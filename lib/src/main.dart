@@ -1,22 +1,13 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
+import 'package:magambell/src/main_app.dart';
 
 void main() {
-  runApp(const MyApp());
-}
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const SplashScreen(),
-    );
-  }
+    runApp(const MagambellApp());
+  }, (error, stackTrace) => log(error.toString()));
 }
