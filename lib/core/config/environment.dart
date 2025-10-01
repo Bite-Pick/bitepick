@@ -1,0 +1,33 @@
+import 'package:flutter/foundation.dart';
+import 'package:magambell/src/main.dart' as main_app;
+
+enum BuildType { dev, prod }
+
+class Environment {
+  Environment._internal(this._buildType);
+
+  factory Environment.newInstance(BuildType buildType) {
+    _instance = Environment._internal(buildType);
+    return _instance;
+  }
+
+  static late Environment _instance;
+  static Environment get instance => _instance;
+
+  late BuildType _buildType;
+  static BuildType get buildType => instance._buildType;
+
+  bool get isDev => _buildType == BuildType.dev;
+  bool get isProd => _buildType == BuildType.prod;
+
+  bool get isReleaseMode => kReleaseMode;
+
+  static String get appName => switch (instance._buildType) {
+        BuildType.dev => 'MagamBell Dev',
+        BuildType.prod => 'MagamBell',
+      };
+
+  Future<void> run() async {
+    await main_app.main();
+  }
+}
