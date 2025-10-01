@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:magambell/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 
 class MagambellApp extends StatelessWidget {
@@ -15,9 +16,7 @@ class MagambellApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ko')],
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: MgTheme.getInstance().themeData,
       home: const SplashScreen(),
       builder: (context, child) {
         return child!;
