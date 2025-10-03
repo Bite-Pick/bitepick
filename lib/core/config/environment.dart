@@ -28,6 +28,6 @@ class Environment {
       };
 
   Future<void> run() async {
-    await main_app.main();
+    await main_app.runMagamBellApp();
   }
 }
