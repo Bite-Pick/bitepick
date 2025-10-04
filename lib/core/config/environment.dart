@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:magambell/core/config/constants.dart';
 import 'package:magambell/src/main.dart' as main_app;
 
 enum BuildType { dev, prod }
@@ -27,7 +29,13 @@ class Environment {
         BuildType.prod => 'MagamBell',
       };
 
+  static String get baseApiUrl => switch (instance._buildType) {
+        BuildType.dev => DEV_API_URL,
+        BuildType.prod => API_URL,
+      };
+
   Future<void> run() async {
+    await dotenv.load(fileName: '.env');
     await main_app.runMagamBellApp();
   }
 }
