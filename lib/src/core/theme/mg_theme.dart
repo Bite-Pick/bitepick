@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/core/theme/mg_color.dart';
-import 'package:magambell/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 
 class MgTheme {
   MgTheme._();

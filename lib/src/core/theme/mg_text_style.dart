@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
 
 /// 마감벨 폰트 패밀리
 class MgFontFamily {
