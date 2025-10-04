@@ -5,23 +5,43 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "magambell",
+            "name": "magambell (dev)",
             "request": "launch",
             "type": "dart",
-            "program": "lib/src/main.dart"
+            "program": "lib/main_dev.dart"
         },
         {
-            "name": "magambell (profile mode)",
+            "name": "magambell (prod)",
             "request": "launch",
             "type": "dart",
-            "program": "lib/src/main.dart",
+            "program": "lib/main_prod.dart"
+        },
+        {
+            "name": "magambell (dev profile)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
             "flutterMode": "profile"
         },
         {
-            "name": "magambell (release mode)",
+            "name": "magambell (prod profile)",
             "request": "launch",
             "type": "dart",
-            "program": "lib/src/main.dart",
+            "program": "lib/main_prod.dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "magambell (dev release)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "magambell (prod release)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_prod.dart",
             "flutterMode": "release"
         }
     ]
