@@ -35,7 +35,6 @@ class Environment {
       };
 
   Future<void> run() async {
-    await dotenv.load(fileName: '.env');
     await main_app.runMagamBellApp();
   }
 }

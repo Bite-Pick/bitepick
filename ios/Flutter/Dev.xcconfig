@@ -1,0 +1,8 @@
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_dev.dart
+PRODUCT_BUNDLE_IDENTIFIER = com.trendflow.magambell.dev
+APP_DISPLAY_NAME = 마감벨 DEV
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
+ASSET_CATALOG_PATH = Runner/Assets-Dev.xcassets
