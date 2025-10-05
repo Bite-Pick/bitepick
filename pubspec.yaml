@@ -22,7 +22,8 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
-
+  build_runner: ^2.9.0
+  flutter_gen_runner: ^5.12.0
 
 flutter:
 
@@ -31,41 +32,30 @@ flutter:
 
   assets:
     - .env
+    - assets/images/
+    - assets/icons/
+    - assets/lottie/
+    - assets/rive/
+    - assets/svg/
 
   fonts:
-    - family: Pretendard-Black
-      fonts:
-        - asset: assets/fonts/Pretendard-Black.otf
-          weight: 900
-    - family: Pretendard-ExtraBold
-      fonts:
-        - asset: assets/fonts/Pretendard-ExtraBold.otf
-          weight: 800
-    - family: Pretendard-Bold
-      fonts:
-        - asset: assets/fonts/Pretendard-Bold.otf
-          weight: 700
-    - family: Pretendard-SemiBold
-      fonts:
-        - asset: assets/fonts/Pretendard-SemiBold.otf
-          weight: 600
-    - family: Pretendard-Medium
-      fonts:
-        - asset: assets/fonts/Pretendard-Medium.otf
-          weight: 500
-    - family: Pretendard-Regular
-      fonts:
-        - asset: assets/fonts/Pretendard-Regular.otf
-          weight: 400
-    - family: Pretendard-Light
-      fonts:
-        - asset: assets/fonts/Pretendard-Light.otf
-          weight: 300
-    - family: Pretendard-ExtraLight
-      fonts:
-        - asset: assets/fonts/Pretendard-ExtraLight.otf
-          weight: 200
-    - family: Pretendard-Thin
+    - family: Pretendard
       fonts:
         - asset: assets/fonts/Pretendard-Thin.otf
           weight: 100
+        - asset: assets/fonts/Pretendard-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Pretendard-Light.otf
+          weight: 300
+        - asset: assets/fonts/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Pretendard-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Pretendard-Black.otf
+          weight: 900
