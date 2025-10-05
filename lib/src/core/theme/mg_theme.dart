@@ -13,9 +13,8 @@ class MgTheme {
   }
 
   // Theme Data
-  ThemeData get themeData => ThemeData(
-    brightness: Brightness.light,
-    colorScheme: ColorScheme.light(
+  ThemeData get themeData {
+    final colorScheme = ColorScheme.light(
       primary: MgColorScheme.primary,
       secondary: MgColorScheme.secondary,
       surface: MgColorScheme.background,
@@ -24,16 +23,22 @@ class MgTheme {
       onSecondary: MgColorScheme.white,
       onSurface: MgColorScheme.text,
       onError: MgColorScheme.white,
-    ),
-    scaffoldBackgroundColor: MgColorScheme.background,
-    fontFamily: MgFontFamily.regular,
-    useMaterial3: true,
-    dividerTheme: DividerThemeData(
-      color: MgColorScheme.divider,
-      thickness: 1,
-      space: 1,
-    ),
-  );
+    );
+
+    return ThemeData(
+      textTheme: mgTextTheme(colorScheme),
+      brightness: Brightness.light,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: MgColorScheme.background,
+      fontFamily: MgFontFamily.regular,
+      useMaterial3: true,
+      dividerTheme: const DividerThemeData(
+        color: MgColorScheme.divider,
+        thickness: 1,
+        space: 1,
+      ),
+    );
+  }
 
   // Semantic Color Scheme
   MgSemanticColorScheme get semanticColorScheme => const MgSemanticColorScheme(
