@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:magambell/src/widgets/base_appbar.dart';
+import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_textfield.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          'Splash Screen',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-      ),
+    return BaseScaffold(
+      appBar: BaseAppBar(title: const Text('Magambell')),
+      body: Center(child: Column(children: [MgTextField()])),
     );
   }
 }

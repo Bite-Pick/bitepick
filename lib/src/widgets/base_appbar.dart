@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:magambell/src/constants/gaps.dart';
-import 'package:magambell/src/constants/gutter.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -63,8 +61,8 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     GestureDetector(
                       onTap: onPopPressed,
-                      child: BaseSvgIcon.chevronLeftSm(),
-                    ).padding(all:MgSpacing.md),
+                      child: Image.asset(R.ASSETS_ICONS_CHEVRON_LEFT_PNG),
+                    ).padding(all: MgSpacing.md),
                   ],
                 )
               : const Offstage()),
@@ -76,7 +74,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: bottom,
       centerTitle: centerTitle,
       titleSpacing: titleSpacing,
-      actions: (action is! SizedBox)? [action ?? Gaps.0, Gaps.wxs]: [action!],
+      actions: action != null ? [action!] : [],
     );
   }
 }
