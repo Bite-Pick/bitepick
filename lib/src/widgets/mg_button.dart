@@ -1,0 +1,137 @@
+import 'package:flutter/material.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/constants/mg_sizes.dart';
+
+class MgButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final Widget content;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final Color? borderColor;
+  final double? height;
+  final double borderRadius;
+  final EdgeInsets? padding;
+  final bool fullWidth;
+  final bool disabled;
+
+  const MgButton({
+    super.key,
+    required this.onPressed,
+    required this.content,
+    this.backgroundColor,
+    this.textColor,
+    this.borderColor,
+    this.height = 50,
+    this.borderRadius = MgRadius.md,
+    this.padding,
+    this.fullWidth = false,
+    this.disabled = false,
+  });
+
+  MgButton copyWith({
+    VoidCallback? onPressed,
+    Widget? content,
+    Color? backgroundColor,
+    Color? textColor,
+    Color? borderColor,
+    double? height,
+    double? borderRadius,
+    EdgeInsets? padding,
+    bool? fullWidth,
+    bool? disabled,
+  }) {
+    return MgButton(
+      onPressed: onPressed ?? this.onPressed,
+      content: content ?? this.content,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      textColor: textColor ?? this.textColor,
+      borderColor: borderColor ?? this.borderColor,
+      height: height ?? this.height,
+      borderRadius: borderRadius ?? this.borderRadius,
+      padding: padding ?? this.padding,
+      fullWidth: fullWidth ?? this.fullWidth,
+      disabled: disabled ?? this.disabled,
+    );
+  }
+
+  MgButton primary({bool whiteBg = false}) => copyWith(
+    backgroundColor: whiteBg ? MgColorScheme.white : MgColorScheme.primary,
+    textColor: whiteBg ? MgColorScheme.primary : MgColorScheme.text,
+    borderColor: whiteBg ? MgColorScheme.primary : null,
+  );
+
+  MgButton secondary({bool whiteBg = false}) => copyWith(
+    backgroundColor: whiteBg ? MgColorScheme.white : MgColorScheme.secondary,
+    textColor: whiteBg ? MgColorScheme.secondary : MgColorScheme.white,
+    borderColor: whiteBg ? MgColorScheme.secondary : null,
+  );
+
+  MgButton asDisabled() => copyWith(
+    backgroundColor: const Color(0xFFFFDF9F),
+    textColor: MgColorScheme.text,
+    disabled: true,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = disabled || onPressed == null;
+
+    return SizedBox(
+      width: fullWidth ? double.infinity : null,
+      height: height,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : onPressed,
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: Container(
+            padding:
+                padding ??
+                const EdgeInsets.symmetric(
+                  horizontal: MgSpacing.md,
+                  vertical: MgSpacing.sm,
+                ),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: borderColor != null
+                  ? Border.all(color: borderColor!)
+                  : null,
+            ),
+            alignment: Alignment.center,
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: textColor ?? MgColorScheme.text,
+                fontSize: MgFontSize.md,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+              child: content,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 텍스트 버튼 (기존 MgButton.text 호환용)
+  factory MgButton.text({
+    String text = '다음',
+    required VoidCallback onPressed,
+    required bool isActive,
+  }) {
+    return MgButton(
+      onPressed: onPressed,
+      content: Text(text).md().bold(),
+      backgroundColor: isActive
+          ? MgColorScheme.primary
+          : MgColorScheme.disabled,
+      textColor: const Color(0xFF212121),
+      height: 52,
+      padding: const EdgeInsets.symmetric(vertical: 17),
+      fullWidth: true,
+      disabled: !isActive,
+    );
+  }
+}
