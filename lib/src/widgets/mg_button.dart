@@ -89,8 +89,8 @@ class MgButton extends StatelessWidget {
             padding:
                 padding ??
                 const EdgeInsets.symmetric(
-                  horizontal: MgSpacing.md,
-                  vertical: MgSpacing.sm,
+                  horizontal: MgSizes.md,
+                  vertical: MgSizes.sm,
                 ),
             decoration: BoxDecoration(
               color: backgroundColor,

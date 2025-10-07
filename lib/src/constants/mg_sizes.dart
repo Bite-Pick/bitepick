@@ -1,6 +1,6 @@
 /// 마감벨 스페이싱
-class MgSpacing {
-  MgSpacing._();
+class MgSizes {
+  MgSizes._();
 
   // Named Spacing
   static const double xss = 2.0;
@@ -20,6 +20,7 @@ class MgSpacing {
   static const double size3 = 3.0;
   static const double size4 = 4.0;
   static const double size8 = 8.0;
+  static const double size10 = 10.0;  
   static const double size12 = 12.0;
   static const double size16 = 16.0;
   static const double size20 = 20.0;

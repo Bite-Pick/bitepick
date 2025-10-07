@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 
 class MgTextField extends StatefulWidget {
   const MgTextField({
@@ -44,11 +46,11 @@ class _MgTextFieldState extends State<MgTextField> {
   late FocusNode _focusNode;
   bool _isFocused = false;
 
-  static const double spacingSm = MgSpacing.xs;
-  static const double spacingMd = MgSpacing.sm;
-  static const double fontSizeMd = MgSpacing.md;
-  static const double fontSizeSm = 14.0;
-  static const double borderRadiusMd = 10.0;
+  static const double spacingSm = MgSizes.xs;
+  static const double spacingMd = MgSizes.sm;
+  static const double fontSizeMd = MgSizes.md;
+  static const double fontSizeSm = MgSizes.sm;
+  static const double borderRadiusMd = MgSizes.size10;
 
   @override
   void initState() {
@@ -67,29 +69,24 @@ class _MgTextFieldState extends State<MgTextField> {
   }
 
   void _onFocusChange() {
-    setState(() {
-      _isFocused = _focusNode.hasFocus;
-    });
+    setState(() => _isFocused = _focusNode.hasFocus);
   }
 
   Color get _borderColor {
+    if (!widget.enabled) return Colors.transparent;
+
     if (widget.error != null && widget.error!.isNotEmpty) {
       return MgColorScheme.subpointRed;
     }
-    if (_isFocused) {
-      return MgColorScheme.primary;
-    }
-    return const Color(0xFFCCCCCC);
+    // TODO: focus 되었을 때 색상 논의
+    return _isFocused ? MgColorScheme.primary : MgColorScheme.gray7;
   }
 
   double get _borderWidth {
     if (widget.error != null && widget.error!.isNotEmpty) {
       return 1.0;
     }
-    if (_isFocused) {
-      return 1.0;
-    }
-    return 0.0;
+    return _isFocused ? 1.0 : 0.0;
   }
 
   @override
@@ -102,18 +99,9 @@ class _MgTextFieldState extends State<MgTextField> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.label != null && widget.label!.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 10),
-              child: Text(
-                widget.label!,
-                style: const TextStyle(
-                  fontSize: fontSizeMd,
-                  color: MgColorScheme.text,
-                  fontWeight: FontWeight.bold,
-                  height: 1.5,
-                ),
-              ),
-            ),
+            Text(
+              widget.label!,
+            ).bold().md().padding(left: MgSizes.md, bottom: MgSizes.size10),
           ],
 
           SizedBox(
@@ -138,7 +126,7 @@ class _MgTextFieldState extends State<MgTextField> {
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 filled: true,
-                fillColor: const Color(0xFFF6F6F6),
+                fillColor: MgColorScheme.gray11,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: spacingMd,
                   vertical: spacingSm,

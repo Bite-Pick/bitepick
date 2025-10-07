@@ -62,7 +62,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                     GestureDetector(
                       onTap: onPopPressed,
                       child: Image.asset(R.ASSETS_ICONS_CHEVRON_LEFT_PNG),
-                    ).padding(all: MgSpacing.md),
+                    ).padding(all: MgSizes.md),
                   ],
                 )
               : const Offstage()),
