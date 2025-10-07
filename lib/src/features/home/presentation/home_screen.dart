@@ -13,6 +13,10 @@ class HomeScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
+      // TODO[home]: 1.주소 설정
+      // TODO[home]: 2.검색
+      // TODO[home]: 3.필터
+      // TODO[home]: 4.상품 리스트
     );
   }
 }

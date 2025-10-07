@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
+import 'package:magambell/src/features/order/presentation/order_screen.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
+import 'package:magambell/src/features/user/presentation/mypage_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 
 class MainScreen extends StatefulWidget {
@@ -18,10 +21,10 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
+    FavoriteScreen(),
     SplashScreen(),
-    HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
+    OrderScreen(),
+    MypageScreen(),
   ];
 
   void _onItemTapped(int index) => setState(() => _selectedIndex = index);
