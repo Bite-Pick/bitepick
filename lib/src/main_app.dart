@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
+import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 
 class MagambellApp extends StatelessWidget {
@@ -18,7 +19,7 @@ class MagambellApp extends StatelessWidget {
       ],
       supportedLocales: const [Locale('ko')],
       theme: MgTheme.getInstance().themeData,
-      home: const SplashScreen(),
+      home: const MainScreen(),
       builder: (context, child) {
         return child!;
       },
