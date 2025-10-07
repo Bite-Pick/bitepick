@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
 
 /// 마감벨 폰트 패밀리
 class MgFontFamily {
@@ -427,3 +427,148 @@ extension MgStyledTextSpan on TextSpan {
     style: (style ?? const TextStyle()).copyWith(letterSpacing: spacing),
   );
 }
+
+TextTheme mgTextTheme(ColorScheme colorScheme) {
+  const family = 'Pretendard';
+  const ls = 0.0;
+  const h = 1.5;
+
+  final textColor = colorScheme.onBackground;
+
+  return TextTheme(
+    // Heading (bold)
+    displayLarge: TextStyle(
+      // 32
+      fontFamily: family,
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    displayMedium: TextStyle(
+      // 28
+      fontFamily: family,
+      fontSize: 28,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    displaySmall: TextStyle(
+      // 24
+      fontFamily: family,
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    headlineMedium: TextStyle(
+      // 20
+      fontFamily: family,
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    headlineSmall: TextStyle(
+      // 18
+      fontFamily: family,
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+
+    // Body (bold) -> Material에선 title 계열이 굵은 본문 타이틀 용도라 여기에 매핑
+    titleLarge: TextStyle(
+      // 16 bold
+      fontFamily: family,
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    titleMedium: TextStyle(
+      // 14 bold
+      fontFamily: family,
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    titleSmall: TextStyle(
+      // 12 bold
+      fontFamily: family,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+
+    // Body (regular)
+    bodyLarge: TextStyle(
+      // 16 regular
+      fontFamily: family,
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    bodyMedium: TextStyle(
+      // 14 regular
+      fontFamily: family,
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    bodySmall: TextStyle(
+      // 12 regular
+      fontFamily: family,
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+
+    // 선택: 라벨(버튼/캡션 등) 필요시 재활용
+    labelLarge: TextStyle(
+      // 14 medium 느낌 주고 싶으면 w600/500로 조정
+      fontFamily: family,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    labelMedium: TextStyle(
+      // 12 medium
+      fontFamily: family,
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+    labelSmall: TextStyle(
+      // 11~12 사용처에 맞게
+      fontFamily: family,
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      height: h,
+      letterSpacing: ls,
+      color: textColor,
+    ),
+  );
+}
+

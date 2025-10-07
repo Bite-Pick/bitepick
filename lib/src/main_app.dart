@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:magambell/core/config/environment.dart';
-import 'package:magambell/core/theme/mg_theme.dart';
+import 'package:magambell/src/core/config/environment.dart';
+import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 
 class MagambellApp extends StatelessWidget {

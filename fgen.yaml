@@ -1,0 +1,12 @@
+exclude:
+  - '.env'
+  - '**/*.json'
+  - '**/*.ttf'
+
+# include:
+
+watch: false
+
+preview: false
+
+output: lib/src/constants/assets.dart
