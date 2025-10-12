@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide NavigatorState;
 import 'package:magambell/src/constants/assets.dart';
+import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_screen.dart';
@@ -17,7 +17,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  late final NavigatorController _navigatorController;
 
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -27,51 +27,75 @@ class _MainScreenState extends State<MainScreen> {
     MypageScreen(),
   ];
 
-  void _onItemTapped(int index) => setState(() => _selectedIndex = index);
+  @override
+  void initState() {
+    super.initState();
+    _navigatorController = NavigatorController();
+  }
+
+  @override
+  void dispose() {
+    _navigatorController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: MgColorScheme.black,
-        unselectedItemColor: MgColorScheme.gray5,
-        selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
-        unselectedLabelStyle: Theme.of(
-          context,
-        ).textTheme.bodySmall!.copyWith(color: MgColorScheme.gray6),
-        backgroundColor: MgColorScheme.white,
-        items: [
-          _buildBottomNavigationBarItem(
-            iconPath: R.ASSETS_ICONS_HOME_PNG,
-            label: '메인',
-            index: 0,
-          ),
-          _buildBottomNavigationBarItem(
-            iconPath: R.ASSETS_ICONS_HEART_PNG,
-            label: '즐겨찾기',
-            index: 1,
-          ),
-          _buildBottomNavigationBarItem(
-            iconPath: R.ASSETS_ICONS_MAP_PIN_PNG,
-            label: '내주변',
-            index: 2,
-          ),
-          _buildBottomNavigationBarItem(
-            iconPath: R.ASSETS_ICONS_ORDER_HISTORY_PNG,
-            label: '주문내역',
-            index: 3,
-          ),
-          _buildBottomNavigationBarItem(
-            iconPath: R.ASSETS_ICONS_USER_PNG,
-            label: 'MY',
-            index: 4,
-          ),
-        ],
-      ),
+    return ValueListenableBuilder<MgDefaultNavigatorState>(
+      valueListenable: _navigatorController,
+      builder: (context, navState, child) {
+        return BaseScaffold(
+          body: IndexedStack(index: navState.tabIndex, children: _screens),
+          bottomNavigationBar: _buildBottomNavigationBar(navState),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomNavigationBar(MgDefaultNavigatorState navState) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: navState.tabIndex,
+      onTap: _navigatorController.changeTabIndex,
+      selectedItemColor: MgColorScheme.black,
+      unselectedItemColor: MgColorScheme.gray5,
+      selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
+      unselectedLabelStyle: Theme.of(
+        context,
+      ).textTheme.bodySmall!.copyWith(color: MgColorScheme.gray6),
+      backgroundColor: MgColorScheme.white,
+      items: [
+        _buildBottomNavigationBarItem(
+          iconPath: R.ASSETS_ICONS_HOME_PNG,
+          label: '메인',
+          index: 0,
+          currentIndex: navState.tabIndex,
+        ),
+        _buildBottomNavigationBarItem(
+          iconPath: R.ASSETS_ICONS_HEART_PNG,
+          label: '즐겨찾기',
+          index: 1,
+          currentIndex: navState.tabIndex,
+        ),
+        _buildBottomNavigationBarItem(
+          iconPath: R.ASSETS_ICONS_MAP_PIN_PNG,
+          label: '내주변',
+          index: 2,
+          currentIndex: navState.tabIndex,
+        ),
+        _buildBottomNavigationBarItem(
+          iconPath: R.ASSETS_ICONS_ORDER_HISTORY_PNG,
+          label: '주문내역',
+          index: 3,
+          currentIndex: navState.tabIndex,
+        ),
+        _buildBottomNavigationBarItem(
+          iconPath: R.ASSETS_ICONS_USER_PNG,
+          label: 'MY',
+          index: 4,
+          currentIndex: navState.tabIndex,
+        ),
+      ],
     );
   }
 
@@ -79,13 +103,14 @@ class _MainScreenState extends State<MainScreen> {
     required String iconPath,
     required String label,
     required int index,
+    required int currentIndex,
   }) {
     return BottomNavigationBarItem(
       icon: Image.asset(
         iconPath,
         width: 24,
         height: 24,
-        color: _selectedIndex == index
+        color: currentIndex == index
             ? MgColorScheme.black
             : MgColorScheme.gray5,
       ),

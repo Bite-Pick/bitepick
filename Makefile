@@ -14,3 +14,6 @@ clean:
 	@flutter clean
 	@find . -name "*.g.dart" -delete
 	@find . -name "*.freezed.dart" -delete
+
+build_runner:
+	@dart run build_runner build --delete-conflicting-outputs
