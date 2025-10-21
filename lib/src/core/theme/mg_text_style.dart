@@ -56,7 +56,7 @@ extension MgStyledText on Text {
     ),
   );
 
-  Text subpointRed() => copyWith(
+  Text red() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
       color: MgColorScheme.subpointRed,
     ),
