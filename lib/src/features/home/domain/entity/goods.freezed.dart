@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'good.dart';
+part of 'goods.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,14 +15,14 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$Good {
+mixin _$Goods {
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
-  double get address => throw _privateConstructorUsedError;
-  double get goodsName => throw _privateConstructorUsedError;
+  String get address => throw _privateConstructorUsedError;
+  String get goodsName => throw _privateConstructorUsedError;
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
   int get originPrice => throw _privateConstructorUsedError;
@@ -30,16 +30,16 @@ mixin _$Good {
   double get salePrice => throw _privateConstructorUsedError;
   double get quantity => throw _privateConstructorUsedError;
   double get distance => throw _privateConstructorUsedError;
-  double get saleStatus => throw _privateConstructorUsedError;
+  String get saleStatus => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $GoodCopyWith<Good> get copyWith => throw _privateConstructorUsedError;
+  $GoodsCopyWith<Goods> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GoodCopyWith<$Res> {
-  factory $GoodCopyWith(Good value, $Res Function(Good) then) =
-      _$GoodCopyWithImpl<$Res, Good>;
+abstract class $GoodsCopyWith<$Res> {
+  factory $GoodsCopyWith(Goods value, $Res Function(Goods) then) =
+      _$GoodsCopyWithImpl<$Res, Goods>;
   @useResult
   $Res call(
       {String storeId,
@@ -47,8 +47,8 @@ abstract class $GoodCopyWith<$Res> {
       List<String> imageUrl,
       double latitude,
       double longitude,
-      double address,
-      double goodsName,
+      String address,
+      String goodsName,
       String startTime,
       String endTime,
       int originPrice,
@@ -56,13 +56,13 @@ abstract class $GoodCopyWith<$Res> {
       double salePrice,
       double quantity,
       double distance,
-      double saleStatus});
+      String saleStatus});
 }
 
 /// @nodoc
-class _$GoodCopyWithImpl<$Res, $Val extends Good>
-    implements $GoodCopyWith<$Res> {
-  _$GoodCopyWithImpl(this._value, this._then);
+class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
+    implements $GoodsCopyWith<$Res> {
+  _$GoodsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -112,11 +112,11 @@ class _$GoodCopyWithImpl<$Res, $Val extends Good>
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
       goodsName: null == goodsName
           ? _value.goodsName
           : goodsName // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -148,16 +148,16 @@ class _$GoodCopyWithImpl<$Res, $Val extends Good>
       saleStatus: null == saleStatus
           ? _value.saleStatus
           : saleStatus // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$GoodImplCopyWith<$Res> implements $GoodCopyWith<$Res> {
-  factory _$$GoodImplCopyWith(
-          _$GoodImpl value, $Res Function(_$GoodImpl) then) =
-      __$$GoodImplCopyWithImpl<$Res>;
+abstract class _$$GoodsImplCopyWith<$Res> implements $GoodsCopyWith<$Res> {
+  factory _$$GoodsImplCopyWith(
+          _$GoodsImpl value, $Res Function(_$GoodsImpl) then) =
+      __$$GoodsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -166,8 +166,8 @@ abstract class _$$GoodImplCopyWith<$Res> implements $GoodCopyWith<$Res> {
       List<String> imageUrl,
       double latitude,
       double longitude,
-      double address,
-      double goodsName,
+      String address,
+      String goodsName,
       String startTime,
       String endTime,
       int originPrice,
@@ -175,14 +175,15 @@ abstract class _$$GoodImplCopyWith<$Res> implements $GoodCopyWith<$Res> {
       double salePrice,
       double quantity,
       double distance,
-      double saleStatus});
+      String saleStatus});
 }
 
 /// @nodoc
-class __$$GoodImplCopyWithImpl<$Res>
-    extends _$GoodCopyWithImpl<$Res, _$GoodImpl>
-    implements _$$GoodImplCopyWith<$Res> {
-  __$$GoodImplCopyWithImpl(_$GoodImpl _value, $Res Function(_$GoodImpl) _then)
+class __$$GoodsImplCopyWithImpl<$Res>
+    extends _$GoodsCopyWithImpl<$Res, _$GoodsImpl>
+    implements _$$GoodsImplCopyWith<$Res> {
+  __$$GoodsImplCopyWithImpl(
+      _$GoodsImpl _value, $Res Function(_$GoodsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -204,7 +205,7 @@ class __$$GoodImplCopyWithImpl<$Res>
     Object? distance = null,
     Object? saleStatus = null,
   }) {
-    return _then(_$GoodImpl(
+    return _then(_$GoodsImpl(
       storeId: null == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
@@ -228,11 +229,11 @@ class __$$GoodImplCopyWithImpl<$Res>
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
       goodsName: null == goodsName
           ? _value.goodsName
           : goodsName // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -264,15 +265,15 @@ class __$$GoodImplCopyWithImpl<$Res>
       saleStatus: null == saleStatus
           ? _value.saleStatus
           : saleStatus // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class _$GoodImpl implements _Good {
-  const _$GoodImpl(
+class _$GoodsImpl implements _Goods {
+  const _$GoodsImpl(
       {required this.storeId,
       required this.storeName,
       required final List<String> imageUrl,
@@ -307,9 +308,9 @@ class _$GoodImpl implements _Good {
   @override
   final double longitude;
   @override
-  final double address;
+  final String address;
   @override
-  final double goodsName;
+  final String goodsName;
   @override
   final String startTime;
   @override
@@ -325,18 +326,18 @@ class _$GoodImpl implements _Good {
   @override
   final double distance;
   @override
-  final double saleStatus;
+  final String saleStatus;
 
   @override
   String toString() {
-    return 'Good(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
+    return 'Goods(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$GoodImpl &&
+            other is _$GoodsImpl &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
@@ -387,19 +388,19 @@ class _$GoodImpl implements _Good {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$GoodImplCopyWith<_$GoodImpl> get copyWith =>
-      __$$GoodImplCopyWithImpl<_$GoodImpl>(this, _$identity);
+  _$$GoodsImplCopyWith<_$GoodsImpl> get copyWith =>
+      __$$GoodsImplCopyWithImpl<_$GoodsImpl>(this, _$identity);
 }
 
-abstract class _Good implements Good {
-  const factory _Good(
+abstract class _Goods implements Goods {
+  const factory _Goods(
       {required final String storeId,
       required final String storeName,
       required final List<String> imageUrl,
       required final double latitude,
       required final double longitude,
-      required final double address,
-      required final double goodsName,
+      required final String address,
+      required final String goodsName,
       required final String startTime,
       required final String endTime,
       required final int originPrice,
@@ -407,7 +408,7 @@ abstract class _Good implements Good {
       required final double salePrice,
       required final double quantity,
       required final double distance,
-      required final double saleStatus}) = _$GoodImpl;
+      required final String saleStatus}) = _$GoodsImpl;
 
   @override
   String get storeId;
@@ -420,9 +421,9 @@ abstract class _Good implements Good {
   @override
   double get longitude;
   @override
-  double get address;
+  String get address;
   @override
-  double get goodsName;
+  String get goodsName;
   @override
   String get startTime;
   @override
@@ -438,9 +439,9 @@ abstract class _Good implements Good {
   @override
   double get distance;
   @override
-  double get saleStatus;
+  String get saleStatus;
   @override
   @JsonKey(ignore: true)
-  _$$GoodImplCopyWith<_$GoodImpl> get copyWith =>
+  _$$GoodsImplCopyWith<_$GoodsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
