@@ -34,6 +34,8 @@ class R {
 
   static const String ASSETS_ICONS_PLUS_PNG = 'assets/icons/plus.png';
 
+  static const String ASSETS_ICONS_TIME_PNG = 'assets/icons/time.png';
+
   static const String ASSETS_ICONS_USER_PNG = 'assets/icons/user.png';
 
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =

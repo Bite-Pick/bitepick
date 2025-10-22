@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/home/domain/entity/goods.dart';
+import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeGoodsItem extends StatefulWidget {
   const HomeGoodsItem({super.key});
@@ -52,7 +54,8 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
             ],
           ),
         ).margin(left: MgSizes.size4),
-        // TODO : 태그 추가
+        Gaps.h4,
+        _buildTags(goods.quantity).margin(left: MgSizes.size4),
       ],
     );
   }
@@ -91,5 +94,28 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
         },
       ),
     );
+  }
+
+  Widget _buildTags(double quantity, String saleStatus) {
+    final List<Widget> tags = [];
+    // TODO: saleStatus enum으로 변경및 조건문 수정
+    if (saleStatus == "ON") tags.add(MgTag(child: Text("픽업가능")));
+
+    tags.add(
+      quantity >= 10
+          ? MgTag(child: Text('재고있음')).gray()
+          : MgTag(child: Text('${quantity.toInt()}개 남음')).danger(),
+    );
+
+    if (quantity <= 4) {
+      tags.add(
+        MgTag(
+          prefix: Image.asset(R.ASSETS_ICONS_TIME_PNG),
+          child: Text('품절임박'),
+        ).danger(light: true),
+      );
+    }
+
+    return Row(children: tags);
   }
 }
