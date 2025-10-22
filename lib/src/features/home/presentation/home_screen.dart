@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
-import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_bottomsheet.dart';
+import 'package:magambell/src/widgets/mg_tag.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -19,26 +27,10 @@ class HomeScreen extends StatelessWidget {
             floating: true,
             delegate: _HomeAppBar(),
           ),
-          // SliverToBoxAdapter(
-          //   child: Column(
-          //     children: [
-          //       Row(children: [Checkbox(value: true, onChanged: (value) => {})]),
-          //       Expanded(
-          //         child: ListView.builder(
-          //           itemCount: 3,
-          //           itemBuilder: (context, index) {
-          //             return HomeGoodsItem().margin(all: MgSizes.md);
-          //           },
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           SliverList(
             delegate: SliverChildListDelegate([
               HomeBannersView(),
-              // TODO[home]: 2.필터
-              Row(children: [Checkbox(value: true, onChanged: (value) => {})]),
+              _buildFilterSection(),
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: 3,
@@ -56,9 +48,39 @@ class HomeScreen extends StatelessWidget {
   Widget _buildFilterSection() {
     return Row(
       children: [
-        // TODO: checkbox
+        Checkbox(value: true, onChanged: (value) => {}),
+        Text("예약가능").sm(),
+        Spacer(),
+        GestureDetector(
+          onTap: () async {
+            await MgBottomsheet.show(context, (context, bottomState) {
+              return _buildSortBottomSheet();
+            });
+          },
+          child: MgTag(
+            suffix: Image.asset(R.ASSETS_ICONS_CHEVRON_DOWN_PNG),
+            child: Text("정렬").sm(),
+          ).transparent(),
+        ),
       ],
     );
+  }
+
+  // TODO: class로 따로 빼기
+  Widget _buildSortBottomSheet() {
+    final List<String> sorts = ["가격 낮은순", "가까운 거리순", "리뷰많은순"];
+    return MgBottomsheet(
+      Column(
+        children: sorts
+            .map((e) => _buildSortBottomSheetItem(e))
+            .toList()
+            .joinWithWidget(Divider()),
+      ),
+    );
+  }
+
+  Widget _buildSortBottomSheetItem(String title) {
+    return Center(child: Text(title).md().margin(vertical: MgSizes.sm));
   }
 }
 
