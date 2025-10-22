@@ -22,6 +22,9 @@ class R {
 
   static const String ASSETS_ICONS_HOME_PNG = 'assets/icons/home.png';
 
+  static const String ASSETS_ICONS_MAP_PIN_BORDER_PNG =
+      'assets/icons/map-pin-border.png';
+
   static const String ASSETS_ICONS_MAP_PIN_PNG = 'assets/icons/map-pin.png';
 
   static const String ASSETS_ICONS_MINUS_PNG = 'assets/icons/minus.png';
@@ -33,6 +36,8 @@ class R {
       'assets/icons/outlined-heart.png';
 
   static const String ASSETS_ICONS_PLUS_PNG = 'assets/icons/plus.png';
+
+  static const String ASSETS_ICONS_SEARCH_PNG = 'assets/icons/search.png';
 
   static const String ASSETS_ICONS_TIME_PNG = 'assets/icons/time.png';
 

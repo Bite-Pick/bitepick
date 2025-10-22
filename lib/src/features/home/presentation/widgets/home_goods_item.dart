@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
+import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
@@ -55,7 +56,10 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
           ),
         ).margin(left: MgSizes.size4),
         Gaps.h4,
-        _buildTags(goods.quantity).margin(left: MgSizes.size4),
+        _buildTags(
+          goods.quantity,
+          goods.saleStatus,
+        ).margin(left: MgSizes.size4),
       ],
     );
   }
@@ -72,6 +76,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
         itemCount: images.length,
         itemBuilder: (context, index) {
           final image = images[index];
+          if (image == "") return SizedBox.shrink();
           return CachedNetworkImage(
             imageUrl: image,
             imageBuilder: (context, imageProvider) => Container(
@@ -116,6 +121,6 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
       );
     }
 
-    return Row(children: tags);
+    return Row(children: tags.joinWithWidget(Gaps.w6));
   }
 }
