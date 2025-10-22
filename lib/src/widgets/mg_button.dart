@@ -66,6 +66,11 @@ class MgButton extends StatelessWidget {
     textColor: whiteBg ? MgColorScheme.secondary : MgColorScheme.white,
     borderColor: whiteBg ? MgColorScheme.secondary : null,
   );
+  MgButton transparent() => copyWith(
+    backgroundColor: MgColorScheme.white,
+    textColor: MgColorScheme.text,
+    borderColor: Colors.transparent,
+  );
 
   MgButton asDisabled() => copyWith(
     backgroundColor: const Color(0xFFFFDF9F),

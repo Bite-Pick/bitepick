@@ -10,6 +10,8 @@ class R {
 
   static const String ASSETS_ICONS_CAMERA_PNG = 'assets/icons/camera.png';
 
+  static const String ASSETS_ICONS_CHECK_PNG = 'assets/icons/check.png';
+
   static const String ASSETS_ICONS_CHEVRON_DOWN_PNG =
       'assets/icons/chevron-down.png';
 
