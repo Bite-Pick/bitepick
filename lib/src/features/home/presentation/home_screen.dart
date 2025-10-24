@@ -8,6 +8,8 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
+import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
@@ -21,6 +23,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final repository = StoreRepository();
+
+    // 2. API 호출
+    repository.getStoreGoods(latitude: 37.7749, longitude: -122.4194).then((
+      val,
+    ) {
+      // 3. 결과 사용
+      print('Total: ${val.length}');
+      for (final item in val) {
+        print('${item.storeName}: ${item.goodsName}');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildFilterSection(),
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: 3,
+                itemCount: 5,
                 itemBuilder: (context, index) {
                   return HomeGoodsItem().margin(all: MgSizes.md);
                 },
@@ -72,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // TODO: class로 따로 빼기
   Widget _buildSortBottomSheet() {
-    final List<String> sorts = ["가격 낮은순", "가까운 거리순", "리뷰많은순"];
+    final List<String> sorts = SortType.values.map((e) => e.name).toList();
     return MgBottomsheet(
       Column(
         children: sorts
