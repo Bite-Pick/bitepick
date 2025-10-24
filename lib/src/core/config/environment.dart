@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:magambell/src/core/config/constants.dart';
 import 'package:magambell/src/main.dart' as main_app;
 

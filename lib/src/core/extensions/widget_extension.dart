@@ -20,4 +20,40 @@ extension KnStyledWidget<T extends Widget> on T {
       child: this,
     );
   }
+
+  Widget margin({
+    double? all,
+    double? horizontal,
+    double? vertical,
+    double? top,
+    double? bottom,
+    double? left,
+    double? right,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: top ?? vertical ?? all ?? 0,
+        bottom: bottom ?? vertical ?? all ?? 0,
+        left: left ?? horizontal ?? all ?? 0,
+        right: right ?? horizontal ?? all ?? 0,
+      ),
+      child: this,
+    );
+  }
+
+  Widget decorated({
+    Key? key,
+    Color? color,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    List<BoxShadow>? boxShadow,
+  }) {
+    final BoxDecoration decoration = BoxDecoration(
+      color: color,
+      border: border,
+      borderRadius: borderRadius,
+      boxShadow: boxShadow,
+    );
+    return DecoratedBox(key: key, child: this, decoration: decoration);
+  }
 }
