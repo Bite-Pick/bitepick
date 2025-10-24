@@ -20,6 +20,11 @@ RouteBase get $mainRoute => GoRouteData.$route(
           name: 'DetailRoute',
           factory: $DetailRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: 'search',
+          name: 'SearchRoute',
+          factory: $SearchRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -47,6 +52,23 @@ extension $DetailRouteExtension on DetailRoute {
 
   String get location => GoRouteData.$location(
         '/detail/${Uri.encodeComponent(id.toString())}',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $SearchRouteExtension on SearchRoute {
+  static SearchRoute _fromState(GoRouterState state) => SearchRoute();
+
+  String get location => GoRouteData.$location(
+        '/search',
       );
 
   void go(BuildContext context) => context.go(location);

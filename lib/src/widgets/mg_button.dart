@@ -124,7 +124,7 @@ class MgButton extends StatelessWidget {
   factory MgButton.text({
     String text = '다음',
     required VoidCallback onPressed,
-    required bool isActive,
+    bool isActive = true,
   }) {
     return MgButton(
       onPressed: onPressed,

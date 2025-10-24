@@ -7,9 +7,11 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
+import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
+// import 'package:magambell/src/core/router/app_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -95,7 +97,7 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [_buildAddress(context), _buildSearch()],
+      children: [_buildAddress(context), _buildSearch(context)],
     ).margin(all: MgSizes.md);
   }
 
@@ -164,10 +166,10 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
         );
   }
 
-  Widget _buildSearch() {
+  Widget _buildSearch(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // TODO: goto Search Page
+      onTap: () async {
+        // await SearchRoute().push(context);
       },
       child: Image.asset(R.ASSETS_ICONS_SEARCH_PNG),
     );
