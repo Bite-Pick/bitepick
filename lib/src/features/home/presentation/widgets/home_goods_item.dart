@@ -11,7 +11,9 @@ import 'package:magambell/src/features/home/domain/entity/goods.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeGoodsItem extends StatefulWidget {
-  const HomeGoodsItem({super.key});
+  const HomeGoodsItem({super.key, required this.goods});
+
+  final Goods goods;
 
   @override
   State<HomeGoodsItem> createState() => _HomeGoodsItemState();
@@ -20,17 +22,17 @@ class HomeGoodsItem extends StatefulWidget {
 class _HomeGoodsItemState extends State<HomeGoodsItem> {
   @override
   Widget build(BuildContext context) {
-    final goods = mockData;
+    final goods = widget.goods;
     return Column(
       children: [
-        _buildImageListView(goods.imageUrl),
+        _buildImageListView(goods.ImageUrl),
         Gaps.h8,
         DefaultTextStyle(
           style: context.textTheme.titleLarge!,
           child: Row(
             children: [
               Gaps.w4,
-              Text(goods.goodsName),
+              Text(goods.storeName),
               Spacer(),
               Text('${goods.discount}%').red(),
               Gaps.w4,

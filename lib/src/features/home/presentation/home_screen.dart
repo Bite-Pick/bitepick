@@ -1,45 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/home/domain/entity/goods.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
-import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 // import 'package:magambell/src/core/router/app_router.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    final repository = StoreRepository();
-
-    // 2. API 호출
-    repository.getStoreGoods(latitude: 37.7749, longitude: -122.4194).then((
-      val,
-    ) {
-      // 3. 결과 사용
-      print('Total: ${val.length}');
-      for (final item in val) {
-        print('${item.storeName}: ${item.goodsName}');
-      }
-    });
-  }
-
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,12 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
             delegate: SliverChildListDelegate([
               HomeBannersView(),
               _buildFilterSection(),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return HomeGoodsItem().margin(all: MgSizes.md);
-                },
+              MgAsyncAnimatedSwitcher<List<Goods>>(
+                asyncValue: ref.watch(
+                  storeGoodsListProvider(
+                    latitude: 37.5185663,
+                    longitude: 127.0230599,
+                  ),
+                ),
+                builder: (goods) => ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: goods.length,
+                  itemBuilder: (context, index) {
+                    final item = goods[index];
+                    return HomeGoodsItem(goods: item).margin(all: MgSizes.md);
+                  },
+                ),
+                emptyBuilder: () => const Center(
+                  child: Text('상품이 없습니다'),
+                ).margin(all: MgSizes.md),
+                loadingBuilder: () => const Center(
+                  child: CircularProgressIndicator(),
+                ).margin(all: MgSizes.md),
               ),
             ]),
           ),
