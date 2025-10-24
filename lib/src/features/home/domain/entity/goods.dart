@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'goods.freezed.dart';
+part 'goods.g.dart';
 
 @freezed
 class Goods with _$Goods {
@@ -21,6 +22,9 @@ class Goods with _$Goods {
     required double distance,
     required String saleStatus,
   }) = _Goods;
+  const Goods._();
+
+  factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 }
 
 final mockData = Goods(

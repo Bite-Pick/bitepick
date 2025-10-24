@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+Goods _$GoodsFromJson(Map<String, dynamic> json) {
+  return _Goods.fromJson(json);
+}
+
 /// @nodoc
 mixin _$Goods {
   String get storeId => throw _privateConstructorUsedError;
@@ -32,6 +36,7 @@ mixin _$Goods {
   double get distance => throw _privateConstructorUsedError;
   String get saleStatus => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GoodsCopyWith<Goods> get copyWith => throw _privateConstructorUsedError;
 }
@@ -271,8 +276,8 @@ class __$$GoodsImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
-class _$GoodsImpl implements _Goods {
+@JsonSerializable()
+class _$GoodsImpl extends _Goods {
   const _$GoodsImpl(
       {required this.storeId,
       required this.storeName,
@@ -289,7 +294,11 @@ class _$GoodsImpl implements _Goods {
       required this.quantity,
       required this.distance,
       required this.saleStatus})
-      : _imageUrl = imageUrl;
+      : _imageUrl = imageUrl,
+        super._();
+
+  factory _$GoodsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GoodsImplFromJson(json);
 
   @override
   final String storeId;
@@ -366,6 +375,7 @@ class _$GoodsImpl implements _Goods {
                 other.saleStatus == saleStatus));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -390,9 +400,16 @@ class _$GoodsImpl implements _Goods {
   @pragma('vm:prefer-inline')
   _$$GoodsImplCopyWith<_$GoodsImpl> get copyWith =>
       __$$GoodsImplCopyWithImpl<_$GoodsImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$GoodsImplToJson(
+      this,
+    );
+  }
 }
 
-abstract class _Goods implements Goods {
+abstract class _Goods extends Goods {
   const factory _Goods(
       {required final String storeId,
       required final String storeName,
@@ -409,6 +426,9 @@ abstract class _Goods implements Goods {
       required final double quantity,
       required final double distance,
       required final String saleStatus}) = _$GoodsImpl;
+  const _Goods._() : super._();
+
+  factory _Goods.fromJson(Map<String, dynamic> json) = _$GoodsImpl.fromJson;
 
   @override
   String get storeId;
