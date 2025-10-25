@@ -7,6 +7,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/home/domain/entity/goods.dart';
+import 'package:magambell/src/features/home/presentation/controllers/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
@@ -27,6 +28,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final HomeScreenState(:onlyAvailable, :sortType) = ref.watch(
+      homeScreenControllerProvider,
+    );
+    final storeGoodsAsync = ref.watch(
+      storeGoodsListProvider(
+        latitude: 37.5185663,
+        longitude: 127.0230599,
+        onlyAvailable: onlyAvailable,
+        sortType: sortType,
+      ),
+    );
     return SafeArea(
       child: CustomScrollView(
         slivers: [
@@ -37,15 +49,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              HomeBannersView(),
-              _buildFilterSection(),
+              // HomeBannersView(),
+              _buildFilterSection(onlyAvailable, sortType),
               MgAsyncAnimatedSwitcher<List<Goods>>(
-                asyncValue: ref.watch(
-                  storeGoodsListProvider(
-                    latitude: 37.5185663,
-                    longitude: 127.0230599,
-                  ),
-                ),
+                asyncValue: storeGoodsAsync,
                 builder: (goods) => ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -69,42 +76,66 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildFilterSection() {
+  Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
-        Checkbox(value: true, onChanged: (value) => {}),
+        Checkbox(
+          value: onlyAvailable,
+          onChanged: (value) => ref
+              .read(homeScreenControllerProvider.notifier)
+              .toggleOnlyAvailable(),
+        ),
         Text("예약가능").sm(),
         Spacer(),
         GestureDetector(
           onTap: () async {
             await MgBottomsheet.show(context, (context, bottomState) {
-              return _buildSortBottomSheet();
+              return _buildSortBottomSheet(sortType);
             });
           },
           child: MgTag(
             suffix: Image.asset(R.ASSETS_ICONS_CHEVRON_DOWN_PNG),
-            child: Text("정렬").sm(),
+            child: Text(sortType.name).sm(),
           ).transparent(),
         ),
       ],
     );
   }
 
-  // TODO: class로 따로 빼기
-  Widget _buildSortBottomSheet() {
+  Widget _buildSortBottomSheet(SortType currentSortType) {
     final List<String> sorts = SortType.values.map((e) => e.name).toList();
     return MgBottomsheet(
       Column(
         children: sorts
-            .map((e) => _buildSortBottomSheetItem(e))
+            .map(
+              (e) => _buildSortBottomSheetItem(
+                e,
+                isSelect: currentSortType.name == e,
+              ),
+            )
             .toList()
             .joinWithWidget(Divider()),
       ),
     );
   }
 
-  Widget _buildSortBottomSheetItem(String title) {
-    return Center(child: Text(title).md().margin(vertical: MgSizes.sm));
+  Widget _buildSortBottomSheetItem(String title, {bool isSelect = false}) {
+    return GestureDetector(
+      onTap: () {
+        ref
+            .read(homeScreenControllerProvider.notifier)
+            .setSortType(SortType.values.firstWhere((e) => e.name == title));
+        Navigator.of(context).pop();
+      },
+      child: Center(child: Text(title).md().margin(vertical: MgSizes.sm))
+          .margin(all: MgSizes.md)
+          .decorated(
+            border: isSelect
+                ? Border.all(color: MgColorScheme.gray4, width: 1)
+                : null,
+            borderRadius: BorderRadius.circular(16),
+          ),
+    );
   }
 }
 
