@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
+import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
@@ -36,7 +38,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
               Spacer(),
               Text('${goods.discount}%').red(),
               Gaps.w4,
-              Text('${goods.salePrice}원'),
+              Text('${goods.salePrice.toPrice()}원'),
               Gaps.w12,
             ],
           ),
@@ -69,10 +71,9 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
   Widget _buildImageListView(List<String> images) {
     // TODO[home] : 기기에 따라 크기를 조정해야하는지 검토
     // TODO[home] : 3개 이상 넘어가면 하단에 +n 표시
-    const double imageHeight = 109;
-    const double imageWidth = 108;
+    final double imagesize = 109.w;
     return SizedBox(
-      height: imageHeight,
+      height: imagesize,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: images.length,
@@ -82,22 +83,22 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
           return CachedNetworkImage(
             imageUrl: image,
             imageBuilder: (context, imageProvider) => Container(
-              height: imageHeight,
-              width: imageWidth,
+              height: imagesize,
+              width: imagesize,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
             placeholder: (context, url) => Container(
-              height: imageHeight,
-              width: imageWidth,
+              height: imagesize,
+              width: imagesize,
               decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-          ).margin(right: MgSizes.size8);
+          ).margin(right: MgSizes.size8.w);
         },
       ),
     );

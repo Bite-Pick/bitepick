@@ -33,6 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
+        // TODO: 주소 설정 이후 하드코딩 제거
         latitude: 37.5185663,
         longitude: 127.0230599,
         onlyAvailable: onlyAvailable,
@@ -51,6 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
               _buildFilterSection(onlyAvailable, sortType),
+              Gaps.h12,
               MgAsyncAnimatedSwitcher<List<Goods>>(
                 asyncValue: storeGoodsAsync,
                 builder: (goods) => ListView.builder(
@@ -59,15 +61,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   itemCount: goods.length,
                   itemBuilder: (context, index) {
                     final item = goods[index];
-                    return HomeGoodsItem(goods: item).margin(all: MgSizes.md);
+                    return HomeGoodsItem(
+                      goods: item,
+                    ).margin(bottom: MgSizes.xs).margin(horizontal: MgSizes.md);
                   },
                 ),
-                emptyBuilder: () => const Center(
-                  child: Text('상품이 없습니다'),
-                ).margin(all: MgSizes.md),
-                loadingBuilder: () => const Center(
-                  child: CircularProgressIndicator(),
-                ).margin(all: MgSizes.md),
+                emptyBuilder: () => const Center(child: Text('상품이 없습니다')),
+                loadingBuilder: () =>
+                    const Center(child: CircularProgressIndicator()),
               ),
             ]),
           ),
@@ -79,6 +80,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
+        // TODO: icon padding 조정 필요
         Checkbox(
           value: onlyAvailable,
           onChanged: (value) => ref
@@ -94,6 +96,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             });
           },
           child: MgTag(
+            // paddingWidth: 0,
+            paddingWidth: MgSizes.md,
             suffix: Image.asset(R.ASSETS_ICONS_CHEVRON_DOWN_PNG),
             child: Text(sortType.name).sm(),
           ).transparent(),
@@ -127,14 +131,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             .setSortType(SortType.values.firstWhere((e) => e.name == title));
         Navigator.of(context).pop();
       },
-      child: Center(child: Text(title).md().margin(vertical: MgSizes.sm))
-          .margin(all: MgSizes.md)
-          .decorated(
-            border: isSelect
-                ? Border.all(color: MgColorScheme.gray4, width: 1)
-                : null,
-            borderRadius: BorderRadius.circular(16),
-          ),
+      // TODO: 터치영역 확장 필요
+      child: Center(
+        child: Row(
+          children: [
+            Text(title).md(),
+            if (isSelect) ...[Spacer(), Image.asset(R.ASSETS_ICONS_CHECK_PNG)],
+          ],
+        ).margin(vertical: MgSizes.sm, horizontal: MgSizes.md),
+      ).padding(all: MgSizes.md),
     );
   }
 }
@@ -149,7 +154,7 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [_buildAddress(context), _buildSearch(context)],
-    ).margin(all: MgSizes.md);
+    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
   }
 
   @override
