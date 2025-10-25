@@ -1,17 +1,18 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'goods.freezed.dart';
+part 'goods.g.dart';
 
 @freezed
 class Goods with _$Goods {
   const factory Goods({
     required String storeId,
     required String storeName,
-    required List<String> imageUrl,
+    required List<String> ImageUrl,
     required double latitude,
     required double longitude,
     required String address,
-    required String goodsName,
+    String? goodsName,
     required String startTime,
     required String endTime,
     required int originPrice,
@@ -21,12 +22,15 @@ class Goods with _$Goods {
     required double distance,
     required String saleStatus,
   }) = _Goods;
+  const Goods._();
+
+  factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 }
 
 final mockData = Goods(
   storeId: "1",
   storeName: "test",
-  imageUrl: ["", "", "", ""],
+  ImageUrl: ["", "", "", ""],
   latitude: 0,
   longitude: 0,
   address: "dd",

@@ -1,28 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/home/domain/entity/goods.dart';
+import 'package:magambell/src/features/home/presentation/controllers/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
-import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
+import 'package:magambell/src/features/store/domain/sort_type.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 // import 'package:magambell/src/core/router/app_router.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final HomeScreenState(:onlyAvailable, :sortType) = ref.watch(
+      homeScreenControllerProvider,
+    );
+    final storeGoodsAsync = ref.watch(
+      storeGoodsListProvider(
+        // TODO: 주소 설정 이후 하드코딩 제거
+        latitude: 37.5185663,
+        longitude: 127.0230599,
+        onlyAvailable: onlyAvailable,
+        sortType: sortType,
+      ),
+    );
     return SafeArea(
       child: CustomScrollView(
         slivers: [
@@ -33,14 +50,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              HomeBannersView(),
-              _buildFilterSection(),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return HomeGoodsItem().margin(all: MgSizes.md);
-                },
+              // HomeBannersView(),
+              _buildFilterSection(onlyAvailable, sortType),
+              Gaps.h12,
+              MgAsyncAnimatedSwitcher<List<Goods>>(
+                asyncValue: storeGoodsAsync,
+                builder: (goods) => ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: goods.length,
+                  itemBuilder: (context, index) {
+                    final item = goods[index];
+                    return HomeGoodsItem(
+                      goods: item,
+                    ).margin(bottom: MgSizes.xs).margin(horizontal: MgSizes.md);
+                  },
+                ),
+                emptyBuilder: () => const Center(child: Text('상품이 없습니다')),
+                loadingBuilder: () =>
+                    const Center(child: CircularProgressIndicator()),
               ),
             ]),
           ),
@@ -49,42 +77,70 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFilterSection() {
+  Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
-        Checkbox(value: true, onChanged: (value) => {}),
+        // TODO: icon padding 조정 필요
+        Checkbox(
+          value: onlyAvailable,
+          onChanged: (value) => ref
+              .read(homeScreenControllerProvider.notifier)
+              .toggleOnlyAvailable(),
+        ),
         Text("예약가능").sm(),
         Spacer(),
         GestureDetector(
           onTap: () async {
             await MgBottomsheet.show(context, (context, bottomState) {
-              return _buildSortBottomSheet();
+              return _buildSortBottomSheet(sortType);
             });
           },
           child: MgTag(
+            // paddingWidth: 0,
+            paddingWidth: MgSizes.md,
             suffix: Image.asset(R.ASSETS_ICONS_CHEVRON_DOWN_PNG),
-            child: Text("정렬").sm(),
+            child: Text(sortType.name).sm(),
           ).transparent(),
         ),
       ],
     );
   }
 
-  // TODO: class로 따로 빼기
-  Widget _buildSortBottomSheet() {
-    final List<String> sorts = ["가격 낮은순", "가까운 거리순", "리뷰많은순"];
+  Widget _buildSortBottomSheet(SortType currentSortType) {
+    final List<String> sorts = SortType.values.map((e) => e.name).toList();
     return MgBottomsheet(
       Column(
         children: sorts
-            .map((e) => _buildSortBottomSheetItem(e))
+            .map(
+              (e) => _buildSortBottomSheetItem(
+                e,
+                isSelect: currentSortType.name == e,
+              ),
+            )
             .toList()
             .joinWithWidget(Divider()),
       ),
     );
   }
 
-  Widget _buildSortBottomSheetItem(String title) {
-    return Center(child: Text(title).md().margin(vertical: MgSizes.sm));
+  Widget _buildSortBottomSheetItem(String title, {bool isSelect = false}) {
+    return GestureDetector(
+      onTap: () {
+        ref
+            .read(homeScreenControllerProvider.notifier)
+            .setSortType(SortType.values.firstWhere((e) => e.name == title));
+        Navigator.of(context).pop();
+      },
+      // TODO: 터치영역 확장 필요
+      child: Center(
+        child: Row(
+          children: [
+            Text(title).md(),
+            if (isSelect) ...[Spacer(), Image.asset(R.ASSETS_ICONS_CHECK_PNG)],
+          ],
+        ).margin(vertical: MgSizes.sm, horizontal: MgSizes.md),
+      ).padding(all: MgSizes.md),
+    );
   }
 }
 
@@ -98,7 +154,7 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [_buildAddress(context), _buildSearch(context)],
-    ).margin(all: MgSizes.md);
+    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
   }
 
   @override

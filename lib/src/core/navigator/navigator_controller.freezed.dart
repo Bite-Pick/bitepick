@@ -12,29 +12,35 @@ part of 'navigator_controller.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MgDefaultNavigatorState {
   int get tabIndex => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MgDefaultNavigatorState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MgDefaultNavigatorStateCopyWith<MgDefaultNavigatorState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MgDefaultNavigatorStateCopyWith<$Res> {
-  factory $MgDefaultNavigatorStateCopyWith(MgDefaultNavigatorState value,
-          $Res Function(MgDefaultNavigatorState) then) =
-      _$MgDefaultNavigatorStateCopyWithImpl<$Res, MgDefaultNavigatorState>;
+  factory $MgDefaultNavigatorStateCopyWith(
+    MgDefaultNavigatorState value,
+    $Res Function(MgDefaultNavigatorState) then,
+  ) = _$MgDefaultNavigatorStateCopyWithImpl<$Res, MgDefaultNavigatorState>;
   @useResult
   $Res call({int tabIndex});
 }
 
 /// @nodoc
-class _$MgDefaultNavigatorStateCopyWithImpl<$Res,
-        $Val extends MgDefaultNavigatorState>
+class _$MgDefaultNavigatorStateCopyWithImpl<
+  $Res,
+  $Val extends MgDefaultNavigatorState
+>
     implements $MgDefaultNavigatorStateCopyWith<$Res> {
   _$MgDefaultNavigatorStateCopyWithImpl(this._value, this._then);
 
@@ -43,17 +49,20 @@ class _$MgDefaultNavigatorStateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MgDefaultNavigatorState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? tabIndex = null,
-  }) {
-    return _then(_value.copyWith(
-      tabIndex: null == tabIndex
-          ? _value.tabIndex
-          : tabIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? tabIndex = null}) {
+    return _then(
+      _value.copyWith(
+            tabIndex: null == tabIndex
+                ? _value.tabIndex
+                : tabIndex // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -61,9 +70,9 @@ class _$MgDefaultNavigatorStateCopyWithImpl<$Res,
 abstract class _$$MgDefaultNavigatorStateImplCopyWith<$Res>
     implements $MgDefaultNavigatorStateCopyWith<$Res> {
   factory _$$MgDefaultNavigatorStateImplCopyWith(
-          _$MgDefaultNavigatorStateImpl value,
-          $Res Function(_$MgDefaultNavigatorStateImpl) then) =
-      __$$MgDefaultNavigatorStateImplCopyWithImpl<$Res>;
+    _$MgDefaultNavigatorStateImpl value,
+    $Res Function(_$MgDefaultNavigatorStateImpl) then,
+  ) = __$$MgDefaultNavigatorStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int tabIndex});
@@ -71,25 +80,30 @@ abstract class _$$MgDefaultNavigatorStateImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MgDefaultNavigatorStateImplCopyWithImpl<$Res>
-    extends _$MgDefaultNavigatorStateCopyWithImpl<$Res,
-        _$MgDefaultNavigatorStateImpl>
+    extends
+        _$MgDefaultNavigatorStateCopyWithImpl<
+          $Res,
+          _$MgDefaultNavigatorStateImpl
+        >
     implements _$$MgDefaultNavigatorStateImplCopyWith<$Res> {
   __$$MgDefaultNavigatorStateImplCopyWithImpl(
-      _$MgDefaultNavigatorStateImpl _value,
-      $Res Function(_$MgDefaultNavigatorStateImpl) _then)
-      : super(_value, _then);
+    _$MgDefaultNavigatorStateImpl _value,
+    $Res Function(_$MgDefaultNavigatorStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MgDefaultNavigatorState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? tabIndex = null,
-  }) {
-    return _then(_$MgDefaultNavigatorStateImpl(
-      tabIndex: null == tabIndex
-          ? _value.tabIndex
-          : tabIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? tabIndex = null}) {
+    return _then(
+      _$MgDefaultNavigatorStateImpl(
+        tabIndex: null == tabIndex
+            ? _value.tabIndex
+            : tabIndex // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -118,12 +132,16 @@ class _$MgDefaultNavigatorStateImpl implements _MgDefaultNavigatorState {
   @override
   int get hashCode => Object.hash(runtimeType, tabIndex);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MgDefaultNavigatorState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MgDefaultNavigatorStateImplCopyWith<_$MgDefaultNavigatorStateImpl>
-      get copyWith => __$$MgDefaultNavigatorStateImplCopyWithImpl<
-          _$MgDefaultNavigatorStateImpl>(this, _$identity);
+  get copyWith =>
+      __$$MgDefaultNavigatorStateImplCopyWithImpl<
+        _$MgDefaultNavigatorStateImpl
+      >(this, _$identity);
 }
 
 abstract class _MgDefaultNavigatorState implements MgDefaultNavigatorState {
@@ -132,8 +150,11 @@ abstract class _MgDefaultNavigatorState implements MgDefaultNavigatorState {
 
   @override
   int get tabIndex;
+
+  /// Create a copy of MgDefaultNavigatorState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MgDefaultNavigatorStateImplCopyWith<_$MgDefaultNavigatorStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

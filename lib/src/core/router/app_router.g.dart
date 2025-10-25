@@ -6,34 +6,33 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [
-      $mainRoute,
-    ];
+List<RouteBase> get $appRoutes => [$mainRoute];
 
 RouteBase get $mainRoute => GoRouteData.$route(
-      path: '/',
-      name: 'MainRoute',
-      factory: $MainRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'detail/:id',
-          name: 'DetailRoute',
-          factory: $DetailRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'search',
-          name: 'SearchRoute',
-          factory: $SearchRouteExtension._fromState,
-        ),
-      ],
-    );
+  path: '/',
+  name: 'MainRoute',
+
+  factory: $MainRouteExtension._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'detail/:id',
+      name: 'DetailRoute',
+
+      factory: $DetailRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'search',
+      name: 'SearchRoute',
+
+      factory: $SearchRouteExtension._fromState,
+    ),
+  ],
+);
 
 extension $MainRouteExtension on MainRoute {
   static MainRoute _fromState(GoRouterState state) => const MainRoute();
 
-  String get location => GoRouteData.$location(
-        '/',
-      );
+  String get location => GoRouteData.$location('/');
 
   void go(BuildContext context) => context.go(location);
 
@@ -46,13 +45,11 @@ extension $MainRouteExtension on MainRoute {
 }
 
 extension $DetailRouteExtension on DetailRoute {
-  static DetailRoute _fromState(GoRouterState state) => DetailRoute(
-        id: int.parse(state.pathParameters['id']!),
-      );
+  static DetailRoute _fromState(GoRouterState state) =>
+      DetailRoute(id: int.parse(state.pathParameters['id']!)!);
 
-  String get location => GoRouteData.$location(
-        '/detail/${Uri.encodeComponent(id.toString())}',
-      );
+  String get location =>
+      GoRouteData.$location('/detail/${Uri.encodeComponent(id.toString())}');
 
   void go(BuildContext context) => context.go(location);
 
@@ -67,9 +64,7 @@ extension $DetailRouteExtension on DetailRoute {
 extension $SearchRouteExtension on SearchRoute {
   static SearchRoute _fromState(GoRouterState state) => SearchRoute();
 
-  String get location => GoRouteData.$location(
-        '/search',
-      );
+  String get location => GoRouteData.$location('/search');
 
   void go(BuildContext context) => context.go(location);
 
