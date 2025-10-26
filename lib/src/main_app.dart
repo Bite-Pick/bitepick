@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:magambell/core/config/environment.dart';
+import 'package:magambell/core/theme/mg_theme.dart';
+import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/core/config/environment.dart';
