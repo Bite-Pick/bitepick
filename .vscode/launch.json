@@ -8,41 +8,65 @@
             "name": "magambell (dev)",
             "request": "launch",
             "type": "dart",
-            "program": "lib/src/main_dev.dart"
+            "program": "lib/src/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "magambell (prod)",
             "request": "launch",
             "type": "dart",
-            "program": "lib/src/main_prod.dart"
+            "program": "lib/src/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
         {
             "name": "magambell (dev profile)",
             "request": "launch",
             "type": "dart",
             "program": "lib/src/main_dev.dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "magambell (prod profile)",
             "request": "launch",
             "type": "dart",
             "program": "lib/src/main_prod.dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
         {
             "name": "magambell (dev release)",
             "request": "launch",
             "type": "dart",
             "program": "lib/src/main_dev.dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "magambell (prod release)",
             "request": "launch",
             "type": "dart",
             "program": "lib/src/main_prod.dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         }
     ]
 }
