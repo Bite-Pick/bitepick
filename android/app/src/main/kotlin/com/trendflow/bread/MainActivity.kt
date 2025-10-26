@@ -1,4 +1,4 @@
-package com.trendflow.magambell
+package com.trendflow.bread
 
 import io.flutter.embedding.android.FlutterActivity
 
