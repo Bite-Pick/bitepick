@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/detail/presentation/detail_screen.dart';
+import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
 
@@ -24,6 +26,10 @@ final appRouter = GoRouter(
   routes: [
     TypedGoRoute<DetailRoute>(name: 'DetailRoute', path: 'detail/:id'),
     TypedGoRoute<SearchRoute>(name: 'SearchRoute', path: 'search'),
+    TypedGoRoute<SearchAddressRoute>(
+      name: 'SearchAddressRoute',
+      path: 'address/search',
+    ),
   ],
 )
 class MainRoute extends GoRouteData {

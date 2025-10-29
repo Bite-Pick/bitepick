@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
-import 'package:magambell/src/features/home/domain/entity/goods.dart';
+import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

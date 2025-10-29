@@ -1,14 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/home/domain/entity/goods.dart';
-import 'package:magambell/src/features/home/presentation/controllers/home_screen.controller.dart';
-import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
+import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
@@ -16,7 +18,6 @@ import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
-// import 'package:magambell/src/core/router/app_router.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -40,39 +41,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         sortType: sortType,
       ),
     );
-    return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            floating: true,
-            delegate: _HomeAppBar(),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              // HomeBannersView(),
-              _buildFilterSection(onlyAvailable, sortType),
-              Gaps.h12,
-              MgAsyncAnimatedSwitcher<List<Goods>>(
-                asyncValue: storeGoodsAsync,
-                builder: (goods) => ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: goods.length,
-                  itemBuilder: (context, index) {
-                    final item = goods[index];
-                    return HomeGoodsItem(
-                      goods: item,
-                    ).margin(bottom: MgSizes.xs).margin(horizontal: MgSizes.md);
+    return Listener(
+      onPointerDown: (event) => log('homescreen'),
+      child: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              floating: true,
+              delegate: _HomeAppBar(),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                // HomeBannersView(),
+                _buildFilterSection(onlyAvailable, sortType),
+                Gaps.h12,
+                MgButton(
+                  onPressed: () {
+                    context.push('/address/search');
                   },
+                  content: Text("hi"),
                 ),
-                emptyBuilder: () => const Center(child: Text('상품이 없습니다')),
-                loadingBuilder: () =>
-                    const Center(child: CircularProgressIndicator()),
-              ),
-            ]),
-          ),
-        ],
+                MgAsyncAnimatedSwitcher<List<Goods>>(
+                  asyncValue: storeGoodsAsync,
+                  builder: (goods) => ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: goods.length,
+                    itemBuilder: (context, index) {
+                      final item = goods[index];
+                      return HomeGoodsItem(goods: item)
+                          .margin(bottom: MgSizes.xs)
+                          .margin(horizontal: MgSizes.md);
+                    },
+                  ),
+                  emptyBuilder: () => const Center(child: Text('상품이 없습니다')),
+                  loadingBuilder: () =>
+                      const Center(child: CircularProgressIndicator()),
+                ),
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -224,8 +234,8 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
 
   Widget _buildSearch(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        // await SearchRoute().push(context);
+      onTap: () {
+        context.push('/address/search');
       },
       child: Image.asset(R.ASSETS_ICONS_SEARCH_PNG),
     );

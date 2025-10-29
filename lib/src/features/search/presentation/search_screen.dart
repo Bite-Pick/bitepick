@@ -7,9 +7,11 @@ import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
 
 class SearchRoute extends GoRouteData {
+  const SearchRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SearchScreen();
+    return const SearchScreen();
   }
 }
 
