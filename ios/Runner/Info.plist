@@ -45,5 +45,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>주소를 검색하기 위해 현재 위치 정보가 필요합니다</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>주소를 검색하기 위해 현재 위치 정보가 필요합니다</string>
 </dict>
 </plist>

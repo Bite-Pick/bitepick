@@ -30,6 +30,7 @@ dependencies:
   # Device Info
   package_info_plus: ^8.1.2
   device_info_plus: ^11.2.0
+  geolocator: ^10.1.0
 
   # State Management
   flutter_riverpod: ^2.6.1
