@@ -10,6 +10,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
@@ -60,22 +61,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           SliverList(
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
-              _buildFilterSection(onlyAvailable, sortType),
-
               MgAsyncAnimatedSwitcher<List<Goods>>(
                 asyncValue: storeGoodsAsync,
-                builder: (goods) => ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: goods.length,
-                  itemBuilder: (context, index) {
-                    final item = goods[index];
-                    return HomeGoodsItem(
-                      goods: item,
-                    ).margin(bottom: MgSizes.xs).margin(horizontal: MgSizes.md);
-                  },
+                builder: (goods) => Column(
+                  children: [
+                    _buildFilterSection(onlyAvailable, sortType),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: goods.length,
+                      itemBuilder: (context, index) {
+                        final item = goods[index];
+                        return HomeGoodsItem(goods: item)
+                            .margin(bottom: MgSizes.xs)
+                            .margin(horizontal: MgSizes.md);
+                      },
+                    ),
+                  ],
                 ),
-                emptyBuilder: () => const Center(child: Text('상품이 없습니다')),
+                emptyBuilder: () =>
+                    HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
                 loadingBuilder: () =>
                     const Center(child: CircularProgressIndicator()),
               ),
@@ -176,22 +181,28 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
 
-class _HomeAppBarContent extends ConsumerWidget {
+class _HomeAppBarContent extends ConsumerStatefulWidget {
   const _HomeAppBarContent({required this.addresses});
 
   final List<Address> addresses;
 
+  @override
+  ConsumerState<_HomeAppBarContent> createState() => _HomeAppBarContentState();
+}
+
+class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Address? get defaultAddress =>
-      addresses.where((a) => a.isDefault).firstOrNull;
+      widget.addresses.where((a) => a.isDefault).firstOrNull;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [_buildAddress(), _buildSearch()],
     ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
   }
 
+  // TODO[tooltip]: 주소 변경시 tooltip 표시
   Widget _buildAddress() {
     return GestureDetector(
       onTap: () async {
@@ -215,7 +226,7 @@ class _HomeAppBarContent extends ConsumerWidget {
       Column(
         children: [
           Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
-          ...addresses.map(
+          ...widget.addresses.map(
             (address) => _buildAddressBottomSheetItem(
               address,
               isSelect: defaultAddress?.label == address.label,

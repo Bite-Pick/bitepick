@@ -124,6 +124,12 @@ class R {
   static const String ASSETS_ICONS_SVG_UPLOAD_SVG =
       'assets/icons/svg/upload.svg';
 
+  static const String ASSETS_IMAGES_HOME_OPEN_AFTER_PNG =
+      'assets/images/home_open_after.png';
+
+  static const String ASSETS_IMAGES_HOME_OPEN_BEFORE_PNG =
+      'assets/images/home_open_before.png';
+
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
 }
