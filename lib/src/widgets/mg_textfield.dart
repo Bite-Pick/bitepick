@@ -137,9 +137,12 @@ class _MgTextFieldState extends State<MgTextField> {
                   widget.prefixIcon ??
                   BaseSvgIcon.search().gray().margin(all: MgSizes.md),
               prefixMode: OverlayVisibilityMode.always,
-              suffix:
-                  widget.suffixIcon ??
-                  BaseSvgIcon.close().margin(all: MgSizes.md),
+              suffix: GestureDetector(
+                onTap: () => widget.controller?.clear(),
+                child:
+                    widget.suffixIcon ??
+                    BaseSvgIcon.close().margin(all: MgSizes.md),
+              ),
               suffixMode: OverlayVisibilityMode.editing,
               padding: const EdgeInsets.symmetric(
                 // horizontal: spacingMd,

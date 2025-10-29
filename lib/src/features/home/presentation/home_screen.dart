@@ -213,11 +213,7 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
           children: [
             BaseSvgIcon.mapPin(size: 20),
             Text(address).md().margin(left: MgSizes.sm, right: MgSizes.xs),
-            if (isSelect) ...[
-              MgTag(child: Text("설정된주소")).primary(),
-              Spacer(),
-              BaseSvgIcon.check(size: 20),
-            ],
+            if (isSelect) BaseSvgIcon.check(size: 20),
           ],
         )
         .margin(all: MgSizes.md)

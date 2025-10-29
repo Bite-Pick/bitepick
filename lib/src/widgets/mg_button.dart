@@ -3,6 +3,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 
+// TODO: loading progress animation 추가
 class MgButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget content;
