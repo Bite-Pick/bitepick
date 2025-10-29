@@ -33,6 +33,11 @@ class Environment {
         BuildType.prod => API_URL,
       };
 
+  // Naver Cloud Platform Geocoding
+  static String get geocodingApiUrl => GEOCODING_API_URL;
+  static String get ncpApiKeyId => X_NCP_APIGW_API_KEY_ID;
+  static String get ncpApiKey => X_NCP_APIGW_API_KEY;
+
   Future<void> run() async {
     await main_app.runMagamBellApp();
   }
