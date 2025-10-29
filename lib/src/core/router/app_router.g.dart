@@ -52,10 +52,10 @@ extension $MainRouteExtension on MainRoute {
 
 extension $DetailRouteExtension on DetailRoute {
   static DetailRoute _fromState(GoRouterState state) =>
-      DetailRoute(id: int.parse(state.pathParameters['id']!));
+      DetailRoute(id: state.pathParameters['id']!);
 
   String get location =>
-      GoRouteData.$location('/detail/${Uri.encodeComponent(id.toString())}');
+      GoRouteData.$location('/detail/${Uri.encodeComponent(id)}');
 
   void go(BuildContext context) => context.go(location);
 

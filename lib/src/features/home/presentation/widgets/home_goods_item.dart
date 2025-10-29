@@ -6,7 +6,9 @@ import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/detail/presentation/detail_screen.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
@@ -25,46 +27,49 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
   @override
   Widget build(BuildContext context) {
     final goods = widget.goods;
-    return Column(
-      children: [
-        _buildImageListView(goods.ImageUrl),
-        Gaps.h8,
-        DefaultTextStyle(
-          style: context.textTheme.titleLarge!,
-          child: Row(
-            children: [
-              Gaps.w4,
-              Text(goods.storeName),
-              Spacer(),
-              Text('${goods.discount}%').red(),
-              Gaps.w4,
-              Text('${goods.salePrice.toPrice()}원'),
-              Gaps.w12,
-            ],
+    return GestureDetector(
+      onTap: () => DetailRoute(id: goods.storeId).push(context),
+      child: Column(
+        children: [
+          _buildImageListView(goods.ImageUrl),
+          Gaps.h8,
+          DefaultTextStyle(
+            style: context.textTheme.titleLarge!,
+            child: Row(
+              children: [
+                Gaps.w4,
+                Text(goods.storeName),
+                Spacer(),
+                Text('${goods.discount}%').red(),
+                Gaps.w4,
+                Text('${goods.salePrice.toPrice()}원'),
+                Gaps.w12,
+              ],
+            ),
           ),
-        ),
-        DefaultTextStyle(
-          style: context.textTheme.bodyMedium!,
-          child: Row(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "픽업시간 : ${goods.startTime.convertTime() ?? ''} ~ ${goods.endTime.convertTime() ?? ''}",
-                  ),
-                  Gaps.w12,
-                  Text("거리 : ${goods.distance}"),
-                ],
-              ),
-            ],
-          ),
-        ).margin(left: MgSizes.size4),
-        Gaps.h4,
-        _buildTags(
-          goods.quantity,
-          goods.saleStatus,
-        ).margin(left: MgSizes.size4),
-      ],
+          DefaultTextStyle(
+            style: context.textTheme.bodyMedium!,
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "픽업시간 : ${goods.startTime.convertTime() ?? ''} ~ ${goods.endTime.convertTime() ?? ''}",
+                    ),
+                    Gaps.w12,
+                    Text("거리 : ${goods.distance}"),
+                  ],
+                ),
+              ],
+            ),
+          ).margin(left: MgSizes.size4),
+          Gaps.h4,
+          _buildTags(
+            goods.quantity,
+            goods.saleStatus,
+          ).margin(left: MgSizes.size4),
+        ],
+      ),
     );
   }
 

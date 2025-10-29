@@ -6,7 +6,7 @@ import 'package:magambell/src/widgets/base_scaffold.dart';
 class DetailRoute extends GoRouteData {
   const DetailRoute({required this.id});
 
-  final int id;
+  final String id;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -17,7 +17,7 @@ class DetailRoute extends GoRouteData {
 class DetailScreen extends StatelessWidget {
   const DetailScreen({super.key, required this.id});
 
-  final int id;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
