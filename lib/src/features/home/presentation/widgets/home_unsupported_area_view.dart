@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -10,6 +9,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_text_rich.dart';
+import 'package:magambell/src/widgets/mg_tooltip.dart';
 
 class HomeUnsupportedAreaView extends ConsumerWidget {
   const HomeUnsupportedAreaView({
@@ -80,19 +80,27 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
           ).bold().xl().center(),
           Gaps.h16,
           Image.asset(imageUrl, height: MgSizes.size240.h),
-          MgButton(
-            content: buttonPrefixIconUrl != null
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      BaseSvgIcon(assetName: buttonPrefixIconUrl!),
-                      Gaps.w6,
-                      Text(buttonText),
-                    ],
-                  )
-                : Text(buttonText),
-            onPressed: onPressed,
-          ).primary().margin(horizontal: MgSizes.size56.w),
+          Gaps.h32,
+          MgTooltip(
+            item: Text(tooltipText).xs().white(),
+            defaultVisible: true,
+            closable: false,
+            itemAlignment: Alignment.topCenter,
+            // offset: const Offset(0, -8),
+            child: MgButton(
+              content: buttonPrefixIconUrl != null
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BaseSvgIcon(assetName: buttonPrefixIconUrl!),
+                        Gaps.w6,
+                        Text(buttonText),
+                      ],
+                    )
+                  : Text(buttonText),
+              onPressed: onPressed,
+            ).primary().margin(horizontal: MgSizes.size56.w),
+          ),
           Gaps.h16,
           Text("지역이 오픈되면 알려드릴게요!").sm().textGray(),
         ],
