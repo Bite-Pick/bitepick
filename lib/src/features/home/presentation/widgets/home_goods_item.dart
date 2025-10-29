@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
@@ -118,7 +118,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
     if (quantity <= 4) {
       tags.add(
         MgTag(
-          prefix: Image.asset(R.ASSETS_ICONS_TIME_PNG),
+          prefix: BaseSvgIcon.time(size: 16),
           child: Text('품절임박'),
         ).danger(light: true),
       );

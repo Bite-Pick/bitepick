@@ -33,11 +33,17 @@ class R {
   static const String ASSETS_ICONS_SVG_FILLED_HEART_SVG =
       'assets/icons/svg/filled/heart.svg';
 
+  static const String ASSETS_ICONS_SVG_FILLED_HOME_SVG =
+      'assets/icons/svg/filled/home.svg';
+
   static const String ASSETS_ICONS_SVG_FILLED_KAKAO_SVG =
       'assets/icons/svg/filled/kakao.svg';
 
   static const String ASSETS_ICONS_SVG_FILLED_MAP_PIN_SVG =
       'assets/icons/svg/filled/map-pin.svg';
+
+  static const String ASSETS_ICONS_SVG_FILLED_ORDER_LIST_SVG =
+      'assets/icons/svg/filled/order list.svg';
 
   static const String ASSETS_ICONS_SVG_FILLED_SHARE_2_SVG =
       'assets/icons/svg/filled/share-2.svg';
@@ -47,6 +53,9 @@ class R {
 
   static const String ASSETS_ICONS_SVG_FILLED_STAR_SVG =
       'assets/icons/svg/filled/star.svg';
+
+  static const String ASSETS_ICONS_SVG_FILLED_USER_SVG =
+      'assets/icons/svg/filled/user.svg';
 
   static const String ASSETS_ICONS_SVG_FOLDER_SVG =
       'assets/icons/svg/folder.svg';

@@ -22,7 +22,7 @@ class MgButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     this.borderColor,
-    this.height = 50,
+    this.height,
     this.borderRadius = MgRadius.md,
     this.padding,
     this.fullWidth = false,
@@ -78,46 +78,59 @@ class MgButton extends StatelessWidget {
     disabled: true,
   );
 
+  MgButton gray() => copyWith(
+    backgroundColor: MgColorScheme.gray9,
+    textColor: MgColorScheme.gray1,
+    borderColor: null,
+  );
+
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = disabled || onPressed == null;
 
-    return SizedBox(
-      width: fullWidth ? double.infinity : null,
-      height: height,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isDisabled ? null : onPressed,
-          borderRadius: BorderRadius.circular(borderRadius),
-          child: Container(
-            padding:
-                padding ??
-                const EdgeInsets.symmetric(
-                  horizontal: MgSizes.md,
-                  vertical: MgSizes.sm,
-                ),
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: borderColor != null
-                  ? Border.all(color: borderColor!)
-                  : null,
-            ),
-            alignment: Alignment.center,
-            child: DefaultTextStyle(
-              style: TextStyle(
-                color: textColor ?? MgColorScheme.text,
-                fontSize: MgFontSize.md,
-                fontWeight: FontWeight.bold,
-                height: 1.5,
+    final child = Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isDisabled ? null : onPressed,
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Container(
+          padding:
+              padding ??
+              const EdgeInsets.symmetric(
+                horizontal: MgSizes.md,
+                vertical: MgSizes.sm,
               ),
-              child: content,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: borderColor != null
+                ? Border.all(color: borderColor!)
+                : null,
+          ),
+          alignment: Alignment.center,
+          child: DefaultTextStyle(
+            style: TextStyle(
+              color: textColor ?? MgColorScheme.text,
+              fontSize: MgFontSize.md,
+              fontWeight: FontWeight.bold,
+              height: 1.5,
             ),
+            child: content,
           ),
         ),
       ),
     );
+
+    // height나 fullWidth가 지정된 경우에만 SizedBox 사용
+    if (height != null || fullWidth) {
+      return SizedBox(
+        width: fullWidth ? double.infinity : null,
+        height: height,
+        child: child,
+      );
+    }
+
+    return child;
   }
 
   /// 텍스트 버튼 (기존 MgButton.text 호환용)
