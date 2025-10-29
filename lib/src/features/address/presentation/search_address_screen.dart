@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
@@ -15,7 +14,6 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_tag.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
 
 class SearchAddressRoute extends GoRouteData {

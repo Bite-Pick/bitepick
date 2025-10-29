@@ -7,7 +7,9 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
+import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
@@ -33,11 +35,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final HomeScreenState(:onlyAvailable, :sortType) = ref.watch(
       homeScreenControllerProvider,
     );
+    final addressState = ref.watch(searchAddressScreenControllerProvider);
+    final defaultAddress = addressState.addresses
+        .where((a) => a.isDefault)
+        .firstOrNull;
+
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
-        // TODO: 주소 설정 이후 하드코딩 제거
-        latitude: 37.5185663,
-        longitude: 127.0230599,
+        latitude: defaultAddress?.latitude ?? 37.5185663, // TODO: 기본 위치 설정 필요
+        longitude: defaultAddress?.longitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
         sortType: sortType,
       ),
@@ -49,19 +55,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           SliverPersistentHeader(
             pinned: true,
             floating: true,
-            delegate: _HomeAppBar(),
+            delegate: _HomeAppBar(addressState.addresses),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
               _buildFilterSection(onlyAvailable, sortType),
-              Gaps.h12,
-              MgButton(
-                onPressed: () {
-                  context.push('/address/search');
-                },
-                content: Text("hi"),
-              ),
+
               MgAsyncAnimatedSwitcher<List<Goods>>(
                 asyncValue: storeGoodsAsync,
                 builder: (goods) => ListView.builder(
@@ -154,16 +154,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class _HomeAppBar extends SliverPersistentHeaderDelegate {
+  _HomeAppBar(this.addresses);
+
+  final List<Address> addresses;
+
   @override
   Widget build(
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [_buildAddress(context), _buildSearch(context)],
-    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
+    return _HomeAppBarContent(addresses: addresses);
   }
 
   @override
@@ -173,59 +174,99 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+}
 
-  Widget _buildAddress(BuildContext context) {
+class _HomeAppBarContent extends ConsumerWidget {
+  const _HomeAppBarContent({required this.addresses});
+
+  final List<Address> addresses;
+
+  Address? get defaultAddress =>
+      addresses.where((a) => a.isDefault).firstOrNull;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [_buildAddress(), _buildSearch()],
+    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
+  }
+
+  Widget _buildAddress() {
     return GestureDetector(
       onTap: () async {
         await MgBottomsheet.show(
           context,
-          (context, bottomState) => _buildAddressBottomSheet(context),
+          (context, bottomState) => _buildAddressBottomSheet(),
         );
       },
       child: Row(
         children: [
           BaseSvgIcon.mapPin(size: 20),
           Gaps.w8,
-          Text("fdsfsfs"), // TODO: selected address
+          Text(defaultAddress?.name ?? '주소를 설정해주세요'),
         ],
       ),
     );
   }
 
-  Widget _buildAddressBottomSheet(BuildContext context) {
-    List<String> address = ["대구 양천구 목동", "필라델피아 올드시티주F"];
+  Widget _buildAddressBottomSheet() {
     return MgBottomsheet(
       Column(
         children: [
-          // TODO:isSelect 선택적으로 활성화
-          ...address.map((e) => _buildAddressBottomSheetItem(e)),
+          Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
+          ...addresses.map(
+            (address) => _buildAddressBottomSheetItem(
+              address,
+              isSelect: defaultAddress?.label == address.label,
+            ),
+          ),
+          Gaps.h16,
           MgButton(
-            content: Text("주소 직접 설정하기").sm().textGray(),
-            onPressed: () => SearchAddressRoute().push(context),
+            content: Text("주소 직접 설정하기").sm().textGray().regular(),
+            onPressed: () {
+              context.pop();
+              SearchAddressRoute().push(context);
+            },
           ).transparent(),
         ],
       ).margin(all: MgSizes.md),
     );
   }
 
-  Widget _buildAddressBottomSheetItem(String address, {bool isSelect = false}) {
-    return Row(
-          children: [
-            BaseSvgIcon.mapPin(size: 20),
-            Text(address).md().margin(left: MgSizes.sm, right: MgSizes.xs),
-            if (isSelect) BaseSvgIcon.check(size: 20),
-          ],
-        )
-        .margin(all: MgSizes.md)
-        .decorated(
-          border: isSelect
-              ? Border.all(color: MgColorScheme.gray4, width: 1)
-              : null,
-          borderRadius: BorderRadius.circular(16),
-        );
+  Widget _buildAddressBottomSheetItem(
+    Address address, {
+    bool isSelect = false,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        ref
+            .read(searchAddressScreenControllerProvider.notifier)
+            .selectFromSaved(address);
+        Navigator.of(context).pop();
+      },
+      child:
+          Row(
+                children: [
+                  BaseSvgIcon.mapPin(size: 20),
+                  Text(
+                    address.label,
+                  ).md().margin(left: MgSizes.sm, right: MgSizes.xs),
+                  if (isSelect) ...[Spacer(), BaseSvgIcon.check(size: 20)],
+                ],
+              )
+              .margin(all: MgSizes.md)
+              .decorated(
+                border: isSelect
+                    ? Border.all(color: MgColorScheme.gray4, width: 1)
+                    : null,
+                borderRadius: BorderRadius.circular(16),
+                color: isSelect ? MgColorScheme.gray10 : null,
+              ),
+    );
   }
 
-  Widget _buildSearch(BuildContext context) {
+  Widget _buildSearch() {
     return GestureDetector(
       onTap: () async => SearchRoute().push(context),
       child: BaseSvgIcon.search(size: 24),
