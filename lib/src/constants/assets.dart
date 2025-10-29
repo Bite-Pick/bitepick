@@ -4,46 +4,116 @@
 class R {
   const R._();
 
-  static const String ASSETS_ICONS_CHECKBOX_PNG = 'assets/icons/Checkbox.png';
+  static const String ASSETS_ICONS_SVG_ALIGN_JUSTIFY_SVG =
+      'assets/icons/svg/align-justify.svg';
 
-  static const String ASSETS_ICONS_SUBTRACT_PNG = 'assets/icons/Subtract.png';
+  static const String ASSETS_ICONS_SVG_BELL_SVG = 'assets/icons/svg/bell.svg';
 
-  static const String ASSETS_ICONS_CAMERA_PNG = 'assets/icons/camera.png';
+  static const String ASSETS_ICONS_SVG_BOOKMARK_SVG =
+      'assets/icons/svg/bookmark.svg';
 
-  static const String ASSETS_ICONS_CHECK_PNG = 'assets/icons/check.png';
+  static const String ASSETS_ICONS_SVG_CHECK_SVG = 'assets/icons/svg/check.svg';
 
-  static const String ASSETS_ICONS_CHEVRON_DOWN_PNG =
-      'assets/icons/chevron-down.png';
+  static const String ASSETS_ICONS_SVG_CLOSE_SVG = 'assets/icons/svg/close.svg';
 
-  static const String ASSETS_ICONS_CHEVRON_LEFT_PNG =
-      'assets/icons/chevron-left.png';
+  static const String ASSETS_ICONS_SVG_COPY_SVG = 'assets/icons/svg/copy.svg';
 
-  static const String ASSETS_ICONS_CLOCK_PNG = 'assets/icons/clock.png';
+  static const String ASSETS_ICONS_SVG_DOWN_SVG = 'assets/icons/svg/down.svg';
 
-  static const String ASSETS_ICONS_HEART_PNG = 'assets/icons/heart.png';
+  static const String ASSETS_ICONS_SVG_DOWNLOAD_SVG =
+      'assets/icons/svg/download.svg';
 
-  static const String ASSETS_ICONS_HOME_PNG = 'assets/icons/home.png';
+  static const String ASSETS_ICONS_SVG_EYE_OFF_SVG =
+      'assets/icons/svg/eye-off.svg';
 
-  static const String ASSETS_ICONS_MAP_PIN_BORDER_PNG =
-      'assets/icons/map-pin-border.png';
+  static const String ASSETS_ICONS_SVG_EYE_SVG = 'assets/icons/svg/eye.svg';
 
-  static const String ASSETS_ICONS_MAP_PIN_PNG = 'assets/icons/map-pin.png';
+  static const String ASSETS_ICONS_SVG_FILE_SVG = 'assets/icons/svg/file.svg';
 
-  static const String ASSETS_ICONS_MINUS_PNG = 'assets/icons/minus.png';
+  static const String ASSETS_ICONS_SVG_FILLED_HEART_SVG =
+      'assets/icons/svg/filled/heart.svg';
 
-  static const String ASSETS_ICONS_ORDER_HISTORY_PNG =
-      'assets/icons/order-history.png';
+  static const String ASSETS_ICONS_SVG_FILLED_KAKAO_SVG =
+      'assets/icons/svg/filled/kakao.svg';
 
-  static const String ASSETS_ICONS_OUTLINED_HEART_PNG =
-      'assets/icons/outlined-heart.png';
+  static const String ASSETS_ICONS_SVG_FILLED_MAP_PIN_SVG =
+      'assets/icons/svg/filled/map-pin.svg';
 
-  static const String ASSETS_ICONS_PLUS_PNG = 'assets/icons/plus.png';
+  static const String ASSETS_ICONS_SVG_FILLED_SHARE_2_SVG =
+      'assets/icons/svg/filled/share-2.svg';
 
-  static const String ASSETS_ICONS_SEARCH_PNG = 'assets/icons/search.png';
+  static const String ASSETS_ICONS_SVG_FILLED_SPEAKER_SVG =
+      'assets/icons/svg/filled/speaker.svg';
 
-  static const String ASSETS_ICONS_TIME_PNG = 'assets/icons/time.png';
+  static const String ASSETS_ICONS_SVG_FILLED_STAR_SVG =
+      'assets/icons/svg/filled/star.svg';
 
-  static const String ASSETS_ICONS_USER_PNG = 'assets/icons/user.png';
+  static const String ASSETS_ICONS_SVG_FOLDER_SVG =
+      'assets/icons/svg/folder.svg';
+
+  static const String ASSETS_ICONS_SVG_HEART_SVG = 'assets/icons/svg/heart.svg';
+
+  static const String ASSETS_ICONS_SVG_HELP_CIRCLE_SVG =
+      'assets/icons/svg/help-circle.svg';
+
+  static const String ASSETS_ICONS_SVG_IMAGE_SVG = 'assets/icons/svg/image.svg';
+
+  static const String ASSETS_ICONS_SVG_INFO_SVG = 'assets/icons/svg/info.svg';
+
+  static const String ASSETS_ICONS_SVG_LEFT_SVG = 'assets/icons/svg/left.svg';
+
+  static const String ASSETS_ICONS_SVG_LINK_SVG = 'assets/icons/svg/link.svg';
+
+  static const String ASSETS_ICONS_SVG_MAP_PIN_SVG =
+      'assets/icons/svg/map-pin.svg';
+
+  static const String ASSETS_ICONS_SVG_MESSAGE_CIRCLE_SVG =
+      'assets/icons/svg/message-circle.svg';
+
+  static const String ASSETS_ICONS_SVG_MESSAGE_SQUARE_SVG =
+      'assets/icons/svg/message-square.svg';
+
+  static const String ASSETS_ICONS_SVG_MINUS_SVG = 'assets/icons/svg/minus.svg';
+
+  static const String ASSETS_ICONS_SVG_MORE_HORIZONTAL_SVG =
+      'assets/icons/svg/more-horizontal.svg';
+
+  static const String ASSETS_ICONS_SVG_MORE_VERTICAL_SVG =
+      'assets/icons/svg/more-vertical.svg';
+
+  static const String ASSETS_ICONS_SVG_PAPERCLIP_SVG =
+      'assets/icons/svg/paperclip.svg';
+
+  static const String ASSETS_ICONS_SVG_PHONE_SVG = 'assets/icons/svg/phone.svg';
+
+  static const String ASSETS_ICONS_SVG_PLUS_SVG = 'assets/icons/svg/plus.svg';
+
+  static const String ASSETS_ICONS_SVG_RIGHT_SVG = 'assets/icons/svg/right.svg';
+
+  static const String ASSETS_ICONS_SVG_ROTATE_CW_SVG =
+      'assets/icons/svg/rotate-cw.svg';
+
+  static const String ASSETS_ICONS_SVG_SEARCH_SVG =
+      'assets/icons/svg/search.svg';
+
+  static const String ASSETS_ICONS_SVG_SETTINGS_SVG =
+      'assets/icons/svg/settings.svg';
+
+  static const String ASSETS_ICONS_SVG_SHARE_SVG = 'assets/icons/svg/share.svg';
+
+  static const String ASSETS_ICONS_SVG_STAR_SVG = 'assets/icons/svg/star.svg';
+
+  static const String ASSETS_ICONS_SVG_THUMB_DOWN_SVG =
+      'assets/icons/svg/thumb-down.svg';
+
+  static const String ASSETS_ICONS_SVG_TIME_SVG = 'assets/icons/svg/time.svg';
+
+  static const String ASSETS_ICONS_SVG_TRASH_SVG = 'assets/icons/svg/trash.svg';
+
+  static const String ASSETS_ICONS_SVG_UP_SVG = 'assets/icons/svg/up.svg';
+
+  static const String ASSETS_ICONS_SVG_UPLOAD_SVG =
+      'assets/icons/svg/upload.svg';
 
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
