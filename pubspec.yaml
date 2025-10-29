@@ -38,6 +38,14 @@ dependencies:
   dartx: ^1.2.0
   flutter_screenutil: ^5.9.3
 
+  # Code Push
+  shorebird_code_push:
+    git:
+      url: https://github.com/Yonple/shorebird_code_push.git
+      path: shorebird_code_push
+      ref: master
+  shared_preferences: ^2.3.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,6 +64,7 @@ flutter:
 
   assets:
     - .env
+    - shorebird.yaml
     - assets/images/
     - assets/icons/
     - assets/icons/svg/
