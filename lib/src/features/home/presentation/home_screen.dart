@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:magambell/src/constants/assets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/home/domain/entity/goods.dart';
-import 'package:magambell/src/features/home/presentation/controllers/home_screen.controller.dart';
-import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
+import 'package:magambell/src/features/address/domain/entities/address.dart';
+import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
+import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
+import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
-// import 'package:magambell/src/core/router/app_router.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -31,42 +36,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final HomeScreenState(:onlyAvailable, :sortType) = ref.watch(
       homeScreenControllerProvider,
     );
+    final addressState = ref.watch(searchAddressScreenControllerProvider);
+    final defaultAddress = addressState.addresses
+        .where((a) => a.isDefault)
+        .firstOrNull;
+
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
-        // TODO: 주소 설정 이후 하드코딩 제거
-        latitude: 37.5185663,
-        longitude: 127.0230599,
+        latitude: defaultAddress?.latitude ?? 37.5185663, // TODO: 기본 위치 설정 필요
+        longitude: defaultAddress?.longitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
         sortType: sortType,
       ),
     );
     return SafeArea(
+      // TODO: BaseCustomScrollView
       child: CustomScrollView(
         slivers: [
           SliverPersistentHeader(
             pinned: true,
             floating: true,
-            delegate: _HomeAppBar(),
+            delegate: _HomeAppBar(addressState.addresses),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
-              _buildFilterSection(onlyAvailable, sortType),
-              Gaps.h12,
               MgAsyncAnimatedSwitcher<List<Goods>>(
                 asyncValue: storeGoodsAsync,
-                builder: (goods) => ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: goods.length,
-                  itemBuilder: (context, index) {
-                    final item = goods[index];
-                    return HomeGoodsItem(
-                      goods: item,
-                    ).margin(bottom: MgSizes.xs).margin(horizontal: MgSizes.md);
-                  },
+                builder: (goods) => Column(
+                  children: [
+                    _buildFilterSection(onlyAvailable, sortType),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: goods.length,
+                      itemBuilder: (context, index) {
+                        final item = goods[index];
+                        return HomeGoodsItem(goods: item)
+                            .margin(bottom: MgSizes.xs)
+                            .margin(horizontal: MgSizes.md);
+                      },
+                    ),
+                  ],
                 ),
-                emptyBuilder: () => const Center(child: Text('상품이 없습니다')),
+                emptyBuilder: () =>
+                    HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
                 loadingBuilder: () =>
                     const Center(child: CircularProgressIndicator()),
               ),
@@ -98,7 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: MgTag(
             // paddingWidth: 0,
             paddingWidth: MgSizes.md,
-            suffix: Image.asset(R.ASSETS_ICONS_CHEVRON_DOWN_PNG),
+            suffix: BaseSvgIcon.down(size: 16),
             child: Text(sortType.name).sm(),
           ).transparent(),
         ),
@@ -136,7 +150,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Row(
           children: [
             Text(title).md(),
-            if (isSelect) ...[Spacer(), Image.asset(R.ASSETS_ICONS_CHECK_PNG)],
+            if (isSelect) ...[Spacer(), BaseSvgIcon.check(size: 20)],
           ],
         ).margin(vertical: MgSizes.sm, horizontal: MgSizes.md),
       ).padding(all: MgSizes.md),
@@ -145,16 +159,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class _HomeAppBar extends SliverPersistentHeaderDelegate {
+  _HomeAppBar(this.addresses);
+
+  final List<Address> addresses;
+
   @override
   Widget build(
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [_buildAddress(context), _buildSearch(context)],
-    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
+    return _HomeAppBarContent(addresses: addresses);
   }
 
   @override
@@ -164,8 +179,31 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+}
 
-  Widget _buildAddress(BuildContext context) {
+class _HomeAppBarContent extends ConsumerStatefulWidget {
+  const _HomeAppBarContent({required this.addresses});
+
+  final List<Address> addresses;
+
+  @override
+  ConsumerState<_HomeAppBarContent> createState() => _HomeAppBarContentState();
+}
+
+class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
+  Address? get defaultAddress =>
+      widget.addresses.where((a) => a.isDefault).firstOrNull;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [_buildAddress(), _buildSearch()],
+    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
+  }
+
+  // TODO[tooltip]: 주소 변경시 tooltip 표시
+  Widget _buildAddress() {
     return GestureDetector(
       onTap: () async {
         await MgBottomsheet.show(
@@ -175,25 +213,31 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
       },
       child: Row(
         children: [
-          Image.asset(R.ASSETS_ICONS_MAP_PIN_BORDER_PNG),
+          BaseSvgIcon.mapPin(size: 20),
           Gaps.w8,
-          Text("fdsfsfs"), // TODO: addreess
+          Text(defaultAddress?.name ?? '주소를 설정해주세요'),
         ],
       ),
     );
   }
 
   Widget _buildAddressBottomSheet() {
-    List<String> address = ["대구 양천구 목동", "필라델피아 올드시티주F"];
     return MgBottomsheet(
       Column(
         children: [
-          // TODO:isSelect 선택적으로 활성화
-          ...address.map((e) => _buildAddressBottomSheetItem(e)),
+          Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
+          ...widget.addresses.map(
+            (address) => _buildAddressBottomSheetItem(
+              address,
+              isSelect: defaultAddress?.label == address.label,
+            ),
+          ),
+          Gaps.h16,
           MgButton(
-            content: Text("주소 직접 설정하기").sm().textGray(),
+            content: Text("주소 직접 설정하기").sm().textGray().regular(),
             onPressed: () {
-              // TODO: 주소 설정 페이지로 이동
+              context.pop();
+              SearchAddressRoute().push(context);
             },
           ).transparent(),
         ],
@@ -201,33 +245,42 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     );
   }
 
-  Widget _buildAddressBottomSheetItem(String address, {bool isSelect = false}) {
-    return Row(
-          children: [
-            Image.asset(R.ASSETS_ICONS_MAP_PIN_BORDER_PNG),
-            Text(address).md().margin(left: MgSizes.sm, right: MgSizes.xs),
-            if (isSelect) ...[
-              MgTag(child: Text("설정된주소")).primary(),
-              Spacer(),
-              Image.asset(R.ASSETS_ICONS_CHECK_PNG),
-            ],
-          ],
-        )
-        .margin(all: MgSizes.md)
-        .decorated(
-          border: isSelect
-              ? Border.all(color: MgColorScheme.gray4, width: 1)
-              : null,
-          borderRadius: BorderRadius.circular(16),
-        );
+  Widget _buildAddressBottomSheetItem(
+    Address address, {
+    bool isSelect = false,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        ref
+            .read(searchAddressScreenControllerProvider.notifier)
+            .selectFromSaved(address);
+        Navigator.of(context).pop();
+      },
+      child:
+          Row(
+                children: [
+                  BaseSvgIcon.mapPin(size: 20),
+                  Text(
+                    address.label,
+                  ).md().margin(left: MgSizes.sm, right: MgSizes.xs),
+                  if (isSelect) ...[Spacer(), BaseSvgIcon.check(size: 20)],
+                ],
+              )
+              .margin(all: MgSizes.md)
+              .decorated(
+                border: isSelect
+                    ? Border.all(color: MgColorScheme.gray4, width: 1)
+                    : null,
+                borderRadius: BorderRadius.circular(16),
+                color: isSelect ? MgColorScheme.gray10 : null,
+              ),
+    );
   }
 
-  Widget _buildSearch(BuildContext context) {
+  Widget _buildSearch() {
     return GestureDetector(
-      onTap: () async {
-        // await SearchRoute().push(context);
-      },
-      child: Image.asset(R.ASSETS_ICONS_SEARCH_PNG),
+      onTap: () async => SearchRoute().push(context),
+      child: BaseSvgIcon.search(size: 24),
     );
   }
 }

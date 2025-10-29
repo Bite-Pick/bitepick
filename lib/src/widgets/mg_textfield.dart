@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 
 class MgTextField extends StatefulWidget {
   const MgTextField({
@@ -21,6 +23,8 @@ class MgTextField extends StatefulWidget {
     this.textInputAction,
     this.inputStyle,
     this.boxDecoration,
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   final String? label;
@@ -37,6 +41,8 @@ class MgTextField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final TextStyle? inputStyle;
   final BoxDecoration? boxDecoration;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
   State<MgTextField> createState() => _MgTextFieldState();
@@ -48,7 +54,6 @@ class _MgTextFieldState extends State<MgTextField> {
 
   static const double spacingSm = MgSizes.xs;
   static const double spacingMd = MgSizes.sm;
-  static const double fontSizeMd = MgSizes.md;
   static const double fontSizeSm = MgSizes.sm;
   static const double borderRadiusMd = MgSizes.size10;
 
@@ -78,8 +83,8 @@ class _MgTextFieldState extends State<MgTextField> {
     if (widget.error != null && widget.error!.isNotEmpty) {
       return MgColorScheme.subpointRed;
     }
-    // TODO: focus 되었을 때 색상 논의
-    return _isFocused ? MgColorScheme.primary : MgColorScheme.gray7;
+    // TODO: focus 되었을 때 색상 논의(_isFocused ? MgColorScheme.primary :)
+    return MgColorScheme.gray7;
   }
 
   double get _borderWidth {
@@ -106,7 +111,7 @@ class _MgTextFieldState extends State<MgTextField> {
 
           SizedBox(
             height: 50,
-            child: TextField(
+            child: CupertinoTextField(
               controller: widget.controller,
               focusNode: _focusNode,
               onChanged: widget.onChanged,
@@ -116,53 +121,37 @@ class _MgTextFieldState extends State<MgTextField> {
               enabled: widget.enabled,
               maxLines: widget.maxLines,
               textInputAction: widget.textInputAction,
+              cursorColor: MgColorScheme.gray1, // TODO: 논의 필요
               style:
                   widget.inputStyle ??
                   const TextStyle(
-                    fontSize: fontSizeMd,
-                    color: // TextInput
-                        MgColorScheme.text,
+                    fontSize: MgFontSize.md,
+                    color: MgColorScheme.text,
                   ),
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                filled: true,
-                fillColor: MgColorScheme.gray11,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: spacingMd,
-                  vertical: spacingSm,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(borderRadiusMd),
-                  borderSide: BorderSide(
-                    color: _borderColor,
-                    width: _borderWidth,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(borderRadiusMd),
-                  borderSide: BorderSide(
-                    color: _borderColor,
-                    width: _borderWidth,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(borderRadiusMd),
-                  borderSide: BorderSide(color: _borderColor, width: 1.0),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(borderRadiusMd),
-                  borderSide: const BorderSide(
-                    color: MgColorScheme.subpointRed,
-                    width: 1.0,
-                  ),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(borderRadiusMd),
-                  borderSide: const BorderSide(
-                    color: MgColorScheme.subpointRed,
-                    width: 1.0,
-                  ),
-                ),
+              placeholder: widget.hintText,
+              placeholderStyle: const TextStyle(
+                fontSize: MgFontSize.md,
+                color: MgColorScheme.text,
+              ),
+              prefix:
+                  widget.prefixIcon ??
+                  BaseSvgIcon.search().gray().margin(all: MgSizes.md),
+              prefixMode: OverlayVisibilityMode.always,
+              suffix: GestureDetector(
+                onTap: () => widget.controller?.clear(),
+                child:
+                    widget.suffixIcon ??
+                    BaseSvgIcon.close().margin(all: MgSizes.md),
+              ),
+              suffixMode: OverlayVisibilityMode.editing,
+              padding: const EdgeInsets.symmetric(
+                // horizontal: spacingMd,
+                vertical: spacingSm,
+              ),
+              decoration: BoxDecoration(
+                color: MgColorScheme.gray11,
+                borderRadius: BorderRadius.circular(borderRadiusMd),
+                border: Border.all(color: _borderColor, width: _borderWidth),
               ),
             ),
           ),

@@ -27,8 +27,10 @@ class MgSizes {
   static const double size20 = 20.0;
   static const double size24 = 24.0;
   static const double size32 = 32.0;
+  static const double size56 = 56.0;
   static const double size64 = 64.0;
   static const double size128 = 128.0;
+  static const double size240 = 240.0;
 }
 
 /// 마감벨 보더 라디우스

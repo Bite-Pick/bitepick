@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide NavigatorState;
 import 'package:magambell/src/constants/assets.dart';
+import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
@@ -8,6 +9,7 @@ import 'package:magambell/src/features/order/presentation/order_screen.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/user/presentation/mypage_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -66,19 +68,19 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: MgColorScheme.white,
       items: [
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_HOME_PNG,
+          iconPath: R.ASSETS_ICONS_SVG_FILLED_HOME_SVG,
           label: '메인',
           index: 0,
           currentIndex: navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_ORDER_HISTORY_PNG,
+          iconPath: R.ASSETS_ICONS_SVG_FILLED_ORDER_LIST_SVG,
           label: '주문내역',
           index: 1,
           currentIndex: navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_USER_PNG,
+          iconPath: R.ASSETS_ICONS_SVG_FILLED_SPEAKER_SVG,
           label: '마이페이지',
           index: 2,
           currentIndex: navState.tabIndex,
@@ -94,13 +96,12 @@ class _MainScreenState extends State<MainScreen> {
     required int currentIndex,
   }) {
     return BottomNavigationBarItem(
-      icon: Image.asset(
-        iconPath,
-        width: 24,
-        height: 24,
+      icon: BaseSvgIcon(
+        assetName: iconPath,
         color: currentIndex == index
             ? MgColorScheme.black
             : MgColorScheme.gray5,
+        size: MgSizes.xxl,
       ),
       label: label,
     );

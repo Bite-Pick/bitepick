@@ -1,0 +1,18 @@
+targets:
+  $default:
+    builders:      
+      go_router_builder:
+        generate_for:
+          - lib/src/core/router/app_router.dart
+      freezed:
+        generate_for:
+          - lib/src/features/**/*.controller.dart
+          - lib/src/features/*/domain/entities/*.dart
+          - lib/src/core/navigator/default_navigator.controller.dart
+      json_serializable:
+        generate_for:
+          - lib/src/features/*/domain/entities/*.dart
+      riverpod_generator:
+        generate_for:
+          - lib/src/features/**/*.controller.dart
+          - lib/src/features/*/data/repositories/*.dart

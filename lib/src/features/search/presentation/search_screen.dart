@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -7,9 +9,11 @@ import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
 
 class SearchRoute extends GoRouteData {
+  const SearchRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SearchScreen();
+    return const SearchScreen();
   }
 }
 
@@ -26,15 +30,16 @@ class SearchScreen extends StatelessWidget {
       body: Column(
         children: [
           MgTextField(hintText: "지역의 동 이름으로 검색해보세요!"),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Container();
-              },
-            ),
-          ),
+          // Expanded(
+          //   child: ListView.builder(
+          //     itemCount: 0,
+          //     itemBuilder: (context, index) {
+          //       return Container();
+          //     },
+          //   ),
+          // ),
         ],
-      ),
+      ).margin(horizontal: MgSizes.md),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 
 class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   const BaseAppBar({
@@ -61,7 +61,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     GestureDetector(
                       onTap: onPopPressed,
-                      child: Image.asset(R.ASSETS_ICONS_CHEVRON_LEFT_PNG),
+                      child: BaseSvgIcon.left(size: 24),
                     ).padding(all: MgSizes.md),
                   ],
                 )
