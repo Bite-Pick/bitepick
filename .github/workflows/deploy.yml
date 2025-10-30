@@ -29,7 +29,7 @@ on:
 
 env:
   INITIAL_BUILD_NUMBER: 1
-  FLUTTER_VERSION: "3.29.0"
+  FLUTTER_VERSION: "3.35.5"
 
 jobs:
   set_env:
