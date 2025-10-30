@@ -341,6 +341,52 @@ jobs:
             echo "iOS release completed at $(date)"
           fi
 
+      - name: Distribute to Firebase App Distribution
+        if: needs.set_env.outputs.IS_PATCH == 'false'
+        env:
+          FIREBASE_APP_ID_IOS: ${{ secrets.FIREBASE_APP_ID_IOS }}
+          GOOGLE_APPLICATION_CREDENTIALS_CONTENT: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        working-directory: ios
+        run: |
+          # Setup Google Application Credentials
+          echo "$GOOGLE_APPLICATION_CREDENTIALS_CONTENT" > google-services-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="$PWD/google-services-key.json"
+
+          # Check required environment variables
+          if [ -z "$FIREBASE_APP_ID_IOS" ]; then
+            echo "❌ ERROR: FIREBASE_APP_ID_IOS is not set"
+            echo "Firebase App Distribution 배포를 위해 FIREBASE_APP_ID_IOS 시크릿이 필요합니다."
+            exit 1
+          fi
+
+          if [ -z "$GOOGLE_APPLICATION_CREDENTIALS_CONTENT" ]; then
+            echo "❌ ERROR: GOOGLE_APPLICATION_CREDENTIALS is not set"
+            echo "Firebase App Distribution 배포를 위해 GOOGLE_APPLICATION_CREDENTIALS 시크릿이 필요합니다."
+            exit 1
+          fi
+
+          # Check if IPA exists
+          if [ -f "../build/ios/ipa/magambell.ipa" ]; then
+            echo "✅ IPA found"
+          else
+            echo "❌ IPA file not found"
+            echo "Checked path: ../build/ios/ipa/magambell.ipa"
+            ls -la ../build/ios/ || echo "ios build directory not found"
+            echo "Shorebird release 빌드가 실패했거나 IPA가 생성되지 않았습니다."
+            exit 1
+          fi
+
+          echo "🚀 Starting Firebase App Distribution for iOS"
+
+          # Firebase App Distribution 실행 및 결과 확인
+          if bundle exec fastlane distribute --verbose 2>&1 | tee ../logs/fastlane_ios_distribute_$(date +"%Y%m%d_%H%M%S").txt; then
+            echo "✅ Firebase App Distribution completed successfully at $(date)"
+          else
+            echo "❌ Firebase App Distribution failed at $(date)"
+            echo "배포 실패로 인해 ios-build job을 실패 처리합니다."
+            exit 1
+          fi
+
       - name: Generate log summary
         if: always()
         run: |
