@@ -57,6 +57,13 @@ platform :android do
     # Shorebird release APK가 이미 빌드되었다고 가정하고 배포만 진행
     flavor = ENV["MODE"] || "dev"
 
+    # Flavor에 따른 Firebase App ID 설정
+    firebase_app_id = if flavor == "dev"
+      ENV["FIREBASE_APP_ID_ANDROID_DEV"]
+    else
+      ENV["FIREBASE_APP_ID_ANDROID"]
+    end
+
     # 여러 가능한 APK 경로 확인
     possible_apk_paths = [
       "../../build/app/outputs/flutter-apk/app-#{flavor}-release.apk",
@@ -86,14 +93,14 @@ platform :android do
 
     # Distribute to Firebase App Distribution
     puts "🔍 Firebase App Distribution 설정 확인:"
-    puts "  - App ID: #{ENV["FIREBASE_APP_ID_ANDROID"]}"
+    puts "  - App ID: #{firebase_app_id}"
     puts "  - Flavor: #{flavor}"
     puts "  - APK Path: #{apk_path}"
     puts "  - APK File Size: #{File.size(apk_path) / 1024 / 1024}MB"
     puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
 
     firebase_app_distribution(
-      app: ENV["FIREBASE_APP_ID_ANDROID"],
+      app: firebase_app_id,
       android_artifact_path: apk_path,
       release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
     )

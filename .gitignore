@@ -44,4 +44,4 @@ app.*.map.json
 
 #shorebird releated
 shorebird.yaml
-SHOREBIRD_DEPLOY_GUIDE.md
+docs/SHOREBIRD_DEPLOY_GUIDE.md
