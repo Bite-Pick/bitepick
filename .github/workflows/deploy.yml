@@ -1,0 +1,414 @@
+name: Build And Deploy
+
+permissions:
+  contents: write
+  actions: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to deploy (e.g., v1.0.0-dev)"
+        required: true
+        default: "v1.0.0-dev"
+        type: string
+      flavor:
+        description: "Build flavor (dev or prod)"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - prod
+  push:
+    tags:
+      - 'v*-dev'      # dev 릴리스 태그 (v1.0.0-dev)
+      - 'v*-prod'     # prod 릴리스 태그 (v1.0.0-prod)
+      - 'v*-dev-patch*'  # dev 패치 태그 (v1.0.0-dev-patch1)
+      - 'v*-prod-patch*' # prod 패치 태그 (v1.0.0-prod-patch1)
+
+env:
+  INITIAL_BUILD_NUMBER: 1
+  FLUTTER_VERSION: "3.29.0"
+
+jobs:
+  set_env:
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.set_env.outputs.VERSION }}
+      BUILD_NUMBER: ${{ steps.set_env.outputs.BUILD_NUMBER }}
+      IS_PATCH: ${{ steps.set_env.outputs.IS_PATCH }}
+      PATCH_BUILD_NUMBER: ${{ steps.set_env.outputs.PATCH_BUILD_NUMBER }}
+      FLAVOR: ${{ steps.set_env.outputs.FLAVOR }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set env
+        id: set_env
+        run: |
+          JSON_FILE="build_numbers.json"
+
+          # 버전 및 flavor 결정 로직
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            FLAVOR="${{ github.event.inputs.flavor }}"
+          elif [ "${{ github.event_name }}" = "push" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG_NAME="${GITHUB_REF:10}"
+
+            # Flavor 추출 (dev 또는 prod)
+            if [[ "$TAG_NAME" == *-dev* ]]; then
+              FLAVOR="dev"
+            elif [[ "$TAG_NAME" == *-prod* ]]; then
+              FLAVOR="prod"
+            else
+              FLAVOR="dev"
+            fi
+
+            # 패치 태그인 경우 -patch 부분 제거
+            VERSION=$(echo "$TAG_NAME" | sed -E 's/-patch[0-9]*$//')
+          else
+            VERSION="v1.0.0-dev"
+            FLAVOR="dev"
+          fi
+
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "FLAVOR=$FLAVOR" >> $GITHUB_OUTPUT
+
+          # 빌드 번호 계산
+          BUILD_NUMBER=$((${{ github.run_number }} + $INITIAL_BUILD_NUMBER))
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+          # 패치 여부 확인
+          if [[ "${{ github.ref }}" == refs/tags/*-patch* ]] || [[ "$VERSION" == *-patch* ]]; then
+            echo "IS_PATCH=true" >> $GITHUB_OUTPUT
+
+            # JSON 파일에서 기존 빌드 번호 추출
+            if [ -f "$JSON_FILE" ]; then
+              BASE_VERSION=$(echo "$VERSION" | sed -E 's/-patch[0-9]*$//')
+              PATCH_BUILD_NUMBER=$(jq -r --arg VERSION "$BASE_VERSION" '.[$VERSION] // empty' $JSON_FILE)
+              if [ -n "$PATCH_BUILD_NUMBER" ] && [ "$PATCH_BUILD_NUMBER" != "null" ]; then
+                echo "PATCH_BUILD_NUMBER=$PATCH_BUILD_NUMBER" >> $GITHUB_OUTPUT
+              else
+                echo "PATCH_BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "PATCH_BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "IS_PATCH=false" >> $GITHUB_OUTPUT
+
+            # JSON 파일에 빌드 번호 저장
+            if [ ! -f "$JSON_FILE" ]; then
+              echo "{}" > "$JSON_FILE"
+            fi
+            echo "$(jq --arg VERSION "$VERSION" --argjson BUILD_NUMBER "$BUILD_NUMBER" '.[$VERSION] = $BUILD_NUMBER' $JSON_FILE)" > $JSON_FILE
+          fi
+
+          # 디버깅 정보 출력
+          echo "Event: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Version: $VERSION"
+          echo "Flavor: $FLAVOR"
+          echo "Build Number: $BUILD_NUMBER"
+
+          PATCH_CHECK="false"
+          if [[ "${{ github.ref }}" == refs/tags/*-patch* ]] || [[ "$VERSION" == *-patch* ]]; then
+            PATCH_CHECK="true"
+          fi
+          echo "Is Patch: $PATCH_CHECK"
+
+      - name: Upload Build Number JSON Artifact
+        if: steps.set_env.outputs.IS_PATCH == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_numbers
+          path: build_numbers.json
+
+  android-build:
+    timeout-minutes: 60
+    needs: set_env
+    env:
+      VERSION: ${{ needs.set_env.outputs.VERSION }}
+      BUILD_NUMBER: ${{ needs.set_env.outputs.BUILD_NUMBER }}
+      IS_PATCH: ${{ needs.set_env.outputs.IS_PATCH }}
+      PATCH_BUILD_NUMBER: ${{ needs.set_env.outputs.PATCH_BUILD_NUMBER }}
+      FLAVOR: ${{ needs.set_env.outputs.FLAVOR }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: android
+
+      - name: Install dependencies
+        working-directory: android
+        run: bundle install
+
+      - name: 🐦 Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "17.x"
+          distribution: "zulu"
+          cache: gradle
+
+      - name: Deploy Android
+        env:
+          FLUTTER_VERSION: ${{ env.FLUTTER_VERSION }}
+          VERSION_NUMBER: ${{ env.VERSION }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+          PATCH_BUILD_NUMBER: ${{ env.PATCH_BUILD_NUMBER }}
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+          MODE: ${{ env.FLAVOR }}
+        working-directory: android
+        run: |
+          # Create logs directory
+          mkdir -p ../logs
+          timestamp=$(date +"%Y%m%d_%H%M%S")
+
+          # Check SHOREBIRD_TOKEN
+          if [ -z "$SHOREBIRD_TOKEN" ]; then
+            echo "ERROR: SHOREBIRD_TOKEN is not set"
+            exit 1
+          fi
+
+          # Execute fastlane based on patch status
+          if [[ "$IS_PATCH" == "true" ]]; then
+            echo "Starting Android $FLAVOR patch at $timestamp"
+            bundle exec fastlane patch --verbose 2>&1 | tee ../logs/fastlane_patch_${timestamp}.txt
+            echo "Android patch completed at $(date)"
+          else
+            echo "Starting Android $FLAVOR release at $timestamp"
+            bundle exec fastlane release --verbose 2>&1 | tee ../logs/fastlane_release_${timestamp}.txt
+            echo "Android release completed at $(date)"
+          fi
+
+      - name: Distribute to Firebase App Distribution
+        if: needs.set_env.outputs.IS_PATCH == 'false'
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS_CONTENT: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        working-directory: android
+        run: |
+          # Setup Google Application Credentials
+          echo "$GOOGLE_APPLICATION_CREDENTIALS_CONTENT" > google-services-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="$PWD/google-services-key.json"
+
+          # Check required environment variables
+          if [ -z "$FIREBASE_APP_ID" ]; then
+            echo "❌ ERROR: FIREBASE_APP_ID is not set"
+            echo "Firebase App Distribution 배포를 위해 FIREBASE_APP_ID 시크릿이 필요합니다."
+            exit 1
+          fi
+
+          if [ -z "$GOOGLE_APPLICATION_CREDENTIALS_CONTENT" ]; then
+            echo "❌ ERROR: GOOGLE_APPLICATION_CREDENTIALS is not set"
+            echo "Firebase App Distribution 배포를 위해 GOOGLE_APPLICATION_CREDENTIALS 시크릿이 필요합니다."
+            exit 1
+          fi
+
+          # Check if APK exists
+          if [ -f "../build/app/outputs/flutter-apk/app-${{ env.FLAVOR }}-release.apk" ]; then
+            echo "✅ APK found at flutter-apk path"
+          elif [ -f "../build/app/outputs/apk/${{ env.FLAVOR }}/release/app-${{ env.FLAVOR }}-release.apk" ]; then
+            echo "✅ APK found at apk/release path, copying to flutter-apk path"
+            mkdir -p "../build/app/outputs/flutter-apk"
+            cp "../build/app/outputs/apk/${{ env.FLAVOR }}/release/app-${{ env.FLAVOR }}-release.apk" "../build/app/outputs/flutter-apk/app-${{ env.FLAVOR }}-release.apk"
+          else
+            echo "❌ APK file not found in expected locations"
+            echo "Checked paths:"
+            echo "  - ../build/app/outputs/flutter-apk/app-${{ env.FLAVOR }}-release.apk"
+            echo "  - ../build/app/outputs/apk/${{ env.FLAVOR }}/release/app-${{ env.FLAVOR }}-release.apk"
+            ls -la ../build/app/outputs/ || echo "outputs directory not found"
+            echo "Shorebird release 빌드가 실패했거나 APK가 생성되지 않았습니다."
+            exit 1
+          fi
+
+          echo "🚀 Starting Firebase App Distribution"
+
+          # Firebase App Distribution 실행 및 결과 확인
+          if bundle exec fastlane distribute --verbose 2>&1 | tee ../logs/fastlane_distribute_$(date +"%Y%m%d_%H%M%S").txt; then
+            echo "✅ Firebase App Distribution completed successfully at $(date)"
+          else
+            echo "❌ Firebase App Distribution failed at $(date)"
+            echo "배포 실패로 인해 android-build job을 실패 처리합니다."
+            exit 1
+          fi
+
+      - name: Generate log summary
+        if: always()
+        run: |
+          cd logs
+          if [ -f fastlane_*.txt ]; then
+            latest_log=$(ls -t fastlane_*.txt | head -1)
+            echo "# Android Fastlane Log Summary" > log_summary.md
+            echo "Generated at: $(date)" >> log_summary.md
+            echo "Action: ${{ env.IS_PATCH == 'true' && 'patch' || 'release' }}" >> log_summary.md
+            echo "Version: ${{ env.VERSION }}" >> log_summary.md
+            echo "Flavor: ${{ env.FLAVOR }}" >> log_summary.md
+            echo "" >> log_summary.md
+            echo "## Log File: $latest_log" >> log_summary.md
+            echo "" >> log_summary.md
+
+            # Extract errors, warnings, and success messages
+            for level in error warning success; do
+              if grep -i "$level" "$latest_log" > /dev/null; then
+                echo "## ${level^} Messages:" >> log_summary.md
+                grep -i "$level" "$latest_log" | head -10 >> log_summary.md
+                echo "" >> log_summary.md
+              fi
+            done
+          fi
+
+      - name: Upload log files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-logs-${{ github.run_number }}
+          path: |
+            logs/*.txt
+            logs/*.md
+          retention-days: 30
+
+  ios-build:
+    timeout-minutes: 60
+    needs: set_env
+    env:
+      VERSION: ${{ needs.set_env.outputs.VERSION }}
+      BUILD_NUMBER: ${{ needs.set_env.outputs.BUILD_NUMBER }}
+      IS_PATCH: ${{ needs.set_env.outputs.IS_PATCH }}
+      PATCH_BUILD_NUMBER: ${{ needs.set_env.outputs.PATCH_BUILD_NUMBER }}
+      FLAVOR: ${{ needs.set_env.outputs.FLAVOR }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: ios
+
+      - name: Install dependencies
+        working-directory: ios
+        run: bundle install
+
+      - name: 🐦 Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Deploy iOS
+        env:
+          FLUTTER_VERSION: ${{ env.FLUTTER_VERSION }}
+          VERSION_NUMBER: ${{ env.VERSION }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+          PATCH_BUILD_NUMBER: ${{ env.PATCH_BUILD_NUMBER }}
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+          MODE: ${{ env.FLAVOR }}
+        working-directory: ios
+        run: |
+          # Create logs directory
+          mkdir -p ../logs
+          timestamp=$(date +"%Y%m%d_%H%M%S")
+
+          # Check SHOREBIRD_TOKEN
+          if [ -z "$SHOREBIRD_TOKEN" ]; then
+            echo "ERROR: SHOREBIRD_TOKEN is not set"
+            exit 1
+          fi
+
+          # Execute fastlane based on patch status
+          if [[ "$IS_PATCH" == "true" ]]; then
+            echo "Starting iOS $FLAVOR patch at $timestamp"
+            bundle exec fastlane patch --verbose 2>&1 | tee ../logs/fastlane_ios_patch_${timestamp}.txt
+            echo "iOS patch completed at $(date)"
+          else
+            echo "Starting iOS $FLAVOR release at $timestamp"
+            bundle exec fastlane release --verbose 2>&1 | tee ../logs/fastlane_ios_release_${timestamp}.txt
+            echo "iOS release completed at $(date)"
+          fi
+
+      - name: Generate log summary
+        if: always()
+        run: |
+          cd logs
+          if [ -f fastlane_ios_*.txt ]; then
+            latest_log=$(ls -t fastlane_ios_*.txt | head -1)
+            echo "# iOS Fastlane Log Summary" > log_summary_ios.md
+            echo "Generated at: $(date)" >> log_summary_ios.md
+            echo "Action: ${{ env.IS_PATCH == 'true' && 'patch' || 'release' }}" >> log_summary_ios.md
+            echo "Version: ${{ env.VERSION }}" >> log_summary_ios.md
+            echo "Flavor: ${{ env.FLAVOR }}" >> log_summary_ios.md
+            echo "" >> log_summary_ios.md
+            echo "## Log File: $latest_log" >> log_summary_ios.md
+            echo "" >> log_summary_ios.md
+
+            # Extract errors, warnings, and success messages
+            for level in error warning success; do
+              if grep -i "$level" "$latest_log" > /dev/null; then
+                echo "## ${level^} Messages:" >> log_summary_ios.md
+                grep -i "$level" "$latest_log" | head -10 >> log_summary_ios.md
+                echo "" >> log_summary_ios.md
+              fi
+            done
+          fi
+
+      - name: Upload log files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-logs-${{ github.run_number }}
+          path: |
+            logs/*.txt
+            logs/*.md
+          retention-days: 30
+
+  push_changes:
+    needs: [set_env, android-build, ios-build]
+    runs-on: ubuntu-latest
+    if: |
+      needs.set_env.result == 'success' &&
+      needs.android-build.result == 'success' &&
+      needs.ios-build.result == 'success' &&
+      needs.set_env.outputs.IS_PATCH == 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Build Number JSON Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build_numbers
+          path: .
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          if [ -f "build_numbers.json" ]; then
+            git add build_numbers.json
+            if git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Update build number for version ${{ needs.set_env.outputs.VERSION }} [skip ci]"
+              git push origin main
+            fi
+          else
+            echo "build_numbers.json not found, skipping commit"
+          fi

@@ -38,6 +38,11 @@ dependencies:
   dartx: ^1.2.0
   flutter_screenutil: ^5.9.3
 
+  shared_preferences: ^2.3.3
+  shorebird_code_push: ^2.0.5
+  restart_app: ^1.3.2
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,10 +61,12 @@ flutter:
 
   assets:
     - .env
+    - shorebird.yaml
     - assets/images/
     - assets/icons/
     - assets/icons/svg/
     - assets/icons/svg/filled/
+    - shorebird.yaml
 
   fonts:
     - family: Pretendard

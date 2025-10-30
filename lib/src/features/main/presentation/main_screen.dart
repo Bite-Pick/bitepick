@@ -23,8 +23,6 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    FavoriteScreen(),
-    SplashScreen(),
     OrderScreen(),
     MypageScreen(),
   ];
@@ -97,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
   }) {
     return BottomNavigationBarItem(
       icon: BaseSvgIcon(
-        assetName: iconPath,
+        assetName: iconPath.replaceFirst('assets/icons/svg/', ''),
         color: currentIndex == index
             ? MgColorScheme.black
             : MgColorScheme.gray5,

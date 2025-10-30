@@ -1,0 +1,106 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and release iOS app with Shorebird"
+  lane :release do
+    sh('flutter pub get')
+
+    # Flavor에 따른 entry point 설정
+    entry_point = case ENV["MODE"]
+    when "dev"
+      "lib/src/main_dev.dart"
+    when "prod"
+      "lib/src/main_prod.dart"
+    else
+      "lib/src/main_dev.dart"
+    end
+
+    shorebird_release(
+      platform: "ios",
+      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}"
+    )
+
+    rescue => exception
+      handle_asset_changes_error(exception)
+      raise exception
+  end
+
+  desc "Create a patch for existing release"
+  lane :patch do
+    sh('flutter pub get')
+
+    # Flavor에 따른 entry point 설정
+    entry_point = case ENV["MODE"]
+    when "dev"
+      "lib/src/main_dev.dart"
+    when "prod"
+      "lib/src/main_prod.dart"
+    else
+      "lib/src/main_dev.dart"
+    end
+
+    # 기본 args 설정
+    patch_args = "-t #{entry_point} --release-version #{ENV["VERSION"]}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
+
+    shorebird_patch(
+      platform: "ios",
+      args: patch_args
+    )
+
+    rescue => exception
+      handle_asset_changes_error(exception)
+      raise exception
+  end
+
+  desc "Distribute iOS build to Firebase App Distribution"
+  lane :distribute do
+    # Firebase App Distribution 배포 (추후 구현)
+    puts "iOS Firebase App Distribution은 추후 구현 예정입니다."
+  end
+end
+
+# Handle asset changes error
+def handle_asset_changes_error(exception)
+  return unless exception.message.match(/\[WARN\].*asset changes.*will not be included/)
+
+  changed_files = extract_changed_files(exception.message)
+
+  unless changed_files.empty?
+    allowed_files = ['base/assets/sentry-debug-meta.properties']
+    unauthorized = changed_files - allowed_files
+
+    unless unauthorized.empty?
+      message = "[iOS-#{ENV["MODE"]}] Unauthorized asset file changes detected: #{unauthorized.join(', ')}"
+      puts message
+    end
+  end
+end
+
+def extract_changed_files(message)
+  changed_files = []
+  lines = message.split("\n")
+  capturing = false
+
+  lines.each do |line|
+    if line.include?('Changed files:')
+      capturing = true
+      next
+    end
+
+    break if capturing && line.include?('Fetching')
+
+    if capturing && !line.strip.empty?
+      cleaned_line = line.strip
+      # 타임스탬프와 아이콘 제거
+      cleaned_line = cleaned_line.gsub(/^\[.*?\]:\s*/, '')
+      cleaned_line = cleaned_line.gsub(/^▸\s*/, '')
+
+      # 파일 경로 형태인지 확인
+      if !cleaned_line.empty? && cleaned_line.match(/^[a-zA-Z0-9\/\.\-_]+$/)
+        changed_files << cleaned_line
+      end
+    end
+  end
+
+  changed_files
+end

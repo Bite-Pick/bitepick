@@ -1,0 +1,154 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build and release Android app with Shorebird"
+  lane :release do
+    sh('flutter pub get')
+
+    # Flavor에 따른 entry point 설정
+    entry_point = case ENV["MODE"]
+    when "dev"
+      "lib/src/main_dev.dart"
+    when "prod"
+      "lib/src/main_prod.dart"
+    else
+      "lib/src/main_dev.dart"
+    end
+
+    shorebird_release(
+      platform: "android",
+      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]} --artifact apk"
+    )
+
+    rescue => exception
+      handle_asset_changes_error(exception)
+      raise exception
+  end
+
+  desc "Create a patch for existing release"
+  lane :patch do
+    sh('flutter pub get')
+
+    # Flavor에 따른 entry point 설정
+    entry_point = case ENV["MODE"]
+    when "dev"
+      "lib/src/main_dev.dart"
+    when "prod"
+      "lib/src/main_prod.dart"
+    else
+      "lib/src/main_dev.dart"
+    end
+
+    # 기본 args 설정
+    patch_args = "-t #{entry_point} --release-version #{ENV["VERSION"]}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
+
+    shorebird_patch(
+      platform: "android",
+      args: patch_args
+    )
+
+    rescue => exception
+      handle_asset_changes_error(exception)
+      raise exception
+  end
+
+  desc "Distribute existing Shorebird APK to Firebase App Distribution"
+  lane :distribute do
+    # Shorebird release APK가 이미 빌드되었다고 가정하고 배포만 진행
+    flavor = ENV["MODE"] || "dev"
+
+    # 여러 가능한 APK 경로 확인
+    possible_apk_paths = [
+      "../../build/app/outputs/flutter-apk/app-#{flavor}-release.apk",
+      "../../build/app/outputs/apk/#{flavor}/release/app-#{flavor}-release.apk"
+    ]
+
+    apk_path = nil
+    possible_apk_paths.each do |path|
+      if File.exist?(path)
+        apk_path = File.expand_path(path)  # 절대 경로로 변환
+        puts "📦 APK 파일 확인됨: #{apk_path}"
+        break
+      else
+        puts "🔍 APK 파일 확인 중: #{path} - 없음"
+      end
+    end
+
+    unless apk_path
+      puts "❌ APK 파일을 찾을 수 없습니다!"
+      puts "확인한 경로들:"
+      possible_apk_paths.each { |path| puts "  - #{path}" }
+      puts "현재 작업 디렉터리: #{Dir.pwd}"
+      puts "디렉터리 내용:"
+      sh("ls -la ../../build/app/outputs/ || echo 'outputs 디렉터리 없음'")
+      raise "APK file not found"
+    end
+
+    # Distribute to Firebase App Distribution
+    puts "🔍 Firebase App Distribution 설정 확인:"
+    puts "  - App ID: #{ENV["FIREBASE_APP_ID"]}"
+    puts "  - Flavor: #{flavor}"
+    puts "  - APK Path: #{apk_path}"
+    puts "  - APK File Size: #{File.size(apk_path) / 1024 / 1024}MB"
+    puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
+
+    firebase_app_distribution(
+      app: ENV["FIREBASE_APP_ID"],
+      android_artifact_path: apk_path,
+      release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
+    )
+
+    puts "✅ Shorebird Firebase App Distribution 배포 완료!"
+
+    rescue => exception
+      puts "❌ Firebase App Distribution 배포 실패: #{exception.message}"
+      handle_asset_changes_error(exception)
+      raise exception
+  end
+end
+
+# Handle asset changes error
+def handle_asset_changes_error(exception)
+  return unless exception.message.match(/\[WARN\].*asset changes.*will not be included/)
+
+  changed_files = extract_changed_files(exception.message)
+
+  unless changed_files.empty?
+    allowed_files = ['base/assets/sentry-debug-meta.properties']
+    unauthorized = changed_files - allowed_files
+
+    unless unauthorized.empty?
+      message = "[Android-#{ENV["MODE"]}] Unauthorized asset file changes detected: #{unauthorized.join(', ')}"
+      puts message
+    end
+  end
+end
+
+def extract_changed_files(message)
+  changed_files = []
+  lines = message.split("\n")
+  capturing = false
+
+  lines.each do |line|
+    if line.include?('Changed files:')
+      capturing = true
+      next
+    end
+
+    break if capturing && line.include?('Fetching')
+
+    if capturing && !line.strip.empty?
+      cleaned_line = line.strip
+      # 타임스탬프와 아이콘 제거
+      cleaned_line = cleaned_line.gsub(/^\[.*?\]:\s*/, '')
+      cleaned_line = cleaned_line.gsub(/^▸\s*/, '')
+
+      # 파일 경로 형태인지 확인
+      if !cleaned_line.empty? && cleaned_line.match(/^[a-zA-Z0-9\/\.\-_]+$/)
+        changed_files << cleaned_line
+      end
+    end
+  end
+
+  changed_files
+end
