@@ -41,3 +41,7 @@ app.*.symbols
 app.*.map.json
 
 .env
+
+#shorebird releated
+shorebird.yaml
+SHOREBIRD_DEPLOY_GUIDE.md

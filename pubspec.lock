@@ -888,12 +888,11 @@ packages:
   shorebird_code_push:
     dependency: "direct main"
     description:
-      path: shorebird_code_push
-      ref: master
-      resolved-ref: f769572e71d9d6ababb8c942dba2db7bc5869bc6
-      url: "https://github.com/Yonple/shorebird_code_push.git"
-    source: git
-    version: "2.0.4"
+      name: shorebird_code_push
+      sha256: "82203f39a66c78548da944dbe4079c2aa2a60fa5bc1105ed707b144c94f04349"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   sky_engine:
     dependency: transitive
     description: flutter
