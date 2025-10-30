@@ -86,14 +86,14 @@ platform :android do
 
     # Distribute to Firebase App Distribution
     puts "🔍 Firebase App Distribution 설정 확인:"
-    puts "  - App ID: #{ENV["FIREBASE_APP_ID"]}"
+    puts "  - App ID: #{ENV["FIREBASE_APP_ID_ANDROID"]}"
     puts "  - Flavor: #{flavor}"
     puts "  - APK Path: #{apk_path}"
     puts "  - APK File Size: #{File.size(apk_path) / 1024 / 1024}MB"
     puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
 
     firebase_app_distribution(
-      app: ENV["FIREBASE_APP_ID"],
+      app: ENV["FIREBASE_APP_ID_ANDROID"],
       android_artifact_path: apk_path,
       release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
     )

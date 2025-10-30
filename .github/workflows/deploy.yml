@@ -195,7 +195,7 @@ jobs:
       - name: Distribute to Firebase App Distribution
         if: needs.set_env.outputs.IS_PATCH == 'false'
         env:
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_APP_ID_ANDROID: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
           GOOGLE_APPLICATION_CREDENTIALS_CONTENT: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         working-directory: android
         run: |
@@ -204,9 +204,9 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="$PWD/google-services-key.json"
 
           # Check required environment variables
-          if [ -z "$FIREBASE_APP_ID" ]; then
-            echo "❌ ERROR: FIREBASE_APP_ID is not set"
-            echo "Firebase App Distribution 배포를 위해 FIREBASE_APP_ID 시크릿이 필요합니다."
+          if [ -z "$FIREBASE_APP_ID_ANDROID" ]; then
+            echo "❌ ERROR: FIREBASE_APP_ID_ANDROID is not set"
+            echo "Firebase App Distribution 배포를 위해 FIREBASE_APP_ID_ANDROID 시크릿이 필요합니다."
             exit 1
           fi
 
