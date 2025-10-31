@@ -334,7 +334,6 @@ jobs:
           MODE: ${{ env.FLAVOR }}
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         working-directory: ios
@@ -350,8 +349,14 @@ jobs:
           fi
 
           # Check App Store Connect API credentials
-          if [ -z "$APP_STORE_CONNECT_API_KEY_ID" ] || [ -z "$APP_STORE_CONNECT_API_KEY_ISSUER_ID" ] || [ -z "$APP_STORE_CONNECT_API_KEY_CONTENT" ]; then
+          if [ -z "$APP_STORE_CONNECT_API_KEY_ID" ] || [ -z "$APP_STORE_CONNECT_API_KEY_ISSUER_ID" ]; then
             echo "ERROR: App Store Connect API credentials are not set"
+            exit 1
+          fi
+
+          # Check if AuthKey.p8 was decrypted
+          if [ ! -f "AuthKey.p8" ]; then
+            echo "ERROR: AuthKey.p8 file not found. GPG decryption may have failed."
             exit 1
           fi
 
