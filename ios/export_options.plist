@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  github actions에서 fastlane으로 ios 배포 시, provisioningProfiles을 빌드에 연결시켜주기 위해 이 파일을 이용
+  https://github.com/shorebirdtech/shorebird/issues/2336 참고
+  새로운 provisioningProfiles을 추가하거나, 이름이 바뀌면 여기에 추가시켜주어야한다.
+-->
+<plist version="1.0">
+  <dict>
+    <key>manageAppVersionAndBuildNumber</key>
+    <false/>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.trendflow.bread</key>
+        <string>match AppStore com.trendflow.bread</string>
+        <key>com.trendflow.bread.dev</key>
+        <string>match AppStore com.trendflow.bread.dev</string>
+    </dict>
+    <key>signingCertificate</key>
+    <string>iOS Distribution</string>
+    <key>signingStyle</key>
+    <string>manual</string>
+    <key>method</key>
+    <string>app-store</string>
+    <key>teamID</key>
+    <string>5ZS2WXY7J7</string>
+    <key>uploadBitcode</key>
+    <false/>
+    <key>uploadSymbols</key>
+    <true/>
+    <key>compileBitcode</key>
+    <false/>
+  </dict>
+</plist>

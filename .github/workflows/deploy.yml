@@ -438,7 +438,7 @@ jobs:
       PATCH_BUILD_NUMBER: ${{ needs.set_env.outputs.PATCH_BUILD_NUMBER }}
       FLAVOR: dev
       MODE: dev
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
@@ -467,6 +467,9 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
+      - name: Fix Xcode version for iOS SDK
+        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+
       - name: Deploy iOS
         env:
           FLUTTER_VERSION: ${{ env.FLUTTER_VERSION }}
@@ -481,6 +484,9 @@ jobs:
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         working-directory: ios
         run: |
+          # Export options plist with absolute path
+          export EXPORT_OPTIONS_PLIST="$(pwd)/export_options.plist"
+
           # Create logs directory
           mkdir -p ../logs
           timestamp=$(date +"%Y%m%d_%H%M%S")
@@ -653,7 +659,7 @@ jobs:
       PATCH_BUILD_NUMBER: ${{ needs.set_env.outputs.PATCH_BUILD_NUMBER }}
       FLAVOR: prod
       MODE: prod
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
@@ -682,6 +688,9 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
+      - name: Fix Xcode version for iOS SDK
+        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+
       - name: Deploy iOS
         env:
           FLUTTER_VERSION: ${{ env.FLUTTER_VERSION }}
@@ -696,6 +705,9 @@ jobs:
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         working-directory: ios
         run: |
+          # Export options plist with absolute path
+          export EXPORT_OPTIONS_PLIST="$(pwd)/export_options.plist"
+
           # Create logs directory
           mkdir -p ../logs
           timestamp=$(date +"%Y%m%d_%H%M%S")
