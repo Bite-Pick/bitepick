@@ -5,27 +5,9 @@ permissions:
   actions: read
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version to deploy (e.g., v1.0.0-dev)"
-        required: true
-        default: "v1.0.0-dev"
-        type: string
-      flavor:
-        description: "Build flavor (dev or prod)"
-        required: true
-        default: "dev"
-        type: choice
-        options:
-          - dev
-          - prod
   push:
     tags:
-      - 'v*-dev'      # dev 릴리스 태그 (v1.0.0-dev)
-      - 'v*-prod'     # prod 릴리스 태그 (v1.0.0-prod)
-      - 'v*-dev-patch*'  # dev 패치 태그 (v1.0.0-dev-patch1)
-      - 'v*-prod-patch*' # prod 패치 태그 (v1.0.0-prod-patch1)
+      - 'v*'  # 모든 버전 태그 (v1.0.0, v1.0.0-dev, v1.0.0-prod, v1.0.0-dev-patch1, etc.)
 
 env:
   INITIAL_BUILD_NUMBER: 1
@@ -47,29 +29,20 @@ jobs:
         id: set_env
         run: |
           JSON_FILE="build_numbers.json"
+          TAG_NAME="${GITHUB_REF:10}"
 
-          # 버전 및 flavor 결정 로직
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-            FLAVOR="${{ github.event.inputs.flavor }}"
-          elif [ "${{ github.event_name }}" = "push" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            TAG_NAME="${GITHUB_REF:10}"
-
-            # Flavor 추출 (dev 또는 prod)
-            if [[ "$TAG_NAME" == *-dev* ]]; then
-              FLAVOR="dev"
-            elif [[ "$TAG_NAME" == *-prod* ]]; then
-              FLAVOR="prod"
-            else
-              FLAVOR="dev"
-            fi
-
-            # 패치 태그인 경우 -patch 부분 제거
-            VERSION=$(echo "$TAG_NAME" | sed -E 's/-patch[0-9]*$//')
-          else
-            VERSION="v1.0.0-dev"
+          # Flavor 추출 (dev 또는 prod)
+          if [[ "$TAG_NAME" == *-dev* ]]; then
             FLAVOR="dev"
+          elif [[ "$TAG_NAME" == *-prod* ]]; then
+            FLAVOR="prod"
+          else
+            # dev/prod가 없으면 둘 다 빌드 (나중에 조건에서 처리)
+            FLAVOR="both"
           fi
+
+          # 패치 태그인 경우 -patch 부분 제거
+          VERSION=$(echo "$TAG_NAME" | sed -E 's/-patch[0-9]*$//')
 
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "FLAVOR=$FLAVOR" >> $GITHUB_OUTPUT
@@ -124,15 +97,17 @@ jobs:
           name: build_numbers
           path: build_numbers.json
 
-  android-build:
+  android-dev:
     timeout-minutes: 60
     needs: set_env
+    if: needs.set_env.outputs.FLAVOR == 'dev' || needs.set_env.outputs.FLAVOR == 'both'
     env:
       VERSION: ${{ needs.set_env.outputs.VERSION }}
       BUILD_NUMBER: ${{ needs.set_env.outputs.BUILD_NUMBER }}
       IS_PATCH: ${{ needs.set_env.outputs.IS_PATCH }}
       PATCH_BUILD_NUMBER: ${{ needs.set_env.outputs.PATCH_BUILD_NUMBER }}
-      FLAVOR: ${{ needs.set_env.outputs.FLAVOR }}
+      FLAVOR: dev
+      MODE: dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
