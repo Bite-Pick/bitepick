@@ -5,8 +5,8 @@
 
 set -e
 
-if [ -z "$GPG_PASSPHRASE" ]; then
-    echo "❌ ERROR: GPG_PASSPHRASE 환경 변수가 설정되지 않았습니다."
+if [ -z "$CERT_ENCRYPT_PASSPHRASE" ]; then
+    echo "❌ ERROR: CERT_ENCRYPT_PASSPHRASE 환경 변수가 설정되지 않았습니다."
     exit 1
 fi
 
@@ -27,7 +27,7 @@ decrypt_file() {
 
         # 복호화
         gpg --quiet --batch --yes \
-            --decrypt --passphrase "$GPG_PASSPHRASE" \
+            --decrypt --passphrase "$CERT_ENCRYPT_PASSPHRASE" \
             --output "$decrypted" "$encrypted"
 
         echo "  ✓ 복호화 완료"

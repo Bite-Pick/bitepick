@@ -42,7 +42,7 @@ Repository > Settings > Secrets and variables > Actions
 
 다음 Secret을 추가:
 ```
-GPG_PASSPHRASE=<암호화 시 사용한 비밀번호>
+CERT_ENCRYPT_PASSPHRASE=<암호화 시 사용한 비밀번호>
 ```
 
 ## GitHub Actions 동작 방식
@@ -51,7 +51,7 @@ GPG_PASSPHRASE=<암호화 시 사용한 비밀번호>
 
 1. **Checkout**: 코드 체크아웃
 2. **Decrypt secrets**: `.github/scripts/decrypt-secrets.sh` 실행
-   - GPG_PASSPHRASE를 사용하여 암호화된 파일들을 복호화
+   - CERT_ENCRYPT_PASSPHRASE를 사용하여 암호화된 파일들을 복호화
    - `.env` → 루트 디렉토리
    - `google-services.json` → `android/app/`
    - `GoogleService-Info.plist` → `ios/Runner/`
@@ -64,7 +64,7 @@ GPG_PASSPHRASE=<암호화 시 사용한 비밀번호>
 
 - name: Decrypt secrets
   env:
-    GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+    CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
   run: |
     chmod +x .github/scripts/decrypt-secrets.sh
     .github/scripts/decrypt-secrets.sh
@@ -77,7 +77,7 @@ GPG_PASSPHRASE=<암호화 시 사용한 비밀번호>
 
 ```bash
 # 환경 변수 설정
-export GPG_PASSPHRASE="your_passphrase"
+export CERT_ENCRYPT_PASSPHRASE="your_passphrase"
 
 # 복호화 스크립트 실행
 .github/scripts/decrypt-secrets.sh
@@ -115,9 +115,9 @@ export GPG_PASSPHRASE="your_passphrase"
 
 ### 복호화 실패
 ```bash
-ERROR: GPG_PASSPHRASE 환경 변수가 설정되지 않았습니다.
+ERROR: CERT_ENCRYPT_PASSPHRASE 환경 변수가 설정되지 않았습니다.
 ```
-**해결**: GitHub Secrets에 `GPG_PASSPHRASE`가 올바르게 설정되었는지 확인
+**해결**: GitHub Secrets에 `CERT_ENCRYPT_PASSPHRASE`가 올바르게 설정되었는지 확인
 
 ### 파일을 찾을 수 없음
 ```bash
@@ -129,7 +129,7 @@ ERROR: GPG_PASSPHRASE 환경 변수가 설정되지 않았습니다.
 ```bash
 gpg: decryption failed: Bad session key
 ```
-**해결**: GitHub Secrets의 `GPG_PASSPHRASE`가 암호화 시 사용한 비밀번호와 일치하는지 확인
+**해결**: GitHub Secrets의 `CERT_ENCRYPT_PASSPHRASE`가 암호화 시 사용한 비밀번호와 일치하는지 확인
 
 ## 참고 자료
 

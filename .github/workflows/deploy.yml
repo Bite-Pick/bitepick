@@ -139,7 +139,7 @@ jobs:
 
       - name: Decrypt secrets
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
         run: |
           chmod +x .github/scripts/decrypt-secrets.sh
           .github/scripts/decrypt-secrets.sh
@@ -301,7 +301,7 @@ jobs:
 
       - name: Decrypt secrets
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
         run: |
           chmod +x .github/scripts/decrypt-secrets.sh
           .github/scripts/decrypt-secrets.sh

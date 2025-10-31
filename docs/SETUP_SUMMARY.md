@@ -37,7 +37,7 @@ MATCH_GIT_BASIC_AUTHORIZATION=<GitHub Personal Access Token>
 
 **필요한 GitHub Secret:**
 ```
-GPG_PASSPHRASE=magambell_gpg_password_2025
+CERT_ENCRYPT_PASSPHRASE=magambell_gpg_password_2025
 ```
 
 ### 3. ✅ GitHub Actions Workflow 업데이트
@@ -77,7 +77,7 @@ Repository > Settings > Secrets and variables > Actions
 **필수:**
 ```bash
 # GPG
-GPG_PASSPHRASE=magambell_gpg_password_2025
+CERT_ENCRYPT_PASSPHRASE=magambell_gpg_password_2025
 
 # Match
 MATCH_PASSWORD=<Keychain에서 확인: security find-generic-password -s match -w>
@@ -127,7 +127,7 @@ git push
 2. **로컬 테스트**
    ```bash
    # 복호화 테스트
-   export GPG_PASSPHRASE="magambell_gpg_password_2025"
+   export CERT_ENCRYPT_PASSPHRASE="magambell_gpg_password_2025"
    .github/scripts/decrypt-secrets.sh
 
    # iOS 빌드 테스트 (선택사항)
