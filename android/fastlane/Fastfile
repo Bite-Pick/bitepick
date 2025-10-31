@@ -95,9 +95,15 @@ platform :android do
     puts "  - APK File Size: #{File.size(apk_path) / 1024 / 1024}MB"
     puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
 
+    # Firebase App ID가 없으면 에러
+    if firebase_app_id.nil? || firebase_app_id.empty?
+      raise "Firebase App ID is not set. Please check FIREBASE_APP_ID_ANDROID or FIREBASE_APP_ID_ANDROID_DEV environment variable."
+    end
+
     firebase_app_distribution(
       app: firebase_app_id,
       android_artifact_path: apk_path,
+      android_artifact_type: "APK",
       release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
     )
 

@@ -16,6 +16,7 @@ platform :ios do
       api_key: api_key,
       readonly: true,
       app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
     # Flavor에 따른 entry point 설정
@@ -54,6 +55,7 @@ platform :ios do
       api_key: api_key,
       readonly: true,
       app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
     # Flavor에 따른 entry point 설정
@@ -123,6 +125,11 @@ platform :ios do
     puts "  - Flavor: #{flavor}"
     puts "  - IPA Path: #{ipa_path}"
     puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
+
+    # Firebase App ID가 없으면 에러
+    if firebase_app_id.nil? || firebase_app_id.empty?
+      raise "Firebase App ID is not set. Please check FIREBASE_APP_ID_IOS or FIREBASE_APP_ID_IOS_DEV environment variable."
+    end
 
     firebase_app_distribution(
       app: firebase_app_id,
