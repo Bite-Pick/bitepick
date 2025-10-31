@@ -46,6 +46,7 @@ encrypt_file "android/app/src/dev/res/google-services.json" "$SECRETS_DIR/google
 encrypt_file "android/app/src/prod/res/google-services.json" "$SECRETS_DIR/google-services-android-prod.json.gpg"
 encrypt_file "ios/Runner/GoogleService-Info-dev.plist" "$SECRETS_DIR/GoogleService-Info-dev.plist.gpg"
 encrypt_file "ios/Runner/GoogleService-Info-prod.plist" "$SECRETS_DIR/GoogleService-Info-prod.plist.gpg"
+encrypt_file "ios/AuthKey.p8" "$SECRETS_DIR/AuthKey.p8.gpg"
 
 echo ""
 echo -e "${GREEN}✅ 암호화 완료!${NC}"

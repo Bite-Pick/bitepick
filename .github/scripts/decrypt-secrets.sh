@@ -42,6 +42,7 @@ decrypt_file "$SECRETS_DIR/google-services-android-dev.json.gpg" "android/app/sr
 decrypt_file "$SECRETS_DIR/google-services-android-prod.json.gpg" "android/app/src/prod/res/google-services.json"
 decrypt_file "$SECRETS_DIR/GoogleService-Info-dev.plist.gpg" "ios/Runner/GoogleService-Info-dev.plist"
 decrypt_file "$SECRETS_DIR/GoogleService-Info-prod.plist.gpg" "ios/Runner/GoogleService-Info-prod.plist"
+decrypt_file "$SECRETS_DIR/AuthKey.p8.gpg" "ios/AuthKey.p8"
 
 echo ""
 echo "✅ 모든 파일 복호화 완료!"

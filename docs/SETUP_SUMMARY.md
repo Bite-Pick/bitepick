@@ -13,10 +13,11 @@
 ```
 APP_STORE_CONNECT_API_KEY_ID=<App Store Connect에서 발급>
 APP_STORE_CONNECT_API_KEY_ISSUER_ID=<App Store Connect에서 발급>
-APP_STORE_CONNECT_API_KEY_CONTENT=<.p8 파일 내용>
 MATCH_PASSWORD=<Match 암호>
 MATCH_GIT_BASIC_AUTHORIZATION=<GitHub Personal Access Token>
 ```
+
+**참고:** App Store Connect API 키(.p8 파일)는 GPG로 암호화되어 `.github/secrets/AuthKey.p8.gpg`에 저장됩니다.
 
 **Match 저장소:**
 - https://github.com/magambell/app-ios-certificates
@@ -30,6 +31,7 @@ MATCH_GIT_BASIC_AUTHORIZATION=<GitHub Personal Access Token>
 - `google-services-android-prod.json.gpg` - Firebase Android Prod
 - `GoogleService-Info-dev.plist.gpg` - Firebase iOS Dev
 - `GoogleService-Info-prod.plist.gpg` - Firebase iOS Prod
+- `AuthKey.p8.gpg` - App Store Connect API Key
 
 **스크립트:**
 - `.github/scripts/encrypt-secrets.sh` - 로컬에서 암호화
@@ -94,11 +96,11 @@ GOOGLE_APPLICATION_CREDENTIALS=<Service Account JSON>
 SHOREBIRD_TOKEN=<이미 설정됨>
 ```
 
-**iOS 배포용 (아직 미발급):**
+**iOS 배포용 (이미 설정됨):**
 ```bash
-APP_STORE_CONNECT_API_KEY_ID=<발급 필요>
-APP_STORE_CONNECT_API_KEY_ISSUER_ID=<발급 필요>
-APP_STORE_CONNECT_API_KEY_CONTENT=<발급 필요>
+APP_STORE_CONNECT_API_KEY_ID=<App Store Connect에서 확인>
+APP_STORE_CONNECT_API_KEY_ISSUER_ID=<App Store Connect에서 확인>
+# AuthKey.p8 파일은 .github/secrets/AuthKey.p8.gpg로 암호화되어 있음
 ```
 
 ### 2. 커밋 및 푸시

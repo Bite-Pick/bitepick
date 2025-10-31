@@ -2,7 +2,7 @@
 
 ## 개요
 
-이 프로젝트는 `.env`, `google-services.json`, `GoogleService-Info.plist` 같은 민감한 파일들을 GPG를 사용하여 암호화하고 GitHub에 안전하게 저장합니다.
+이 프로젝트는 `.env`, `google-services.json`, `GoogleService-Info.plist`, `AuthKey.p8` 같은 민감한 파일들을 GPG를 사용하여 암호화하고 GitHub에 안전하게 저장합니다.
 
 ## 암호화 방법
 
@@ -10,8 +10,11 @@
 
 다음 파일들이 있어야 합니다:
 - `.env` (루트 디렉토리)
-- `android/app/google-services.json`
-- `ios/Runner/GoogleService-Info.plist`
+- `android/app/src/dev/res/google-services.json`
+- `android/app/src/prod/res/google-services.json`
+- `ios/Runner/GoogleService-Info-dev.plist`
+- `ios/Runner/GoogleService-Info-prod.plist`
+- `ios/AuthKey.p8` (App Store Connect API Key)
 
 ### 2. 암호화 스크립트 실행
 
@@ -25,8 +28,11 @@
 
 `.github/secrets/` 디렉토리에 다음 파일들이 생성됩니다:
 - `env.gpg`
-- `google-services-android.json.gpg`
-- `GoogleService-Info.plist.gpg`
+- `google-services-android-dev.json.gpg`
+- `google-services-android-prod.json.gpg`
+- `GoogleService-Info-dev.plist.gpg`
+- `GoogleService-Info-prod.plist.gpg`
+- `AuthKey.p8.gpg`
 
 ### 4. Git에 커밋
 
@@ -53,8 +59,9 @@ CERT_ENCRYPT_PASSPHRASE=<암호화 시 사용한 비밀번호>
 2. **Decrypt secrets**: `.github/scripts/decrypt-secrets.sh` 실행
    - CERT_ENCRYPT_PASSPHRASE를 사용하여 암호화된 파일들을 복호화
    - `.env` → 루트 디렉토리
-   - `google-services.json` → `android/app/`
-   - `GoogleService-Info.plist` → `ios/Runner/`
+   - `google-services.json` (dev/prod) → `android/app/src/{flavor}/res/`
+   - `GoogleService-Info.plist` (dev/prod) → `ios/Runner/`
+   - `AuthKey.p8` → `ios/`
 3. **Build**: 복호화된 파일들을 사용하여 빌드
 
 ### 워크플로우 예시
@@ -107,9 +114,10 @@ export CERT_ENCRYPT_PASSPHRASE="your_passphrase"
 - GitHub Secrets로만 비밀번호 관리
 
 ### ❌ 하지 말아야 할 것
-- 원본 파일(.env, google-services.json 등)을 Git에 커밋하지 말 것
+- 원본 파일(.env, google-services.json, AuthKey.p8 등)을 Git에 커밋하지 말 것
 - GPG 비밀번호를 코드나 문서에 포함하지 말 것
 - 암호화되지 않은 파일을 공개 저장소에 올리지 말 것
+- App Store Connect API 키(.p8)를 GitHub Secrets에 직접 저장하지 말 것 (GPG 암호화 사용)
 
 ## 트러블슈팅
 
