@@ -3,8 +3,6 @@ default_platform(:android)
 platform :android do
   desc "Build and release Android app with Shorebird"
   lane :release do
-    sh('flutter pub get')
-
     # Flavor에 따른 entry point 설정
     entry_point = case ENV["MODE"]
     when "dev"
@@ -27,8 +25,6 @@ platform :android do
 
   desc "Create a patch for existing release"
   lane :patch do
-    sh('flutter pub get')
-
     # Flavor에 따른 entry point 설정
     entry_point = case ENV["MODE"]
     when "dev"

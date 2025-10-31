@@ -137,6 +137,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Decrypt secrets
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          chmod +x .github/scripts/decrypt-secrets.sh
+          .github/scripts/decrypt-secrets.sh
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -292,6 +299,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Decrypt secrets
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          chmod +x .github/scripts/decrypt-secrets.sh
+          .github/scripts/decrypt-secrets.sh
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -318,6 +332,11 @@ jobs:
           PATCH_BUILD_NUMBER: ${{ env.PATCH_BUILD_NUMBER }}
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
           MODE: ${{ env.FLAVOR }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         working-directory: ios
         run: |
           # Create logs directory
@@ -327,6 +346,18 @@ jobs:
           # Check SHOREBIRD_TOKEN
           if [ -z "$SHOREBIRD_TOKEN" ]; then
             echo "ERROR: SHOREBIRD_TOKEN is not set"
+            exit 1
+          fi
+
+          # Check App Store Connect API credentials
+          if [ -z "$APP_STORE_CONNECT_API_KEY_ID" ] || [ -z "$APP_STORE_CONNECT_API_KEY_ISSUER_ID" ] || [ -z "$APP_STORE_CONNECT_API_KEY_CONTENT" ]; then
+            echo "ERROR: App Store Connect API credentials are not set"
+            exit 1
+          fi
+
+          # Check Match credentials
+          if [ -z "$MATCH_PASSWORD" ] || [ -z "$MATCH_GIT_BASIC_AUTHORIZATION" ]; then
+            echo "ERROR: Match credentials are not set"
             exit 1
           fi
 

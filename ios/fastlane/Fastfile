@@ -3,7 +3,20 @@ default_platform(:ios)
 platform :ios do
   desc "Build and release iOS app with Shorebird"
   lane :release do
-    sh('flutter pub get')
+    setup_ci
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+    )
+
+    match(
+      type: "appstore",
+      api_key: api_key,
+      readonly: true,
+      app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
+    )
 
     # Flavor에 따른 entry point 설정
     entry_point = case ENV["MODE"]
@@ -17,7 +30,8 @@ platform :ios do
 
     shorebird_release(
       platform: "ios",
-      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}"
+      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}",
+      export_options: ENV['EXPORT_OPTIONS_PLIST']
     )
 
     rescue => exception
@@ -27,7 +41,20 @@ platform :ios do
 
   desc "Create a patch for existing release"
   lane :patch do
-    sh('flutter pub get')
+    setup_ci
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+    )
+
+    match(
+      type: "appstore",
+      api_key: api_key,
+      readonly: true,
+      app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
+    )
 
     # Flavor에 따른 entry point 설정
     entry_point = case ENV["MODE"]
@@ -44,7 +71,8 @@ platform :ios do
 
     shorebird_patch(
       platform: "ios",
-      args: patch_args
+      args: patch_args,
+      export_options: ENV['EXPORT_OPTIONS_PLIST']
     )
 
     rescue => exception
@@ -56,6 +84,13 @@ platform :ios do
   lane :distribute do
     # Shorebird release IPA가 이미 빌드되었다고 가정하고 배포만 진행
     flavor = ENV["MODE"] || "dev"
+
+    # Flavor에 따른 Firebase App ID 설정
+    firebase_app_id = if flavor == "dev"
+      ENV["FIREBASE_APP_ID_IOS_DEV"]
+    else
+      ENV["FIREBASE_APP_ID_IOS"]
+    end
 
     # 여러 가능한 IPA 경로 확인
     possible_ipa_paths = [
@@ -84,13 +119,13 @@ platform :ios do
 
     # Distribute to Firebase App Distribution
     puts "🔍 Firebase App Distribution 설정 확인:"
-    puts "  - App ID: #{ENV["FIREBASE_APP_ID_IOS"]}"
+    puts "  - App ID: #{firebase_app_id}"
     puts "  - Flavor: #{flavor}"
     puts "  - IPA Path: #{ipa_path}"
     puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
 
     firebase_app_distribution(
-      app: ENV["FIREBASE_APP_ID_IOS"],
+      app: firebase_app_id,
       ipa_path: ipa_path,
       release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원",
       groups: "qa-testers"

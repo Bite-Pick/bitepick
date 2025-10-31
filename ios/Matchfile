@@ -1,0 +1,9 @@
+git_url("https://github.com/magambell/app-ios-certificates")
+
+storage_mode("git")
+
+type("appstore")
+
+app_identifier(["com.trendflow.bread", "com.trendflow.bread.dev"])
+
+username("magambell@naver.com")
