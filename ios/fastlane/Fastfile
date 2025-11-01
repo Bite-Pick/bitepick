@@ -19,25 +19,11 @@ platform :ios do
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
-    # Update Xcode project code signing settings
-    app_identifier = ENV["MODE"] == "dev" ? "com.trendflow.bread.dev" : "com.trendflow.bread"
-    update_code_signing_settings(
-      use_automatic_signing: false,
-      path: "Runner.xcodeproj",
-      targets: ["Runner"],
-      code_sign_identity: "Apple Distribution",
-      bundle_identifier: app_identifier,
-      profile_name: "match AppStore #{app_identifier}"
-    )
-
-    # Flutter dependencies
     sh('flutter pub get')
 
-    # Update build number and version in Xcode project
     increment_build_number(build_number: ENV["BUILD_NUMBER"])
     increment_version_number(version_number: ENV["VERSION_NUMBER"])
 
-    # Install CocoaPods dependencies
     cocoapods(
       repo_update: false,
       use_bundle_exec: true,
@@ -82,18 +68,6 @@ platform :ios do
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
-    # Update Xcode project code signing settings
-    app_identifier = ENV["MODE"] == "dev" ? "com.trendflow.bread.dev" : "com.trendflow.bread"
-    update_code_signing_settings(
-      use_automatic_signing: false,
-      path: "Runner.xcodeproj",
-      targets: ["Runner"],
-      code_sign_identity: "Apple Distribution",
-      bundle_identifier: app_identifier,
-      profile_name: "match AppStore #{app_identifier}"
-    )
-
-    # Flutter dependencies
     sh('flutter pub get')
 
     # Flavor에 따른 entry point 설정
