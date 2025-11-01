@@ -13,6 +13,8 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
+import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_map_view.dart';
@@ -42,22 +44,66 @@ class DetailScreen extends ConsumerStatefulWidget {
   ConsumerState<DetailScreen> createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends ConsumerState<DetailScreen> {
+class _DetailScreenState extends ConsumerState<DetailScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final store = ref.watch(storeGoodsDetailProvider(id));
     final store = mockData;
     return BaseScaffold(
       appBar: BaseAppBar(title: Text('상세 화면 ${widget.id}')),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildThumbnailImageView(store),
-            _buildStoreDescriptionSection(store),
-            Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
-            _buildStoreLocationInfoSection(store),
-            Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
-          ],
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                _buildThumbnailImageView(store),
+                _buildStoreDescriptionSection(store),
+                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
+                _buildStoreLocationInfoSection(store),
+                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
+              ],
+            ),
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverAppBarDelegate(
+              TabBar(
+                dividerColor: Colors.transparent,
+                controller: _tabController,
+                labelColor: MgColorScheme.text,
+                unselectedLabelColor: MgColorScheme.gray5,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+                ),
+                labelStyle: context.textTheme.titleLarge,
+                unselectedLabelStyle: context.textTheme.bodyLarge,
+                tabs: [
+                  Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
+                  Tab(text: '리뷰'),
+                ],
+              ),
+            ),
+          ),
+        ],
+        body: TabBarView(
+          controller: _tabController,
+          children: [StoreInfoView(), StoreReviewListView()],
         ),
       ),
     );
@@ -229,5 +275,31 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
         ],
       ).margin(vertical: MgSizes.md, horizontal: MgSizes.xl),
     );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(color: MgColorScheme.white, child: _tabBar);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

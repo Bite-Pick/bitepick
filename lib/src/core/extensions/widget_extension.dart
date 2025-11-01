@@ -77,4 +77,8 @@ extension KnStyledWidget<T extends Widget> on T {
         : constraints;
     return ConstrainedBox(key: key, child: this, constraints: constraints);
   }
+
+  Widget colored(Color color) {
+    return ColoredBox(color: color, child: this);
+  }
 }
