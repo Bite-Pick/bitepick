@@ -19,8 +19,6 @@ platform :ios do
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
-    sh('flutter pub get')
-
     increment_build_number(build_number: ENV["BUILD_NUMBER"])
     increment_version_number(version_number: ENV["VERSION_NUMBER"])
 
@@ -67,8 +65,6 @@ platform :ios do
       app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
-
-    sh('flutter pub get')
 
     # Flavor에 따른 entry point 설정
     entry_point = case ENV["MODE"]
