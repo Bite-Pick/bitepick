@@ -56,4 +56,25 @@ extension KnStyledWidget<T extends Widget> on T {
     );
     return DecoratedBox(key: key, child: this, decoration: decoration);
   }
+
+  Widget constrained({
+    Key? key,
+    double? width,
+    double? height,
+    double minWidth = 0.0,
+    double maxWidth = double.infinity,
+    double minHeight = 0.0,
+    double maxHeight = double.infinity,
+  }) {
+    BoxConstraints constraints = BoxConstraints(
+      minWidth: minWidth,
+      maxWidth: maxWidth,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+    );
+    constraints = (width != null || height != null)
+        ? constraints.tighten(width: width, height: height)
+        : constraints;
+    return ConstrainedBox(key: key, child: this, constraints: constraints);
+  }
 }

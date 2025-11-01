@@ -3,6 +3,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
@@ -13,8 +14,11 @@ import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
+import 'package:magambell/src/widgets/base_map_view.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_bottomsheet.dart';
+import 'package:magambell/src/widgets/mg_button.dart';
 
 class StoreRoute extends GoRouteData {
   const StoreRoute({required this.id});
@@ -50,6 +54,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
             _buildStoreDescriptionSection(store),
             Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
             _buildStoreLocationInfoSection(store),
+            Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
           ],
         ),
       ),
@@ -142,7 +147,21 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
         ),
         _buildStoreInfoItem('주차안내', "TODO"),
         _buildStoreInfoItem('가게 주소', store.address), //TODO: 복사 버튼 추가
-        // TODO: 지도 추가
+        BaseMapView(
+          latitude: store.latitude,
+          longitude: store.longitude,
+        ).constrained(height: 100).margin(vertical: MgSizes.md),
+        MgButton(
+          onPressed: () async {
+            await MgBottomsheet.show(context, (context, bottomState) {
+              return _buildFindRouteBottomSheet();
+            });
+          },
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [BaseSvgIcon.mapPin(), Gaps.w4, Text("길찾기")],
+          ),
+        ), //TODO: border
       ],
     ).margin(horizontal: MgSizes.md);
   }
@@ -155,5 +174,46 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
         Text(value).md().regular(),
       ],
     );
+  }
+
+  Widget _buildFindRouteBottomSheet() {
+    return MgBottomsheet(
+      Column(
+        children: [
+          Text("길찾기").md().bold().margin(vertical: MgSizes.md),
+          _buildBottomSheetItem("네이버지도", R.ASSETS_IMAGES_NAVERMAP_PNG, () {
+            // TODO
+          }),
+          Divider(),
+          _buildBottomSheetItem("카카오맵", R.ASSETS_IMAGES_KAKAOMAP_PNG, () {
+            // TODO
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomSheetItem(
+    String label,
+    String iconUrl,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          ClipOval(
+            child: Image.asset(iconUrl),
+          ).constrained(height: MgSizes.size24),
+          Gaps.w12,
+          Text(label).md(),
+        ],
+      ).margin(vertical: MgSizes.md, horizontal: MgSizes.xl),
+    );
+  }
+
+  Widget _buildStoreDetailSection() {
+    return TabBar(); // TODO:
   }
 }

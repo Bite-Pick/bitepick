@@ -30,7 +30,11 @@ class Goods with _$Goods {
 final mockData = Goods(
   storeId: "1",
   storeName: "test",
-  ImageUrl: ["", "", "", ""],
+  ImageUrl: [
+    "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
+    "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg",
+    "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/3_bakery01.jpeg",
+  ],
   latitude: 0,
   longitude: 0,
   address: "dd",
