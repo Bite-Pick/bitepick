@@ -103,7 +103,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
         ],
         body: TabBarView(
           controller: _tabController,
-          children: [StoreInfoView(), StoreReviewListView()],
+          children: [StoreInfoView(), StoreReviewListView(widget.id)],
         ),
       ),
     );

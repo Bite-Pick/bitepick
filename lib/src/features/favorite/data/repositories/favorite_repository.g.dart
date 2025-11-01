@@ -7,7 +7,7 @@ part of 'favorite_repository.dart';
 // **************************************************************************
 
 String _$favoriteRepositoryHash() =>
-    r'4db8ff3394d8f2a3e23519de3cb7972abf3044aa';
+    r'11bb25fec0ff72efae7673cfdf33e9a06818a261';
 
 /// See also [favoriteRepository].
 @ProviderFor(favoriteRepository)
@@ -25,7 +25,7 @@ final favoriteRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FavoriteRepositoryRef = AutoDisposeProviderRef<FavoriteRepository>;
-String _$favoriteHash() => r'937b2ee0bcdc32d87bc79feeafbad815674071ea';
+String _$favoriteHash() => r'2db9715e2b46cddd41697cdb7c8f3f12238866bb';
 
 /// Copied from Dart SDK
 class _SystemHash {
