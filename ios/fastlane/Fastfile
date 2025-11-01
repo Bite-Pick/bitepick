@@ -106,28 +106,49 @@ platform :ios do
       ENV["FIREBASE_APP_ID_IOS"]
     end
 
-    # 여러 가능한 IPA 경로 확인
-    possible_ipa_paths = [
-      "../../build/ios/ipa/magambell.ipa",
-      "../../build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app"
-    ]
+    # 현재 작업 디렉터리 출력 (디버깅용)
+    puts "📍 현재 작업 디렉터리: #{Dir.pwd}"
+
+    # Shorebird IPA 파일 찾기 (glob 패턴 사용)
+    # fastlane 작업 디렉터리는 ios/fastlane이므로 ../../build/ios/ipa/*.ipa로 검색
+    ipa_files = Dir.glob("../../build/ios/ipa/*.ipa")
+
+    puts "🔍 검색된 IPA 파일들: #{ipa_files.inspect}"
 
     ipa_path = nil
-    possible_ipa_paths.each do |path|
-      if File.exist?(path)
-        ipa_path = File.expand_path(path)  # 절대 경로로 변환
-        puts "📦 IPA 파일 확인됨: #{ipa_path}"
-        break
-      else
-        puts "🔍 IPA 파일 확인 중: #{path} - 없음"
+    if ipa_files.any?
+      ipa_path = File.expand_path(ipa_files.first)
+      puts "📦 IPA 파일 확인됨: #{ipa_path}"
+    else
+      # 대체 경로들도 확인
+      possible_ipa_paths = [
+        "../../build/ios/ipa/Runner.ipa",
+        "../../build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app"
+      ]
+
+      possible_ipa_paths.each do |path|
+        puts "🔍 IPA 파일 확인 중: #{path}"
+        if File.exist?(path)
+          ipa_path = File.expand_path(path)
+          puts "📦 IPA 파일 확인됨: #{ipa_path}"
+          break
+        end
       end
     end
 
     unless ipa_path
       puts "❌ IPA 파일을 찾을 수 없습니다!"
-      puts "확인한 경로들:"
-      possible_ipa_paths.each { |path| puts "  - #{path}" }
-      puts "현재 작업 디렉터리: #{Dir.pwd}"
+      puts "확인한 디렉터리 내용:"
+
+      # build 디렉터리 구조 출력
+      build_dir = "../../build/ios"
+      if Dir.exist?(build_dir)
+        puts "\n#{build_dir} 디렉터리 구조:"
+        Dir.glob("#{build_dir}/**/*").each { |f| puts "  - #{f}" }
+      else
+        puts "  - #{build_dir} 디렉터리가 존재하지 않습니다"
+      end
+
       raise "IPA file not found"
     end
 
