@@ -6,7 +6,7 @@ part of 'store_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$storeGoodsListHash() => r'51a985118f421ba0809434fcda50792e605aa48c';
+String _$storeGoodsListHash() => r'e0631c63beb69f76787e0201a6973035f5de6a4e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -254,7 +254,7 @@ class _StoreGoodsListProviderElement
   int get size => (origin as StoreGoodsListProvider).size;
 }
 
-String _$storeGoodsDetailHash() => r'e33f15e9a99bd8c2e18334440829bc6764af760e';
+String _$storeGoodsDetailHash() => r'b9818eb9888b86007877016cabfc9a8b7f78dc00';
 
 /// See also [storeGoodsDetail].
 @ProviderFor(storeGoodsDetail)

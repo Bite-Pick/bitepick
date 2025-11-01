@@ -11,12 +11,14 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
+import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_map_view.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
@@ -98,6 +100,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
   }
 
   Widget _buildStoreDescriptionSection(Goods store) {
+    final favoriteAsync = ref.watch(favoriteProvider(storeId: widget.id));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,10 +110,24 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
             StoreTags(quantity: store.quantity, saleStatus: store.saleStatus),
             Spacer(),
             GestureDetector(
-              onTap: () {
-                // TODO: 좋아요
+              onTap: () async {
+                final repo = ref.read(favoriteRepositoryProvider);
+                final currentFavorite = favoriteAsync.asData?.value;
+                currentFavorite == true
+                    ? await repo.removeFavorite(widget.id)
+                    : await repo.addFavorite(widget.id);
+                ref.invalidate(favoriteProvider(storeId: widget.id));
               },
-              child: BaseSvgIcon.heart(),
+              child: MgAsyncAnimatedSwitcher(
+                asyncValue: favoriteAsync,
+                builder: (isFavorite) {
+                  return (isFavorite == true)
+                      ? BaseSvgIcon.heartFilled(
+                          color: MgColorScheme.navigationPrimary,
+                        )
+                      : BaseSvgIcon.heart();
+                },
+              ),
             ),
           ],
         ),
@@ -211,9 +229,5 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
         ],
       ).margin(vertical: MgSizes.md, horizontal: MgSizes.xl),
     );
-  }
-
-  Widget _buildStoreDetailSection() {
-    return TabBar(); // TODO:
   }
 }
