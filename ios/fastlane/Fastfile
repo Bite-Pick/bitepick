@@ -21,8 +21,12 @@ platform :ios do
 
     sh('flutter pub get')
 
+    # Clean version number (remove 'v' prefix and flavor suffix like '-dev', '-prod')
+    clean_version = ENV["VERSION_NUMBER"].sub(/^v/, '').sub(/-dev$/, '').sub(/-prod$/, '')
+    puts "📦 Using clean version: #{clean_version}"
+
     increment_build_number(build_number: ENV["BUILD_NUMBER"])
-    increment_version_number(version_number: ENV["VERSION_NUMBER"])
+    increment_version_number(version_number: clean_version)
 
     cocoapods(
       repo_update: false,
@@ -41,7 +45,7 @@ platform :ios do
 
     shorebird_release(
       platform: "ios",
-      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}",
+      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{clean_version} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}",
       export_options: ENV['EXPORT_OPTIONS_PLIST']
     )
 
