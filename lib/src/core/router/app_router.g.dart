@@ -15,10 +15,10 @@ RouteBase get $mainRoute => GoRouteData.$route(
   factory: $MainRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'detail/:id',
-      name: 'DetailRoute',
+      path: 'store/:id',
+      name: 'StoreRoute',
 
-      factory: $DetailRouteExtension._fromState,
+      factory: $StoreRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'search',
@@ -50,12 +50,12 @@ extension $MainRouteExtension on MainRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $DetailRouteExtension on DetailRoute {
-  static DetailRoute _fromState(GoRouterState state) =>
-      DetailRoute(id: int.parse(state.pathParameters['id']!));
+extension $StoreRouteExtension on StoreRoute {
+  static StoreRoute _fromState(GoRouterState state) =>
+      StoreRoute(id: state.pathParameters['id']!);
 
   String get location =>
-      GoRouteData.$location('/detail/${Uri.encodeComponent(id.toString())}');
+      GoRouteData.$location('/store/${Uri.encodeComponent(id)}');
 
   void go(BuildContext context) => context.go(location);
 

@@ -87,7 +87,7 @@ class MgTag extends StatelessWidget {
 
   Widget _buildAffix(Widget? affix, BuildContext context) {
     if (affix == null) return const SizedBox.shrink();
-
+    // TODO: icon도 color적용 필요
     return SizedBox(
       width: _iconSize ?? MgSizes.size16,
       height: _iconSize ?? MgSizes.size16,

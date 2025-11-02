@@ -44,8 +44,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
-        latitude: defaultAddress?.latitude ?? 37.5185663, // TODO: 기본 위치 설정 필요
-        longitude: defaultAddress?.longitude ?? 127.0230599,
+        latitude: 37.5185663, // TODO: 기본 위치 설정 필요
+        longitude: 127.0230599,
+        // latitude:defaultAddress?.longitude ?? 37.5185663,
+        // longitude: defaultAddress?.latitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
         sortType: sortType,
       ),

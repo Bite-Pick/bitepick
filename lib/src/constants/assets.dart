@@ -130,6 +130,12 @@ class R {
   static const String ASSETS_IMAGES_HOME_OPEN_BEFORE_PNG =
       'assets/images/home_open_before.png';
 
+  static const String ASSETS_IMAGES_KAKAOMAP_PNG = 'assets/images/kakaomap.png';
+
+  static const String ASSETS_IMAGES_NAVERMAP_PNG = 'assets/images/navermap.png';
+
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
+
+  static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }

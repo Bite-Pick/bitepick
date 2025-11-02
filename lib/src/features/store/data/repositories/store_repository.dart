@@ -19,7 +19,7 @@ Future<List<Goods>> storeGoodsList(
 }) async {
   final dio = ApiClient().dio;
   final res = await dio.get(
-    '/api/v1/store',
+    '/v1/store',
     queryParameters: {
       'latitude': latitude,
       'longitude': longitude,
@@ -44,7 +44,7 @@ Future<List<Goods>> storeGoodsList(
 @riverpod
 Future<Goods?> storeGoodsDetail(Ref ref, String id) async {
   final dio = ApiClient().dio;
-  final res = await dio.get('/api/v1/store/$id');
+  final res = await dio.get('/v1/store/$id');
 
   if (res.data['status'] != 'OK') return null;
 
