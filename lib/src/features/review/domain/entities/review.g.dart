@@ -10,7 +10,7 @@ _$ReviewImpl _$$ReviewImplFromJson(Map<String, dynamic> json) => _$ReviewImpl(
   reviewId: json['reviewId'] as String,
   rating: (json['rating'] as num).toInt(),
   satisfactionReasons: (json['satisfactionReasons'] as List<dynamic>)
-      .map((e) => e as String)
+      .map((e) => $enumDecode(_$SatisfactionTypeEnumMap, e))
       .toList(),
   description: json['description'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
@@ -27,7 +27,9 @@ Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
     <String, dynamic>{
       'reviewId': instance.reviewId,
       'rating': instance.rating,
-      'satisfactionReasons': instance.satisfactionReasons,
+      'satisfactionReasons': instance.satisfactionReasons
+          .map((e) => _$SatisfactionTypeEnumMap[e]!)
+          .toList(),
       'description': instance.description,
       'createdAt': instance.createdAt.toIso8601String(),
       'imageUrls': instance.imageUrls,
@@ -36,3 +38,10 @@ Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
       'storeId': instance.storeId,
       'storeName': instance.storeName,
     };
+
+const _$SatisfactionTypeEnumMap = {
+  SatisfactionType.variety: 'VARIETY',
+  SatisfactionType.affordable: 'AFFORDABLE',
+  SatisfactionType.friendly: 'FRIENDLY',
+  SatisfactionType.zero: 'ZERO',
+};

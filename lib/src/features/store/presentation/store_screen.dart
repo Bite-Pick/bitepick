@@ -65,7 +65,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
     // final store = ref.watch(storeGoodsDetailProvider(id));
     final store = mockData;
     return BaseScaffold(
-      appBar: BaseAppBar(title: Text('상세 화면 ${widget.id}')),
+      appBar: BaseAppBar(),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(
@@ -106,7 +106,44 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
           children: [StoreInfoView(), StoreReviewListView(widget.id)],
         ),
       ),
+      bottomNavigationBar: _buildBottomButton(store),
     );
+  }
+
+  Widget _buildBottomButton(Goods store) {
+    return SafeArea(
+          child: Row(
+            children: [
+              Expanded(
+                child:
+                    Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(child: BaseSvgIcon.plus()),
+                            Text("수량").md().margin(horizontal: MgSizes.xxl),
+                            GestureDetector(child: BaseSvgIcon.minus()),
+                          ],
+                        )
+                        .margin(all: MgSizes.sm)
+                        .decorated(
+                          color: MgColorScheme.gray8,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+              ),
+              Gaps.w10,
+              Expanded(
+                child: MgButton(
+                  onPressed: () {
+                    // TODO: 구매하기 로직
+                  },
+                  content: Text('구매하기'),
+                ).primary(),
+              ),
+            ],
+          ),
+        )
+        .constrained(height: 85)
+        .margin(horizontal: MgSizes.md, vertical: MgSizes.md);
   }
 
   Widget _buildThumbnailImageView(Goods store) {
@@ -154,6 +191,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
         Row(
           children: [
             StoreTags(quantity: store.quantity, saleStatus: store.saleStatus),
+            // TODO[review]: 리뷰영역으로 스크롤내리는 버튼 추가
             Spacer(),
             GestureDetector(
               onTap: () async {

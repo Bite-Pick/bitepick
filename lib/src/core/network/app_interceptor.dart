@@ -30,12 +30,12 @@ class AppInterceptor extends Interceptor {
 
     // 인증 토큰 주입
     final token = await _getAuthToken();
-    // if (token != null) {
-    // options.headers['Authorization'] = 'Bearer $token';
-    options.headers['Authorization'] =
-        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VyUm9sZSI6IkNVU1RPTUVSIiwic3ViIjoiNzQyMTQ5NjM5NDc4MjgxNjkyIiwiaWF0IjoxNzYyMDA0ODEyLCJleHAiOjE3NjIwMDg0MTJ9.Krvs6AC_CtgGOluidxjCh4MEV8YdRWrQKNPUzA6t5lA ';
-    // }
-
+    if (token != null) {
+      options.headers['Authorization'] = 'Bearer $token';
+      // options.headers['Authorization'] =
+      // 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VyUm9sZSI6IkNVU1RPTUVSIiwic3ViIjoiNzQyMTQ5NjM5NDc4MjgxNjkyIiwiaWF0IjoxNzYyMDA0ODEyLCJleHAiOjE3NjIwMDg0MTJ9.Krvs6AC_CtgGOluidxjCh4MEV8YdRWrQKNPUzA6t5lA ';
+      // }
+    }
     // 세션 쿠키 주입
     if (_sessionCookie != null) {
       options.headers['Cookie'] = _sessionCookie;

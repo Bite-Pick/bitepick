@@ -23,7 +23,8 @@ Review _$ReviewFromJson(Map<String, dynamic> json) {
 mixin _$Review {
   String get reviewId => throw _privateConstructorUsedError;
   int get rating => throw _privateConstructorUsedError;
-  List<String> get satisfactionReasons => throw _privateConstructorUsedError;
+  List<SatisfactionType> get satisfactionReasons =>
+      throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   List<String> get imageUrls => throw _privateConstructorUsedError;
@@ -49,7 +50,7 @@ abstract class $ReviewCopyWith<$Res> {
   $Res call({
     String reviewId,
     int rating,
-    List<String> satisfactionReasons,
+    List<SatisfactionType> satisfactionReasons,
     String description,
     DateTime createdAt,
     List<String> imageUrls,
@@ -99,7 +100,7 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
             satisfactionReasons: null == satisfactionReasons
                 ? _value.satisfactionReasons
                 : satisfactionReasons // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+                      as List<SatisfactionType>,
             description: null == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
@@ -145,7 +146,7 @@ abstract class _$$ReviewImplCopyWith<$Res> implements $ReviewCopyWith<$Res> {
   $Res call({
     String reviewId,
     int rating,
-    List<String> satisfactionReasons,
+    List<SatisfactionType> satisfactionReasons,
     String description,
     DateTime createdAt,
     List<String> imageUrls,
@@ -194,7 +195,7 @@ class __$$ReviewImplCopyWithImpl<$Res>
         satisfactionReasons: null == satisfactionReasons
             ? _value._satisfactionReasons
             : satisfactionReasons // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+                  as List<SatisfactionType>,
         description: null == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
@@ -234,7 +235,7 @@ class _$ReviewImpl extends _Review {
   const _$ReviewImpl({
     required this.reviewId,
     required this.rating,
-    required final List<String> satisfactionReasons,
+    required final List<SatisfactionType> satisfactionReasons,
     required this.description,
     required this.createdAt,
     required final List<String> imageUrls,
@@ -253,9 +254,9 @@ class _$ReviewImpl extends _Review {
   final String reviewId;
   @override
   final int rating;
-  final List<String> _satisfactionReasons;
+  final List<SatisfactionType> _satisfactionReasons;
   @override
-  List<String> get satisfactionReasons {
+  List<SatisfactionType> get satisfactionReasons {
     if (_satisfactionReasons is EqualUnmodifiableListView)
       return _satisfactionReasons;
     // ignore: implicit_dynamic_type
@@ -350,7 +351,7 @@ abstract class _Review extends Review {
   const factory _Review({
     required final String reviewId,
     required final int rating,
-    required final List<String> satisfactionReasons,
+    required final List<SatisfactionType> satisfactionReasons,
     required final String description,
     required final DateTime createdAt,
     required final List<String> imageUrls,
@@ -368,7 +369,7 @@ abstract class _Review extends Review {
   @override
   int get rating;
   @override
-  List<String> get satisfactionReasons;
+  List<SatisfactionType> get satisfactionReasons;
   @override
   String get description;
   @override
