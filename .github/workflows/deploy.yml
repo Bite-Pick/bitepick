@@ -552,13 +552,25 @@ jobs:
             exit 1
           fi
 
-          # Check if IPA exists
-          if [ -f "../build/ios/ipa/magambell.ipa" ]; then
-            echo "✅ IPA found"
+          # Check if IPA exists - use find command to locate any .ipa file
+          echo "🔍 Searching for IPA files..."
+          ls -la ../build/ios/ || echo "ios build directory not found"
+          ls -la ../build/ios/ipa/ || echo "ipa directory not found"
+
+          # Find any .ipa file in the directory
+          IPA_FILE=$(find ../build/ios/ipa -name "*.ipa" -type f | head -1)
+
+          if [ -n "$IPA_FILE" ]; then
+            echo "✅ IPA found at: $IPA_FILE"
+            # Create symbolic link with expected name if needed
+            if [ ! -f "../build/ios/ipa/magambell.ipa" ]; then
+              echo "Creating symbolic link to magambell.ipa"
+              ln -s "$(basename "$IPA_FILE")" "../build/ios/ipa/magambell.ipa"
+            fi
           else
-            echo "❌ IPA file not found"
-            echo "Checked path: ../build/ios/ipa/magambell.ipa"
-            ls -la ../build/ios/ || echo "ios build directory not found"
+            echo "❌ No IPA file found in ../build/ios/ipa/"
+            echo "Directory contents:"
+            find ../build/ios/ipa -type f || echo "No files found"
             echo "Shorebird release 빌드가 실패했거나 IPA가 생성되지 않았습니다."
             exit 1
           fi
@@ -773,13 +785,25 @@ jobs:
             exit 1
           fi
 
-          # Check if IPA exists
-          if [ -f "../build/ios/ipa/magambell.ipa" ]; then
-            echo "✅ IPA found"
+          # Check if IPA exists - use find command to locate any .ipa file
+          echo "🔍 Searching for IPA files..."
+          ls -la ../build/ios/ || echo "ios build directory not found"
+          ls -la ../build/ios/ipa/ || echo "ipa directory not found"
+
+          # Find any .ipa file in the directory
+          IPA_FILE=$(find ../build/ios/ipa -name "*.ipa" -type f | head -1)
+
+          if [ -n "$IPA_FILE" ]; then
+            echo "✅ IPA found at: $IPA_FILE"
+            # Create symbolic link with expected name if needed
+            if [ ! -f "../build/ios/ipa/magambell.ipa" ]; then
+              echo "Creating symbolic link to magambell.ipa"
+              ln -s "$(basename "$IPA_FILE")" "../build/ios/ipa/magambell.ipa"
+            fi
           else
-            echo "❌ IPA file not found"
-            echo "Checked path: ../build/ios/ipa/magambell.ipa"
-            ls -la ../build/ios/ || echo "ios build directory not found"
+            echo "❌ No IPA file found in ../build/ios/ipa/"
+            echo "Directory contents:"
+            find ../build/ios/ipa -type f || echo "No files found"
             echo "Shorebird release 빌드가 실패했거나 IPA가 생성되지 않았습니다."
             exit 1
           fi
