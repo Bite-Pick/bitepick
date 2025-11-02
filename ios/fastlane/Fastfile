@@ -45,6 +45,14 @@ platform :ios do
       export_options: ENV['EXPORT_OPTIONS_PLIST']
     )
 
+    # App Store에 업로드
+    upload_to_app_store(
+      api_key: api_key,
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: false
+    )
+
     rescue => exception
       handle_asset_changes_error(exception)
       raise exception
