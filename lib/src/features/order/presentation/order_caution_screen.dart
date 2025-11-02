@@ -4,24 +4,24 @@ import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/order/presentation/order_pay_screen.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class OrderCautionRoute extends GoRouteData {
-  const OrderCautionRoute({this.count = 1});
-  final int count;
+  const OrderCautionRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrderCautionScreen(count: count);
+    return const OrderCautionScreen();
   }
 }
 
 class OrderCautionScreen extends StatelessWidget {
-  const OrderCautionScreen({super.key, this.count = 1});
-  final int count;
+  const OrderCautionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +49,8 @@ class OrderCautionScreen extends StatelessWidget {
           Spacer(),
           // Bottom button
           MgButton(
-            onPressed: () {
-              // TODO: 결제 화면으로 이동
-              context.pop();
+            onPressed: () async {
+              await const OrderPayRoute().push(context);
             },
             content: Text('결제하기'),
           ).primary().margin(horizontal: MgSizes.md, bottom: MgSizes.xxl),

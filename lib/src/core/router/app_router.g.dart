@@ -38,6 +38,12 @@ RouteBase get $mainRoute => GoRouteData.$route(
 
       factory: $OrderCautionRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'order/pay',
+      name: 'OrderPayRoute',
+
+      factory: $OrderPayRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -113,6 +119,25 @@ extension $OrderCautionRouteExtension on OrderCautionRoute {
   String get location => GoRouteData.$location(
     '/order/caution',
     queryParams: {if (count != 1) 'count': count.toString()},
+  );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OrderPayRouteExtension on OrderPayRoute {
+  static OrderPayRoute _fromState(GoRouterState state) =>
+      OrderPayRoute(int.parse(state.uri.queryParameters['count']!));
+
+  String get location => GoRouteData.$location(
+    '/order/pay',
+    queryParams: {'count': count.toString()},
   );
 
   void go(BuildContext context) => context.go(location);

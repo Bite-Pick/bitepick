@@ -15,6 +15,7 @@ import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
+import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
@@ -150,8 +151,16 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
-                  onPressed: () async =>
-                      OrderCautionRoute(count: count).push(context),
+                  onPressed: () async {
+                    // 주문 정보 저장
+                    ref.read(orderPayScreenControllerProvider.notifier).setOrderInfo(
+                          goodsId: widget.id,
+                          quantity: count,
+                          totalPrice: store.salePrice * count,
+                        );
+                    // 주문 확인 화면으로 이동
+                    await const OrderCautionRoute().push(context);
+                  },
                   content: Text('구매하기'),
                 ).primary(),
               ),
