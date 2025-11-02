@@ -32,6 +32,12 @@ RouteBase get $mainRoute => GoRouteData.$route(
 
       factory: $SearchAddressRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'order/caution',
+      name: 'OrderCautionRoute',
+
+      factory: $OrderCautionRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -96,4 +102,34 @@ extension $SearchAddressRouteExtension on SearchAddressRoute {
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OrderCautionRouteExtension on OrderCautionRoute {
+  static OrderCautionRoute _fromState(GoRouterState state) => OrderCautionRoute(
+    count:
+        _$convertMapValue('count', state.uri.queryParameters, int.parse) ?? 1,
+  );
+
+  String get location => GoRouteData.$location(
+    '/order/caution',
+    queryParams: {if (count != 1) 'count': count.toString()},
+  );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
 }

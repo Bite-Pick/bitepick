@@ -134,8 +134,17 @@ class R {
 
   static const String ASSETS_IMAGES_NAVERMAP_PNG = 'assets/images/navermap.png';
 
+  static const String ASSETS_IMAGES_ORDER_CAUTION_1_PNG =
+      'assets/images/order_caution_1.png';
+
+  static const String ASSETS_IMAGES_ORDER_CAUTION_2_PNG =
+      'assets/images/order_caution_2.png';
+
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
+
+  static const String ASSETS_IMAGES_TOSS_PAYMENTS_PNG =
+      'assets/images/toss_payments.png';
 
   static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }

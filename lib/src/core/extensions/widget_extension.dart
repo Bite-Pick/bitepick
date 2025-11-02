@@ -47,12 +47,14 @@ extension KnStyledWidget<T extends Widget> on T {
     BoxBorder? border,
     BorderRadius? borderRadius,
     List<BoxShadow>? boxShadow,
+    BoxShape? shape,
   }) {
     final BoxDecoration decoration = BoxDecoration(
       color: color,
       border: border,
       borderRadius: borderRadius,
       boxShadow: boxShadow,
+      shape: shape ?? BoxShape.rectangle,
     );
     return DecoratedBox(key: key, child: this, decoration: decoration);
   }

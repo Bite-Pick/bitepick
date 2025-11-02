@@ -8,11 +8,13 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
@@ -31,23 +33,30 @@ class StoreRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DetailScreen(id: id);
+    return StoreScreen(id: id);
   }
 }
 
-class DetailScreen extends ConsumerStatefulWidget {
-  const DetailScreen({super.key, required this.id});
+class StoreScreen extends ConsumerStatefulWidget {
+  const StoreScreen({super.key, required this.id});
 
   final String id;
 
   @override
-  ConsumerState<DetailScreen> createState() => _DetailScreenState();
+  ConsumerState<StoreScreen> createState() => _StoreScreenState();
 }
 
-class _DetailScreenState extends ConsumerState<DetailScreen>
+class _StoreScreenState extends ConsumerState<StoreScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  int count = 1;
+  void setCount(bool isAdd) => setState(
+    () => count = isAdd
+        ? count + 1
+        : count > 1
+        ? count - 1
+        : 1,
+  );
   @override
   void initState() {
     super.initState();
@@ -119,9 +128,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                     Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GestureDetector(child: BaseSvgIcon.plus()),
-                            Text("수량").md().margin(horizontal: MgSizes.xxl),
-                            GestureDetector(child: BaseSvgIcon.minus()),
+                            GestureDetector(
+                              child: BaseSvgIcon.minus(),
+                              onTap: () => setCount(false),
+                            ),
+                            Text('$count').md().margin(
+                              horizontal: MgSizes.xxl,
+                            ), // NOTE: 다량 구매 고객 많을시 숫자 선택 bottomSheet 나오도록F
+                            GestureDetector(
+                              child: BaseSvgIcon.plus(),
+                              onTap: () => setCount(true),
+                            ),
                           ],
                         )
                         .margin(all: MgSizes.sm)
@@ -133,9 +150,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
-                  onPressed: () {
-                    // TODO: 구매하기 로직
-                  },
+                  onPressed: () async =>
+                      OrderCautionRoute(count: count).push(context),
                   content: Text('구매하기'),
                 ).primary(),
               ),
