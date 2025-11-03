@@ -50,6 +50,8 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           Column(
             children: [
               StoreLocationInfoView(
+                storeId: widget.order.storeId,
+                address: "address", // TODO[order]:백엔드 개발 필요
                 latitude: mockLatitude, // TODO: 실제 위도 경도 값으로 변경
                 longitude: mockLongitude,
                 storeName: widget.order.storeName,

@@ -28,17 +28,11 @@ class BaseMapView extends StatelessWidget {
         activeLayerGroups: [NLayerGroup.building, NLayerGroup.transit],
       ),
       onMapReady: (controller) async {
-        // final goalMarker = NMarker(
-        //   id: "goal",
-        //   position: NLatLng(latitude, longitude),
-        //   caption: NOverlayCaption(
-        //     text: buildingName,
-        //     textSize: MgFontSize.sm,
-        //     color: Colors.black,
-        //     haloColor: Colors.white,
-        //   ),
-        // );
-        // await controller.addOverlay(goalMarker);
+        final marker = NMarker(
+          id: "goal",
+          position: NLatLng(latitude, longitude),
+        );
+        await controller.addOverlay(marker);
       },
     );
   }

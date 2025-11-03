@@ -255,7 +255,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               ).margin(left: MgSizes.size4, right: MgSizes.size8),
               Text(
                 '${store.originPrice.toPrice()}원',
-              ).underline().textColor(MgColorScheme.gray6), // TODO: 취소선
+              ).lineThrough().textColor(MgColorScheme.subpointRed)
             ],
           ),
         ),
@@ -274,9 +274,11 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         _buildStoreInfoItem('주차안내', "TODO"),
         _buildStoreInfoItem('가게 주소', store.address), //TODO: 복사 버튼 추가
         StoreLocationInfoView(
+          storeId: widget.id,
           latitude: store.latitude,
           longitude: store.longitude,
           storeName: store.storeName,
+          address: store.address,
         ).margin(vertical: MgSizes.md),
       ],
     ).margin(horizontal: MgSizes.md);

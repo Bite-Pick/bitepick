@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
+import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
@@ -26,7 +27,16 @@ final appRouter = GoRouter(
   name: 'MainRoute',
   path: '/',
   routes: [
-    TypedGoRoute<StoreRoute>(name: 'StoreRoute', path: 'store/:id'),
+    TypedGoRoute<StoreRoute>(
+      name: 'StoreRoute',
+      path: 'store/:id',
+      routes: [
+        TypedGoRoute<StoreMapRoute>(
+          name: 'StoreMapRoute',
+          path: 'map',
+        ),
+      ],
+    ),
     TypedGoRoute<SearchRoute>(name: 'SearchRoute', path: 'search'),
     TypedGoRoute<SearchAddressRoute>(
       name: 'SearchAddressRoute',
