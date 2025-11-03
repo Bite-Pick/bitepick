@@ -7,8 +7,8 @@ part 'address.g.dart';
 @freezed
 class Address with _$Address {
   const factory Address({
-    required String label, 
-    required String name, 
+    required String label,
+    required String name,
     required double latitude,
     required double longitude,
     @Default(false) bool isDefault,
@@ -17,3 +17,7 @@ class Address with _$Address {
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);
 }
+
+// Mock latitude and longitude (서울 강남역 기준)
+const double mockLatitude = 37.4979502;
+const double mockLongitude = 127.0276368;

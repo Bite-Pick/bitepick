@@ -78,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
           currentIndex: navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_SVG_FILLED_SPEAKER_SVG,
+          iconPath: R.ASSETS_ICONS_SVG_FILLED_USER_SVG,
           label: '마이페이지',
           index: 2,
           currentIndex: navState.tabIndex,

@@ -4,8 +4,11 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/address/domain/entities/address.dart';
+import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
 import 'package:magambell/src/features/order/domain/entities/order.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
+import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class OrderListItem extends ConsumerStatefulWidget {
@@ -43,7 +46,30 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           price: 5000,
           count: 2,
         ),
-        // TODO: Map
+        if (widget.order.orderStatus != OrderStatus.completed) ...[
+          Column(
+            children: [
+              StoreLocationInfoView(
+                latitude: mockLatitude, // TODO: 실제 위도 경도 값으로 변경
+                longitude: mockLongitude,
+                storeName: widget.order.storeName,
+                mapHeight: 160,
+              ),
+              if (widget.order.orderStatus == OrderStatus.pending)
+                MgButton(
+                  content: Text("주문 취소").textGray().regular(),
+                  onPressed: () {
+                    // TODO[order]: 주문 취소 API 연동
+                  },
+                )
+              else
+                MgButton(
+                  content: Text("문의하기").textGray().regular(),
+                  onPressed: () {},
+                ),
+            ],
+          ).margin(vertical: MgSizes.md),
+        ],
       ],
     ).margin(all: MgSizes.md);
   }
