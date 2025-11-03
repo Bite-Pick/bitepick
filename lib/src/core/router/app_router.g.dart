@@ -111,15 +111,10 @@ extension $SearchAddressRouteExtension on SearchAddressRoute {
 }
 
 extension $OrderCautionRouteExtension on OrderCautionRoute {
-  static OrderCautionRoute _fromState(GoRouterState state) => OrderCautionRoute(
-    count:
-        _$convertMapValue('count', state.uri.queryParameters, int.parse) ?? 1,
-  );
+  static OrderCautionRoute _fromState(GoRouterState state) =>
+      const OrderCautionRoute();
 
-  String get location => GoRouteData.$location(
-    '/order/caution',
-    queryParams: {if (count != 1) 'count': count.toString()},
-  );
+  String get location => GoRouteData.$location('/order/caution');
 
   void go(BuildContext context) => context.go(location);
 
@@ -132,13 +127,9 @@ extension $OrderCautionRouteExtension on OrderCautionRoute {
 }
 
 extension $OrderPayRouteExtension on OrderPayRoute {
-  static OrderPayRoute _fromState(GoRouterState state) =>
-      OrderPayRoute(int.parse(state.uri.queryParameters['count']!));
+  static OrderPayRoute _fromState(GoRouterState state) => const OrderPayRoute();
 
-  String get location => GoRouteData.$location(
-    '/order/pay',
-    queryParams: {'count': count.toString()},
-  );
+  String get location => GoRouteData.$location('/order/pay');
 
   void go(BuildContext context) => context.go(location);
 
@@ -148,13 +139,4 @@ extension $OrderPayRouteExtension on OrderPayRoute {
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
-}
-
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
 }

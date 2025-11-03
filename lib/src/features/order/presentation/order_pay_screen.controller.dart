@@ -5,7 +5,7 @@ part 'order_pay_screen.controller.g.dart';
 class OrderInfo {
   final String goodsId;
   final int quantity;
-  final int totalPrice;
+  final double totalPrice;
 
   OrderInfo({
     required this.goodsId,
@@ -16,7 +16,7 @@ class OrderInfo {
   OrderInfo copyWith({
     String? goodsId,
     int? quantity,
-    int? totalPrice,
+    double? totalPrice,
   }) {
     return OrderInfo(
       goodsId: goodsId ?? this.goodsId,
@@ -40,7 +40,7 @@ class OrderPayScreenController extends _$OrderPayScreenController {
   void setOrderInfo({
     required String goodsId,
     required int quantity,
-    required int totalPrice,
+    required double totalPrice,
   }) {
     state = OrderInfo(
       goodsId: goodsId,
@@ -49,7 +49,7 @@ class OrderPayScreenController extends _$OrderPayScreenController {
     );
   }
 
-  void updateQuantity(int quantity, int pricePerItem) {
+  void updateQuantity(int quantity, double pricePerItem) {
     state = state.copyWith(
       quantity: quantity,
       totalPrice: pricePerItem * quantity,

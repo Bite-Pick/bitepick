@@ -16,15 +16,14 @@ import 'package:magambell/src/features/favorite/data/repositories/favorite_repos
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
+import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
-import 'package:magambell/src/widgets/base_map_view.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
-import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class StoreRoute extends GoRouteData {
@@ -274,21 +273,11 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         ),
         _buildStoreInfoItem('주차안내', "TODO"),
         _buildStoreInfoItem('가게 주소', store.address), //TODO: 복사 버튼 추가
-        BaseMapView(
+        StoreLocationInfoView(
           latitude: store.latitude,
           longitude: store.longitude,
-        ).constrained(height: 100).margin(vertical: MgSizes.md),
-        MgButton(
-          onPressed: () async {
-            await MgBottomsheet.show(context, (context, bottomState) {
-              return _buildFindRouteBottomSheet();
-            });
-          },
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [BaseSvgIcon.mapPin(), Gaps.w4, Text("길찾기")],
-          ),
-        ), //TODO: border
+          storeName: store.storeName,
+        ).margin(vertical: MgSizes.md),
       ],
     ).margin(horizontal: MgSizes.md);
   }
@@ -300,43 +289,6 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         Gaps.w12,
         Text(value).md().regular(),
       ],
-    );
-  }
-
-  Widget _buildFindRouteBottomSheet() {
-    return MgBottomsheet(
-      Column(
-        children: [
-          Text("길찾기").md().bold().margin(vertical: MgSizes.md),
-          _buildBottomSheetItem("네이버지도", R.ASSETS_IMAGES_NAVERMAP_PNG, () {
-            // TODO
-          }),
-          Divider(),
-          _buildBottomSheetItem("카카오맵", R.ASSETS_IMAGES_KAKAOMAP_PNG, () {
-            // TODO
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomSheetItem(
-    String label,
-    String iconUrl,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          ClipOval(
-            child: Image.asset(iconUrl),
-          ).constrained(height: MgSizes.size24),
-          Gaps.w12,
-          Text(label).md(),
-        ],
-      ).margin(vertical: MgSizes.md, horizontal: MgSizes.xl),
     );
   }
 }
