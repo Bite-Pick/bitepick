@@ -19,6 +19,14 @@ RouteBase get $mainRoute => GoRouteData.$route(
       name: 'StoreRoute',
 
       factory: $StoreRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'map',
+          name: 'StoreMapRoute',
+
+          factory: $StoreMapRouteExtension._fromState,
+        ),
+      ],
     ),
     GoRouteData.$route(
       path: 'search',
@@ -31,6 +39,18 @@ RouteBase get $mainRoute => GoRouteData.$route(
       name: 'SearchAddressRoute',
 
       factory: $SearchAddressRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'order/caution',
+      name: 'OrderCautionRoute',
+
+      factory: $OrderCautionRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'order/pay',
+      name: 'OrderPayRoute',
+
+      factory: $OrderPayRouteExtension._fromState,
     ),
   ],
 );
@@ -67,6 +87,27 @@ extension $StoreRouteExtension on StoreRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
+extension $StoreMapRouteExtension on StoreMapRoute {
+  static StoreMapRoute _fromState(GoRouterState state) => StoreMapRoute(
+    id: state.pathParameters['id']!,
+    $extra: state.extra as StoreMapExtra,
+  );
+
+  String get location =>
+      GoRouteData.$location('/store/${Uri.encodeComponent(id)}/map');
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
 extension $SearchRouteExtension on SearchRoute {
   static SearchRoute _fromState(GoRouterState state) => const SearchRoute();
 
@@ -87,6 +128,37 @@ extension $SearchAddressRouteExtension on SearchAddressRoute {
       const SearchAddressRoute();
 
   String get location => GoRouteData.$location('/address/search');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OrderCautionRouteExtension on OrderCautionRoute {
+  static OrderCautionRoute _fromState(GoRouterState state) =>
+      const OrderCautionRoute();
+
+  String get location => GoRouteData.$location('/order/caution');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OrderPayRouteExtension on OrderPayRoute {
+  static OrderPayRoute _fromState(GoRouterState state) => const OrderPayRoute();
+
+  String get location => GoRouteData.$location('/order/pay');
 
   void go(BuildContext context) => context.go(location);
 

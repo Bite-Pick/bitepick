@@ -55,4 +55,5 @@ class MgColorScheme {
   static const Color inactive = Color(0xFF8F8F8F);
   static const Color kakaoPayYellow = Color(0xFFFFEB00);
   static const Color alertRed = Color(0xFFFF5149);
+  static const Color green = Color(0xff02713E);
 }

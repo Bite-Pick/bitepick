@@ -185,6 +185,9 @@ class BaseSvgIcon extends StatelessWidget {
   }
 }
 
+final mockImage =
+    "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg";
+
 extension BaseSvgIconExtension on BaseSvgIcon {
   BaseSvgIcon color(Color? color) {
     return copyWith(color: color);

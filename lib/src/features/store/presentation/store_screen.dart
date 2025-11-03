@@ -1,27 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
+import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
+import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
-import 'package:magambell/src/widgets/base_map_view.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
-import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class StoreRoute extends GoRouteData {
@@ -31,23 +35,30 @@ class StoreRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DetailScreen(id: id);
+    return StoreScreen(id: id);
   }
 }
 
-class DetailScreen extends ConsumerStatefulWidget {
-  const DetailScreen({super.key, required this.id});
+class StoreScreen extends ConsumerStatefulWidget {
+  const StoreScreen({super.key, required this.id});
 
   final String id;
 
   @override
-  ConsumerState<DetailScreen> createState() => _DetailScreenState();
+  ConsumerState<StoreScreen> createState() => _StoreScreenState();
 }
 
-class _DetailScreenState extends ConsumerState<DetailScreen>
+class _StoreScreenState extends ConsumerState<StoreScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  int count = 1;
+  void setCount(bool isAdd) => setState(
+    () => count = isAdd
+        ? count + 1
+        : count > 1
+        ? count - 1
+        : 1,
+  );
   @override
   void initState() {
     super.initState();
@@ -63,7 +74,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
   @override
   Widget build(BuildContext context) {
     // final store = ref.watch(storeGoodsDetailProvider(id));
-    final store = mockData;
+    final store = mockStore;
     return BaseScaffold(
       appBar: BaseAppBar(),
       body: NestedScrollView(
@@ -73,9 +84,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
               children: [
                 _buildThumbnailImageView(store),
                 _buildStoreDescriptionSection(store),
-                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
+                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
                 _buildStoreLocationInfoSection(store),
-                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
+                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
               ],
             ),
           ),
@@ -119,9 +130,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                     Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GestureDetector(child: BaseSvgIcon.plus()),
-                            Text("수량").md().margin(horizontal: MgSizes.xxl),
-                            GestureDetector(child: BaseSvgIcon.minus()),
+                            GestureDetector(
+                              child: BaseSvgIcon.minus(),
+                              onTap: () => setCount(false),
+                            ),
+                            Text('$count').md().margin(
+                              horizontal: MgSizes.xxl,
+                            ), // NOTE: 다량 구매 고객 많을시 숫자 선택 bottomSheet 나오도록F
+                            GestureDetector(
+                              child: BaseSvgIcon.plus(),
+                              onTap: () => setCount(true),
+                            ),
                           ],
                         )
                         .margin(all: MgSizes.sm)
@@ -133,8 +152,19 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
-                  onPressed: () {
-                    // TODO: 구매하기 로직
+                  onPressed: () async {
+                    // 주문 정보 저장
+                    ref
+                        .read(orderPayScreenControllerProvider.notifier)
+                        .setOrderInfo(
+                          goodsId: widget.id,
+                          quantity: count,
+                          totalPrice: store.salePrice * count,
+                          salePrice: store.salePrice,
+                          originalPrice: store.originPrice.toDouble(),
+                        );
+                    // 주문 확인 화면으로 이동
+                    await const OrderCautionRoute().push(context);
                   },
                   content: Text('구매하기'),
                 ).primary(),
@@ -195,12 +225,21 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
             Spacer(),
             GestureDetector(
               onTap: () async {
-                final repo = ref.read(favoriteRepositoryProvider);
-                final currentFavorite = favoriteAsync.asData?.value;
-                currentFavorite == true
-                    ? await repo.removeFavorite(widget.id)
-                    : await repo.addFavorite(widget.id);
-                ref.invalidate(favoriteProvider(storeId: widget.id));
+                context.showFlash(
+                  duration: const Duration(milliseconds: 2000),
+                  builder: (context, controller) {
+                    return FlashBar(
+                      controller: controller,
+                      content: Text("로그인 기능 구현 이후에 작동가능"),
+                    );
+                  },
+                );
+                // final repo = ref.read(favoriteRepositoryProvider);
+                // final currentFavorite = favoriteAsync.asData?.value;
+                // currentFavorite == true
+                //     ? await repo.removeFavorite(widget.id)
+                //     : await repo.addFavorite(widget.id);
+                // ref.invalidate(favoriteProvider(storeId: widget.id));
               },
               child: MgAsyncAnimatedSwitcher(
                 asyncValue: favoriteAsync,
@@ -231,12 +270,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
               ).margin(left: MgSizes.size4, right: MgSizes.size8),
               Text(
                 '${store.originPrice.toPrice()}원',
-              ).underline().textColor(MgColorScheme.gray6), // TODO: 취소선
+                style: TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: MgColorScheme.gray6,
+                  color: MgColorScheme.gray6,
+                ),
+              ),
             ],
           ),
         ),
       ],
-    ).margin(all: MgSizes.md);
+    ).margin(all: MgSizes.md, bottom: 0);
   }
 
   Widget _buildStoreLocationInfoSection(Goods store) {
@@ -248,70 +292,37 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
           "${store.startTime.convertTime() ?? ''} ~ ${store.endTime.convertTime() ?? ''}",
         ),
         _buildStoreInfoItem('주차안내', "TODO"),
-        _buildStoreInfoItem('가게 주소', store.address), //TODO: 복사 버튼 추가
-        BaseMapView(
+        _buildStoreInfoItem(
+          '가게 주소',
+          store.address,
+          suffix: GestureDetector(
+            onTap: () async {
+              await Clipboard.setData(ClipboardData(text: store.address));
+              // TODO: Flash 메시지로 복사완료 알림
+            },
+            child: Text("복사").textColor(Color(0xff0077FF)),
+          ),
+        ),
+        StoreLocationInfoView(
+          storeId: widget.id,
           latitude: store.latitude,
           longitude: store.longitude,
-        ).constrained(height: 100).margin(vertical: MgSizes.md),
-        MgButton(
-          onPressed: () async {
-            await MgBottomsheet.show(context, (context, bottomState) {
-              return _buildFindRouteBottomSheet();
-            });
-          },
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [BaseSvgIcon.mapPin(), Gaps.w4, Text("길찾기")],
-          ),
-        ), //TODO: border
+          storeName: store.storeName,
+          address: store.address,
+        ).margin(vertical: MgSizes.md),
       ],
     ).margin(horizontal: MgSizes.md);
   }
 
-  Widget _buildStoreInfoItem(String label, String value) {
+  Widget _buildStoreInfoItem(String label, String value, {Widget? suffix}) {
     return Row(
       children: [
         Text(label).md().textGray().bold(),
         Gaps.w12,
         Text(value).md().regular(),
+        Gaps.w4,
+        suffix ?? SizedBox.shrink(),
       ],
-    );
-  }
-
-  Widget _buildFindRouteBottomSheet() {
-    return MgBottomsheet(
-      Column(
-        children: [
-          Text("길찾기").md().bold().margin(vertical: MgSizes.md),
-          _buildBottomSheetItem("네이버지도", R.ASSETS_IMAGES_NAVERMAP_PNG, () {
-            // TODO
-          }),
-          Divider(),
-          _buildBottomSheetItem("카카오맵", R.ASSETS_IMAGES_KAKAOMAP_PNG, () {
-            // TODO
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomSheetItem(
-    String label,
-    String iconUrl,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          ClipOval(
-            child: Image.asset(iconUrl),
-          ).constrained(height: MgSizes.size24),
-          Gaps.w12,
-          Text(label).md(),
-        ],
-      ).margin(vertical: MgSizes.md, horizontal: MgSizes.xl),
     );
   }
 }

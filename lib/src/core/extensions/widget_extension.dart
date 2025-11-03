@@ -47,12 +47,14 @@ extension KnStyledWidget<T extends Widget> on T {
     BoxBorder? border,
     BorderRadius? borderRadius,
     List<BoxShadow>? boxShadow,
+    BoxShape? shape,
   }) {
     final BoxDecoration decoration = BoxDecoration(
       color: color,
       border: border,
       borderRadius: borderRadius,
       boxShadow: boxShadow,
+      shape: shape ?? BoxShape.rectangle,
     );
     return DecoratedBox(key: key, child: this, decoration: decoration);
   }
@@ -78,7 +80,27 @@ extension KnStyledWidget<T extends Widget> on T {
     return ConstrainedBox(key: key, child: this, constraints: constraints);
   }
 
-  Widget colored(Color color) {
-    return ColoredBox(color: color, child: this);
-  }
+  Widget colored(Color color) => ColoredBox(color: color, child: this);
+  
+  Widget clipRRect({
+    Key? key,
+    double? all,
+    double? topLeft,
+    double? topRight,
+    double? bottomLeft,
+    double? bottomRight,
+    CustomClipper<RRect>? clipper,
+    Clip clipBehavior = Clip.antiAlias,
+  }) => ClipRRect(
+    key: key,
+    child: this,
+    clipper: clipper,
+    clipBehavior: clipBehavior,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(topLeft ?? all ?? 0.0),
+      topRight: Radius.circular(topRight ?? all ?? 0.0),
+      bottomLeft: Radius.circular(bottomLeft ?? all ?? 0.0),
+      bottomRight: Radius.circular(bottomRight ?? all ?? 0.0),
+    ),
+  );
 }

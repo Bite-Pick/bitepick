@@ -37,8 +37,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final HomeScreenState(:onlyAvailable, :sortType) = ref.watch(
       homeScreenControllerProvider,
     );
-    final addressState = ref.watch(searchAddressScreenControllerProvider);
-    final defaultAddress = addressState.addresses
+    final defaultAddress = ref
+        .watch(searchAddressScreenControllerProvider)
+        .addresses
         .where((a) => a.isDefault)
         .firstOrNull;
 
@@ -46,20 +47,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       storeGoodsListProvider(
         latitude: 37.5185663, // TODO: 기본 위치 설정 필요
         longitude: 127.0230599,
-        // latitude:defaultAddress?.longitude ?? 37.5185663,
+        // latitude: defaultAddress?.longitude ?? 37.5185663,
         // longitude: defaultAddress?.latitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
         sortType: sortType,
       ),
     );
     return SafeArea(
-      // TODO: BaseCustomScrollView
+      // TODO: BaseCustomScrollView refact
       child: CustomScrollView(
         slivers: [
           SliverPersistentHeader(
             pinned: true,
             floating: true,
-            delegate: _HomeAppBar(addressState.addresses),
+            delegate: _HomeAppBar(serviceAreas, defaultAddress),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
@@ -163,9 +164,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class _HomeAppBar extends SliverPersistentHeaderDelegate {
-  _HomeAppBar(this.addresses);
+  _HomeAppBar(this.addresses, this.defaultAddress);
 
   final List<Address> addresses;
+  final Address? defaultAddress;
 
   @override
   Widget build(
@@ -173,7 +175,10 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return _HomeAppBarContent(addresses: addresses);
+    return _HomeAppBarContent(
+      addresses: addresses,
+      defaultAddress: defaultAddress,
+    );
   }
 
   @override
@@ -186,18 +191,20 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
 }
 
 class _HomeAppBarContent extends ConsumerStatefulWidget {
-  const _HomeAppBarContent({required this.addresses});
+  const _HomeAppBarContent({
+    required this.addresses,
+    required this.defaultAddress,
+    super.key,
+  });
 
   final List<Address> addresses;
+  final Address? defaultAddress;
 
   @override
   ConsumerState<_HomeAppBarContent> createState() => _HomeAppBarContentState();
 }
 
 class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
-  Address? get defaultAddress =>
-      widget.addresses.where((a) => a.isDefault).firstOrNull;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -219,7 +226,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
         children: [
           BaseSvgIcon.mapPin(size: 20),
           Gaps.w8,
-          Text(defaultAddress?.name ?? '주소를 설정해주세요'),
+          Text(widget.defaultAddress?.name ?? '주소를 설정해주세요'),
         ],
       ),
     );
@@ -233,7 +240,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
           ...widget.addresses.map(
             (address) => _buildAddressBottomSheetItem(
               address,
-              isSelect: defaultAddress?.label == address.label,
+              isSelect: widget.defaultAddress?.label == address.label,
             ),
           ),
           Gaps.h16,
@@ -244,6 +251,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
               SearchAddressRoute().push(context);
             },
           ).transparent(),
+          Text("현재 데이터가 많지않아 주소를 바꿔도 데이터변동은 없도록 임시처리해뒀습니다!"),
         ],
       ).margin(all: MgSizes.md),
     );
