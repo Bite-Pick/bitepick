@@ -52,7 +52,7 @@ platform :ios do
     # TestFlight에 업로드
     upload_to_testflight(
       api_key: api_key,
-      skip_waiting_for_build_processing: true,
+      skip_waiting_for_build_processing: false,
       team_id: "JM239C9WFM"
     )
 
@@ -175,12 +175,20 @@ platform :ios do
       raise "Firebase App ID is not set. Please check FIREBASE_APP_ID_IOS or FIREBASE_APP_ID_IOS_DEV environment variable."
     end
 
-    firebase_app_distribution(
+    firebase_params = {
       app: firebase_app_id,
       ipa_path: ipa_path,
-      release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원",
-      groups: "qa-testers"
-    )
+      release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
+    }
+
+    # 그룹이나 테스터 이메일이 설정된 경우에만 추가
+    if ENV["FIREBASE_GROUPS"]
+      firebase_params[:groups] = ENV["FIREBASE_GROUPS"]
+    elsif ENV["FIREBASE_TESTERS"]
+      firebase_params[:testers] = ENV["FIREBASE_TESTERS"]
+    end
+
+    firebase_app_distribution(firebase_params)
 
     puts "✅ Shorebird Firebase App Distribution 배포 완료!"
 
