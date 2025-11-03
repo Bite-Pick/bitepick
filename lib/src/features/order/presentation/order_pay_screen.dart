@@ -166,7 +166,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
               price: price,
               count: count,
               imageSize: 80,
-            ),
+            ).margin(all: MgSizes.md),
           ],
         )
         .margin(all: 2) //

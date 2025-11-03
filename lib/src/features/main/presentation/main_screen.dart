@@ -5,7 +5,7 @@ import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
-import 'package:magambell/src/features/order/presentation/order_screen.dart';
+import 'package:magambell/src/features/order/presentation/order_list_screen.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/user/presentation/mypage_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    OrderScreen(),
+    OrderListScreen(),
     MypageScreen(),
   ];
 

@@ -54,6 +54,6 @@ class OrderInfoItem extends StatelessWidget {
           ),
         ),
       ],
-    ).margin(all: MgSizes.sm);
+    );
   }
 }
