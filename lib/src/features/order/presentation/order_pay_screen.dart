@@ -1,3 +1,5 @@
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,9 +55,9 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     final storeName = '가게명';
     final storeAddress = '경상북도 경산시 백자로 76 3층';
     final pickupTime = '오늘 7:00';
-    final double originalPrice = 7000;
-    final double salePrice = 3950;
-    final double discount = originalPrice - salePrice;
+    final double originalPrice = orderInfo.originalPrice;
+    final double salePrice = orderInfo.salePrice;
+    final double discount = orderInfo.discount;
     final quantity = orderInfo.quantity;
     final totalPrice = orderInfo.totalPrice;
 
@@ -95,11 +97,30 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           ),
           // 결제 버튼
           MgButton(
-            onPressed: _allAgreed
-                ? () {
-                    // TODO: 결제 로직 추가
-                  }
-                : null,
+            onPressed: () async {
+              if (!_allAgreed) {
+                context.showFlash(
+                  duration: const Duration(milliseconds: 2000),
+                  builder: (context, controller) {
+                    return FlashBar(
+                      controller: controller,
+                      content: Text("모든 약관에 동의해 주세요."),
+                    );
+                  },
+                );
+                return;
+              }
+              // TODO: 결제 로직 추가
+              context.showFlash(
+                duration: const Duration(milliseconds: 2000),
+                builder: (context, controller) {
+                  return FlashBar(
+                    controller: controller,
+                    content: Text("결제 기능 구현중"),
+                  );
+                },
+              );
+            },
             content: Text('${totalPrice.toPrice()}원 결제하기'),
           ).primary().margin(
             horizontal: MgSizes.md,
@@ -134,7 +155,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           storeName: storeName,
           address: storeAddress,
           discount: 50,
-          price: salePrice,
+          price: salePrice * quantity,
           count: quantity,
         ),
       ],
@@ -183,7 +204,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label).md().textGray(),
-        Text('${isDiscount ? '-' : ''}${price.toPrice()}원').md().textGray(),
+        Text('${price.toPrice()}원').md().textGray(),
       ],
     );
   }

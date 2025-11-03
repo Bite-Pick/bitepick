@@ -21,3 +21,19 @@ class Address with _$Address {
 // Mock latitude and longitude (서울 강남역 기준)
 const double mockLatitude = 37.4979502;
 const double mockLongitude = 127.0276368;
+
+// 서비스 가능 지역
+final List<Address> serviceAreas = [
+  Address(
+    label: '경기도 용인시 기흥구 마북동',
+    name: '경기도 용인시 기흥구 마북동',
+    latitude: 37.301657,
+    longitude: 127.117501,
+  ),
+  Address(
+    label: '경기도 용인시 기흥구 보정동',
+    name: '경기도 용인시 기흥구 보정동',
+    latitude: 37.320165,
+    longitude: 127.112962,
+  ),
+];

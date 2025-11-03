@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
@@ -72,7 +74,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   @override
   Widget build(BuildContext context) {
     // final store = ref.watch(storeGoodsDetailProvider(id));
-    final store = mockData;
+    final store = mockStore;
     return BaseScaffold(
       appBar: BaseAppBar(),
       body: NestedScrollView(
@@ -82,9 +84,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               children: [
                 _buildThumbnailImageView(store),
                 _buildStoreDescriptionSection(store),
-                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
+                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
                 _buildStoreLocationInfoSection(store),
-                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.lg),
+                Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
               ],
             ),
           ),
@@ -152,10 +154,14 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                 child: MgButton(
                   onPressed: () async {
                     // 주문 정보 저장
-                    ref.read(orderPayScreenControllerProvider.notifier).setOrderInfo(
+                    ref
+                        .read(orderPayScreenControllerProvider.notifier)
+                        .setOrderInfo(
                           goodsId: widget.id,
                           quantity: count,
                           totalPrice: store.salePrice * count,
+                          salePrice: store.salePrice,
+                          originalPrice: store.originPrice.toDouble(),
                         );
                     // 주문 확인 화면으로 이동
                     await const OrderCautionRoute().push(context);
@@ -219,12 +225,21 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             Spacer(),
             GestureDetector(
               onTap: () async {
-                final repo = ref.read(favoriteRepositoryProvider);
-                final currentFavorite = favoriteAsync.asData?.value;
-                currentFavorite == true
-                    ? await repo.removeFavorite(widget.id)
-                    : await repo.addFavorite(widget.id);
-                ref.invalidate(favoriteProvider(storeId: widget.id));
+                context.showFlash(
+                  duration: const Duration(milliseconds: 2000),
+                  builder: (context, controller) {
+                    return FlashBar(
+                      controller: controller,
+                      content: Text("로그인 기능 구현 이후에 작동가능"),
+                    );
+                  },
+                );
+                // final repo = ref.read(favoriteRepositoryProvider);
+                // final currentFavorite = favoriteAsync.asData?.value;
+                // currentFavorite == true
+                //     ? await repo.removeFavorite(widget.id)
+                //     : await repo.addFavorite(widget.id);
+                // ref.invalidate(favoriteProvider(storeId: widget.id));
               },
               child: MgAsyncAnimatedSwitcher(
                 asyncValue: favoriteAsync,
@@ -255,12 +270,17 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               ).margin(left: MgSizes.size4, right: MgSizes.size8),
               Text(
                 '${store.originPrice.toPrice()}원',
-              ).lineThrough().textColor(MgColorScheme.subpointRed)
+                style: TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: MgColorScheme.gray6,
+                  color: MgColorScheme.gray6,
+                ),
+              ),
             ],
           ),
         ),
       ],
-    ).margin(all: MgSizes.md);
+    ).margin(all: MgSizes.md, bottom: 0);
   }
 
   Widget _buildStoreLocationInfoSection(Goods store) {
@@ -272,7 +292,17 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
           "${store.startTime.convertTime() ?? ''} ~ ${store.endTime.convertTime() ?? ''}",
         ),
         _buildStoreInfoItem('주차안내', "TODO"),
-        _buildStoreInfoItem('가게 주소', store.address), //TODO: 복사 버튼 추가
+        _buildStoreInfoItem(
+          '가게 주소',
+          store.address,
+          suffix: GestureDetector(
+            onTap: () async {
+              await Clipboard.setData(ClipboardData(text: store.address));
+              // TODO: Flash 메시지로 복사완료 알림
+            },
+            child: Text("복사").textColor(Color(0xff0077FF)),
+          ),
+        ),
         StoreLocationInfoView(
           storeId: widget.id,
           latitude: store.latitude,
@@ -284,12 +314,14 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
     ).margin(horizontal: MgSizes.md);
   }
 
-  Widget _buildStoreInfoItem(String label, String value) {
+  Widget _buildStoreInfoItem(String label, String value, {Widget? suffix}) {
     return Row(
       children: [
         Text(label).md().textGray().bold(),
         Gaps.w12,
         Text(value).md().regular(),
+        Gaps.w4,
+        suffix ?? SizedBox.shrink(),
       ],
     );
   }
