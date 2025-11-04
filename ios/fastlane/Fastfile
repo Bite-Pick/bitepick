@@ -43,10 +43,34 @@ platform :ios do
       "lib/src/main_dev.dart"
     end
 
+    # 동적으로 export_options.plist 생성
+    # match에서 생성된 프로비저닝 프로파일 매핑 사용
+    provisioning_profiles = lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+
+    export_options = {
+      method: "app-store",
+      teamID: "JM239C9WFM",
+      provisioningProfiles: provisioning_profiles,
+      signingStyle: "manual",
+      signingCertificate: "iOS Distribution",
+      uploadBitcode: false,
+      uploadSymbols: true,
+      compileBitcode: false,
+      manageAppVersionAndBuildNumber: false
+    }
+
+    # export_options를 plist 파일로 저장
+    export_options_path = "/tmp/export_options_#{ENV["MODE"]}.plist"
+    File.write(export_options_path, Plist::Emit.dump(export_options))
+
+    puts "✅ 동적으로 생성된 export_options.plist:"
+    puts "   경로: #{export_options_path}"
+    puts "   프로비저닝 프로파일: #{provisioning_profiles}"
+
     shorebird_release(
       platform: "ios",
       args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{clean_version} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}",
-      export_options: ENV['EXPORT_OPTIONS_PLIST']
+      export_options: export_options_path
     )
 
     # IPA 파일 경로 찾기 (여러 경로 시도)
@@ -137,8 +161,7 @@ platform :ios do
 
     shorebird_patch(
       platform: "ios",
-      args: patch_args,
-      export_options: ENV['EXPORT_OPTIONS_PLIST']
+      args: patch_args
     )
 
     rescue => exception
