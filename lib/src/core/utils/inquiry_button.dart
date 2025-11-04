@@ -51,7 +51,7 @@ class InquiryButton extends StatelessWidget {
             child: Image.asset(R.ASSETS_IMAGES_KAKAO_CHANNEL_PNG),
           ).constrained(height: MgSizes.size24),
           Gaps.w12,
-          Expanded(child: Text('마감벨 카카오채널 문의').md()),
+          Expanded(child: Text('바이트픽 카카오채널 문의').md()),
         ],
       ).margin(all: MgSizes.lg),
     );
