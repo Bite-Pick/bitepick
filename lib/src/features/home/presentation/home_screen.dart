@@ -44,16 +44,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .where((a) => a.isDefault)
         .firstOrNull;
 
-    final storeGoodsAsync = ref.watch(
-      storeGoodsListProvider(
-        latitude: 37.5185663, // TODO: 기본 위치 설정 필요
-        longitude: 127.0230599,
-        // latitude: defaultAddress?.latitude ?? 37.5185663,
-        // longitude: defaultAddress?.longitude ?? 127.0230599,
-        onlyAvailable: onlyAvailable,
-        sortType: sortType,
-      ),
-    );
+    // 배포시 403에러 발생
+    // final storeGoodsAsync = ref.watch(
+    //   storeGoodsListProvider(
+    //     latitude: 37.5185663, // TODO: 기본 위치 설정 필요
+    //     longitude: 127.0230599,
+    //     // latitude: defaultAddress?.latitude ?? 37.5185663,
+    //     // longitude: defaultAddress?.longitude ?? 127.0230599,
+    //     onlyAvailable: onlyAvailable,
+    //     sortType: sortType,
+    //   ),
+    // );
+    final goods = [mockGood];
     return SafeArea(
       // TODO: BaseCustomScrollView refact
       child: CustomScrollView(
@@ -67,29 +69,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
               HomeUpdateBanner(),
-              MgAsyncAnimatedSwitcher<List<Goods>>(
-                asyncValue: storeGoodsAsync,
-                builder: (goods) => Column(
-                  children: [
-                    _buildFilterSection(onlyAvailable, sortType),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: goods.length,
-                      itemBuilder: (context, index) {
-                        final item = goods[index];
-                        return HomeGoodsItem(goods: item)
-                            .margin(bottom: MgSizes.xs)
-                            .margin(horizontal: MgSizes.md);
-                      },
-                    ),
-                  ],
-                ),
-                emptyBuilder: () =>
-                    HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
-                loadingBuilder: () =>
-                    const Center(child: CircularProgressIndicator()),
+              // MgAsyncAnimatedSwitcher<List<Goods>>(
+              //   asyncValue: storeGoodsAsync,
+              //   builder: (goods) =>
+              Column(
+                children: [
+                  _buildFilterSection(onlyAvailable, sortType),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: goods.length,
+                    itemBuilder: (context, index) {
+                      final item = goods[index];
+                      return HomeGoodsItem(goods: item)
+                          .margin(bottom: MgSizes.xs)
+                          .margin(horizontal: MgSizes.md);
+                    },
+                  ),
+                ],
               ),
+              // emptyBuilder: () =>
+              //     HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
+              // loadingBuilder: () =>
+              //     const Center(child: CircularProgressIndicator()),
+              // ),
             ]),
           ),
         ],

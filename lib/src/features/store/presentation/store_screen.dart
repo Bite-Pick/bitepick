@@ -74,7 +74,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   @override
   Widget build(BuildContext context) {
     // final store = ref.watch(storeGoodsDetailProvider(id));
-    final store = mockStore;
+    final store = mockGood;
     return BaseScaffold(
       appBar: BaseAppBar(),
       body: NestedScrollView(

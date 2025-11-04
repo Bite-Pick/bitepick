@@ -27,7 +27,7 @@ class Goods with _$Goods {
   factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 }
 
-final mockStore = Goods(
+final mockGood = Goods(
   storeId: "758244809439404511",
   storeName: "라스트오븐",
   ImageUrl: [
