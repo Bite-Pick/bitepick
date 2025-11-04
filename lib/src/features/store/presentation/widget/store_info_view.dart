@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/utils/debug_text.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
@@ -34,7 +35,7 @@ class StoreInfoView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(child: Text("백엔드 개발필요")), // TODO[bitebag]: 삭제
+        Center(child: DebugText("백엔드 개발필요")), // TODO[bitebag]: 삭제
         _buildNoticeItem(),
         _buildImages(images),
         Gaps.h16,

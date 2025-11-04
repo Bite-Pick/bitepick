@@ -4,6 +4,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/utils/inquiry_button.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
 import 'package:magambell/src/features/order/domain/entities/order.dart';
@@ -65,10 +66,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
                   },
                 )
               else
-                MgButton(
-                  content: Text("문의하기").textGray().regular(),
-                  onPressed: () {},
-                ),
+                InquiryButton(),
             ],
           ).margin(vertical: MgSizes.md),
         ],

@@ -117,7 +117,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
           children: [StoreInfoView(), StoreReviewListView(widget.id)],
         ),
       ),
-      bottomNavigationBar: _buildBottomButton(store),
+      // bottomNavigationBar: _buildBottomButton(store),
     );
   }
 
@@ -223,40 +223,40 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             StoreTags(quantity: store.quantity, saleStatus: store.saleStatus),
             // TODO[review]: 리뷰영역으로 스크롤내리는 버튼 추가
             Spacer(),
-            GestureDetector(
-              onTap: () async {
-                context.showFlash(
-                  duration: const Duration(milliseconds: 2000),
-                  builder: (context, controller) {
-                    return FlashBar(
-                      controller: controller,
-                      content: Text("로그인 기능 구현 이후에 작동가능"),
-                    );
-                  },
-                );
-                // final repo = ref.read(favoriteRepositoryProvider);
-                // final currentFavorite = favoriteAsync.asData?.value;
-                // currentFavorite == true
-                //     ? await repo.removeFavorite(widget.id)
-                //     : await repo.addFavorite(widget.id);
-                // ref.invalidate(favoriteProvider(storeId: widget.id));
-              },
-              child: MgAsyncAnimatedSwitcher(
-                asyncValue: favoriteAsync,
-                builder: (isFavorite) {
-                  return (isFavorite == true)
-                      ? BaseSvgIcon.heartFilled(
-                          color: MgColorScheme.navigationPrimary,
-                        )
-                      : BaseSvgIcon.heart();
-                },
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () async {
+            //     context.showFlash(
+            //       duration: const Duration(milliseconds: 2000),
+            //       builder: (context, controller) {
+            //         return FlashBar(
+            //           controller: controller,
+            //           content: Text("로그인 기능 구현 이후에 작동가능"),
+            //         );
+            //       },
+            //     );
+            //     // final repo = ref.read(favoriteRepositoryProvider);
+            //     // final currentFavorite = favoriteAsync.asData?.value;
+            //     // currentFavorite == true
+            //     //     ? await repo.removeFavorite(widget.id)
+            //     //     : await repo.addFavorite(widget.id);
+            //     // ref.invalidate(favoriteProvider(storeId: widget.id));
+            //   },
+            //   child: MgAsyncAnimatedSwitcher(
+            //     asyncValue: favoriteAsync,
+            //     builder: (isFavorite) {
+            //       return (isFavorite == true)
+            //           ? BaseSvgIcon.heartFilled(
+            //               color: MgColorScheme.navigationPrimary,
+            //             )
+            //           : BaseSvgIcon.heart();
+            //     },
+            //   ),
+            // ),
           ],
         ),
         Gaps.h12,
         Text(store.storeName).md().bold(),
-        Text("ㅇㅇㅇㅇ").regular().textGray().margin(
+        Text("맛있는 빵으로 기억되길 바라는 베이커리, 라스트오븐").regular().textGray().margin(
           top: MgSizes.size4,
           bottom: MgSizes.size8,
         ), //store.description
@@ -291,7 +291,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
           '픽업시간',
           "${store.startTime.convertTime() ?? ''} ~ ${store.endTime.convertTime() ?? ''}",
         ),
-        _buildStoreInfoItem('주차안내', "TODO"),
+        _buildStoreInfoItem('주차안내', "강남구 공영주차장1 이용"),
         _buildStoreInfoItem(
           '가게 주소',
           store.address,
