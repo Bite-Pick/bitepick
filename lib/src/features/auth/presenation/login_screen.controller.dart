@@ -25,13 +25,15 @@ class LoginScreenController extends _$LoginScreenController {
         return false;
       }
 
-      // 2. 백엔드로 기존 회원 검증
+      // 2. 최근 로그인 정보 저장
+      await _saveLastLoginProvider('NAVER');
+
+      // 3. 백엔드로 기존 회원 검증
       final isExistingUser = await _verifyUser(authResult);
 
       if (!isExistingUser) {
-        // 신규 회원인 경우: 회원가입 화면으로 이동 (Controller에서는 결과만 반환)
+        // 신규 회원인 경우: 회원가입 화면으로 이동
         state = AsyncValue.data(authResult);
-        // TODO: SelectUserTypeRoute().push(context); 를 위한 flag 반환
         return false;
       }
 
@@ -42,12 +44,54 @@ class LoginScreenController extends _$LoginScreenController {
         return true;
       } else {
         await ref.read(socialAuthRepositoryProvider).logoutNaver();
-        // TODO: 도메인 로그아웃
         state = AsyncValue.error('로그인에 실패했습니다.', StackTrace.current);
         return false;
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error('네이버 로그인 중 오류가 발생했습니다.', stackTrace);
+      return false;
+    }
+  }
+
+  /// 카카오 로그인
+  Future<bool> signInWithKakao() async {
+    state = const AsyncValue.loading();
+
+    try {
+      // 1. 카카오 SDK로 로그인 실행 및 프로필 가져오기
+      final authResult = await ref
+          .read(socialAuthRepositoryProvider)
+          .signInWithKakao();
+
+      if (authResult == null) {
+        state = AsyncValue.error('카카오 로그인에 실패했습니다.', StackTrace.current);
+        return false;
+      }
+
+      // 2. 최근 로그인 정보 저장
+      await _saveLastLoginProvider('KAKAO');
+
+      // 3. 백엔드로 기존 회원 검증
+      final isExistingUser = await _verifyUser(authResult);
+
+      if (!isExistingUser) {
+        // 신규 회원인 경우: 회원가입 화면으로 이동
+        state = AsyncValue.data(authResult);
+        return false;
+      }
+
+      // 기존 회원인 경우: 로그인 처리
+      final loginSuccess = await _loginUser(authResult);
+      if (loginSuccess) {
+        state = const AsyncValue.data(null);
+        return true;
+      } else {
+        await ref.read(socialAuthRepositoryProvider).logoutKakao();
+        state = AsyncValue.error('로그인에 실패했습니다.', StackTrace.current);
+        return false;
+      }
+    } catch (error, stackTrace) {
+      state = AsyncValue.error('카카오 로그인 중 오류가 발생했습니다.', stackTrace);
       return false;
     }
   }

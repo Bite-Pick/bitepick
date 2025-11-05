@@ -3,6 +3,7 @@ import 'package:flutter_naver_login/interface/types/naver_account_result.dart';
 import 'package:flutter_naver_login/interface/types/naver_login_result.dart';
 import 'package:flutter_naver_login/interface/types/naver_login_status.dart';
 import 'package:flutter_naver_login/interface/types/naver_token.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,6 +57,52 @@ class SocialAuthRepository {
       await FlutterNaverLogin.logOut();
     } catch (e) {
       print('Naver logout error: $e');
+    }
+  }
+
+  /// 카카오 로그인
+  Future<SocialAuthResult?> signInWithKakao() async {
+    try {
+      // 1. 카카오톡 설치 여부 확인 후 로그인
+      OAuthToken token;
+      if (await isKakaoTalkInstalled()) {
+        // 카카오톡으로 로그인
+        token = await UserApi.instance.loginWithKakaoTalk();
+      } else {
+        // 카카오 계정으로 로그인
+        token = await UserApi.instance.loginWithKakaoAccount();
+      }
+
+      print('Kakao login success: ${token.accessToken.substring(0, 10)}...');
+
+      // 2. 프로필 정보 가져오기
+      final User user = await UserApi.instance.me();
+
+      if (user.kakaoAccount?.email == null) {
+        print('Kakao email is null');
+        return null;
+      }
+
+      // 3. 결과 반환
+      return SocialAuthResult(
+        providerType: AuthProviderType.kakao,
+        authCode: token.accessToken, // Access Token을 authCode로 전달
+        email: user.kakaoAccount?.email ?? '',
+        name: user.kakaoAccount?.profile?.nickname ?? '',
+      );
+    } catch (e, stackTrace) {
+      print('Kakao login error: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
+
+  /// 카카오 로그아웃
+  Future<void> logoutKakao() async {
+    try {
+      await UserApi.instance.logout();
+    } catch (e) {
+      print('Kakao logout error: $e');
     }
   }
 }

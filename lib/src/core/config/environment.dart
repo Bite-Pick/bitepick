@@ -38,6 +38,8 @@ class Environment {
   static String get ncpApiKeyId => X_NCP_APIGW_API_KEY_ID;
   static String get ncpApiKey => X_NCP_APIGW_API_KEY;
 
+  static String get kakaoNativeAppKey => KAKAO_NATIVE_APP_KEY;
+
   Future<void> run() async {
     await main_app.runMagamBellApp();
   }

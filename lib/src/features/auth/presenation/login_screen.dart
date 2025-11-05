@@ -53,7 +53,11 @@ class LoginScreen extends ConsumerWidget {
               spacing: MgSizes.sm,
               children: [
                 _buildSocialLoginButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await ref
+                        .read(loginScreenControllerProvider.notifier)
+                        .signInWithKakao();
+                  },
                   text: "카카오톡으로 로그인",
                   imagePath: R.ASSETS_IMAGES_KAKAO_LOGIN_PNG,
                   backgroundColor: MgColorScheme.primary,
