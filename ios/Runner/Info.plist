@@ -51,7 +51,7 @@
 		<key>NidAppName</key>
 		<string>${NAVER_APP_NAME}</string>
 		<key>NidClientID</key>
-		<string>${NAVER_CLIENT_ID}</string>
+		<string>${NAVER_CONSUMER_ID}</string>
 		<key>NidClientSecret</key>
 		<string>${NAVER_CONSUMER_SECRET}</string>
 		<key>NidUrlScheme</key>
