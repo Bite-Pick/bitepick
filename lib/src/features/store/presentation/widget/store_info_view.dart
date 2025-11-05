@@ -15,19 +15,15 @@ class StoreInfoView extends StatelessWidget {
   final images = [
     BiteBag(
       "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
+      "마늘육쪽빵",
     ),
     BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
+      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg",
+      "도넛",
     ),
     BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
-    ),
-    BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
+      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/3_bakery01.jpeg",
+      "몽블랑",
     ),
   ];
   @override
@@ -39,7 +35,7 @@ class StoreInfoView extends StatelessWidget {
         _buildNoticeItem(),
         _buildImages(images),
         Gaps.h16,
-        _buildTags(["dd", "dd", "dd"]),
+        _buildTags(["갓성비", "당일생산 당일판매"]).margin(left: MgSizes.sm),
       ],
     ).margin(horizontal: MgSizes.md);
   }

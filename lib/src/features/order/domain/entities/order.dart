@@ -94,35 +94,35 @@ extension OrderStatusExt on OrderStatus {
 
 // Mock data for testing
 final List<Order> mockOrders = [
-  Order(
-    orderId: 'order_001',
-    orderStatus: OrderStatus.accepted,
-    createdAt: DateTime.now().subtract(Duration(hours: 2)),
-    memo: '일회용 수저 빼주세요',
-    storeId: 'store_001',
-    storeName: '행복한 베이커리',
-    imageUrls: [
-      'https://picsum.photos/seed/bakery1/400/300',
-      'https://picsum.photos/seed/bakery2/400/300',
-    ],
-    goodsList: [
-      OrderGoods(
-        orderGoodsId: 'goods_001',
-        goodsName: '모닝빵 세트',
-        quantity: 2,
-        salePrice: 8000,
-      ),
-      OrderGoods(
-        orderGoodsId: 'goods_002',
-        goodsName: '크루아상 세트',
-        quantity: 1,
-        salePrice: 6000,
-      ),
-    ],
-    reviewIds: [],
-    payType: '간편결제',
-    easyPayProvider: '카카오페이',
-  ),
+  // Order(
+  //   orderId: 'order_001',
+  //   orderStatus: OrderStatus.accepted,
+  //   createdAt: DateTime.now().subtract(Duration(hours: 2)),
+  //   memo: '일회용 수저 빼주세요',
+  //   storeId: 'store_001',
+  //   storeName: '행복한 베이커리',
+  //   imageUrls: [
+  //     'https://picsum.photos/seed/bakery1/400/300',
+  //     'https://picsum.photos/seed/bakery2/400/300',
+  //   ],
+  //   goodsList: [
+  //     OrderGoods(
+  //       orderGoodsId: 'goods_001',
+  //       goodsName: '모닝빵 세트',
+  //       quantity: 2,
+  //       salePrice: 8000,
+  //     ),
+  //     OrderGoods(
+  //       orderGoodsId: 'goods_002',
+  //       goodsName: '크루아상 세트',
+  //       quantity: 1,
+  //       salePrice: 6000,
+  //     ),
+  //   ],
+  //   reviewIds: [],
+  //   payType: '간편결제',
+  //   easyPayProvider: '카카오페이',
+  // ),
   Order(
     orderId: 'order_002',
     orderStatus: OrderStatus.completed,

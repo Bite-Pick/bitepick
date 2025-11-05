@@ -73,7 +73,8 @@ class _MypageScreenState extends State<MypageScreen> {
       final prettyJson = const JsonEncoder.withIndent('  ').convert(data);
 
       // 디버깅 정보 구성
-      final debugInfo = '''
+      final debugInfo =
+          '''
 🌐 Environment: ${Environment.instance.isDev ? 'DEV' : 'PROD'}
 📍 Base URL: ${Environment.baseApiUrl}
 🎯 Full URL: ${Environment.baseApiUrl}/v1/store
@@ -201,10 +202,7 @@ $prettyJson
                 const SizedBox(height: 8),
                 Text(
                   e.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ],
             ),
@@ -221,10 +219,11 @@ $prettyJson
       body: ListView(
         children: [
           _buildVersionSection(),
-          MgButton(
-            onPressed: _debugApiCall,
-            content: const Text("API 디버깅"),
-          ).margin(horizontal: MgSizes.md),
+          if (!Environment.instance.isDev)
+            MgButton(
+              onPressed: _debugApiCall,
+              content: const Text("API 디버깅"),
+            ).margin(horizontal: MgSizes.md),
         ],
       ),
     );
@@ -247,24 +246,17 @@ $prettyJson
           ],
           if (!ShorebirdManager.isAvailable) ...[
             Gaps.h8,
-            Text('코드 푸시가 비활성화되어 있습니다.')
-                .sm()
-                .textGray()
-                .regular(),
+            Text('코드 푸시가 비활성화되어 있습니다.').sm().textGray().regular(),
           ],
         ],
       ).margin(all: MgSizes.md),
     );
-
   }
 
   Widget _buildVersionItem(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label).md().textGray(),
-        Text(value).md().bold(),
-      ],
+      children: [Text(label).md().textGray(), Text(value).md().bold()],
     );
   }
 }

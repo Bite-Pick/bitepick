@@ -22,7 +22,7 @@ class InquiryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MgButton(
       onPressed: () async => _showInquiryBottomSheet(context),
-      content: Text("문의하기"),
+      content: Text("문의하기").regular().textGray().sm(),
     );
   }
 

@@ -37,18 +37,19 @@ class StoreLocationInfoView extends StatelessWidget {
       spacing: MgSizes.md,
       children: [
         GestureDetector(
-          onTap: () async =>
-              // 지도 전체화면으로 이동
-              StoreMapRoute(
-                id: storeId,
-                $extra: StoreMapExtra(
-                  storeName: storeName,
-                  latitude: latitude,
-                  longitude: longitude,
-                  address: address,
-                ),
-              ).push(context),
-          child: IgnorePointer(
+          onTap: () async {
+            // 지도 전체화면으로 이동
+            StoreMapRoute(
+              id: storeId,
+              $extra: StoreMapExtra(
+                storeName: storeName,
+                latitude: latitude,
+                longitude: longitude,
+                address: address,
+              ),
+            ).push(context);
+          },
+          child: AbsorbPointer(
             child: BaseMapView(
               latitude: latitude,
               longitude: longitude,
@@ -129,7 +130,7 @@ class StoreLocationInfoView extends StatelessWidget {
             child: Image.asset(iconUrl),
           ).constrained(height: MgSizes.size24),
           Gaps.w12,
-          Text(label).md(),
+          Expanded(child: Text(label).md()),
         ],
       ).margin(vertical: MgSizes.md, horizontal: MgSizes.xl),
     );

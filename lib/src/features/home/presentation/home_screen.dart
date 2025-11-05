@@ -243,8 +243,8 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     return MgBottomsheet(
       Column(
         children: [
-          Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
-          ...widget.addresses.map(
+          Text("추천 지역").md().bold().margin(vertical: MgSizes.xl),
+          ...serviceAreas.map(
             (address) => _buildAddressBottomSheetItem(
               address,
               isSelect: widget.defaultAddress?.label == address.label,
@@ -269,11 +269,14 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     bool isSelect = false,
   }) {
     return GestureDetector(
-      onTap: () {
-        ref
+      onTap: () async {
+        // 추천 키워드를 선택하면 바로 주소로 추가하고 기본 주소로 설정
+        await ref
             .read(searchAddressScreenControllerProvider.notifier)
-            .selectFromSaved(address);
-        Navigator.of(context).pop();
+            .selectFromSearch(address);
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       },
       child:
           Row(
