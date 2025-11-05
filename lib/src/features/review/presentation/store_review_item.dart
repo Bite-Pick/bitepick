@@ -35,11 +35,11 @@ class _StoreReviewItemState extends ConsumerState<StoreReviewItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              // ClipOval(
-              //   // child: Image.network(""), // TODO: 이미지 확정 필요..
-              //   child: Container(width: 50, height: 50, color: Colors.red),
-              // ),
-              // Gaps.w12,
+              ClipOval(
+                // child: Image.network(""), // TODO: 이미지 확정 필요..
+                child: Container(width: 50, height: 50, color: Colors.red),
+              ),
+              Gaps.w12,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,13 +66,13 @@ class _StoreReviewItemState extends ConsumerState<StoreReviewItem> {
                   ],
                 ),
               ),
-              // MgButton(
-              //   onPressed: () {
-              //     // TODO[report]: 신고하기 API
-              //   },
-              //   content: Text("신고하기").sm(),
-              //   padding: Gutter.wsm,
-              // ),
+              MgButton(
+                onPressed: () {
+                  // TODO[report]: 신고하기 API
+                },
+                content: Text("신고하기").sm(),
+                padding: Gutter.wsm,
+              ),
             ],
           ),
           Gaps.h12,

@@ -43,83 +43,15 @@ platform :ios do
       "lib/src/main_dev.dart"
     end
 
-    # 동적으로 export_options.plist 생성
-    # match에서 생성된 프로비저닝 프로파일 매핑 사용
-    provisioning_profiles = lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
-
-    export_options = {
-      method: "app-store",
-      teamID: "JM239C9WFM",
-      provisioningProfiles: provisioning_profiles,
-      signingStyle: "manual",
-      signingCertificate: "iOS Distribution",
-      uploadBitcode: false,
-      uploadSymbols: true,
-      compileBitcode: false,
-      manageAppVersionAndBuildNumber: false
-    }
-
-    # export_options를 plist 파일로 저장
-    export_options_path = "/tmp/export_options_#{ENV["MODE"]}.plist"
-    File.write(export_options_path, Plist::Emit.dump(export_options))
-
-    puts "✅ 동적으로 생성된 export_options.plist:"
-    puts "   경로: #{export_options_path}"
-    puts "   프로비저닝 프로파일: #{provisioning_profiles}"
-
     shorebird_release(
       platform: "ios",
       args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{clean_version} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}",
-      export_options: export_options_path
+      export_options: ENV['EXPORT_OPTIONS_PLIST']
     )
-
-    # IPA 파일 경로 찾기 (여러 경로 시도)
-    possible_paths = [
-      "../build/ios/ipa/*.ipa",
-      "../../build/ios/ipa/*.ipa",
-      "./build/ios/ipa/*.ipa"
-    ]
-
-    ipa_path = nil
-    possible_paths.each do |pattern|
-      found = Dir[pattern].first
-      if found
-        ipa_path = found
-        break
-      end
-    end
-
-    if ipa_path.nil?
-      # 디버깅을 위한 상세 정보 출력
-      puts "❌ IPA 파일을 찾을 수 없습니다."
-      puts "🔍 현재 디렉토리: #{Dir.pwd}"
-      puts "🔍 탐색한 경로들:"
-      possible_paths.each do |pattern|
-        puts "   - #{pattern}"
-      end
-
-      # build/ios/ipa 디렉토리 확인
-      ipa_dir = "../build/ios/ipa"
-      if Dir.exist?(ipa_dir)
-        puts "📁 #{ipa_dir} 디렉토리 내용:"
-        Dir.entries(ipa_dir).each { |f| puts "   - #{f}" }
-      else
-        puts "❌ #{ipa_dir} 디렉토리가 존재하지 않습니다."
-      end
-
-      UI.user_error!("IPA 파일을 찾을 수 없습니다. 위의 디버깅 정보를 확인하세요.")
-    end
-
-    # 절대 경로로 변환
-    absolute_ipa_path = File.expand_path(ipa_path)
-
-    puts "✅ IPA 파일 발견: #{ipa_path}"
-    puts "📦 절대 경로: #{absolute_ipa_path}"
 
     # TestFlight에 업로드
     upload_to_testflight(
       api_key: api_key,
-      ipa: absolute_ipa_path,
       skip_waiting_for_build_processing: false,
       team_id: "JM239C9WFM"
     )
@@ -164,7 +96,8 @@ platform :ios do
 
     shorebird_patch(
       platform: "ios",
-      args: patch_args
+      args: patch_args,
+      export_options: ENV['EXPORT_OPTIONS_PLIST']
     )
 
     rescue => exception

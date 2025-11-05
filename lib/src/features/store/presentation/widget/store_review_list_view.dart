@@ -71,15 +71,15 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
               "이 상품의 모든 리뷰(${reviews.length}개)",
             ).textGray().md().margin(top: MgSizes.md, left: MgSizes.md),
           ),
-          // Row(
-          //   children: [
-          //     Checkbox(
-          //       value: _imageCheckOnly,
-          //       onChanged: (value) => _toggleImageCheck(),
-          //     ),
-          //     Text("포토리뷰만 보기").sm(),
-          //   ],
-          // ),
+          Row(
+            children: [
+              Checkbox(
+                value: _imageCheckOnly,
+                onChanged: (value) => _toggleImageCheck(),
+              ),
+              Text("포토리뷰만 보기").sm(),
+            ],
+          ),
           ...reviews.map((review) {
             return StoreReviewItem(review);
           }),

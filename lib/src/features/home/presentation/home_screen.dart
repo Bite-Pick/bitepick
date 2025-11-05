@@ -7,7 +7,6 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/core/utils/debug_text.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
@@ -44,18 +43,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .where((a) => a.isDefault)
         .firstOrNull;
 
-    // 배포시 403에러 발생
-    // final storeGoodsAsync = ref.watch(
-    //   storeGoodsListProvider(
-    //     latitude: 37.5185663, // TODO: 기본 위치 설정 필요
-    //     longitude: 127.0230599,
-    //     // latitude: defaultAddress?.latitude ?? 37.5185663,
-    //     // longitude: defaultAddress?.longitude ?? 127.0230599,
-    //     onlyAvailable: onlyAvailable,
-    //     sortType: sortType,
-    //   ),
-    // );
-    final goods = [mockGood];
+    final storeGoodsAsync = ref.watch(
+      storeGoodsListProvider(
+        latitude: 37.5185663, // TODO: 기본 위치 설정 필요
+        longitude: 127.0230599,
+        // latitude: defaultAddress?.longitude ?? 37.5185663,
+        // longitude: defaultAddress?.latitude ?? 127.0230599,
+        onlyAvailable: onlyAvailable,
+        sortType: sortType,
+      ),
+    );
     return SafeArea(
       // TODO: BaseCustomScrollView refact
       child: CustomScrollView(
@@ -69,30 +66,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
               HomeUpdateBanner(),
-              // MgAsyncAnimatedSwitcher<List<Goods>>(
-              //   asyncValue: storeGoodsAsync,
-              //   builder: (goods) =>
-              Column(
-                children: [
-                  _buildFilterSection(onlyAvailable, sortType),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: goods.length,
-                    itemBuilder: (context, index) {
-                      final item = goods[index];
-                      return HomeGoodsItem(goods: item)
-                          .margin(bottom: MgSizes.xs)
-                          .margin(horizontal: MgSizes.md);
-                    },
-                  ),
-                ],
+              MgAsyncAnimatedSwitcher<List<Goods>>(
+                asyncValue: storeGoodsAsync,
+                builder: (goods) => Column(
+                  children: [
+                    _buildFilterSection(onlyAvailable, sortType),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: goods.length,
+                      itemBuilder: (context, index) {
+                        final item = goods[index];
+                        return HomeGoodsItem(goods: item)
+                            .margin(bottom: MgSizes.xs)
+                            .margin(horizontal: MgSizes.md);
+                      },
+                    ),
+                  ],
+                ),
+                emptyBuilder: () =>
+                    HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
+                loadingBuilder: () =>
+                    const Center(child: CircularProgressIndicator()),
               ),
-              // emptyBuilder: () =>
-              //     HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
-              // loadingBuilder: () =>
-              //     const Center(child: CircularProgressIndicator()),
-              // ),
             ]),
           ),
         ],
@@ -213,10 +209,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildAddress(),
-        // _buildSearch(),
-      ],
+      children: [_buildAddress(), _buildSearch()],
     ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
   }
 
@@ -243,8 +236,8 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     return MgBottomsheet(
       Column(
         children: [
-          Text("추천 지역").md().bold().margin(vertical: MgSizes.xl),
-          ...serviceAreas.map(
+          Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
+          ...widget.addresses.map(
             (address) => _buildAddressBottomSheetItem(
               address,
               isSelect: widget.defaultAddress?.label == address.label,
@@ -258,7 +251,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
               SearchAddressRoute().push(context);
             },
           ).transparent(),
-          DebugText("현재 데이터가 많지않아 주소를 바꿔도 데이터변동은 없도록 임시처리해뒀습니다!"),
+          Text("현재 데이터가 많지않아 주소를 바꿔도 데이터변동은 없도록 임시처리해뒀습니다!"),
         ],
       ).margin(all: MgSizes.md),
     );
@@ -269,14 +262,11 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     bool isSelect = false,
   }) {
     return GestureDetector(
-      onTap: () async {
-        // 추천 키워드를 선택하면 바로 주소로 추가하고 기본 주소로 설정
-        await ref
+      onTap: () {
+        ref
             .read(searchAddressScreenControllerProvider.notifier)
-            .selectFromSearch(address);
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
+            .selectFromSaved(address);
+        Navigator.of(context).pop();
       },
       child:
           Row(

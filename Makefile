@@ -17,7 +17,3 @@ clean:
 
 build_runner:
 	@dart run build_runner build --delete-conflicting-outputs
-
-shIosPatchDev:
-	@echo "🤕Shorebird IOS patch🤕"
-	@shorebird patch ios  --target lib/src/main_dev.dart --flavor dev

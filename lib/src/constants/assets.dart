@@ -130,9 +130,6 @@ class R {
   static const String ASSETS_IMAGES_HOME_OPEN_BEFORE_PNG =
       'assets/images/home_open_before.png';
 
-  static const String ASSETS_IMAGES_KAKAO_CHANNEL_PNG =
-      'assets/images/kakao_channel.png';
-
   static const String ASSETS_IMAGES_KAKAOMAP_PNG = 'assets/images/kakaomap.png';
 
   static const String ASSETS_IMAGES_NAVERMAP_PNG = 'assets/images/navermap.png';

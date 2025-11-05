@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
-import 'package:magambell/src/core/utils/debug_text.dart';
 import 'package:magambell/src/features/order/domain/entities/order.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_list_item.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
@@ -14,17 +13,14 @@ class OrderListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final orders = mockOrders;
     return BaseScaffold(
-      appBar: BaseAppBar(
-        title: const Text('주문 내역'),
-        leading: SizedBox.shrink(),
-      ),
+      appBar: BaseAppBar(title: const Text('주문 내역')),
       body: ListView.builder(
         itemCount: orders.length,
         itemBuilder: (context, index) {
           final order = orders[index];
           return Column(
             children: [
-              if (index == 0) DebugText("백엔드 개발필요"),
+              if (index == 0) Text("백엔드 개발필요"),
               OrderListItem(order),
               if (index != orders.length - 1)
                 Divider(thickness: 6).margin(vertical: MgSizes.lg),
