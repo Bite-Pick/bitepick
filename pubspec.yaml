@@ -48,6 +48,7 @@ dependencies:
   reactive_forms: ^17.0.1
   flutter_naver_login: ^2.1.1
   kakao_flutter_sdk: ^1.9.7+3
+  sign_in_with_apple: ^7.0.1
 
 
 dev_dependencies:

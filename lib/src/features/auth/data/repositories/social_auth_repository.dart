@@ -7,6 +7,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 part 'social_auth_repository.g.dart';
 
@@ -103,6 +104,43 @@ class SocialAuthRepository {
       await UserApi.instance.logout();
     } catch (e) {
       print('Kakao logout error: $e');
+    }
+  }
+
+  /// 애플 로그인
+  Future<SocialAuthResult?> signInWithApple() async {
+    try {
+      // 1. 애플 로그인 요청
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      print('Apple login success: ${credential.identityToken?.substring(0, 10)}...');
+
+      if (credential.identityToken == null) {
+        print('Apple identity token is null');
+        return null;
+      }
+
+      // 2. 이메일 추출 (최초 로그인시에만 제공됨)
+      // 이후 로그인에서는 email이 null이므로 userIdentifier를 사용
+      final email = credential.email ?? '${credential.userIdentifier}@privaterelay.appleid.com';
+      final name = credential.givenName ?? credential.familyName ?? '';
+
+      // 3. 결과 반환
+      return SocialAuthResult(
+        providerType: AuthProviderType.apple,
+        authCode: credential.identityToken!, // Identity Token을 authCode로 전달
+        email: email,
+        name: name,
+      );
+    } catch (e, stackTrace) {
+      print('Apple login error: $e');
+      print('Stack trace: $stackTrace');
+      return null;
     }
   }
 }
