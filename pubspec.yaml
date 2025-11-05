@@ -45,6 +45,7 @@ dependencies:
   flutter_naver_map: ^1.4.1+1
   url_launcher: ^6.3.2
   flash: ^3.1.1
+  reactive_forms: ^17.0.1
 
 
 dev_dependencies:
