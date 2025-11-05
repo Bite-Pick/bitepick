@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/utils/debug_text.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
@@ -14,19 +15,15 @@ class StoreInfoView extends StatelessWidget {
   final images = [
     BiteBag(
       "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
+      "마늘육쪽빵",
     ),
     BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
+      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg",
+      "도넛",
     ),
     BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
-    ),
-    BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
+      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/3_bakery01.jpeg",
+      "몽블랑",
     ),
   ];
   @override
@@ -34,11 +31,11 @@ class StoreInfoView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(child: Text("백엔드 개발필요")), // TODO[bitebag]: 삭제
+        Center(child: DebugText("백엔드 개발필요")), // TODO[bitebag]: 삭제
         _buildNoticeItem(),
         _buildImages(images),
         Gaps.h16,
-        _buildTags(["dd", "dd", "dd"]),
+        _buildTags(["갓성비", "당일생산 당일판매"]).margin(left: MgSizes.sm),
       ],
     ).margin(horizontal: MgSizes.md);
   }

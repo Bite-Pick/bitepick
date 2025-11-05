@@ -35,11 +35,11 @@ android {
         create("dev") {
             dimension = "app"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "마감벨 DEV")
+            resValue("string", "app_name", "바이트픽 DEV")
         }
         create("prod") {
             dimension = "app"
-            resValue("string", "app_name", "마감벨")
+            resValue("string", "app_name", "바이트픽")
         }
     }
 

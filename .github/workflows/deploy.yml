@@ -257,7 +257,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: android-logs-${{ github.run_number }}
+          name: android-dev-logs-${{ github.run_number }}
           path: |
             logs/*.txt
             logs/*.md
@@ -421,7 +421,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: android-logs-${{ github.run_number }}
+          name: android-prod-logs-${{ github.run_number }}
           path: |
             logs/*.txt
             logs/*.md
@@ -615,7 +615,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-logs-${{ github.run_number }}
+          name: ios-dev-logs-${{ github.run_number }}
           path: |
             logs/*.txt
             logs/*.md
@@ -848,7 +848,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-logs-${{ github.run_number }}
+          name: ios-prod-logs-${{ github.run_number }}
           path: |
             logs/*.txt
             logs/*.md

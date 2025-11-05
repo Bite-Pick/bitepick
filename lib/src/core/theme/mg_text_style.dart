@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 
-/// 마감벨 폰트 패밀리
+/// 바이트픽 폰트 패밀리
 class MgFontFamily {
   MgFontFamily._();
 
@@ -16,11 +16,11 @@ class MgFontFamily {
   static const String thin = 'Pretendard-Thin'; // 100
 }
 
-/// 마감벨 폰트 사이즈
+/// 바이트픽 폰트 사이즈
 class MgFontSize {
   MgFontSize._();
 
-  static const double xxl = 28.0;
+  static const double xxl = 32.0;
   static const double xl = 24.0;
   static const double lg = 20.0;
   static const double md = 16.0;
@@ -571,4 +571,3 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
     ),
   );
 }
-

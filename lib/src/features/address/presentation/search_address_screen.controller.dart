@@ -100,19 +100,35 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
 
   /// 검색 결과 리스트에서 항목을 탭했을 때(새 주소 추가 + 기본주소로 설정)
   Future<void> selectFromSearch(Address addr) async {
-    // 최대 5개 제한
-    if (state.addresses.length >= 5) {
-      state = state.copyWith(message: '주소는 최대 5개까지 저장할 수 있습니다.');
-      return;
+    // 이미 같은 주소가 있는지 확인
+    final existingIndex = state.addresses.indexWhere(
+      (a) => a.label == addr.label && a.name == addr.name,
+    );
+
+    List<Address> updated;
+
+    if (existingIndex != -1) {
+      // 이미 있는 주소면 기본 주소로만 변경
+      updated = state.addresses.map((a) {
+        final isSame = a.label == addr.label && a.name == addr.name;
+        return a.copyWith(isDefault: isSame);
+      }).toList()..sort(_defaultFirst);
+    } else {
+      // 새 주소를 추가
+      // 최대 5개 제한
+      if (state.addresses.length >= 5) {
+        state = state.copyWith(message: '주소는 최대 5개까지 저장할 수 있습니다.');
+        return;
+      }
+
+      // 기존 기본 해제
+      final concated = state.addresses
+          .map((a) => a.isDefault ? a.copyWith(isDefault: false) : a)
+          .toList();
+
+      final target = addr.copyWith(isDefault: true);
+      updated = [...concated, target]..sort(_defaultFirst);
     }
-
-    // 기존 기본 해제
-    final concated = state.addresses
-        .map((a) => a.isDefault ? a.copyWith(isDefault: false) : a)
-        .toList();
-
-    final target = addr.copyWith(isDefault: true);
-    final updated = [...concated, target]..sort(_defaultFirst);
 
     state = state.copyWith(
       addresses: updated,

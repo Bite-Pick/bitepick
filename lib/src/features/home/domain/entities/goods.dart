@@ -27,24 +27,24 @@ class Goods with _$Goods {
   factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 }
 
-final mockStore = Goods(
-  storeId: "1",
-  storeName: "test",
+final mockGood = Goods(
+  storeId: "758244809439404511",
+  storeName: "라스트오븐",
   ImageUrl: [
     "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
     "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg",
     "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/3_bakery01.jpeg",
   ],
-  latitude: 0,
-  longitude: 0,
-  address: "dd",
-  goodsName: "dd",
-  startTime: "2025-10-12T00:40:57.096Z",
-  endTime: "2025-10-12T00:40:57.096Z",
-  originPrice: 5800,
-  discount: 10,
-  salePrice: 5220,
-  quantity: 0,
-  distance: 0,
+  latitude: 37.5185663,
+  longitude: 127.0230599,
+  address: "서울 강남구 가로수길 9",
+  goodsName: "바이트박스",
+  startTime: "2025-09-24T12:00:00",
+  endTime: "2025-09-24T19:00:00",
+  originPrice: 14000,
+  discount: 40,
+  salePrice: 8300,
+  quantity: 2,
+  distance: 2,
   saleStatus: "ON",
 );
