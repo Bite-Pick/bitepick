@@ -124,6 +124,9 @@ class R {
   static const String ASSETS_ICONS_SVG_UPLOAD_SVG =
       'assets/icons/svg/upload.svg';
 
+  static const String ASSETS_IMAGES_APPLE_LOGIN_PNG =
+      'assets/images/apple_login.png';
+
   static const String ASSETS_IMAGES_HOME_OPEN_AFTER_PNG =
       'assets/images/home_open_after.png';
 
@@ -133,7 +136,13 @@ class R {
   static const String ASSETS_IMAGES_KAKAO_CHANNEL_PNG =
       'assets/images/kakao_channel.png';
 
+  static const String ASSETS_IMAGES_KAKAO_LOGIN_PNG =
+      'assets/images/kakao_login.png';
+
   static const String ASSETS_IMAGES_KAKAOMAP_PNG = 'assets/images/kakaomap.png';
+
+  static const String ASSETS_IMAGES_NAVER_LOGIN_PNG =
+      'assets/images/naver_login.png';
 
   static const String ASSETS_IMAGES_NAVERMAP_PNG = 'assets/images/navermap.png';
 
