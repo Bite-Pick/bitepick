@@ -65,11 +65,9 @@ class LoginScreen extends ConsumerWidget {
                   isLoading: isLoading,
                 ),
                 _buildSocialLoginButton(
-                  onPressed: () async {
-                    await ref
-                        .read(loginScreenControllerProvider.notifier)
-                        .signInWithNaver();
-                  },
+                  onPressed: () async => await ref
+                      .read(loginScreenControllerProvider.notifier)
+                      .signInWithNaver(),
                   text: "네이버로 로그인",
                   imagePath: R.ASSETS_IMAGES_NAVER_LOGIN_PNG,
                   backgroundColor: const Color(0xFF36AE3C),
@@ -77,7 +75,9 @@ class LoginScreen extends ConsumerWidget {
                   isLoading: isLoading,
                 ),
                 _buildSocialLoginButton(
-                  onPressed: () {},
+                  onPressed: () async => await ref
+                      .read(loginScreenControllerProvider.notifier)
+                      .signInWithApple(),
                   text: "Apple로 로그인",
                   imagePath: R.ASSETS_IMAGES_APPLE_LOGIN_PNG,
                   backgroundColor: MgColorScheme.gray1,

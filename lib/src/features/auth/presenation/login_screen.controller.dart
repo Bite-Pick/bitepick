@@ -108,6 +108,48 @@ class LoginScreenController extends _$LoginScreenController {
     return true;
   }
 
+  /// 애플 로그인
+  Future<bool> signInWithApple() async {
+    state = const AsyncValue.loading();
+
+    try {
+      // 1. 애플 SDK로 로그인 실행 및 프로필 가져오기
+      final authResult = await ref
+          .read(socialAuthRepositoryProvider)
+          .signInWithApple();
+
+      if (authResult == null) {
+        state = AsyncValue.error('애플 로그인에 실패했습니다.', StackTrace.current);
+        return false;
+      }
+
+      // 2. 최근 로그인 정보 저장
+      await _saveLastLoginProvider('APPLE');
+
+      // 3. 백엔드로 기존 회원 검증
+      final isExistingUser = await _verifyUser(authResult);
+
+      if (!isExistingUser) {
+        // 신규 회원인 경우: 회원가입 화면으로 이동
+        state = AsyncValue.data(authResult);
+        return false;
+      }
+
+      // 기존 회원인 경우: 로그인 처리
+      final loginSuccess = await _loginUser(authResult);
+      if (loginSuccess) {
+        state = const AsyncValue.data(null);
+        return true;
+      } else {
+        state = AsyncValue.error('로그인에 실패했습니다.', StackTrace.current);
+        return false;
+      }
+    } catch (error, stackTrace) {
+      state = AsyncValue.error('애플 로그인 중 오류가 발생했습니다.', stackTrace);
+      return false;
+    }
+  }
+
   /// 최근 로그인 Provider 저장
   // TODO: 적용 시점 고민 필요(로그인 완료 vs 버튼만 눌러도)
   Future<void> _saveLastLoginProvider(String provider) async {
