@@ -40,7 +40,10 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# secret files
 .env
+android/app/src/main/res/values/strings.xml
+ios/Flutter/Secret.xcconfig
 
 #shorebird releated
 shorebird.yaml

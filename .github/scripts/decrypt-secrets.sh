@@ -43,6 +43,8 @@ decrypt_file "$SECRETS_DIR/google-services-android-prod.json.gpg" "android/app/s
 decrypt_file "$SECRETS_DIR/GoogleService-Info-dev.plist.gpg" "ios/Runner/GoogleService-Info-dev.plist"
 decrypt_file "$SECRETS_DIR/GoogleService-Info-prod.plist.gpg" "ios/Runner/GoogleService-Info-prod.plist"
 decrypt_file "$SECRETS_DIR/AuthKey.p8.gpg" "ios/AuthKey.p8"
+decrypt_file "$SECRETS_DIR/Secret.xcconfig.gpg" "ios/Flutter/Secret.xcconfig"
+decrypt_file "$SECRETS_DIR/strings.xml.gpg" "android/app/src/main/res/values/strings.xml"
 
 echo ""
 echo "✅ 모든 파일 복호화 완료!"
