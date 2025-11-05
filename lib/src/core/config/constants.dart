@@ -28,3 +28,6 @@ final String SERVICE_URL_SCHEME = dotenv.env['SERVICE_URL_SCHEME']!;
 final String PORTONE_STORE_ID = dotenv.env['PORTONE_STORE_ID']!;
 final String PORTONE_TEST_CHANNEL_KEY = dotenv.env['PORTONE_TEST_CHANNEL_KEY']!;
 final String PORTONE_CHANNEL_KEY = dotenv.env['PORTONE_CHANNEL_KEY']!;
+
+// kakao
+final String KAKAO_NATIVE_APP_KEY = dotenv.env['KAKAO_NATIVE_APP_KEY']!;
