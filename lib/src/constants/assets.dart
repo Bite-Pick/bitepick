@@ -130,6 +130,9 @@ class R {
   static const String ASSETS_IMAGES_HOME_OPEN_BEFORE_PNG =
       'assets/images/home_open_before.png';
 
+  static const String ASSETS_IMAGES_KAKAO_CHANNEL_PNG =
+      'assets/images/kakao_channel.png';
+
   static const String ASSETS_IMAGES_KAKAOMAP_PNG = 'assets/images/kakaomap.png';
 
   static const String ASSETS_IMAGES_NAVERMAP_PNG = 'assets/images/navermap.png';
@@ -140,11 +143,15 @@ class R {
   static const String ASSETS_IMAGES_ORDER_CAUTION_2_PNG =
       'assets/images/order_caution_2.png';
 
+  static const String ASSETS_IMAGES_OWNER_PNG = 'assets/images/owner.png';
+
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
 
   static const String ASSETS_IMAGES_TOSS_PAYMENTS_PNG =
       'assets/images/toss_payments.png';
+
+  static const String ASSETS_IMAGES_USER_PNG = 'assets/images/user.png';
 
   static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }

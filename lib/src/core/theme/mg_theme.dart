@@ -12,23 +12,25 @@ class MgTheme {
     return _instance!;
   }
 
+  ColorScheme get _colorScheme => ColorScheme.light(
+        primary: MgColorScheme.primary,
+        secondary: MgColorScheme.secondary,
+        surface: MgColorScheme.background,
+        error: MgColorScheme.subpointRed,
+        onPrimary: MgColorScheme.black,
+        onSecondary: MgColorScheme.white,
+        onSurface: MgColorScheme.text,
+        onError: MgColorScheme.white,
+      );
+
+  TextTheme get textTheme => mgTextTheme(_colorScheme);
+
   // Theme Data
   ThemeData get themeData {
-    final colorScheme = ColorScheme.light(
-      primary: MgColorScheme.primary,
-      secondary: MgColorScheme.secondary,
-      surface: MgColorScheme.background,
-      error: MgColorScheme.subpointRed,
-      onPrimary: MgColorScheme.black,
-      onSecondary: MgColorScheme.white,
-      onSurface: MgColorScheme.text,
-      onError: MgColorScheme.white,
-    );
-
     return ThemeData(
-      textTheme: mgTextTheme(colorScheme),
+      textTheme: textTheme,
       brightness: Brightness.light,
-      colorScheme: colorScheme,
+      colorScheme: _colorScheme,
       scaffoldBackgroundColor: MgColorScheme.background,
       fontFamily: MgFontFamily.regular,
       useMaterial3: true,
