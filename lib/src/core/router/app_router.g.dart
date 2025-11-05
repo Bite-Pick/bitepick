@@ -6,7 +6,75 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$mainRoute];
+List<RouteBase> get $appRoutes => [$loginRoute, $mainRoute];
+
+RouteBase get $loginRoute => GoRouteData.$route(
+  path: '/auth',
+  name: 'LoginRoute',
+
+  factory: $LoginRouteExtension._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'select-user-type',
+      name: 'SelectUserTypeRoute',
+
+      factory: $SelectUserTypeRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'owner/join/info',
+      name: 'OwnerJoinInfoRoute',
+
+      factory: $OwnerJoinInfoRouteExtension._fromState,
+    ),
+  ],
+);
+
+extension $LoginRouteExtension on LoginRoute {
+  static LoginRoute _fromState(GoRouterState state) => const LoginRoute();
+
+  String get location => GoRouteData.$location('/auth');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $SelectUserTypeRouteExtension on SelectUserTypeRoute {
+  static SelectUserTypeRoute _fromState(GoRouterState state) =>
+      const SelectUserTypeRoute();
+
+  String get location => GoRouteData.$location('/auth/select-user-type');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerJoinInfoRouteExtension on OwnerJoinInfoRoute {
+  static OwnerJoinInfoRoute _fromState(GoRouterState state) =>
+      const OwnerJoinInfoRoute();
+
+  String get location => GoRouteData.$location('/auth/owner/join/info');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $mainRoute => GoRouteData.$route(
   path: '/',
