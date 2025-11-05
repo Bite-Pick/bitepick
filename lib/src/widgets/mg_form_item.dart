@@ -3,6 +3,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 /// Reactive Form Item 위젯
@@ -29,58 +30,55 @@ class MgFormItem<T> extends ReactiveFormField<T, T> {
     this.showError = true,
     this.helper,
   }) : super(
-          formControlName: name,
-          showErrors: !showError ? (_) => false : null,
-          builder: (field) {
-            final isError = field.errorText?.isNotEmpty ?? false;
+         formControlName: name,
+         showErrors: !showError ? (_) => false : null,
+         builder: (field) {
+           final isError = field.errorText?.isNotEmpty ?? false;
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Label
-                if (label != null) ...[
-                  DefaultTextStyle(
-                    style: const TextStyle().md().bold(),
-                    child: label,
-                  ),
-                  Gaps.h8,
-                ],
+           return Column(
+             mainAxisAlignment: MainAxisAlignment.start,
+             mainAxisSize: MainAxisSize.min,
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               // Label
+               if (label != null) ...[
+                 DefaultTextStyle(
+                   style: MgTheme.getInstance().textTheme.bodyMedium!,
+                   child: label,
+                 ),
+                 Gaps.h8,
+               ],
 
-                // Child Widget
-                child,
+               child,
+               AnimatedSwitcher(
+                 duration: const Duration(milliseconds: 150),
+                 child: isError
+                     ? Column(
+                         children: [
+                           Gaps.h4,
+                           Text(
+                             field.errorText ?? "",
+                             style: MgTheme.getInstance().textTheme.bodySmall!
+                                 .copyWith(color: MgColorScheme.subpointRed),
+                           ),
+                         ],
+                       )
+                     : const Offstage(),
+               ),
 
-                // Error Message
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 150),
-                  child: isError
-                      ? Column(
-                          children: [
-                            Gaps.h4,
-                            Text(
-                              field.errorText ?? "",
-                              style: const TextStyle()
-                                  .sm()
-                                  .copyWith(color: MgColorScheme.red),
-                            ),
-                          ],
-                        )
-                      : const Offstage(),
-                ),
-
-                // Helper Message
-                if (helper != null && !isError) ...[
-                  Gaps.h4,
-                  DefaultTextStyle(
-                    style: const TextStyle().sm().textGray(),
-                    child: helper,
-                  ),
-                ],
-              ],
-            );
-          },
-        );
+               if (helper != null && !isError) ...[
+                 Gaps.h4,
+                 DefaultTextStyle(
+                   style: MgTheme.getInstance().textTheme.bodySmall!.copyWith(
+                     color: MgColorScheme.gray4,
+                   ),
+                   child: helper,
+                 ),
+               ],
+             ],
+           );
+         },
+       );
 
   final Widget child;
   final Widget? label;
@@ -99,16 +97,15 @@ class MgFormItem<T> extends ReactiveFormField<T, T> {
     Widget? child,
     Widget? label,
     Widget? helper,
-  }) =>
-      MgFormItem(
-        key: key,
-        name: name ?? this.name,
-        label: label ?? this.label,
-        helper: helper ?? this.helper,
-        showError: showError,
-        validationMessages: super.validationMessages,
-        child: child ?? this.child,
-      );
+  }) => MgFormItem(
+    key: key,
+    name: name ?? this.name,
+    label: label ?? this.label,
+    helper: helper ?? this.helper,
+    showError: showError,
+    validationMessages: super.validationMessages,
+    child: child ?? this.child,
+  );
 
   @override
   ReactiveFormFieldState<T, T> createState() => ReactiveFormFieldState<T, T>();
