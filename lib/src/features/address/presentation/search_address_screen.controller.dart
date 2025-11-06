@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/util/shared_preference_store.dart';
+import '../../../core/utils/shared_preference_store.dart';
 import '../data/repository/naver_geocoding_repository.dart';
 import '../domain/entities/address.dart';
 import '../domain/entities/area.dart';
