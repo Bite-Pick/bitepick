@@ -84,14 +84,14 @@ class _MgTextFieldState extends State<MgTextField> {
       return MgColorScheme.subpointRed;
     }
     // TODO: focus 되었을 때 색상 논의(_isFocused ? MgColorScheme.primary :)
-    return MgColorScheme.gray7;
+    return _isFocused ? MgColorScheme.primary : MgColorScheme.gray7;
   }
 
   double get _borderWidth {
     if (widget.error != null && widget.error!.isNotEmpty) {
       return 1.0;
     }
-    return _isFocused ? 1.0 : 0.0;
+    return _isFocused ? 1.5 : 1.0;
   }
 
   @override
@@ -131,7 +131,7 @@ class _MgTextFieldState extends State<MgTextField> {
               placeholder: widget.hintText,
               placeholderStyle: const TextStyle(
                 fontSize: MgFontSize.md,
-                color: MgColorScheme.text,
+                color: MgColorScheme.gray4,
               ),
               prefix:
                   widget.prefixIcon ??
@@ -144,12 +144,16 @@ class _MgTextFieldState extends State<MgTextField> {
                     BaseSvgIcon.close().margin(all: MgSizes.md),
               ),
               suffixMode: OverlayVisibilityMode.editing,
-              padding: const EdgeInsets.symmetric(
-                // horizontal: spacingMd,
+              padding: EdgeInsets.symmetric(
+                horizontal: widget.prefixIcon == SizedBox.shrink()
+                    ? 0
+                    : spacingMd,
                 vertical: spacingSm,
               ),
               decoration: BoxDecoration(
-                color: MgColorScheme.gray11,
+                color: widget.enabled
+                    ? MgColorScheme.gray11
+                    : MgColorScheme.gray9,
                 borderRadius: BorderRadius.circular(borderRadiusMd),
                 border: Border.all(color: _borderColor, width: _borderWidth),
               ),

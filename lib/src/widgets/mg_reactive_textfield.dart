@@ -31,7 +31,7 @@ class MgReactiveTextField extends ReactiveFormField<String, String> {
              maxLines: maxLines,
              textInputAction: textInputAction,
              inputStyle: inputStyle,
-             prefixIcon: prefixIcon,
+             prefixIcon: prefixIcon ?? SizedBox.shrink(),
              suffixIcon: suffixIcon,
              onSubmitted: onSubmitted,
            );
@@ -55,7 +55,7 @@ class MgReactiveTextField extends ReactiveFormField<String, String> {
 }
 
 class _MgReactiveTextFieldState extends ReactiveFormFieldState<String, String> {
-  late TextEditingController _textEditingController;
+  final TextEditingController _textEditingController = TextEditingController();
   late FocusNode _focusNode;
   bool _isFocused = false;
 
@@ -64,7 +64,7 @@ class _MgReactiveTextFieldState extends ReactiveFormFieldState<String, String> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-    _textEditingController = TextEditingController(text: value ?? '');
+    _textEditingController.text = value ?? '';
   }
 
   @override
