@@ -8,7 +8,7 @@ class SocialAuthResult with _$SocialAuthResult {
   const factory SocialAuthResult({
     required AuthProviderType providerType,
     required String authCode, // Access Token
-    required String email,
-    required String name,
+    String? email,
+    String? name,
   }) = _SocialAuthResult;
 }

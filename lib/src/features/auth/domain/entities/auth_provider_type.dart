@@ -7,3 +7,5 @@ enum AuthProviderType {
 
   final String value;
 }
+
+// enum UserRole = 'GUEST' | 'OWNER';

@@ -1,4 +1,7 @@
+import 'package:magambell/src/features/auth/data/providers/auth_token_manager.dart';
+import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/data/repositories/social_auth_repository.dart';
+import 'package:magambell/src/features/auth/data/repositories/vertify_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +65,9 @@ class LoginScreenController extends _$LoginScreenController {
       }
 
       // 2. 백엔드로 기존 회원 검증
-      final isExistingUser = await _verifyUser(authResult);
+      final isExistingUser = await ref
+          .read(vertifyRepositoryProvider)
+          .vertifySocial(authResult.providerType, authResult.authCode);
 
       if (!isExistingUser) {
         // 신규 회원인 경우: 회원가입 화면으로 이동
@@ -89,16 +94,24 @@ class LoginScreenController extends _$LoginScreenController {
     }
   }
 
-  /// 백엔드로 기존 회원 검증
-  Future<bool> _verifyUser(SocialAuthResult authResult) async {
-    // TODO : vertify duplicate
-    return true;
-  }
-
   /// 백엔드로 로그인 요청
   Future<bool> _loginUser(SocialAuthResult authResult) async {
-    // TODO
-    return true;
+    try {
+      final tokens =
+          await ref.read(authRepositoryProvider).authenticateWithSocial(
+                providerType: authResult.providerType,
+                authCode: authResult.authCode,
+              );
+
+      if (tokens != null) {
+        await ref.read(authTokenManagerProvider.notifier).saveTokens(tokens);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Login error: $e');
+      return false;
+    }
   }
 
   /// 최근 로그인 Provider 저장
