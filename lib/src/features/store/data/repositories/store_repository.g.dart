@@ -6,7 +6,24 @@ part of 'store_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$storeGoodsListHash() => r'e0631c63beb69f76787e0201a6973035f5de6a4e';
+String _$storeRepositoryHash() => r'b399b38fed392f450c5fc9f2c9b6d6cc2dc66749';
+
+/// See also [storeRepository].
+@ProviderFor(storeRepository)
+final storeRepositoryProvider = AutoDisposeProvider<StoreRepository>.internal(
+  storeRepository,
+  name: r'storeRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$storeRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef StoreRepositoryRef = AutoDisposeProviderRef<StoreRepository>;
+String _$storeGoodsListHash() => r'8ab0b5549e4f03ed16d2256b1434d1590a1de8c3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -254,7 +271,7 @@ class _StoreGoodsListProviderElement
   int get size => (origin as StoreGoodsListProvider).size;
 }
 
-String _$storeGoodsDetailHash() => r'b9818eb9888b86007877016cabfc9a8b7f78dc00';
+String _$storeGoodsDetailHash() => r'114beff048c709d20f59d89d90e27454c8b8ccac';
 
 /// See also [storeGoodsDetail].
 @ProviderFor(storeGoodsDetail)

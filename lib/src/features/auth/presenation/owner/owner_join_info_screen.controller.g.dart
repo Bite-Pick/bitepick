@@ -7,15 +7,12 @@ part of 'owner_join_info_screen.controller.dart';
 // **************************************************************************
 
 String _$ownerJoinInfoScreenControllerHash() =>
-    r'6489466eba4de0ffee02b102dfd419b84f62b43a';
+    r'55330ca8525a0160d0afc5ac0aed32045a52b00b';
 
 /// See also [OwnerJoinInfoScreenController].
 @ProviderFor(OwnerJoinInfoScreenController)
 final ownerJoinInfoScreenControllerProvider =
-    AutoDisposeAsyncNotifierProvider<
-      OwnerJoinInfoScreenController,
-      void
-    >.internal(
+    AsyncNotifierProvider<OwnerJoinInfoScreenController, void>.internal(
       OwnerJoinInfoScreenController.new,
       name: r'ownerJoinInfoScreenControllerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -25,6 +22,6 @@ final ownerJoinInfoScreenControllerProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$OwnerJoinInfoScreenController = AutoDisposeAsyncNotifier<void>;
+typedef _$OwnerJoinInfoScreenController = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
