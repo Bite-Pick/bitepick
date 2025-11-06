@@ -76,8 +76,8 @@ const Map<String, FinancialInstitution> financialInstitutions = {
     name: '대구은행',
     code: '대구',
   ),
-  'JeonBukBank': FinancialInstitution(
-    icon: 'JeonBukBank',
+  'JeonbukBank': FinancialInstitution(
+    icon: 'JeonbukBank',
     name: '전북은행',
     code: '전북',
   ),
