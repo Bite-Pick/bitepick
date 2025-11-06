@@ -1,7 +1,11 @@
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/assets.dart';
+import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -71,9 +75,21 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
           ),
           Spacer(),
           MgButton(
-            onPressed: selectedUserRole != null
-                ? _showAgreementBottomSheet
-                : null,
+            onPressed: () {
+              if (selectedUserRole == null) {
+                context.showFlash(
+                  duration: const Duration(milliseconds: 2000),
+                  builder: (context, controller) {
+                    return FlashBar(
+                      controller: controller,
+                      content: Text("사용자 유형을 선택해 주세요."),
+                    );
+                  },
+                );
+                return;
+              }
+              _showAgreementBottomSheet();
+            },
             content: const Text("다음"),
           ).primary(),
         ],
@@ -83,35 +99,51 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
 
   void _showAgreementBottomSheet() {
     MgBottomsheet.show(context, (context, bottomState) {
-      return Padding(
-        padding: const EdgeInsets.all(MgSizes.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("약관 동의").lg().bold(),
-            Gaps.h24,
-            AgreementSection(
-              onAllAgreedChanged: (allAgreed) {
-                bottomState(() {
-                  _allAgreed = allAgreed;
-                });
-              },
-            ),
-            Gaps.h24,
-            MgButton(
-              onPressed: _allAgreed
-                  ? () {
-                      Navigator.pop(context);
-                      // TODO: 회원가입 API 호출
-                      print('회원가입: ${selectedUserRole?.value}');
-                    }
-                  : null,
-              content: const Text("동의하고 시작하기"),
-            ).primary(),
-          ],
-        ),
-      );
-    }, height: 500);
+      return Column(
+        children: [
+          Text("이용 약관").md().bold().margin(vertical: MgSizes.md),
+          AgreementSection(
+            allAgreeText: '전체 동의',
+            items: [
+              AgreementItem(text: '개인정보 수집 및 이용 동의 (필수)', link: PRIAVCY_POLICY),
+              selectedUserRole == UserRole.customer
+                  ? AgreementItem(
+                      text: '이용약관(일반 회원용)',
+                      link: GUEST_SERVICE_TERM,
+                    )
+                  : AgreementItem(
+                      text: '이용약관(공급자 회원용)',
+                      link: OWNER_SERVICE_TERM,
+                    ),
+            ],
+            onAllAgreedChanged: (allAgreed) {
+              bottomState(() => _allAgreed = allAgreed);
+            },
+          ),
+          Gaps.h32,
+          MgButton(
+            onPressed: () {
+              if (!_allAgreed) {
+                // TODO: 컴포넌트 분리
+                context.showFlash(
+                  duration: const Duration(milliseconds: 1000),
+                  builder: (context, controller) {
+                    return FlashBar(
+                      controller: controller,
+                      content: Text("모든 약관에 동의해 주세요."),
+                    );
+                  },
+                );
+                return;
+              }
+              // TODO: 회원가입 API 호출
+              
+            },
+            content: const Text("확인"),
+          ).primary(),
+        ],
+      ).padding(all: MgSizes.xl);
+    }, height: 400.h);
   }
 
   Widget _buildUserTypeButton({
