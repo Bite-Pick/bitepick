@@ -75,6 +75,7 @@ flutter:
     - assets/icons/
     - assets/icons/svg/
     - assets/icons/svg/filled/
+    - assets/icons/svg/bank/
     - shorebird.yaml
 
   fonts:

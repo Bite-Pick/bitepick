@@ -7,6 +7,93 @@ class R {
   static const String ASSETS_ICONS_SVG_ALIGN_JUSTIFY_SVG =
       'assets/icons/svg/align-justify.svg';
 
+  static const String ASSETS_ICONS_SVG_BANK_BUSANBANK_SVG =
+      'assets/icons/svg/bank/BusanBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_CITIBANK_SVG =
+      'assets/icons/svg/bank/CitiBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_DAEGUBANK_SVG =
+      'assets/icons/svg/bank/DaeguBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_FORESTCOOPERATIVE_SVG =
+      'assets/icons/svg/bank/ForestCooperative.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_GWANGJUBANK_SVG =
+      'assets/icons/svg/bank/GwangjuBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_GYEONGNAMBANK_SVG =
+      'assets/icons/svg/bank/GyeongnamBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_HANABANK_SVG =
+      'assets/icons/svg/bank/HanaBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_IBKBANK_SVG =
+      'assets/icons/svg/bank/IbkBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_JEJUBANK_SVG =
+      'assets/icons/svg/bank/JejuBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_JEONBUKBANK_SVG =
+      'assets/icons/svg/bank/JeonbukBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KBANK_SVG =
+      'assets/icons/svg/bank/KBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KAKAOBANK_SVG =
+      'assets/icons/svg/bank/KakaoBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KBBANK_SVG =
+      'assets/icons/svg/bank/KbBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KBINVESTMENTSECURITIES_SVG =
+      'assets/icons/svg/bank/KbInvestmentSecurities.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KDBINDUSTRIALBANK_SVG =
+      'assets/icons/svg/bank/KdbIndustrialBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KEBEXCHANGEBANK_SVG =
+      'assets/icons/svg/bank/KebExchangeBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_KOREAINVESTMENTSECURITIES_SVG =
+      'assets/icons/svg/bank/KoreaInvestmentSecurities.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_MUTUALSAVINGSBANK_SVG =
+      'assets/icons/svg/bank/MutualSavingsBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_NHBANK_SVG =
+      'assets/icons/svg/bank/NhBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_NHINVESTMENTSECURITIES_SVG =
+      'assets/icons/svg/bank/NhInvestmentSecurities.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_POSTOFFICEBANK_SVG =
+      'assets/icons/svg/bank/PostOfficeBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_SAEMAEULCREDITUNION_SVG =
+      'assets/icons/svg/bank/SaemaeulCreditUnion.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_SBISAVINGSBANK_SVG =
+      'assets/icons/svg/bank/SbiSavingsBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_SCFIRSTBANK_SVG =
+      'assets/icons/svg/bank/ScFirstBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_SHINHANBANK_SVG =
+      'assets/icons/svg/bank/ShinhanBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_SHINHYUPBANK_SVG =
+      'assets/icons/svg/bank/ShinhyupBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_SUHYUPBANK_SVG =
+      'assets/icons/svg/bank/SuhyupBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_TOSSBANK_SVG =
+      'assets/icons/svg/bank/TossBank.svg';
+
+  static const String ASSETS_ICONS_SVG_BANK_WOORIBANK_SVG =
+      'assets/icons/svg/bank/WooriBank.svg';
+
   static const String ASSETS_ICONS_SVG_BELL_SVG = 'assets/icons/svg/bell.svg';
 
   static const String ASSETS_ICONS_SVG_BOOKMARK_SVG =
