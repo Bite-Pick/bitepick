@@ -19,8 +19,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SocialAuthResult {
   AuthProviderType get providerType => throw _privateConstructorUsedError;
   String get authCode => throw _privateConstructorUsedError; // Access Token
-  String get email => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
 
   /// Create a copy of SocialAuthResult
   /// with the given fields replaced by the non-null parameter values.
@@ -39,8 +39,8 @@ abstract class $SocialAuthResultCopyWith<$Res> {
   $Res call({
     AuthProviderType providerType,
     String authCode,
-    String email,
-    String name,
+    String? email,
+    String? name,
   });
 }
 
@@ -61,8 +61,8 @@ class _$SocialAuthResultCopyWithImpl<$Res, $Val extends SocialAuthResult>
   $Res call({
     Object? providerType = null,
     Object? authCode = null,
-    Object? email = null,
-    Object? name = null,
+    Object? email = freezed,
+    Object? name = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -74,14 +74,14 @@ class _$SocialAuthResultCopyWithImpl<$Res, $Val extends SocialAuthResult>
                 ? _value.authCode
                 : authCode // ignore: cast_nullable_to_non_nullable
                       as String,
-            email: null == email
+            email: freezed == email
                 ? _value.email
                 : email // ignore: cast_nullable_to_non_nullable
-                      as String,
-            name: null == name
+                      as String?,
+            name: freezed == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
           )
           as $Val,
     );
@@ -100,8 +100,8 @@ abstract class _$$SocialAuthResultImplCopyWith<$Res>
   $Res call({
     AuthProviderType providerType,
     String authCode,
-    String email,
-    String name,
+    String? email,
+    String? name,
   });
 }
 
@@ -121,8 +121,8 @@ class __$$SocialAuthResultImplCopyWithImpl<$Res>
   $Res call({
     Object? providerType = null,
     Object? authCode = null,
-    Object? email = null,
-    Object? name = null,
+    Object? email = freezed,
+    Object? name = freezed,
   }) {
     return _then(
       _$SocialAuthResultImpl(
@@ -134,14 +134,14 @@ class __$$SocialAuthResultImplCopyWithImpl<$Res>
             ? _value.authCode
             : authCode // ignore: cast_nullable_to_non_nullable
                   as String,
-        email: null == email
+        email: freezed == email
             ? _value.email
             : email // ignore: cast_nullable_to_non_nullable
-                  as String,
-        name: null == name
+                  as String?,
+        name: freezed == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
       ),
     );
   }
@@ -153,8 +153,8 @@ class _$SocialAuthResultImpl implements _SocialAuthResult {
   const _$SocialAuthResultImpl({
     required this.providerType,
     required this.authCode,
-    required this.email,
-    required this.name,
+    this.email,
+    this.name,
   });
 
   @override
@@ -163,9 +163,9 @@ class _$SocialAuthResultImpl implements _SocialAuthResult {
   final String authCode;
   // Access Token
   @override
-  final String email;
+  final String? email;
   @override
-  final String name;
+  final String? name;
 
   @override
   String toString() {
@@ -205,8 +205,8 @@ abstract class _SocialAuthResult implements SocialAuthResult {
   const factory _SocialAuthResult({
     required final AuthProviderType providerType,
     required final String authCode,
-    required final String email,
-    required final String name,
+    final String? email,
+    final String? name,
   }) = _$SocialAuthResultImpl;
 
   @override
@@ -214,9 +214,9 @@ abstract class _SocialAuthResult implements SocialAuthResult {
   @override
   String get authCode; // Access Token
   @override
-  String get email;
+  String? get email;
   @override
-  String get name;
+  String? get name;
 
   /// Create a copy of SocialAuthResult
   /// with the given fields replaced by the non-null parameter values.

@@ -7,7 +7,7 @@ part of 'social_auth_repository.dart';
 // **************************************************************************
 
 String _$socialAuthRepositoryHash() =>
-    r'e397fd846e74cf9ac2b4de825e08e0259a1a7445';
+    r'e6e0c018f74e983a0c316626cbfd70a11d149dae';
 
 /// See also [socialAuthRepository].
 @ProviderFor(socialAuthRepository)
