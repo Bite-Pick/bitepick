@@ -64,7 +64,10 @@ class BankListBottomsheet extends StatelessWidget {
                             children: [
                               // TODO: 은행 아이콘 추가 시 여기에 표시
                               // Icon(Icons.account_balance, size: 32, color: MgColorScheme.gray1),
-                              BaseSvgIcon(assetName: 'bank/${bank.icon}.svg'),
+                              BaseSvgIcon(
+                                assetName: 'bank/${bank.icon}.svg',
+                                hasColorFilter: false,
+                              ),
                               Gaps.h8,
                               Text(
                                 bank.name,
