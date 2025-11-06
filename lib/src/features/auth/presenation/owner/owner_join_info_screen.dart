@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_reactive_textfield.dart';
 import 'package:magambell/src/widgets/mg_select.dart';
@@ -98,11 +101,11 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                     _buildSectionTitle('대표자 정보'),
                     MgReactiveTextField(
                       formControlName: 'representativeName',
-                      hintText: '대표님 성함 ',
+                      hintText: '대표자 성함 ',
                     ),
                     MgReactiveTextField(
                       formControlName: 'representativePhone',
-                      hintText: '대표님 연락처 ',
+                      hintText: '전화번호  (예: 01012345678)',
                       keyboardType: TextInputType.phone,
                     ),
 
@@ -110,32 +113,27 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                     _buildSectionTitle('사업자 등록 번호'),
                     MgReactiveTextField(
                       formControlName: 'businessNumber',
-                      hintText: '사업자 등록 번호 ',
+                      hintText: '"-" 제외한 10자리 숫자 ',
                       keyboardType: TextInputType.number,
                     ),
 
                     // 5. 계좌 등록
                     _buildSectionTitle('계좌 등록'),
-                    // TODO:
                     MgSelect<String?>(
                       formControlName: 'bankName',
                       hintText: '은행 선택',
-                      options: const [
-                        MgSelectOption(value: 'KB', label: 'KB국민은행'),
-                        MgSelectOption(value: 'SHINHAN', label: '신한은행'),
-                        MgSelectOption(value: 'WOORI', label: '우리은행'),
-                        MgSelectOption(value: 'HANA', label: '하나은행'),
-                        MgSelectOption(value: 'NH', label: 'NH농협은행'),
-                        MgSelectOption(value: 'IBK', label: 'IBK기업은행'),
-                        MgSelectOption(value: 'KBANK', label: '케이뱅크'),
-                        MgSelectOption(value: 'KAKAO', label: '카카오뱅크'),
-                        MgSelectOption(value: 'TOSS', label: '토스뱅크'),
-                      ],
+                      bottomSheetTitle: '은행 선택해주세요',
+                      options: financialInstitutions.values
+                          .map(
+                            (e) => MgSelectOption(value: e.code, label: e.name),
+                          )
+                          .toList(),
+                      customBottomSheet: _showBankBottomSheet,
                     ),
                     Gaps.h8,
                     MgReactiveTextField(
                       formControlName: 'accountNumber',
-                      hintText: '계좌번호 ',
+                      hintText: '"-" 제외한 계좌번호 ',
                       keyboardType: TextInputType.number,
                     ),
                   ],
@@ -170,14 +168,35 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     ).margin(top: MgSizes.xl, bottom: MgSizes.xs);
   }
 
-  void _findPostalCode() {
+  void _findPostalCode() async {
     final controller = ref.read(ownerJoinInfoScreenControllerProvider.notifier);
-    // TODO: 주소 찾기 API 연동 (Daum 우편번호 서비스 등)
-    // 예시:
-    // controller.updateAddress(
-    //   postalCode: '12345',
-    //   address: '서울특별시 강남구 테헤란로',
-    // );
-    print('주소 찾기');
+
+    await Navigator.push<Kpostal>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => KpostalView(
+          useLocalServer: false,
+          // kakaoKey: 'YOUR_KAKAO_API_KEY', // TODO: Add Kakao API Key for geocoding
+          callback: (Kpostal result) {
+            controller.updateAddress(
+              postalCode: result.postCode,
+              address: result.address,
+              latitude: result.kakaoLatitude,
+              longitude: result.kakaoLongitude,
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showBankBottomSheet(
+    BuildContext context,
+    ReactiveFormFieldState<String?, String?> field,
+    List<MgSelectOption<String?>> options,
+  ) {
+    MgBottomsheet.show(context, (context, bottomState) {
+      return BankListBottomsheet(field: field);
+    }, height: 300);
   }
 }

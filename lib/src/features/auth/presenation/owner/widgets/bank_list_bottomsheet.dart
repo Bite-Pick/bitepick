@@ -4,6 +4,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -63,20 +64,7 @@ class BankListBottomsheet extends StatelessWidget {
                             children: [
                               // TODO: 은행 아이콘 추가 시 여기에 표시
                               // Icon(Icons.account_balance, size: 32, color: MgColorScheme.gray1),
-                              Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: MgColorScheme.gray9,
-                                  borderRadius: BorderRadius.circular(
-                                    MgRadius.sm,
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.account_balance,
-                                  size: 24,
-                                ),
-                              ),
+                              BaseSvgIcon(assetName: 'bank/${bank.icon}.svg'),
                               Gaps.h8,
                               Text(
                                 bank.name,

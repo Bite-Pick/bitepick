@@ -133,16 +133,21 @@ class _MgTextFieldState extends State<MgTextField> {
                 fontSize: MgFontSize.md,
                 color: MgColorScheme.gray4,
               ),
-              prefix:
-                  widget.prefixIcon ??
-                  BaseSvgIcon.search().gray().margin(all: MgSizes.md),
-              prefixMode: OverlayVisibilityMode.always,
-              suffix: GestureDetector(
-                onTap: () => widget.controller?.clear(),
-                child:
-                    widget.suffixIcon ??
-                    BaseSvgIcon.close().margin(all: MgSizes.md),
-              ),
+              prefix: widget.enabled
+                  ? (widget.prefixIcon ??
+                        BaseSvgIcon.search().gray().margin(all: MgSizes.md))
+                  : null,
+              prefixMode: widget.enabled
+                  ? OverlayVisibilityMode.always
+                  : OverlayVisibilityMode.never,
+              suffix: !widget.enabled
+                  ? null
+                  : GestureDetector(
+                      onTap: () => widget.controller?.clear(),
+                      child:
+                          widget.suffixIcon ??
+                          BaseSvgIcon.close().margin(all: MgSizes.md),
+                    ),
               suffixMode: OverlayVisibilityMode.editing,
               padding: EdgeInsets.symmetric(
                 horizontal: widget.prefixIcon == SizedBox.shrink()

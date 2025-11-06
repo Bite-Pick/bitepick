@@ -24,18 +24,28 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
     this.hintText,
     this.readOnly = false,
     this.enabled = true,
+    this.customBottomSheet,
+    this.bottomSheetTitle,
   }) : super(
          builder: (ReactiveFormFieldState<T, T> field) {
            final value = field.value;
-           final selectedOption = options.firstWhere(
-             (opt) => opt.value == value,
-             orElse: () =>
-                 MgSelectOption(value: value as T, label: hintText ?? ''),
-           );
+           MgSelectOption<T>? selectedOption;
+           try {
+             selectedOption = options.firstWhere((opt) => opt.value == value);
+           } catch (_) {
+             selectedOption = null;
+           }
 
            return GestureDetector(
              onTap: enabled && !readOnly
-                 ? () => _showSelectBottomSheet(field.context, field, options)
+                 ? () => customBottomSheet != null
+                       ? customBottomSheet!(field.context, field, options)
+                       : _showSelectBottomSheet(
+                           field.context,
+                           field,
+                           options,
+                           bottomSheetTitle,
+                         )
                  : null,
              child: Container(
                padding: const EdgeInsets.symmetric(
@@ -54,14 +64,14 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
                ),
                child: Row(
                  children: [
-                   if (value != null && selectedOption.icon != null) ...[
-                     selectedOption.icon!,
+                   if (value != null && selectedOption?.icon != null) ...[
+                     selectedOption!.icon!,
                      Gaps.w8,
                    ],
                    Expanded(
                      child:
                          Text(
-                           value != null
+                           value != null && selectedOption != null
                                ? selectedOption.label
                                : (hintText ?? ''),
                          ).md().textColor(
@@ -82,28 +92,44 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
   final String? hintText;
   final bool readOnly;
   final bool enabled;
+  final void Function(
+    BuildContext context,
+    ReactiveFormFieldState<T, T> field,
+    List<MgSelectOption<T>> options,
+  )?
+  customBottomSheet;
+  final String? bottomSheetTitle;
 
   static void _showSelectBottomSheet<T>(
     BuildContext context,
     ReactiveFormFieldState<T, T> field,
     List<MgSelectOption<T>> options,
+    String? title,
   ) {
     MgBottomsheet.show(context, (context, bottomState) {
-      return MgBottomsheet(
-        Column(
-          children: [
-            Text('선택').lg().bold().margin(vertical: MgSizes.md),
-            Gaps.h8,
-            ...options.map(
-              (option) => _buildSelectItem(
-                context,
-                field,
-                option,
-                isSelected: field.value == option.value,
-              ),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            title ?? '선택해주세요',
+          ).lg().bold().margin(vertical: MgSizes.md, horizontal: MgSizes.md),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: options
+                    .map(
+                      (option) => _buildSelectItem(
+                        context,
+                        field,
+                        option,
+                        isSelected: field.value == option.value,
+                      ),
+                    )
+                    .toList(),
+              ).margin(horizontal: MgSizes.md, bottom: MgSizes.md),
             ),
-          ],
-        ).margin(all: MgSizes.md),
+          ),
+        ],
       );
     }, height: 400);
   }
