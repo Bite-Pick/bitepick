@@ -9,7 +9,9 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
@@ -18,25 +20,28 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // // Controller state 감지
-    // ref.listen<AsyncValue<void>>(loginControllerProvider, (previous, next) {
-    //   next.when(
-    //     data: (authResult) {
-    //     //   // 로그인 성공 시 메인 화면으로 이동
-    //     //   if (authResult == null) {
-    //     //     context.go(const MainRoute().location);
-    //     //   } else {
-    //     //     // 신규 회원 - 회원가입 화면으로 이동
-    //     //     context.push(const SelectUserTypeRoute().location);
-    //     //   }
-    //     // },
-    //     error: (error, stack) {
-    //       // 에러 토스트 표시
-    //       context.showErrorBar(content: Text(error.toString()));
-    //     },
-    //     loading: () {},
-    //   );
-    // });
+    // Controller state 감지
+    ref.listen<AsyncValue<SocialAuthResult?>>(loginScreenControllerProvider, (
+      previous,
+      next,
+    ) {
+      next.when(
+        data: (authResult) {
+          // 로그인 성공 시 메인 화면으로 이동
+          if (authResult == null) {
+            MainRoute().go(context);
+          } else {
+            // 신규 회원 - 회원가입 화면으로 이동
+            SelectUserTypeRoute().push(context);
+          }
+        },
+        error: (error, stack) {
+          // 에러 토스트 표시
+          context.showErrorBar(content: Text(error.toString()));
+        },
+        loading: () {},
+      );
+    });
 
     final loginState = ref.watch(loginScreenControllerProvider);
     final isLoading = loginState.isLoading;
