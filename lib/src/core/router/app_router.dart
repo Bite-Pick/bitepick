@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
-import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_register_screen.dart';
+import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';

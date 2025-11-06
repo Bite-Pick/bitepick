@@ -40,10 +40,10 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
              child: Container(
                padding: const EdgeInsets.symmetric(
                  horizontal: MgSizes.md,
-                 vertical: MgSizes.md,
+                 vertical: MgSizes.sm,
                ),
                decoration: BoxDecoration(
-                 color: enabled ? MgColorScheme.gray10 : MgColorScheme.gray9,
+                 color: enabled ? Colors.transparent : MgColorScheme.gray9,
                  borderRadius: BorderRadius.circular(12),
                  border: Border.all(
                    color: field.errorText != null
@@ -59,15 +59,16 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
                      Gaps.w8,
                    ],
                    Expanded(
-                     child: Text(
-                       value != null ? selectedOption.label : (hintText ?? ''),
-                       style: TextStyle(
-                         fontSize: MgFontSize.md,
-                         color: value != null
-                             ? MgColorScheme.gray1
-                             : MgColorScheme.text,
-                       ),
-                     ),
+                     child:
+                         Text(
+                           value != null
+                               ? selectedOption.label
+                               : (hintText ?? ''),
+                         ).md().textColor(
+                           value != null
+                               ? MgColorScheme.gray1
+                               : MgColorScheme.text,
+                         ),
                    ),
                    BaseSvgIcon.down(size: 20),
                  ],

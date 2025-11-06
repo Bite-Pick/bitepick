@@ -8,9 +8,11 @@ import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
+import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -100,6 +102,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
   void _showAgreementBottomSheet() {
     MgBottomsheet.show(context, (context, bottomState) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text("이용 약관").md().bold().margin(vertical: MgSizes.md),
           AgreementSection(
@@ -136,8 +139,9 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
                 );
                 return;
               }
-              // TODO: 회원가입 API 호출
-              
+              if (selectedUserRole == UserRole.owner) {
+                OwnerJoinInfoRoute().push(context);
+              }
             },
             content: const Text("확인"),
           ).primary(),
