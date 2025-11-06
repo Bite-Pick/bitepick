@@ -1,30 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_screen.controller.dart';
+part of 'auth_token_manager.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginScreenControllerHash() =>
-    r'64b0259d57b169f63e7b1817ef8b3f232a20bbc7';
+String _$authTokenManagerHash() => r'9f9e55206ab6f0d34be798dea0f62f3872454eb6';
 
-/// See also [LoginScreenController].
-@ProviderFor(LoginScreenController)
-final loginScreenControllerProvider =
-    AutoDisposeAsyncNotifierProvider<
-      LoginScreenController,
-      SocialAuthResult?
-    >.internal(
-      LoginScreenController.new,
-      name: r'loginScreenControllerProvider',
+/// See also [AuthTokenManager].
+@ProviderFor(AuthTokenManager)
+final authTokenManagerProvider =
+    AsyncNotifierProvider<AuthTokenManager, AuthTokens?>.internal(
+      AuthTokenManager.new,
+      name: r'authTokenManagerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$loginScreenControllerHash,
+          : _$authTokenManagerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$LoginScreenController = AutoDisposeAsyncNotifier<SocialAuthResult?>;
+typedef _$AuthTokenManager = AsyncNotifier<AuthTokens?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

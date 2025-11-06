@@ -23,7 +23,7 @@ class VertifyRepository {
 
     final data = res.data['data'] as bool?;
     if (res.data['status'] != 'OK' || data == null) return false;
-    return true;
+    return data;
   }
 }
 

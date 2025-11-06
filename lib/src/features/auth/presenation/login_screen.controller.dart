@@ -1,4 +1,4 @@
-import 'package:magambell/src/features/auth/data/providers/auth_token_manager.dart';
+import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/data/repositories/social_auth_repository.dart';
 import 'package:magambell/src/features/auth/data/repositories/vertify_repository.dart';
@@ -11,11 +11,13 @@ part 'login_screen.controller.g.dart';
 @riverpod
 class LoginScreenController extends _$LoginScreenController {
   @override
-  FutureOr<void> build() {}
+  FutureOr<SocialAuthResult?> build() async {
+    return null;
+  }
 
   /// 네이버 로그인
-  Future<bool> signInWithNaver() async {
-    return _performSocialLogin(
+  Future<void> signInWithNaver() async {
+    await _performSocialLogin(
       onSocialLogin: () =>
           ref.read(socialAuthRepositoryProvider).signInWithNaver(),
       providerName: '네이버',
@@ -25,8 +27,8 @@ class LoginScreenController extends _$LoginScreenController {
   }
 
   /// 카카오 로그인
-  Future<bool> signInWithKakao() async {
-    return _performSocialLogin(
+  Future<void> signInWithKakao() async {
+    await _performSocialLogin(
       onSocialLogin: () =>
           ref.read(socialAuthRepositoryProvider).signInWithKakao(),
       providerName: '카카오',
@@ -36,8 +38,8 @@ class LoginScreenController extends _$LoginScreenController {
   }
 
   /// 애플 로그인
-  Future<bool> signInWithApple() async {
-    return _performSocialLogin(
+  Future<void> signInWithApple() async {
+    await _performSocialLogin(
       onSocialLogin: () =>
           ref.read(socialAuthRepositoryProvider).signInWithApple(),
       providerName: '애플',
@@ -45,7 +47,7 @@ class LoginScreenController extends _$LoginScreenController {
   }
 
   /// 소셜 로그인 공통 로직
-  Future<bool> _performSocialLogin({
+  Future<void> _performSocialLogin({
     required Future<SocialAuthResult?> Function() onSocialLogin,
     required String providerName,
     Future<void> Function()? onSocialLogout,
@@ -61,7 +63,7 @@ class LoginScreenController extends _$LoginScreenController {
           '$providerName 로그인에 실패했습니다.',
           StackTrace.current,
         );
-        return false;
+        return;
       }
 
       // 2. 백엔드로 기존 회원 검증
@@ -70,38 +72,37 @@ class LoginScreenController extends _$LoginScreenController {
           .vertifySocial(authResult.providerType, authResult.authCode);
 
       if (!isExistingUser) {
-        // 신규 회원인 경우: 회원가입 화면으로 이동
+        // 신규 회원인 경우: 회원가입 화면으로 이동 (authResult 반환)
         state = AsyncValue.data(authResult);
-        return false;
+        return;
       }
 
       // 기존 회원인 경우: 로그인 처리
       final loginSuccess = await _loginUser(authResult);
       if (loginSuccess) {
+        // 로그인 성공: null 반환 (메인 화면으로 이동)
         state = const AsyncValue.data(null);
-        return true;
       } else {
         // 로그인 실패 시 로그아웃
         if (onSocialLogout != null) {
           await onSocialLogout();
         }
         state = AsyncValue.error('로그인에 실패했습니다.', StackTrace.current);
-        return false;
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error('$providerName 로그인 중 오류가 발생했습니다.', stackTrace);
-      return false;
     }
   }
 
   /// 백엔드로 로그인 요청
   Future<bool> _loginUser(SocialAuthResult authResult) async {
     try {
-      final tokens =
-          await ref.read(authRepositoryProvider).authenticateWithSocial(
-                providerType: authResult.providerType,
-                authCode: authResult.authCode,
-              );
+      final tokens = await ref
+          .read(authRepositoryProvider)
+          .authenticateWithSocial(
+            providerType: authResult.providerType,
+            authCode: authResult.authCode,
+          );
 
       if (tokens != null) {
         await ref.read(authTokenManagerProvider.notifier).saveTokens(tokens);
