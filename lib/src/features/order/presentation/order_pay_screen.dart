@@ -3,6 +3,7 @@ import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -10,11 +11,11 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
+import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OrderPayRoute extends GoRouteData {
   const OrderPayRoute();
@@ -32,19 +33,7 @@ class OrderPayScreen extends ConsumerStatefulWidget {
 }
 
 class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
-  bool _agreement1 = false;
-  bool _agreement2 = false;
-  bool _agreement3 = false;
-
-  bool get _allAgreed => _agreement1 && _agreement2 && _agreement3;
-
-  void _toggleAllAgreements(bool? value) {
-    setState(() {
-      _agreement1 = value ?? false;
-      _agreement2 = value ?? false;
-      _agreement3 = value ?? false;
-    });
-  }
+  bool _allAgreed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -247,80 +236,23 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   }
 
   Widget _buildAgreementSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 전체 동의
-        GestureDetector(
-          onTap: () => _toggleAllAgreements(!_allAgreed),
-          child: Row(
-            children: [
-              Checkbox(
-                value: _allAgreed,
-                onChanged: _toggleAllAgreements,
-                activeColor: MgColorScheme.primary,
-              ),
-              Text("주문내용 확인 및 결제 동의").md().bold(),
-            ],
-          ),
-        ).decorated(
-          color: MgColorScheme.gray9,
-          borderRadius: BorderRadius.circular(MgRadius.md),
+    return AgreementSection(
+      items: const [
+        AgreementItem(text: '개인정보 수집 및 이용 동의 (필수)', link: PRIAVCY_POLICY),
+        AgreementItem(
+          text: '개인정보 제3자 정보 제공 동의 (필수)',
+          link: 'https://example.com/third-party', // TODO[asset]:  제3자 정보 제공
         ),
-        _buildAgreementItem(
-          '개인정보 수집 및 이용 동의 (필수)',
-          'https://example.com/privacy',
-          _agreement1,
-          (value) => setState(() => _agreement1 = value ?? false),
-        ),
-        _buildAgreementItem(
-          '개인정보 제3자 정보 제공 동의 (필수)',
-          'https://example.com/third-party',
-          _agreement2,
-          (value) => setState(() => _agreement2 = value ?? false),
-        ),
-        _buildAgreementItem(
-          '결제대행 서비스 이용약관 동의 (필수)',
-          'https://example.com/payment-terms',
-          _agreement3,
-          (value) => setState(() => _agreement3 = value ?? false),
+        AgreementItem(
+          text: '결제대행 서비스 이용약관 동의 (필수)',
+          link:
+              'https://example.com/payment-terms', // TODO[asset]:  결제대행 서비스 이용약관
         ),
       ],
-    );
-  }
-
-  Widget _buildAgreementItem(
-    String text,
-    String link,
-    bool value,
-    Function(bool?) onChanged,
-  ) {
-    return GestureDetector(
-      onTap: () => onChanged(!value),
-      child: Row(
-        children: [
-          BaseSvgIcon.check(
-            color: value ? MgColorScheme.primary : MgColorScheme.gray6,
-            size: MgSizes.lg,
-          ),
-          Gaps.w8,
-          Expanded(child: Text(text).sm().textGray()),
-          GestureDetector(
-            onTap: () async {
-              if (link.isNotEmpty) {
-                await launchUrl(
-                  Uri.parse(link),
-                  mode: LaunchMode.externalApplication,
-                );
-              }
-            },
-            child: BaseSvgIcon.right(
-              color: MgColorScheme.gray6,
-              size: MgSizes.lg,
-            ),
-          ),
-        ],
-      ).margin(vertical: MgSizes.xs),
+      allAgreeText: '주문내용 확인 및 결제 동의',
+      onAllAgreedChanged: (allAgreed) {
+        setState(() => _allAgreed = allAgreed);
+      },
     );
   }
 }
