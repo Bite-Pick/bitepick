@@ -18,6 +18,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/quantity_picker.dart';
 
 class StoreRoute extends GoRouteData {
   const StoreRoute({required this.id});
@@ -43,13 +44,8 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int count = 1;
-  void setCount(bool isAdd) => setState(
-    () => count = isAdd
-        ? count + 1
-        : count > 1
-        ? count - 1
-        : 1,
-  );
+  void setCount(int newCount) => setState(() => count = newCount);
+
   @override
   void initState() {
     super.initState();
@@ -109,28 +105,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
           child: Row(
             children: [
               Expanded(
-                child:
-                    Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              child: BaseSvgIcon.minus(),
-                              onTap: () => setCount(false),
-                            ),
-                            Text('$count').md().margin(
-                              horizontal: MgSizes.xxl,
-                            ), // NOTE: 다량 구매 고객 많을시 숫자 선택 bottomSheet 나오도록F
-                            GestureDetector(
-                              child: BaseSvgIcon.plus(),
-                              onTap: () => setCount(true),
-                            ),
-                          ],
-                        )
-                        .margin(all: MgSizes.sm)
-                        .decorated(
-                          color: MgColorScheme.gray8,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                child: QuantityPicker(count: count, onCountChanged: setCount),
               ),
               Gaps.w10,
               Expanded(
