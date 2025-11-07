@@ -11,6 +11,7 @@ import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
