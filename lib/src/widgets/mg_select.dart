@@ -107,29 +107,35 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
     String? title,
   ) {
     MgBottomsheet.show(context, (context, bottomState) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            title ?? '선택해주세요',
-          ).lg().bold().margin(vertical: MgSizes.md, horizontal: MgSizes.md),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: options
-                    .map(
-                      (option) => _buildSelectItem(
-                        context,
-                        field,
-                        option,
-                        isSelected: field.value == option.value,
-                      ),
-                    )
-                    .toList(),
-              ).margin(horizontal: MgSizes.md, bottom: MgSizes.md),
-            ),
+      return MgBottomsheet(
+        SizedBox(
+          height: 400,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title ?? '선택해주세요',
+              ).lg().bold().margin(vertical: MgSizes.md, horizontal: MgSizes.md),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: options
+                        .map(
+                          (option) => _buildSelectItem(
+                            context,
+                            field,
+                            option,
+                            isSelected: field.value == option.value,
+                          ),
+                        )
+                        .toList(),
+                  ).margin(horizontal: MgSizes.md, bottom: MgSizes.md),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       );
     }, height: 400);
   }
