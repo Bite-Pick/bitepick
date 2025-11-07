@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -176,13 +177,27 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
       MaterialPageRoute(
         builder: (_) => KpostalView(
           useLocalServer: false,
-          // kakaoKey: 'YOUR_KAKAO_API_KEY', // TODO: Add Kakao API Key for geocoding
+          kakaoKey: Environment.kakaoJavascriptKey,
           callback: (Kpostal result) {
+            // TODO[auth]: 동작 확인필요(카카오 key 확인)
+            final latitude = result.kakaoLatitude;
+            final longitude = result.kakaoLongitude;
+
+            // // 위경도가 없는 경우 경고 표시
+            // if (latitude == null || longitude == null) {
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     const SnackBar(
+            //       content: Text('위치 정보를 가져올 수 없습니다. 주소는 저장되었습니다.'),
+            //       duration: Duration(seconds: 3),
+            //     ),
+            //   );
+            // }
+
             controller.updateAddress(
               postalCode: result.postCode,
               address: result.address,
-              latitude: result.kakaoLatitude,
-              longitude: result.kakaoLongitude,
+              latitude: latitude,
+              longitude: longitude,
             );
           },
         ),
