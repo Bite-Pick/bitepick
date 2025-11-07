@@ -6,7 +6,7 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$loginRoute, $mainRoute];
+List<RouteBase> get $appRoutes => [$loginRoute, $defaultRoute];
 
 RouteBase get $loginRoute => GoRouteData.$route(
   path: '/auth',
@@ -76,12 +76,24 @@ extension $OwnerJoinInfoRouteExtension on OwnerJoinInfoRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $mainRoute => GoRouteData.$route(
+RouteBase get $defaultRoute => GoRouteData.$route(
   path: '/',
-  name: 'MainRoute',
+  name: 'DefaultRoute',
 
-  factory: $MainRouteExtension._fromState,
+  factory: $DefaultRouteExtension._fromState,
   routes: [
+    GoRouteData.$route(
+      path: 'main',
+      name: 'MainRoute',
+
+      factory: $MainRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'owner/home',
+      name: 'OwnerHomeRoute',
+
+      factory: $OwnerHomeRouteExtension._fromState,
+    ),
     GoRouteData.$route(
       path: 'store/:id',
       name: 'StoreRoute',
@@ -123,10 +135,41 @@ RouteBase get $mainRoute => GoRouteData.$route(
   ],
 );
 
+extension $DefaultRouteExtension on DefaultRoute {
+  static DefaultRoute _fromState(GoRouterState state) => const DefaultRoute();
+
+  String get location => GoRouteData.$location('/');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 extension $MainRouteExtension on MainRoute {
   static MainRoute _fromState(GoRouterState state) => const MainRoute();
 
-  String get location => GoRouteData.$location('/');
+  String get location => GoRouteData.$location('/main');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerHomeRouteExtension on OwnerHomeRoute {
+  static OwnerHomeRoute _fromState(GoRouterState state) =>
+      const OwnerHomeRoute();
+
+  String get location => GoRouteData.$location('/owner/home');
 
   void go(BuildContext context) => context.go(location);
 
