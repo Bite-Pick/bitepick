@@ -17,4 +17,5 @@ targets:
           - lib/src/features/**/*.controller.dart
           - lib/src/features/*/data/repositories/*.dart
           - lib/src/features/*/providers/*.dart
+          - lib/src/features/*/providers/*.dart
           - lib/src/core/network/api_client.dart
