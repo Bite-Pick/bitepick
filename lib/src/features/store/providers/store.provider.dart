@@ -1,4 +1,4 @@
-import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

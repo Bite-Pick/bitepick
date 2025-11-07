@@ -7,7 +7,8 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
-import 'package:magambell/src/features/owner/providers/store.provider.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
+import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -72,7 +73,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [Text("주문"), Text("판매"), Text("관리")],
+        children: [Text("주문"), OwnerGoodsView(null), Text("관리")],
       ),
     );
   }
