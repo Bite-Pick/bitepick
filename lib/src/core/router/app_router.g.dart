@@ -95,6 +95,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $OwnerHomeRouteExtension._fromState,
     ),
     GoRouteData.$route(
+      path: 'owner/goods/register',
+      name: 'GoodsRegisterRoute',
+
+      factory: $GoodsRegisterRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
       path: 'store/:id',
       name: 'StoreRoute',
 
@@ -170,6 +176,22 @@ extension $OwnerHomeRouteExtension on OwnerHomeRoute {
       const OwnerHomeRoute();
 
   String get location => GoRouteData.$location('/owner/home');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $GoodsRegisterRouteExtension on GoodsRegisterRoute {
+  static GoodsRegisterRoute _fromState(GoRouterState state) =>
+      const GoodsRegisterRoute();
+
+  String get location => GoRouteData.$location('/owner/goods/register');
 
   void go(BuildContext context) => context.go(location);
 
