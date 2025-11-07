@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -87,14 +86,20 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
           '${formValue['address']} ${formValue['addressDetail']}'.trim();
 
       // FormControl에 저장된 위도/경도 가져오기 (KpostalView에서 받은 값)
-      final latitude = (formValue['latitude'] as double?) ?? 0.0;
-      final longitude = (formValue['longitude'] as double?) ?? 0.0;
+      final latitude = formValue['latitude'] as double?;
+      final longitude = formValue['longitude'] as double?;
 
-      await ref.read(storeRepositoryProvider).createStore(
+      // // 위경도 검증: null이거나 둘 다 0.0인 경우 경고
+      // if (latitude == null || longitude == null)
+      //   throw Exception('위치 정보가 없습니다. 주소 찾기를 다시 시도해주세요.');
+
+      await ref
+          .read(storeRepositoryProvider)
+          .createStore(
             name: formValue['storeName'] as String,
             address: fullAddress,
-            latitude: latitude,
-            longitude: longitude,
+            latitude: latitude ?? 0,
+            longitude: longitude ?? 0,
             ownerName: formValue['representativeName'] as String,
             ownerPhone: formValue['representativePhone'] as String,
             businessNumber: formValue['businessNumber'] as String,
