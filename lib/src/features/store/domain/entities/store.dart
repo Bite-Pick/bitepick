@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 
 part 'store.freezed.dart';
 part 'store.g.dart';

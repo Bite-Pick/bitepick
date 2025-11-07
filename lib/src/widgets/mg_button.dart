@@ -3,7 +3,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 
-// TODO: isDisabled 
+// TODO: isDisabled
 // TODO: loading progress animation 추가
 class MgButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -14,6 +14,7 @@ class MgButton extends StatelessWidget {
   final double? height;
   final double borderRadius;
   final EdgeInsets? padding;
+  // TODO: 동작 확인 필요
   final bool fullWidth;
   final bool disabled;
 
