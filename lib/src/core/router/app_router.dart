@@ -100,7 +100,7 @@ class DefaultRoute extends GoRouteData {
       case UserRole.owner:
         return OwnerHomeRoute().location;
       case UserRole.guest:
-      case UserRole.admin:
+      case UserRole.admin: // TODO: 확인 필요
         return MainRoute().location;
     }
   }
@@ -112,19 +112,5 @@ class MainRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const MainScreen();
-  }
-}
-
-class OwnerHomeRoute extends GoRouteData {
-  const OwnerHomeRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    // ProviderContainer를 통해 userProvider에서 goodsId 가져오기
-    final container = ProviderScope.containerOf(context);
-    final user = container.read(userStateProvider);
-    final storeId = user?.goodsId ?? 'default';
-
-    return OwnerHomeScreen(id: storeId);
   }
 }
