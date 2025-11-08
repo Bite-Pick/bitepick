@@ -21,7 +21,7 @@ class Step3PriceInfoView extends ConsumerWidget {
 
         return StoreRegisterViewWrapper(
           children: [
-            GoodsRegisterFormTitle(title: "정가 입력"),
+            GoodsRegisterFormTitle(title: "정가"),
             MgReactiveTextField<int>(
               formControlName: 'originalPrice',
               hintText: '정가를 입력해주세요',
@@ -45,25 +45,22 @@ class Step3PriceInfoView extends ConsumerWidget {
               ],
               bottomSheetTitle: "할인율 선택",
             ),
-            Gaps.h32,
-
             // 판매가 (계산된 값)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: MgColorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(MgRadius.md),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('판매가').md().bold(),
-                  Text(
-                    '$salePrice원',
-                  ).lg().bold().textColor(MgColorScheme.primary),
-                ],
-              ),
-            ),
+            if (salePrice != 0)
+              Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('판매가').md(),
+                      Text('$salePrice원').xl().bold().red(),
+                    ],
+                  )
+                  .margin(vertical: MgSizes.sm, horizontal: MgSizes.size20)
+                  .decorated(
+                    color: MgColorScheme.lightest,
+                    borderRadius: BorderRadius.circular(MgRadius.md),
+                  )
+                  // TODO: 하단 버튼위에 붙이도록
+                  .margin(top: MgSizes.xxl),
           ],
         );
       },

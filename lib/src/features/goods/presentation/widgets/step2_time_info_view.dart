@@ -12,6 +12,7 @@ import 'package:magambell/src/widgets/mg_form_item.dart';
 import 'package:magambell/src/widgets/quantity_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+// TODO: 판매시작 시간 이후로 종료시간을 설정할 수 있도록 수정
 class Step2TimeInfoView extends ConsumerWidget {
   const Step2TimeInfoView({super.key});
 
