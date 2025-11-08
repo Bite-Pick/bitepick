@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class BaseScaffold extends StatelessWidget {
     this.backgroundColor,
     this.unfocusWhenTapOpaque = true,
     this.extendBodyBehindAppBar = false,
+    this.hasBottomMargin = true,
+    this.resizeToAvoidBottomInset,
     this.onTap,
     this.onBack,
   });
@@ -26,6 +29,8 @@ class BaseScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final bool unfocusWhenTapOpaque;
   final bool extendBodyBehindAppBar;
+  final bool hasBottomMargin;
+  final bool? resizeToAvoidBottomInset;
   final VoidCallback? onTap;
   final Future<bool> Function()? onBack;
 
@@ -35,8 +40,17 @@ class BaseScaffold extends StatelessWidget {
     return widget!;
   }
 
+  static double getBottomMargin(BuildContext context) {
+    return math.max(
+      MediaQuery.of(context).viewPadding.bottom,
+      MediaQuery.of(context).systemGestureInsets.bottom,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double bottomNotchPadding = getBottomMargin(context);
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, _) async {
@@ -58,11 +72,32 @@ class BaseScaffold extends StatelessWidget {
           endDrawer: endDrawer,
           body: DefaultTextStyle(
             style: Theme.of(context).textTheme.bodyLarge!,
-            child: body,
+            child: bottomNavigationBar == null && hasBottomMargin
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: bottomNotchPadding),
+                    child: body,
+                  )
+                : body,
           ),
           floatingActionButton: floatingActionButton,
           backgroundColor: backgroundColor,
-          bottomNavigationBar: bottomNavigationBar,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+          bottomNavigationBar: bottomNavigationBar == null
+              ? null
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    bottomNavigationBar!,
+                    if (hasBottomMargin)
+                      Container(
+                        height: bottomNotchPadding,
+                        color: Theme.of(context)
+                                .bottomNavigationBarTheme
+                                .backgroundColor ??
+                            Theme.of(context).colorScheme.surface,
+                      ),
+                  ],
+                ),
         ),
       ),
     );

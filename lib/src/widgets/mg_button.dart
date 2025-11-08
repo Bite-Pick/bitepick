@@ -3,6 +3,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 
+// TODO: isDisabled 
 // TODO: loading progress animation 추가
 class MgButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -74,8 +75,8 @@ class MgButton extends StatelessWidget {
   );
 
   MgButton asDisabled() => copyWith(
-    backgroundColor: const Color(0xFFFFDF9F),
-    textColor: MgColorScheme.text,
+    backgroundColor: MgColorScheme.gray10,
+    textColor: MgColorScheme.white,
     disabled: true,
   );
 
@@ -88,6 +89,14 @@ class MgButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = disabled || onPressed == null;
+
+    // disabled 상태일 때 자동으로 스타일 적용
+    final effectiveBackgroundColor = isDisabled
+        ? (backgroundColor ?? const Color(0xFFFFDF9F))
+        : backgroundColor;
+    final effectiveTextColor = isDisabled
+        ? (textColor ?? MgColorScheme.text)
+        : (textColor ?? MgColorScheme.text);
 
     final child = Material(
       color: Colors.transparent,
@@ -102,7 +111,7 @@ class MgButton extends StatelessWidget {
                 vertical: MgSizes.sm,
               ),
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: effectiveBackgroundColor,
             borderRadius: BorderRadius.circular(borderRadius),
             border: borderColor != null
                 ? Border.all(color: borderColor!)
@@ -111,7 +120,7 @@ class MgButton extends StatelessWidget {
           alignment: Alignment.center,
           child: DefaultTextStyle(
             style: TextStyle(
-              color: textColor ?? MgColorScheme.text,
+              color: effectiveTextColor,
               fontSize: MgFontSize.md,
               fontWeight: FontWeight.bold,
               height: 1.5,

@@ -1,0 +1,227 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'social_auth_result.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
+
+/// @nodoc
+mixin _$SocialAuthResult {
+  AuthProviderType get providerType => throw _privateConstructorUsedError;
+  String get authCode => throw _privateConstructorUsedError; // Access Token
+  String? get email => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+
+  /// Create a copy of SocialAuthResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SocialAuthResultCopyWith<SocialAuthResult> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SocialAuthResultCopyWith<$Res> {
+  factory $SocialAuthResultCopyWith(
+    SocialAuthResult value,
+    $Res Function(SocialAuthResult) then,
+  ) = _$SocialAuthResultCopyWithImpl<$Res, SocialAuthResult>;
+  @useResult
+  $Res call({
+    AuthProviderType providerType,
+    String authCode,
+    String? email,
+    String? name,
+  });
+}
+
+/// @nodoc
+class _$SocialAuthResultCopyWithImpl<$Res, $Val extends SocialAuthResult>
+    implements $SocialAuthResultCopyWith<$Res> {
+  _$SocialAuthResultCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SocialAuthResult
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? providerType = null,
+    Object? authCode = null,
+    Object? email = freezed,
+    Object? name = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            providerType: null == providerType
+                ? _value.providerType
+                : providerType // ignore: cast_nullable_to_non_nullable
+                      as AuthProviderType,
+            authCode: null == authCode
+                ? _value.authCode
+                : authCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            email: freezed == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$SocialAuthResultImplCopyWith<$Res>
+    implements $SocialAuthResultCopyWith<$Res> {
+  factory _$$SocialAuthResultImplCopyWith(
+    _$SocialAuthResultImpl value,
+    $Res Function(_$SocialAuthResultImpl) then,
+  ) = __$$SocialAuthResultImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    AuthProviderType providerType,
+    String authCode,
+    String? email,
+    String? name,
+  });
+}
+
+/// @nodoc
+class __$$SocialAuthResultImplCopyWithImpl<$Res>
+    extends _$SocialAuthResultCopyWithImpl<$Res, _$SocialAuthResultImpl>
+    implements _$$SocialAuthResultImplCopyWith<$Res> {
+  __$$SocialAuthResultImplCopyWithImpl(
+    _$SocialAuthResultImpl _value,
+    $Res Function(_$SocialAuthResultImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of SocialAuthResult
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? providerType = null,
+    Object? authCode = null,
+    Object? email = freezed,
+    Object? name = freezed,
+  }) {
+    return _then(
+      _$SocialAuthResultImpl(
+        providerType: null == providerType
+            ? _value.providerType
+            : providerType // ignore: cast_nullable_to_non_nullable
+                  as AuthProviderType,
+        authCode: null == authCode
+            ? _value.authCode
+            : authCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        email: freezed == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$SocialAuthResultImpl implements _SocialAuthResult {
+  const _$SocialAuthResultImpl({
+    required this.providerType,
+    required this.authCode,
+    this.email,
+    this.name,
+  });
+
+  @override
+  final AuthProviderType providerType;
+  @override
+  final String authCode;
+  // Access Token
+  @override
+  final String? email;
+  @override
+  final String? name;
+
+  @override
+  String toString() {
+    return 'SocialAuthResult(providerType: $providerType, authCode: $authCode, email: $email, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SocialAuthResultImpl &&
+            (identical(other.providerType, providerType) ||
+                other.providerType == providerType) &&
+            (identical(other.authCode, authCode) ||
+                other.authCode == authCode) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, providerType, authCode, email, name);
+
+  /// Create a copy of SocialAuthResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SocialAuthResultImplCopyWith<_$SocialAuthResultImpl> get copyWith =>
+      __$$SocialAuthResultImplCopyWithImpl<_$SocialAuthResultImpl>(
+        this,
+        _$identity,
+      );
+}
+
+abstract class _SocialAuthResult implements SocialAuthResult {
+  const factory _SocialAuthResult({
+    required final AuthProviderType providerType,
+    required final String authCode,
+    final String? email,
+    final String? name,
+  }) = _$SocialAuthResultImpl;
+
+  @override
+  AuthProviderType get providerType;
+  @override
+  String get authCode; // Access Token
+  @override
+  String? get email;
+  @override
+  String? get name;
+
+  /// Create a copy of SocialAuthResult
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SocialAuthResultImplCopyWith<_$SocialAuthResultImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

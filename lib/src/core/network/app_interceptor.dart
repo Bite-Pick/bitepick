@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
+import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// 앱 공통 인터셉터
@@ -12,9 +16,18 @@ import 'package:package_info_plus/package_info_plus.dart';
 /// - Response: Cookie 관리
 /// - Error: 에러 코드별 처리 (400: 에러 메시지, 401: 토큰 갱신, 502: 점검)
 class AppInterceptor extends Interceptor {
+  final Ref ref;
+
+  AppInterceptor(this.ref);
+
   static String? _sessionCookie;
-  static String? _authToken;
   static String? _cachedUserAgent;
+
+  // 🔄 토큰 갱신 중 여부 플래그
+  static bool _isRefreshing = false;
+
+  // 📦 토큰 갱신 대기 중인 요청들을 저장할 큐
+  static final List<_RequestQueueItem> _requestQueue = [];
 
   // ========================================
   // 1️⃣ Request 전처리
@@ -30,16 +43,9 @@ class AppInterceptor extends Interceptor {
 
     // 인증 토큰 주입
     final token = await _getAuthToken();
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
-      // options.headers['Authorization'] =
-      // 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VyUm9sZSI6IkNVU1RPTUVSIiwic3ViIjoiNzQyMTQ5NjM5NDc4MjgxNjkyIiwiaWF0IjoxNzYyMDA0ODEyLCJleHAiOjE3NjIwMDg0MTJ9.Krvs6AC_CtgGOluidxjCh4MEV8YdRWrQKNPUzA6t5lA ';
-      // }
-    }
+    if (token != null) options.headers['Authorization'] = 'Bearer $token';
     // 세션 쿠키 주입
-    if (_sessionCookie != null) {
-      options.headers['Cookie'] = _sessionCookie;
-    }
+    // if (_sessionCookie != null) options.headers['Cookie'] = _sessionCookie;
 
     return super.onRequest(options, handler);
   }
@@ -114,23 +120,87 @@ class AppInterceptor extends Interceptor {
   }
 
   // ========================================
-  // 🔄 토큰 갱신 후 재요청
+  // 🔄 토큰 갱신 후 재요청 (Queue Lock 패턴)
   // ========================================
 
   Future<void> _refreshTokenAndRetry(
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    try {
-      final newToken = await _refreshAuthToken();
+    debugPrint('🔒 Request failed with 401, checking refresh status...');
 
-      if (newToken == null) {
+    // 1. 이미 토큰 갱신 중이면 큐에 추가하고 대기
+    if (_isRefreshing) {
+      debugPrint('⏳ Token refresh in progress, adding request to queue');
+      _requestQueue.add(_RequestQueueItem(err, handler));
+      return;
+    }
+
+    // 2. 첫 번째 요청이 토큰 갱신 시작
+    _isRefreshing = true;
+    debugPrint('🔄 Starting token refresh...');
+
+    try {
+      // 3. 새 Access Token 발급
+      final newAccessToken = await _refreshAuthToken();
+
+      if (newAccessToken == null) {
+        debugPrint('❌ Token refresh failed, navigate to login');
+        _isRefreshing = false;
+
+        // 큐에 있는 모든 요청 실패 처리
+        for (final item in _requestQueue) {
+          item.handler.reject(item.error);
+        }
+        _requestQueue.clear();
+
         _navigateToLogin();
         return handler.reject(err);
       }
 
-      // 토큰 갱신 성공: 원래 요청 재시도
-      final dio = Dio(
+      debugPrint('✅ Token refreshed successfully');
+
+      // 4. 현재 요청 재시도
+      await _retryRequest(err, handler, newAccessToken);
+
+      // 5. 큐에 있는 모든 요청들도 재시도
+      debugPrint('📦 Retrying ${_requestQueue.length} queued requests');
+      for (final item in _requestQueue) {
+        await _retryRequest(item.error, item.handler, newAccessToken);
+      }
+      _requestQueue.clear();
+
+      _isRefreshing = false;
+      debugPrint('✅ All requests retried successfully');
+    } catch (e, stackTrace) {
+      debugPrint('❌ Token refresh and retry failed: $e');
+      debugPrint('Stack trace: $stackTrace');
+
+      _isRefreshing = false;
+
+      // 큐에 있는 모든 요청 실패 처리
+      for (final item in _requestQueue) {
+        item.handler.reject(item.error);
+      }
+      _requestQueue.clear();
+
+      _navigateToLogin();
+      return handler.reject(err);
+    }
+  }
+
+  /// 실패한 요청을 새 토큰으로 재시도
+  Future<void> _retryRequest(
+    DioException err,
+    ErrorInterceptorHandler handler,
+    String newAccessToken,
+  ) async {
+    try {
+      // 1. 실패했던 요청의 헤더에 새 토큰 주입
+      err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+
+      // 2. 실패했던 요청을 새 토큰으로 재시도
+      final retryDio = Dio(
         BaseOptions(
           baseUrl: err.requestOptions.baseUrl,
           connectTimeout: err.requestOptions.connectTimeout,
@@ -138,22 +208,20 @@ class AppInterceptor extends Interceptor {
         ),
       );
 
-      final response = await dio.request(
+      final response = await retryDio.request(
         err.requestOptions.path,
         data: err.requestOptions.data,
         queryParameters: err.requestOptions.queryParameters,
         options: Options(
           method: err.requestOptions.method,
-          headers: {
-            ...err.requestOptions.headers,
-            'Authorization': 'Bearer $newToken',
-          },
+          headers: err.requestOptions.headers,
         ),
       );
 
+      // 3. 성공한 응답 반환
       handler.resolve(response);
     } catch (e) {
-      _navigateToLogin();
+      debugPrint('❌ Retry request failed: $e');
       handler.reject(err);
     }
   }
@@ -198,32 +266,100 @@ class AppInterceptor extends Interceptor {
   }
 
   /// 인증 토큰 가져오기
-  ///
-  /// TODO: SharedPreferences, SecureStorage 등에서 토큰을 가져오도록 구현
   Future<String?> _getAuthToken() async {
-    // 예시: SharedPreferences에서 토큰 가져오기
-    // final prefs = await SharedPreferences.getInstance();
-    // return prefs.getString('auth_token');
-
-    return _authToken; // 임시로 메모리에서 가져옴
+    final tokenManager = ref.read(authTokenManagerProvider.notifier);
+    return tokenManager.getAccessToken();
   }
 
   /// 인증 토큰 갱신
   ///
-  /// TODO: 실제 토큰 갱신 API 호출 구현
+  /// 토큰 갱신 전용 Dio 인스턴스를 생성하여 요청
+  /// - Refresh Token이 만료된 경우 로그인 화면으로 이동
   Future<String?> _refreshAuthToken() async {
-    // 예시: Refresh Token으로 새 Access Token 발급
-    // final refreshToken = await _getRefreshToken();
-    // final dio = Dio();
-    // final response = await dio.post('/auth/token/reissue', data: {
-    //   'refresh_token': refreshToken,
-    // });
-    // final newToken = response.data['access_token'];
-    // await _saveAuthToken(newToken);
-    // return newToken;
+    try {
+      final tokenManager = ref.read(authTokenManagerProvider.notifier);
+      final refreshToken = tokenManager.getRefreshToken();
 
-    debugPrint('⚠️ Token refresh not implemented');
-    return null;
+      if (refreshToken == null) {
+        debugPrint('⚠️ No refresh token available');
+        return null;
+      }
+
+      debugPrint('🔄 Refreshing token...');
+
+      // 토큰 갱신 전용 Dio 인스턴스 생성 (인터셉터 없음)
+      final refreshDio = Dio(
+        BaseOptions(
+          baseUrl: ref.read(apiClientProvider).options.baseUrl,
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+          contentType: ContentType.json.mimeType,
+          headers: {
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      // Refresh Token 갱신 요청 중 에러 처리
+      refreshDio.interceptors.add(
+        InterceptorsWrapper(
+          onError: (error, handler) async {
+            final statusCode = error.response?.statusCode;
+            final code = error.response?.data?['code'];
+
+            debugPrint(
+              '❌ Token refresh error: statusCode=$statusCode, code=$code',
+            );
+
+            // Refresh Token 만료 또는 인증 오류
+            if (statusCode == 401 || code == 401) {
+              debugPrint('🔐 Refresh token expired, navigate to login');
+              _navigateToLogin();
+            }
+
+            return handler.next(error);
+          },
+        ),
+      );
+
+      // 토큰 갱신 API 요청
+      final response = await refreshDio.post(
+        '/v1/auth/token/reissue',
+        data: {'refreshToken': refreshToken},
+      );
+
+      if (response.statusCode != 200) {
+        debugPrint('⚠️ Token refresh failed: ${response.statusCode}');
+        return null;
+      }
+
+      // Response Header에서 JWT 토큰 추출
+      final authorization = response.headers.value('authorization');
+      final newRefreshToken = response.headers.value('refreshtoken');
+
+      if (authorization == null || newRefreshToken == null) {
+        debugPrint('⚠️ Tokens not found in response headers');
+        return null;
+      }
+
+      // "Bearer " 및 "RefreshToken " 접두사 제거
+      final accessToken = authorization.replaceFirst('Bearer ', '');
+      final refresh = newRefreshToken.replaceFirst('RefreshToken ', '');
+
+      // 새 토큰 저장
+      final newTokens = AuthTokens(
+        accessToken: accessToken,
+        refreshToken: refresh,
+      );
+      await tokenManager.saveTokens(newTokens);
+
+      debugPrint('✅ Token refreshed and saved');
+      return accessToken;
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ Token refresh failed: $e');
+      debugPrint('Stack trace: $stackTrace');
+      return null;
+    }
   }
 
   /// 에러 메시지 표시
@@ -263,17 +399,23 @@ class AppInterceptor extends Interceptor {
   }
 
   // ========================================
-  // 🔑 토큰 관리 정적 메서드
+  // 🔑 세션 쿠키 관리 정적 메서드
   // ========================================
 
-  /// 토큰 설정 (로그인 후 호출)
-  static void setAuthToken(String token) {
-    _authToken = token;
-  }
-
-  /// 토큰 삭제 (로그아웃 후 호출)
-  static void clearAuthToken() {
-    _authToken = null;
+  /// 세션 쿠키 삭제 (로그아웃 후 호출)
+  static void clearSessionCookie() {
     _sessionCookie = null;
   }
+}
+
+// ========================================
+// 📦 요청 큐 아이템
+// ========================================
+
+/// 토큰 갱신 대기 중인 요청을 저장하는 클래스
+class _RequestQueueItem {
+  final DioException error;
+  final ErrorInterceptorHandler handler;
+
+  _RequestQueueItem(this.error, this.handler);
 }
