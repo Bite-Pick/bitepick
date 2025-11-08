@@ -77,12 +77,19 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
       children: List.generate(STEPS, (index) {
         final isActive = index <= currentStep;
         return Expanded(
-          child: Container(
-            height: 6,
-            margin: EdgeInsets.only(right: index < 4 ? MgSizes.xs : 0),
-            decoration: BoxDecoration(
-              color: isActive ? MgColorScheme.primary : MgColorScheme.gray9,
-              borderRadius: BorderRadius.circular(2),
+          child: GestureDetector(
+            onTap: () {
+              ref
+                  .read(goodsRegisterScreenControllerProvider.notifier)
+                  .goToStep(index);
+            },
+            child: Container(
+              height: 6,
+              margin: EdgeInsets.only(right: index < 4 ? MgSizes.xs : 0),
+              decoration: BoxDecoration(
+                color: isActive ? MgColorScheme.primary : MgColorScheme.gray9,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
           ),
         );

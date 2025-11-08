@@ -1,0 +1,16 @@
+import 'dart:io';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'local_image.freezed.dart';
+
+/// 로컬 이미지 파일 정보
+@freezed
+class LocalImage with _$LocalImage {
+  const factory LocalImage({
+    required int id,
+    required String key,
+    required File file,
+    String? uploadedUrl, // S3 업로드 완료 후 URL
+  }) = _LocalImage;
+}
