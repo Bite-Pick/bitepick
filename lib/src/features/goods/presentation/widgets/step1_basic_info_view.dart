@@ -81,7 +81,7 @@ class Step1BasicInfoView extends ConsumerWidget {
                 children: [
                   BaseSvgIcon.camera(color: MgColorScheme.gray4),
                   Gaps.w8,
-                  Text("사진추가(${localImages.length}/MAX_IMAGE_COUNT)")
+                  Text("사진추가(${localImages.length}/$MAX_IMAGE_COUNT)")
                       .textColor(
                         !canAddMore
                             ? MgColorScheme.alertRed
@@ -112,12 +112,12 @@ class Step1BasicInfoView extends ConsumerWidget {
         itemCount: localImages.length + (canAddMore ? 1 : 0), // + 버튼 추가
         itemBuilder: (context, index) {
           // 마지막 아이템이고 추가 가능하면 + 버튼 표시
-          if (index == localImages.length && canAddMore) {
+          if (index == 0 && canAddMore) {
             return _buildAddImageButton(context, ref, controller, localImages);
           }
 
           // 이미지 아이템
-          final localImage = localImages[index];
+          final localImage = localImages[canAddMore ? index - 1 : index];
           return Stack(
             children: [
               Container(

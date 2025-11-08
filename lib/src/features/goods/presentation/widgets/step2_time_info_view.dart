@@ -1,46 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/goods_register_form_title.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step_view_wrapper.dart';
+import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_form_item.dart';
 import 'package:magambell/src/widgets/quantity_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class Step2TimeInfoView extends ConsumerStatefulWidget {
+class Step2TimeInfoView extends ConsumerWidget {
   const Step2TimeInfoView({super.key});
 
-  @override
-  ConsumerState<Step2TimeInfoView> createState() => _Step2TimeInfoViewState();
-}
-
-class _Step2TimeInfoViewState extends ConsumerState<Step2TimeInfoView> {
-  DateTime? _startTime;
-  DateTime? _endTime;
+  String _formatTime(DateTime? time) {
+    if (time == null) return '';
+    final formatter = DateFormat('a h시 mm분', 'ko_KR');
+    return formatter.format(time);
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ReactiveFormConsumer(
       builder: (context, form, child) {
         final quantityControl = form.control('quantity') as FormControl<int>;
         final quantity = quantityControl.value ?? 0;
 
+        final startTimeControl =
+            form.control('startTime') as FormControl<DateTime>;
+        final endTimeControl = form.control('endTime') as FormControl<DateTime>;
+
         return StoreRegisterViewWrapper(
           children: [
-            GoodsRegisterFormTitle(title: "판매 시간 설정"),
-            _buildPickupTimePicker(),
+            GoodsRegisterFormTitle(title: "판매 시작시간"),
+            _buildTimeSelector(
+              context: context,
+              control: startTimeControl,
+              placeholder: '판매 시작 시간',
+            ),
             Gaps.h32,
-            GoodsRegisterFormTitle(title: "판매 개수 설정"),
+            GoodsRegisterFormTitle(title: "판매 종료시간"),
+            _buildTimeSelector(
+              context: context,
+              control: endTimeControl,
+              placeholder: '판매 종료 시간',
+            ),
+            Gaps.h32,
+            GoodsRegisterFormTitle(title: "판매 개수"),
             MgFormItem(
               name: 'quantity',
-              child: QuantityPicker(
-                count: quantity,
-                onCountChanged: (quantity) {
-                  form.updateValue({'quantity': quantity});
-                },
-              ),
+              child:
+                  QuantityPicker(
+                    count: quantity,
+                    onCountChanged: (quantity) {
+                      form.updateValue({'quantity': quantity});
+                    },
+                    alignment: MainAxisAlignment.spaceAround,
+                    backgroundColor: Colors.transparent,
+                  ).decorated(
+                    border: Border.all(color: MgColorScheme.gray7, width: 1),
+                    borderRadius: BorderRadius.circular(MgRadius.md),
+                  ),
             ),
           ],
         );
@@ -48,153 +70,54 @@ class _Step2TimeInfoViewState extends ConsumerState<Step2TimeInfoView> {
     );
   }
 
-  Widget _buildPickupTimePicker() {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: _selectStartTime,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              border: Border.all(color: MgColorScheme.gray3),
-              borderRadius: BorderRadius.circular(MgRadius.md),
-              color: MgColorScheme.white,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(_formatDateTime(_startTime)).md().textColor(
-                  _startTime == null ? MgColorScheme.gray5 : MgColorScheme.text,
-                ),
-                Icon(
-                  Icons.calendar_today_outlined,
-                  color: MgColorScheme.gray5,
-                  size: 20,
-                ),
-              ],
-            ),
+  Widget _buildTimeSelector({
+    required BuildContext context,
+    required FormControl<DateTime> control,
+    required String placeholder,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        TimePickerBottomSheet.show(
+          context,
+          initialTime: control.value,
+          onTimeSelected: (time) {
+            control.value = time;
+          },
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: MgSizes.md,
+          vertical: MgSizes.sm,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            // TODO: 최초 값 기입전에는 error로 인식하지않도록
+            color: control.hasErrors
+                ? MgColorScheme.subpointRed
+                : MgColorScheme.gray8,
+            width: 1,
           ),
         ),
-
-        Gaps.h32,
-
-        // 판매 종료 시간
-        Text('판매 종료 시간').md().bold(),
-        Gaps.h8,
-        Text('마감백 판매를 종료할 시간을 선택해주세요').sm().textGray(),
-        Gaps.h16,
-        GestureDetector(
-          onTap: _selectEndTime,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              border: Border.all(color: MgColorScheme.gray3),
-              borderRadius: BorderRadius.circular(MgRadius.md),
-              color: MgColorScheme.white,
+        child: Row(
+          children: [
+            Expanded(
+              child:
+                  Text(
+                    control.value != null
+                        ? _formatTime(control.value)
+                        : placeholder,
+                  ).md().textColor(
+                    control.value != null
+                        ? MgColorScheme.text
+                        : MgColorScheme.gray5,
+                  ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(_formatDateTime(_endTime)).md().textColor(
-                  _endTime == null ? MgColorScheme.gray5 : MgColorScheme.text,
-                ),
-                Icon(
-                  Icons.calendar_today_outlined,
-                  color: MgColorScheme.gray5,
-                  size: 20,
-                ),
-              ],
-            ),
-          ),
+            Icon(Icons.access_time, color: MgColorScheme.gray5, size: 20),
+          ],
         ),
-
-        Gaps.h24,
-
-        // 판매 기간 요약
-        if (_startTime != null && _endTime != null)
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: MgColorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(MgRadius.md),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('판매 기간').sm().bold(),
-                Gaps.h8,
-                Text(
-                  '${_formatDateTime(_startTime)} ~ ${_formatDateTime(_endTime)}',
-                ).md().textColor(MgColorScheme.primary),
-                Gaps.h4,
-                Text(
-                  '총 ${_endTime!.difference(_startTime!).inHours}시간 ${_endTime!.difference(_startTime!).inMinutes % 60}분',
-                ).sm().textGray(),
-              ],
-            ),
-          ),
-      ],
+      ),
     );
-  }
-
-  Future<void> _selectStartTime() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _startTime ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-
-    if (picked != null) {
-      final TimeOfDay? time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (time != null) {
-        setState(() {
-          _startTime = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            time.hour,
-            time.minute,
-          );
-        });
-      }
-    }
-  }
-
-  Future<void> _selectEndTime() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _endTime ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-
-    if (picked != null) {
-      final TimeOfDay? time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (time != null) {
-        setState(() {
-          _endTime = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            time.hour,
-            time.minute,
-          );
-        });
-      }
-    }
-  }
-
-  String _formatDateTime(DateTime? dateTime) {
-    if (dateTime == null) return '시간 선택';
-    return '${dateTime.year}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
