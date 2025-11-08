@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
-import 'package:magambell/src/features/goods/domain/entities/image_upload_request.dart';
-import 'package:magambell/src/features/goods/domain/entities/local_image.dart';
+import 'package:magambell/src/features/image/domain/entities/image_meta_data.dart';
+import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

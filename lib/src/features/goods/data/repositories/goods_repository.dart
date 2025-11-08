@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
-import 'package:magambell/src/features/goods/domain/entities/image_upload_request.dart';
-import 'package:magambell/src/features/goods/domain/entities/local_image.dart';
+import 'package:magambell/src/features/image/domain/entities/image_meta_data.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
+import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'goods_repository.g.dart';
