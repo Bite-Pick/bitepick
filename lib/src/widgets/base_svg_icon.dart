@@ -150,6 +150,8 @@ class BaseSvgIcon extends StatelessWidget {
 
   factory BaseSvgIcon.kakao({double? size, Color? color}) =>
       _makeIcon('filled/kakao.svg', size, color);
+  factory BaseSvgIcon.camera({double? size, Color? color}) =>
+      _makeIcon('camera.svg', size, color);
 
 
   BaseSvgIcon copyWith({Color? color, double? size, bool? hasColorFilter}) {

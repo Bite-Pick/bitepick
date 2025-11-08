@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide NavigatorState;
+import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
@@ -10,6 +11,15 @@ import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/user/presentation/mypage_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+
+class MainRoute extends GoRouteData {
+  const MainRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MainScreen();
+  }
+}
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

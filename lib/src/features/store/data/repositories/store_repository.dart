@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
-import 'package:magambell/src/features/home/domain/entities/goods.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -98,7 +98,9 @@ Future<List<Goods>> storeGoodsList(
   int page = 1,
   int size = 10,
 }) async {
-  return ref.read(storeRepositoryProvider).getStoreGoodsList(
+  return ref
+      .read(storeRepositoryProvider)
+      .getStoreGoodsList(
         latitude: latitude,
         longitude: longitude,
         keyword: keyword,

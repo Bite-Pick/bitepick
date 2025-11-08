@@ -104,9 +104,7 @@ class _MgTextFieldState extends State<MgTextField> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.label != null && widget.label!.isNotEmpty) ...[
-            Text(
-              widget.label!,
-            ).bold().md().padding(left: MgSizes.md, bottom: MgSizes.size10),
+            Text(widget.label!).bold().md().padding(bottom: MgSizes.size8),
           ],
 
           SizedBox(

@@ -5,6 +5,7 @@ import 'package:magambell/src/features/address/presentation/search_address_scree
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
+import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
@@ -58,6 +59,10 @@ class LoginRoute extends GoRouteData {
   routes: [
     TypedGoRoute<MainRoute>(name: 'MainRoute', path: 'main'),
     TypedGoRoute<OwnerHomeRoute>(name: 'OwnerHomeRoute', path: 'owner/home'),
+    TypedGoRoute<GoodsRegisterRoute>(
+      name: 'GoodsRegisterRoute',
+      path: 'owner/goods/register',
+    ),
     TypedGoRoute<StoreRoute>(
       name: 'StoreRoute',
       path: 'store/:id',
@@ -86,6 +91,9 @@ class DefaultRoute extends GoRouteData {
 
   @override
   String? redirect(BuildContext context, GoRouterState state) {
+    // 최초 실행일때만 하위 로직을 수행하기 위함
+    if (state.uri.path != '/') return null;
+
     // ProviderContainer를 통해 userProvider 접근
     final container = ProviderScope.containerOf(context);
     final user = container.read(userStateProvider);
@@ -100,7 +108,7 @@ class DefaultRoute extends GoRouteData {
       case UserRole.owner:
         return OwnerHomeRoute().location;
       case UserRole.guest:
-      case UserRole.admin:
+      case UserRole.admin: // TODO: 확인 필요
         return MainRoute().location;
     }
   }
@@ -112,19 +120,5 @@ class MainRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const MainScreen();
-  }
-}
-
-class OwnerHomeRoute extends GoRouteData {
-  const OwnerHomeRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    // ProviderContainer를 통해 userProvider에서 goodsId 가져오기
-    final container = ProviderScope.containerOf(context);
-    final user = container.read(userStateProvider);
-    final storeId = user?.goodsId ?? 'default';
-
-    return OwnerHomeScreen(id: storeId);
   }
 }
