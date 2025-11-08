@@ -33,7 +33,8 @@ class GoodsRegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
-  static const STEPS = 5;
+  static const STEPS = 4;
+  // TODO: tag추가시 5
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +103,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
     1 => const Step2TimeInfoView(),
     2 => const Step3PriceInfoView(),
     3 => const Step4GoodsInfoView(),
-    4 => const Step5TagsView(),
+    // 4 => const Step5TagsView(),
     _ => const SizedBox.shrink(),
   };
 }

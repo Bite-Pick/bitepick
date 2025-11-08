@@ -20,7 +20,9 @@ mixin _$GoodsRegisterState {
   int get currentStep => throw _privateConstructorUsedError;
   FormGroup get form => throw _privateConstructorUsedError;
   List<LocalImage> get localImages =>
-      throw _privateConstructorUsedError; // 로컬 이미지 파일들
+      throw _privateConstructorUsedError; // Step1: 대표 이미지 파일들
+  List<GoodsDetailItem> get goodsDetails =>
+      throw _privateConstructorUsedError; // Step4: 상품 상세 정보 리스트
   bool get isSubmitting => throw _privateConstructorUsedError;
   double get uploadProgress => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -43,6 +45,7 @@ abstract class $GoodsRegisterStateCopyWith<$Res> {
     int currentStep,
     FormGroup form,
     List<LocalImage> localImages,
+    List<GoodsDetailItem> goodsDetails,
     bool isSubmitting,
     double uploadProgress,
     String? error,
@@ -67,6 +70,7 @@ class _$GoodsRegisterStateCopyWithImpl<$Res, $Val extends GoodsRegisterState>
     Object? currentStep = null,
     Object? form = null,
     Object? localImages = null,
+    Object? goodsDetails = null,
     Object? isSubmitting = null,
     Object? uploadProgress = null,
     Object? error = freezed,
@@ -85,6 +89,10 @@ class _$GoodsRegisterStateCopyWithImpl<$Res, $Val extends GoodsRegisterState>
                 ? _value.localImages
                 : localImages // ignore: cast_nullable_to_non_nullable
                       as List<LocalImage>,
+            goodsDetails: null == goodsDetails
+                ? _value.goodsDetails
+                : goodsDetails // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsDetailItem>,
             isSubmitting: null == isSubmitting
                 ? _value.isSubmitting
                 : isSubmitting // ignore: cast_nullable_to_non_nullable
@@ -116,6 +124,7 @@ abstract class _$$GoodsRegisterStateImplCopyWith<$Res>
     int currentStep,
     FormGroup form,
     List<LocalImage> localImages,
+    List<GoodsDetailItem> goodsDetails,
     bool isSubmitting,
     double uploadProgress,
     String? error,
@@ -139,6 +148,7 @@ class __$$GoodsRegisterStateImplCopyWithImpl<$Res>
     Object? currentStep = null,
     Object? form = null,
     Object? localImages = null,
+    Object? goodsDetails = null,
     Object? isSubmitting = null,
     Object? uploadProgress = null,
     Object? error = freezed,
@@ -157,6 +167,10 @@ class __$$GoodsRegisterStateImplCopyWithImpl<$Res>
             ? _value._localImages
             : localImages // ignore: cast_nullable_to_non_nullable
                   as List<LocalImage>,
+        goodsDetails: null == goodsDetails
+            ? _value._goodsDetails
+            : goodsDetails // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsDetailItem>,
         isSubmitting: null == isSubmitting
             ? _value.isSubmitting
             : isSubmitting // ignore: cast_nullable_to_non_nullable
@@ -181,10 +195,12 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
     required this.currentStep,
     required this.form,
     final List<LocalImage> localImages = const [],
+    final List<GoodsDetailItem> goodsDetails = const [],
     this.isSubmitting = false,
     this.uploadProgress = 0.0,
     this.error,
-  }) : _localImages = localImages;
+  }) : _localImages = localImages,
+       _goodsDetails = goodsDetails;
 
   @override
   final int currentStep;
@@ -199,7 +215,18 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
     return EqualUnmodifiableListView(_localImages);
   }
 
-  // 로컬 이미지 파일들
+  // Step1: 대표 이미지 파일들
+  final List<GoodsDetailItem> _goodsDetails;
+  // Step1: 대표 이미지 파일들
+  @override
+  @JsonKey()
+  List<GoodsDetailItem> get goodsDetails {
+    if (_goodsDetails is EqualUnmodifiableListView) return _goodsDetails;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_goodsDetails);
+  }
+
+  // Step4: 상품 상세 정보 리스트
   @override
   @JsonKey()
   final bool isSubmitting;
@@ -211,7 +238,7 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
 
   @override
   String toString() {
-    return 'GoodsRegisterState(currentStep: $currentStep, form: $form, localImages: $localImages, isSubmitting: $isSubmitting, uploadProgress: $uploadProgress, error: $error)';
+    return 'GoodsRegisterState(currentStep: $currentStep, form: $form, localImages: $localImages, goodsDetails: $goodsDetails, isSubmitting: $isSubmitting, uploadProgress: $uploadProgress, error: $error)';
   }
 
   @override
@@ -226,6 +253,10 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
               other._localImages,
               _localImages,
             ) &&
+            const DeepCollectionEquality().equals(
+              other._goodsDetails,
+              _goodsDetails,
+            ) &&
             (identical(other.isSubmitting, isSubmitting) ||
                 other.isSubmitting == isSubmitting) &&
             (identical(other.uploadProgress, uploadProgress) ||
@@ -239,6 +270,7 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
     currentStep,
     form,
     const DeepCollectionEquality().hash(_localImages),
+    const DeepCollectionEquality().hash(_goodsDetails),
     isSubmitting,
     uploadProgress,
     error,
@@ -261,6 +293,7 @@ abstract class _GoodsRegisterState implements GoodsRegisterState {
     required final int currentStep,
     required final FormGroup form,
     final List<LocalImage> localImages,
+    final List<GoodsDetailItem> goodsDetails,
     final bool isSubmitting,
     final double uploadProgress,
     final String? error,
@@ -271,7 +304,9 @@ abstract class _GoodsRegisterState implements GoodsRegisterState {
   @override
   FormGroup get form;
   @override
-  List<LocalImage> get localImages; // 로컬 이미지 파일들
+  List<LocalImage> get localImages; // Step1: 대표 이미지 파일들
+  @override
+  List<GoodsDetailItem> get goodsDetails; // Step4: 상품 상세 정보 리스트
   @override
   bool get isSubmitting;
   @override

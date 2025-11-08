@@ -35,11 +35,7 @@ class Step1BasicInfoView extends ConsumerWidget {
               title: '마감백 설명',
               subtitles: [TextSpan(text: '마감백은 어떤빵으로 구성되어있나요?')],
             ),
-            MgReactiveTextField(
-              formControlName: 'description',
-              hintText: '마감백 설명 입력',
-              maxLines: 4,
-            ),
+            MgReactiveTextField(formControlName: 'description'),
             Gaps.h32,
             GoodsRegisterFormTitle(title: '대표 이미지'),
             // 이미지가 0장일 때만 점선 테두리 버튼 표시

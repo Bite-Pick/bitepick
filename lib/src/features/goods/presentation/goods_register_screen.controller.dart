@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
 import 'package:magambell/src/features/goods/domain/entities/image_upload_request.dart';
 import 'package:magambell/src/features/goods/domain/entities/local_image.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -15,7 +16,8 @@ class GoodsRegisterState with _$GoodsRegisterState {
   const factory GoodsRegisterState({
     required int currentStep,
     required FormGroup form,
-    @Default([]) List<LocalImage> localImages, // 로컬 이미지 파일들
+    @Default([]) List<LocalImage> localImages, // Step1: 대표 이미지 파일들
+    @Default([]) List<GoodsDetailItem> goodsDetails, // Step4: 상품 상세 정보 리스트
     @Default(false) bool isSubmitting,
     @Default(0.0) double uploadProgress,
     String? error,
@@ -53,8 +55,16 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
         value: 0,
         validators: [Validators.required, Validators.min(1)],
       ),
+      // Step 2: 수량, 판매 시작,마감 시간
+      'quantity': FormControl<int>(
+        value: 0,
+        validators: [Validators.required, Validators.min(1)],
+      ),
 
-      // Step 2: 가격 정보
+      'startTime': FormControl<DateTime>(validators: [Validators.required]),
+      'endTime': FormControl<DateTime>(validators: [Validators.required]),
+
+      // Step 3: 가격 정보
       'originalPrice': FormControl<int>(
         validators: [Validators.required, Validators.min(0)],
       ),
@@ -66,16 +76,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
         ],
       ),
       'salePrice': FormControl<int>(),
-
-      // Step 3: 수량
-      'quantity': FormControl<int>(
-        value: 0,
-        validators: [Validators.required, Validators.min(1)],
-      ),
-
-      // Step 4: 시간
-      'startTime': FormControl<DateTime>(validators: [Validators.required]),
-      'endTime': FormControl<DateTime>(validators: [Validators.required]),
     });
   }
 
@@ -139,13 +139,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
     for (final file in files) {
       final fileName = file.path.split('/').last;
-      newImages.add(
-        LocalImage(
-          id: currentId,
-          key: fileName,
-          file: file,
-        ),
-      );
+      newImages.add(LocalImage(id: currentId, key: fileName, file: file));
       currentId++;
     }
 
@@ -168,6 +162,54 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
     }
   }
 
+  // 상품 상세 정보 추가
+  void addGoodsDetail({
+    required File file,
+    required String name,
+  }) {
+    final fileName = file.path.split('/').last;
+    final newDetail = GoodsDetailItem(
+      id: state.goodsDetails.length,
+      key: fileName,
+      name: name,
+      file: file,
+    );
+
+    final updatedDetails = [...state.goodsDetails, newDetail];
+    state = state.copyWith(goodsDetails: updatedDetails);
+  }
+
+  // 상품 상세 정보 업데이트
+  void updateGoodsDetail({
+    required int index,
+    File? file,
+    String? name,
+  }) {
+    if (index >= 0 && index < state.goodsDetails.length) {
+      final detail = state.goodsDetails[index];
+      final updatedDetail = GoodsDetailItem(
+        id: detail.id,
+        key: file != null ? file.path.split('/').last : detail.key,
+        name: name ?? detail.name,
+        file: file ?? detail.file,
+        uploadedUrl: detail.uploadedUrl,
+      );
+
+      final updatedDetails = List<GoodsDetailItem>.from(state.goodsDetails);
+      updatedDetails[index] = updatedDetail;
+      state = state.copyWith(goodsDetails: updatedDetails);
+    }
+  }
+
+  // 상품 상세 정보 제거
+  void removeGoodsDetail(int index) {
+    if (index >= 0 && index < state.goodsDetails.length) {
+      final updatedDetails = List<GoodsDetailItem>.from(state.goodsDetails)
+        ..removeAt(index);
+      state = state.copyWith(goodsDetails: updatedDetails);
+    }
+  }
+
   // 최종 제출
   Future<void> submit() async {
     if (!state.form.valid) {
@@ -185,9 +227,18 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       final formValue = state.form.value;
       final repository = ref.read(goodsRepositoryProvider);
 
-      // 1. 이미지 메타데이터 생성
+      // 1. 대표 이미지 메타데이터 생성
       final imageMetadataList = state.localImages
           .map((img) => ImageMetadata(id: img.id, key: img.key))
+          .toList();
+
+      // 2. 상품 상세 정보 메타데이터 생성 (API 요청용)
+      final goodsDetailsMetadataList = state.goodsDetails
+          .map((detail) => {
+                'id': detail.id,
+                'key': detail.key,
+                'name': detail.name,
+              })
           .toList();
 
       // 2. Goods 등록 API 호출 (presigned URL 받기)
@@ -213,18 +264,12 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
         },
       );
 
-      state = state.copyWith(
-        isSubmitting: false,
-        uploadProgress: 1.0,
-      );
+      state = state.copyWith(isSubmitting: false, uploadProgress: 1.0);
 
       // 성공 처리
       print('Goods 등록 및 이미지 업로드 완료');
     } catch (e) {
-      state = state.copyWith(
-        isSubmitting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isSubmitting: false, error: e.toString());
     }
   }
 }
