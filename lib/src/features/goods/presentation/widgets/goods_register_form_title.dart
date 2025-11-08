@@ -21,12 +21,13 @@ class GoodsRegisterFormTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title).md().bold(),
-        MgTextRich(
-          style: context.textTheme.bodyMedium!.copyWith(
-            color: MgColorScheme.gray4,
+        if (subtitles.isNotEmpty)
+          MgTextRich(
+            style: context.textTheme.bodyMedium!.copyWith(
+              color: MgColorScheme.gray4,
+            ),
+            children: subtitles,
           ),
-          children: subtitles,
-        ),
         Gaps.h8,
       ],
     );

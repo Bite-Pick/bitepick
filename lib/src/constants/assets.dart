@@ -99,6 +99,9 @@ class R {
   static const String ASSETS_ICONS_SVG_BOOKMARK_SVG =
       'assets/icons/svg/bookmark.svg';
 
+  static const String ASSETS_ICONS_SVG_CAMERA_SVG =
+      'assets/icons/svg/camera.svg';
+
   static const String ASSETS_ICONS_SVG_CHECK_SVG = 'assets/icons/svg/check.svg';
 
   static const String ASSETS_ICONS_SVG_CLOSE_SVG = 'assets/icons/svg/close.svg';
