@@ -55,3 +55,6 @@ android/app/src/prod/res/google-services.json
 ios/Runner/GoogleService-Info-Dev.plist
 ios/Runner/GoogleService-Info-Prod.plist
 
+
+# local playground
+lib/src/playground.dart

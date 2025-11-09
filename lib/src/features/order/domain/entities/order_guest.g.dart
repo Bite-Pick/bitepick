@@ -1,32 +1,33 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order.dart';
+part of 'order_guest.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OrderImpl _$$OrderImplFromJson(Map<String, dynamic> json) => _$OrderImpl(
-  orderId: json['orderId'] as String,
-  orderStatus: $enumDecode(_$OrderStatusEnumMap, json['orderStatus']),
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  memo: json['memo'] as String?,
-  storeId: json['storeId'] as String,
-  storeName: json['storeName'] as String,
-  imageUrls: (json['imageUrls'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
-  goodsList: (json['goodsList'] as List<dynamic>)
-      .map((e) => OrderGoods.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  reviewIds: (json['reviewIds'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
-  payType: json['payType'] as String,
-  easyPayProvider: json['easyPayProvider'] as String?,
-);
+_$OrderGuestImpl _$$OrderGuestImplFromJson(Map<String, dynamic> json) =>
+    _$OrderGuestImpl(
+      orderId: json['orderId'] as String,
+      orderStatus: $enumDecode(_$OrderStatusEnumMap, json['orderStatus']),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      memo: json['memo'] as String?,
+      storeId: json['storeId'] as String,
+      storeName: json['storeName'] as String,
+      imageUrls: (json['imageUrls'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      goodsList: (json['goodsList'] as List<dynamic>)
+          .map((e) => OrderGoods.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      reviewIds: (json['reviewIds'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      payType: json['payType'] as String,
+      easyPayProvider: json['easyPayProvider'] as String?,
+    );
 
-Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>
+Map<String, dynamic> _$$OrderGuestImplToJson(_$OrderGuestImpl instance) =>
     <String, dynamic>{
       'orderId': instance.orderId,
       'orderStatus': _$OrderStatusEnumMap[instance.orderStatus]!,

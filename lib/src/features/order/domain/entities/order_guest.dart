@@ -1,13 +1,14 @@
 import 'dart:ui';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/features/order/domain/entities/order_status.dart';
 
-part 'order.freezed.dart';
-part 'order.g.dart';
+part 'order_guest.freezed.dart';
+part 'order_guest.g.dart';
 
 @freezed
-class Order with _$Order {
-  const factory Order({
+class OrderGuest with _$OrderGuest {
+  const factory OrderGuest({
     required String orderId,
     required OrderStatus orderStatus,
     required DateTime createdAt,
@@ -19,9 +20,10 @@ class Order with _$Order {
     required List<String> reviewIds,
     required String payType,
     String? easyPayProvider,
-  }) = _Order;
+  }) = _OrderGuest;
 
-  factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+  factory OrderGuest.fromJson(Map<String, dynamic> json) =>
+      _$OrderGuestFromJson(json);
 }
 
 @freezed
@@ -37,64 +39,9 @@ class OrderGoods with _$OrderGoods {
       _$OrderGoodsFromJson(json);
 }
 
-enum OrderStatus {
-  @JsonValue('PENDING')
-  pending,
-  @JsonValue('PAID')
-  paid,
-  @JsonValue('ACCEPTED')
-  accepted,
-  @JsonValue('REJECTED')
-  rejected,
-  @JsonValue('COMPLETED')
-  completed,
-  @JsonValue('CANCELED')
-  canceled,
-  @JsonValue('FAILED')
-  failed,
-}
-
-extension OrderStatusExt on OrderStatus {
-  String get label {
-    switch (this) {
-      case OrderStatus.pending:
-        return '수락대기';
-      case OrderStatus.paid:
-        return '주문 접수';
-      case OrderStatus.accepted:
-        return '픽업 대기';
-      case OrderStatus.rejected:
-        return '매장 취소';
-      case OrderStatus.completed:
-        return '픽업 완료';
-      case OrderStatus.canceled:
-        return '본인 취소';
-      case OrderStatus.failed:
-        return '주문 실패';
-    }
-  }
-
-  Color get color {
-    switch (this) {
-      case OrderStatus.pending:
-        return Color(0xffFFE7B3);
-      case OrderStatus.paid:
-        return Color(0xffCDE3FF);
-      case OrderStatus.accepted:
-        return Color(0xffD7F3D4);
-      case OrderStatus.rejected:
-      case OrderStatus.canceled:
-      case OrderStatus.failed:
-        return Color(0xffEF444D);
-      case OrderStatus.completed:
-        return Color(0xffE2E2E2);
-    }
-  }
-}
-
 // Mock data for testing
-final List<Order> mockOrders = [
-  Order(
+final List<OrderGuest> mockOrders = [
+  OrderGuest(
     orderId: 'order_001',
     orderStatus: OrderStatus.accepted,
     createdAt: DateTime.now().subtract(Duration(hours: 2)),
@@ -123,7 +70,7 @@ final List<Order> mockOrders = [
     payType: '간편결제',
     easyPayProvider: '카카오페이',
   ),
-  Order(
+  OrderGuest(
     orderId: 'order_002',
     orderStatus: OrderStatus.completed,
     createdAt: DateTime.now().subtract(Duration(days: 1)),
@@ -143,7 +90,7 @@ final List<Order> mockOrders = [
     payType: '간편결제',
     easyPayProvider: '토스페이',
   ),
-  Order(
+  OrderGuest(
     orderId: 'order_003',
     orderStatus: OrderStatus.paid,
     createdAt: DateTime.now().subtract(Duration(minutes: 30)),
