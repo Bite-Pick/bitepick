@@ -28,7 +28,8 @@ final mockStore = Store(
   ],
   goodsList: [
     Goods(
-      storeId: "store-001",
+      storeId: 'test',
+      goodsId: "store-001",
       storeName: "마감벨 테스트 가게",
       ImageUrl: [
         "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
@@ -47,7 +48,8 @@ final mockStore = Store(
       saleStatus: "ON",
     ),
     Goods(
-      storeId: "store-001",
+      storeId: "",
+      goodsId: "store-001",
       storeName: "마감벨 테스트 가게",
       ImageUrl: [
         "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg",

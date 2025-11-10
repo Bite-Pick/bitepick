@@ -391,5 +391,22 @@ class _StoreGoodsDetailProviderElement
   String get id => (origin as StoreGoodsDetailProvider).id;
 }
 
+String _$ownerStoreHash() => r'8901a6755dd0146eb0d8c5c8e03d4509c467701e';
+
+/// See also [ownerStore].
+@ProviderFor(ownerStore)
+final ownerStoreProvider = AutoDisposeFutureProvider<Store?>.internal(
+  ownerStore,
+  name: r'ownerStoreProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ownerStoreHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef OwnerStoreRef = AutoDisposeFutureProviderRef<Store?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
