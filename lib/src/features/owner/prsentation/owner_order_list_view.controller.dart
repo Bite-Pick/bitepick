@@ -104,9 +104,11 @@ class OwnerOrderListController extends _$OwnerOrderListController {
     state = AsyncValue.data(currentState.copyWith(statusCounts: counts));
   }
 
-  Future<void> rejectOrder(String orderId) async {
+  Future<void> rejectOrder(String orderId, {String? rejectReason}) async {
     try {
-      await ref.read(orderRepositoryProvider).rejectOrder(orderId);
+      await ref
+          .read(orderRepositoryProvider)
+          .rejectOrder(orderId, rejectReason: rejectReason);
       await refresh();
     } catch (e) {
       final currentState = state.requireValue;
@@ -129,6 +131,17 @@ class OwnerOrderListController extends _$OwnerOrderListController {
   Future<void> completeOrder(String orderId) async {
     try {
       await ref.read(orderRepositoryProvider).completeOrder(orderId);
+      await refresh();
+    } catch (e) {
+      final currentState = state.requireValue;
+      state = AsyncValue.data(currentState.copyWith(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  Future<void> cancelOrder(String orderId) async {
+    try {
+      await ref.read(orderRepositoryProvider).cancelOrder(orderId);
       await refresh();
     } catch (e) {
       final currentState = state.requireValue;

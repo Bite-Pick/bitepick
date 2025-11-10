@@ -23,7 +23,7 @@ final orderRepositoryProvider = AutoDisposeProvider<OrderRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef OrderRepositoryRef = AutoDisposeProviderRef<OrderRepository>;
-String _$storeOrdersHash() => r'8cdc100618dfb45584f0f742bc1d17b73382ebd2';
+String _$storeOrdersHash() => r'04dbd43356e06d728d465d48be645330f04914c7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -59,7 +59,7 @@ class StoreOrdersFamily extends Family<AsyncValue<List<OrderOwner>>> {
   StoreOrdersProvider call({
     int page = 1,
     int size = 10,
-    OrderGuestStatus? orderStatus,
+    OrderOwnerStatus? orderStatus,
   }) {
     return StoreOrdersProvider(
       page: page,
@@ -100,7 +100,7 @@ class StoreOrdersProvider extends AutoDisposeFutureProvider<List<OrderOwner>> {
   StoreOrdersProvider({
     int page = 1,
     int size = 10,
-    OrderGuestStatus? orderStatus,
+    OrderOwnerStatus? orderStatus,
   }) : this._internal(
          (ref) => storeOrders(
            ref as StoreOrdersRef,
@@ -135,7 +135,7 @@ class StoreOrdersProvider extends AutoDisposeFutureProvider<List<OrderOwner>> {
 
   final int page;
   final int size;
-  final OrderGuestStatus? orderStatus;
+  final OrderOwnerStatus? orderStatus;
 
   @override
   Override overrideWith(
@@ -191,7 +191,7 @@ mixin StoreOrdersRef on AutoDisposeFutureProviderRef<List<OrderOwner>> {
   int get size;
 
   /// The parameter `orderStatus` of this provider.
-  OrderGuestStatus? get orderStatus;
+  OrderOwnerStatus? get orderStatus;
 }
 
 class _StoreOrdersProviderElement
@@ -204,7 +204,7 @@ class _StoreOrdersProviderElement
   @override
   int get size => (origin as StoreOrdersProvider).size;
   @override
-  OrderGuestStatus? get orderStatus =>
+  OrderOwnerStatus? get orderStatus =>
       (origin as StoreOrdersProvider).orderStatus;
 }
 

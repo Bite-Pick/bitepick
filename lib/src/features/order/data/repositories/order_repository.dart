@@ -36,8 +36,11 @@ class OrderRepository {
         .toList();
   }
 
-  Future<bool> rejectOrder(String orderId) async {
-    final res = await _dio.post('/v1/order/reject/$orderId');
+  Future<bool> rejectOrder(String orderId, {String? rejectReason}) async {
+    final res = await _dio.post(
+      '/v1/order/reject/$orderId',
+      data: rejectReason != null ? {'rejectReason': rejectReason} : null,
+    );
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
@@ -56,6 +59,13 @@ class OrderRepository {
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
   }
+
+  Future<bool> cancelOrder(String orderId) async {
+    final res = await _dio.post('/v1/order/cancel/$orderId');
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return false;
+    return true;
+  }
 }
 
 @riverpod
@@ -68,7 +78,7 @@ Future<List<OrderOwner>> storeOrders(
   Ref ref, {
   int page = 1,
   int size = 10,
-  OrderGuestStatus? orderStatus,
+  OrderOwnerStatus? orderStatus,
 }) async {
   return ref
       .read(orderRepositoryProvider)

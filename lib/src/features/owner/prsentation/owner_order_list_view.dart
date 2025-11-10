@@ -49,22 +49,8 @@ class OwnerOrderListView extends ConsumerWidget {
                         itemCount: controllerState.orders.length,
                         itemBuilder: (context, index) {
                           final order = controllerState.orders[index];
-                          return OrderOwnerInfoItem(
-                            order,
-                            onReject: () async {
-                              await controller.rejectOrder(order.orderId);
-                            },
-                            onAccept: () async {
-                              // if (order.orderStatus ==
-                              //         OrderOwnerStatus.pending ||
-                              //     order.orderStatus == OrderGuestStatus.paid) {
-                              //   await controller.approveOrder(order.orderId);
-                              // } else if (order.orderStatus ==
-                              //     OrderGuestStatus.accepted) {
-                              //   await controller.completeOrder(order.orderId);
-                              // }
-                            },
-                          ).margin(top: index == 0 ? MgSizes.lg : 0);
+                          return OrderOwnerInfoItem(order)
+                              .margin(top: index == 0 ? MgSizes.lg : 0);
                         },
                         separatorBuilder: (context, index) => Gaps.h20,
                       ).margin(horizontal: MgSizes.xl),

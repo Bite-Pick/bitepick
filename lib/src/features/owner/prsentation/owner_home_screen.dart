@@ -51,8 +51,9 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     final store = ref.watch(storeStateProvider);
     return BaseScaffold(
       appBar: BaseAppBar(
-        leading: _buildDaySelectButton(),
-        leadingWidth: 120, // TODO[ui]:fix
+        // leading: _buildDaySelectButton(),
+        // leadingWidth: 120, // TODO[ui]:fix
+        leading: SizedBox.shrink(),
         action: _buildServiceSwitch(),
         bottom: TabBar(
           dividerColor: Colors.transparent,
