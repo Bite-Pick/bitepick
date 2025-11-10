@@ -6,6 +6,7 @@ part 'goods.g.dart';
 @freezed
 class Goods with _$Goods {
   const factory Goods({
+    required String goodsId,
     required String storeId,
     required String storeName,
     required List<String> ImageUrl,
@@ -27,9 +28,10 @@ class Goods with _$Goods {
   factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 }
 
-final mockStore = Goods(
-  storeId: "1",
+final mockGoods = Goods(
+  goodsId: "1",
   storeName: "test",
+  storeId: "test",
   ImageUrl: [
     "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
     "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg",

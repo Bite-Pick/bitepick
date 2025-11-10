@@ -13,15 +13,15 @@ class MgTheme {
   }
 
   ColorScheme get _colorScheme => ColorScheme.light(
-        primary: MgColorScheme.primary,
-        secondary: MgColorScheme.secondary,
-        surface: MgColorScheme.background,
-        error: MgColorScheme.subpointRed,
-        onPrimary: MgColorScheme.black,
-        onSecondary: MgColorScheme.white,
-        onSurface: MgColorScheme.text,
-        onError: MgColorScheme.white,
-      );
+    primary: MgColorScheme.primary,
+    secondary: MgColorScheme.secondary,
+    surface: MgColorScheme.background,
+    error: MgColorScheme.subpointRed,
+    onPrimary: MgColorScheme.black,
+    onSecondary: MgColorScheme.white,
+    onSurface: MgColorScheme.text,
+    onError: MgColorScheme.white,
+  );
 
   TextTheme get textTheme => mgTextTheme(_colorScheme);
 

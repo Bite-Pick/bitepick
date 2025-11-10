@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
-import 'package:magambell/src/features/order/domain/entities/order.dart';
+import 'package:magambell/src/features/order/domain/entities/order_guest.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_list_item.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';

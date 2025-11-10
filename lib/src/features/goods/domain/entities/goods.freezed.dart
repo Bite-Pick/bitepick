@@ -21,6 +21,7 @@ Goods _$GoodsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Goods {
+  String get goodsId => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   List<String> get ImageUrl => throw _privateConstructorUsedError;
@@ -52,6 +53,7 @@ abstract class $GoodsCopyWith<$Res> {
       _$GoodsCopyWithImpl<$Res, Goods>;
   @useResult
   $Res call({
+    String goodsId,
     String storeId,
     String storeName,
     List<String> ImageUrl,
@@ -85,6 +87,7 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? goodsId = null,
     Object? storeId = null,
     Object? storeName = null,
     Object? ImageUrl = null,
@@ -103,6 +106,10 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
   }) {
     return _then(
       _value.copyWith(
+            goodsId: null == goodsId
+                ? _value.goodsId
+                : goodsId // ignore: cast_nullable_to_non_nullable
+                      as String,
             storeId: null == storeId
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
@@ -178,6 +185,7 @@ abstract class _$$GoodsImplCopyWith<$Res> implements $GoodsCopyWith<$Res> {
   @override
   @useResult
   $Res call({
+    String goodsId,
     String storeId,
     String storeName,
     List<String> ImageUrl,
@@ -210,6 +218,7 @@ class __$$GoodsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? goodsId = null,
     Object? storeId = null,
     Object? storeName = null,
     Object? ImageUrl = null,
@@ -228,6 +237,10 @@ class __$$GoodsImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$GoodsImpl(
+        goodsId: null == goodsId
+            ? _value.goodsId
+            : goodsId // ignore: cast_nullable_to_non_nullable
+                  as String,
         storeId: null == storeId
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
@@ -297,6 +310,7 @@ class __$$GoodsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GoodsImpl extends _Goods {
   const _$GoodsImpl({
+    required this.goodsId,
     required this.storeId,
     required this.storeName,
     required final List<String> ImageUrl,
@@ -318,6 +332,8 @@ class _$GoodsImpl extends _Goods {
   factory _$GoodsImpl.fromJson(Map<String, dynamic> json) =>
       _$$GoodsImplFromJson(json);
 
+  @override
+  final String goodsId;
   @override
   final String storeId;
   @override
@@ -357,7 +373,7 @@ class _$GoodsImpl extends _Goods {
 
   @override
   String toString() {
-    return 'Goods(storeId: $storeId, storeName: $storeName, ImageUrl: $ImageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
+    return 'Goods(goodsId: $goodsId, storeId: $storeId, storeName: $storeName, ImageUrl: $ImageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
   }
 
   @override
@@ -365,6 +381,7 @@ class _$GoodsImpl extends _Goods {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GoodsImpl &&
+            (identical(other.goodsId, goodsId) || other.goodsId == goodsId) &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
@@ -397,6 +414,7 @@ class _$GoodsImpl extends _Goods {
   @override
   int get hashCode => Object.hash(
     runtimeType,
+    goodsId,
     storeId,
     storeName,
     const DeepCollectionEquality().hash(_ImageUrl),
@@ -430,6 +448,7 @@ class _$GoodsImpl extends _Goods {
 
 abstract class _Goods extends Goods {
   const factory _Goods({
+    required final String goodsId,
     required final String storeId,
     required final String storeName,
     required final List<String> ImageUrl,
@@ -450,6 +469,8 @@ abstract class _Goods extends Goods {
 
   factory _Goods.fromJson(Map<String, dynamic> json) = _$GoodsImpl.fromJson;
 
+  @override
+  String get goodsId;
   @override
   String get storeId;
   @override

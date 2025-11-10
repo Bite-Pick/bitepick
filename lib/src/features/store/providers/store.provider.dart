@@ -9,40 +9,7 @@ class StoreState extends _$StoreState {
   @override
   Store? build() {
     // Mock data - API가 준비되면 실제 API 호출로 대체
-    return Store(
-      storeId: 'store-123',
-      storeName: '맛있는 빵집',
-      address: '서울시 강남구 테헤란로 123',
-      storeImageUrls: [
-        'https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg',
-        'https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/2_b03.jpg',
-      ],
-      goodsList: [
-        Goods(
-          storeId: 'store-123',
-          storeName: '맛있는 빵집',
-          ImageUrl: [
-            'https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg',
-          ],
-          latitude: 37.5012,
-          longitude: 127.0396,
-          address: '서울시 강남구 테헤란로 123',
-          goodsName: '크로와상',
-          startTime: DateTime.now()
-              .subtract(const Duration(hours: 1))
-              .toIso8601String(),
-          endTime: DateTime.now()
-              .add(const Duration(hours: 5))
-              .toIso8601String(),
-          originPrice: 5000,
-          discount: 30,
-          salePrice: 3500,
-          quantity: 15,
-          distance: 0,
-          saleStatus: 'ON',
-        ),
-      ],
-    );
+    return mockStore;
   }
 
   // 매장 정보 설정

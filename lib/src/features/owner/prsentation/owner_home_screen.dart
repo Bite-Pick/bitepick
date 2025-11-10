@@ -7,7 +7,9 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
+import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
 import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -36,7 +38,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -50,9 +52,10 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     final store = ref.watch(storeStateProvider);
     return BaseScaffold(
       appBar: BaseAppBar(
-        leading: _buildDaySelectButton(),
-        leadingWidth: 120, // TODO[ui]:fix
-        action: _buildServiceSwitch(),
+        // leading: _buildDaySelectButton(),
+        // leadingWidth: 120, // TODO[ui]:fix
+        leading: SizedBox.shrink(),
+        action: _buildServiceSwitch(store?.goodsList[0].goodsId ?? ""),
         bottom: TabBar(
           dividerColor: Colors.transparent,
           controller: _tabController,
@@ -62,18 +65,17 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           indicator: UnderlineTabIndicator(
             borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
           ),
-          labelStyle: context.textTheme.bodyLarge,
+          labelStyle: context.textTheme.titleLarge,
           unselectedLabelStyle: context.textTheme.bodyLarge,
           tabs: [
             Tab(text: '주문'),
             Tab(text: '판매'),
-            Tab(text: '관리'),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [Text("주문"), OwnerGoodsView(null), Text("관리")],
+        children: [OwnerOrderListView(), OwnerGoodsView()],
       ),
     );
   }
@@ -93,15 +95,19 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildServiceSwitch() {
+  Widget _buildServiceSwitch(String id) {
     return Row(
       children: [
-        Text("영업중"),
-
+        Text("영업중").bold().md(),
+        Gaps.w8,
+        // TODO: 스위치 색상 변경
         Switch(
           value: true,
-          onChanged: (value) {
-            // TODO[goods]: 마감백 saleStatue인지 확인필요
+          onChanged: (value) async {
+            await ref
+                .read(goodsRepositoryProvider)
+                .setGoodsSaleStatus(id: id, saleStatus: value);
+            ref.invalidate(storeStateProvider);
           },
         ),
       ],

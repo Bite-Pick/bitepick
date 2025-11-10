@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'order.dart';
+part of 'order_guest.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,14 +15,14 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-Order _$OrderFromJson(Map<String, dynamic> json) {
-  return _Order.fromJson(json);
+OrderGuest _$OrderGuestFromJson(Map<String, dynamic> json) {
+  return _OrderGuest.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Order {
+mixin _$OrderGuest {
   String get orderId => throw _privateConstructorUsedError;
-  OrderStatus get orderStatus => throw _privateConstructorUsedError;
+  OrderGuestStatus get orderStatus => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   String? get memo => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
@@ -33,23 +33,26 @@ mixin _$Order {
   String get payType => throw _privateConstructorUsedError;
   String? get easyPayProvider => throw _privateConstructorUsedError;
 
-  /// Serializes this Order to a JSON map.
+  /// Serializes this OrderGuest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of Order
+  /// Create a copy of OrderGuest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $OrderCopyWith<Order> get copyWith => throw _privateConstructorUsedError;
+  $OrderGuestCopyWith<OrderGuest> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $OrderCopyWith<$Res> {
-  factory $OrderCopyWith(Order value, $Res Function(Order) then) =
-      _$OrderCopyWithImpl<$Res, Order>;
+abstract class $OrderGuestCopyWith<$Res> {
+  factory $OrderGuestCopyWith(
+    OrderGuest value,
+    $Res Function(OrderGuest) then,
+  ) = _$OrderGuestCopyWithImpl<$Res, OrderGuest>;
   @useResult
   $Res call({
     String orderId,
-    OrderStatus orderStatus,
+    OrderGuestStatus orderStatus,
     DateTime createdAt,
     String? memo,
     String storeId,
@@ -63,16 +66,16 @@ abstract class $OrderCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$OrderCopyWithImpl<$Res, $Val extends Order>
-    implements $OrderCopyWith<$Res> {
-  _$OrderCopyWithImpl(this._value, this._then);
+class _$OrderGuestCopyWithImpl<$Res, $Val extends OrderGuest>
+    implements $OrderGuestCopyWith<$Res> {
+  _$OrderGuestCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Order
+  /// Create a copy of OrderGuest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -98,7 +101,7 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
             orderStatus: null == orderStatus
                 ? _value.orderStatus
                 : orderStatus // ignore: cast_nullable_to_non_nullable
-                      as OrderStatus,
+                      as OrderGuestStatus,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -142,16 +145,17 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
 }
 
 /// @nodoc
-abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
-  factory _$$OrderImplCopyWith(
-    _$OrderImpl value,
-    $Res Function(_$OrderImpl) then,
-  ) = __$$OrderImplCopyWithImpl<$Res>;
+abstract class _$$OrderGuestImplCopyWith<$Res>
+    implements $OrderGuestCopyWith<$Res> {
+  factory _$$OrderGuestImplCopyWith(
+    _$OrderGuestImpl value,
+    $Res Function(_$OrderGuestImpl) then,
+  ) = __$$OrderGuestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
     String orderId,
-    OrderStatus orderStatus,
+    OrderGuestStatus orderStatus,
     DateTime createdAt,
     String? memo,
     String storeId,
@@ -165,15 +169,15 @@ abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$OrderImplCopyWithImpl<$Res>
-    extends _$OrderCopyWithImpl<$Res, _$OrderImpl>
-    implements _$$OrderImplCopyWith<$Res> {
-  __$$OrderImplCopyWithImpl(
-    _$OrderImpl _value,
-    $Res Function(_$OrderImpl) _then,
+class __$$OrderGuestImplCopyWithImpl<$Res>
+    extends _$OrderGuestCopyWithImpl<$Res, _$OrderGuestImpl>
+    implements _$$OrderGuestImplCopyWith<$Res> {
+  __$$OrderGuestImplCopyWithImpl(
+    _$OrderGuestImpl _value,
+    $Res Function(_$OrderGuestImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of Order
+  /// Create a copy of OrderGuest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -191,7 +195,7 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? easyPayProvider = freezed,
   }) {
     return _then(
-      _$OrderImpl(
+      _$OrderGuestImpl(
         orderId: null == orderId
             ? _value.orderId
             : orderId // ignore: cast_nullable_to_non_nullable
@@ -199,7 +203,7 @@ class __$$OrderImplCopyWithImpl<$Res>
         orderStatus: null == orderStatus
             ? _value.orderStatus
             : orderStatus // ignore: cast_nullable_to_non_nullable
-                  as OrderStatus,
+                  as OrderGuestStatus,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -243,8 +247,8 @@ class __$$OrderImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$OrderImpl implements _Order {
-  const _$OrderImpl({
+class _$OrderGuestImpl implements _OrderGuest {
+  const _$OrderGuestImpl({
     required this.orderId,
     required this.orderStatus,
     required this.createdAt,
@@ -260,13 +264,13 @@ class _$OrderImpl implements _Order {
        _goodsList = goodsList,
        _reviewIds = reviewIds;
 
-  factory _$OrderImpl.fromJson(Map<String, dynamic> json) =>
-      _$$OrderImplFromJson(json);
+  factory _$OrderGuestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OrderGuestImplFromJson(json);
 
   @override
   final String orderId;
   @override
-  final OrderStatus orderStatus;
+  final OrderGuestStatus orderStatus;
   @override
   final DateTime createdAt;
   @override
@@ -306,14 +310,14 @@ class _$OrderImpl implements _Order {
 
   @override
   String toString() {
-    return 'Order(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, memo: $memo, storeId: $storeId, storeName: $storeName, imageUrls: $imageUrls, goodsList: $goodsList, reviewIds: $reviewIds, payType: $payType, easyPayProvider: $easyPayProvider)';
+    return 'OrderGuest(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, memo: $memo, storeId: $storeId, storeName: $storeName, imageUrls: $imageUrls, goodsList: $goodsList, reviewIds: $reviewIds, payType: $payType, easyPayProvider: $easyPayProvider)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$OrderImpl &&
+            other is _$OrderGuestImpl &&
             (identical(other.orderId, orderId) || other.orderId == orderId) &&
             (identical(other.orderStatus, orderStatus) ||
                 other.orderStatus == orderStatus) &&
@@ -357,24 +361,24 @@ class _$OrderImpl implements _Order {
     easyPayProvider,
   );
 
-  /// Create a copy of Order
+  /// Create a copy of OrderGuest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$OrderImplCopyWith<_$OrderImpl> get copyWith =>
-      __$$OrderImplCopyWithImpl<_$OrderImpl>(this, _$identity);
+  _$$OrderGuestImplCopyWith<_$OrderGuestImpl> get copyWith =>
+      __$$OrderGuestImplCopyWithImpl<_$OrderGuestImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OrderImplToJson(this);
+    return _$$OrderGuestImplToJson(this);
   }
 }
 
-abstract class _Order implements Order {
-  const factory _Order({
+abstract class _OrderGuest implements OrderGuest {
+  const factory _OrderGuest({
     required final String orderId,
-    required final OrderStatus orderStatus,
+    required final OrderGuestStatus orderStatus,
     required final DateTime createdAt,
     final String? memo,
     required final String storeId,
@@ -384,14 +388,15 @@ abstract class _Order implements Order {
     required final List<String> reviewIds,
     required final String payType,
     final String? easyPayProvider,
-  }) = _$OrderImpl;
+  }) = _$OrderGuestImpl;
 
-  factory _Order.fromJson(Map<String, dynamic> json) = _$OrderImpl.fromJson;
+  factory _OrderGuest.fromJson(Map<String, dynamic> json) =
+      _$OrderGuestImpl.fromJson;
 
   @override
   String get orderId;
   @override
-  OrderStatus get orderStatus;
+  OrderGuestStatus get orderStatus;
   @override
   DateTime get createdAt;
   @override
@@ -411,11 +416,11 @@ abstract class _Order implements Order {
   @override
   String? get easyPayProvider;
 
-  /// Create a copy of Order
+  /// Create a copy of OrderGuest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$OrderImplCopyWith<_$OrderImpl> get copyWith =>
+  _$$OrderGuestImplCopyWith<_$OrderGuestImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

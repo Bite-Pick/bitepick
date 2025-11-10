@@ -152,14 +152,18 @@ class BaseSvgIcon extends StatelessWidget {
       _makeIcon('filled/kakao.svg', size, color);
   factory BaseSvgIcon.camera({double? size, Color? color}) =>
       _makeIcon('camera.svg', size, color);
-
+  factory BaseSvgIcon.filledTime({
+    double? size,
+    Color? color,
+    bool? hasColorFilter,
+  }) => _makeIcon('filled/time.svg', size, color);
 
   BaseSvgIcon copyWith({Color? color, double? size, bool? hasColorFilter}) {
     return BaseSvgIcon(
       assetName: _assetName,
       color: color ?? _color,
       size: size ?? _size,
-      hasColorFilter: hasColorFilter ?? true,
+      hasColorFilter: hasColorFilter ?? false,
     );
   }
 
@@ -177,15 +181,15 @@ class BaseSvgIcon extends StatelessWidget {
     final iconThemeData = Theme.of(context).iconTheme;
 
     final size = _size ?? iconThemeData.size ?? MgSizes.xxl;
-    final color = _color ?? iconThemeData.color;
+    final color = _color;
 
     return SvgPicture.asset(
       'assets/icons/svg/$_assetName',
       key: key,
       width: size,
       height: size,
-      colorFilter: hasColorFilter
-          ? ColorFilter.mode(color ?? MgColorScheme.text, BlendMode.srcIn)
+      colorFilter: color != null
+          ? ColorFilter.mode(color, BlendMode.srcIn)
           : null,
     );
   }

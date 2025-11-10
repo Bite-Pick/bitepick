@@ -47,7 +47,8 @@ class GoodsRepository {
     );
 
     // data['goodsPreSignedImages']에서 presigned URL 배열만 추출
-    final presignedImagesData = response.data['data']['goodsPreSignedImages'] as List;
+    final presignedImagesData =
+        response.data['data']['goodsPreSignedImages'] as List;
     return presignedImagesData
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
         .toList();
@@ -67,9 +68,7 @@ class GoodsRepository {
         presignedUrl,
         data: bytes,
         options: Options(
-          headers: {
-            'Content-Type': 'image/jpeg',
-          },
+          headers: {'Content-Type': 'image/jpeg'},
           contentType: 'image/jpeg',
         ),
         onSendProgress: onProgress,
@@ -83,13 +82,15 @@ class GoodsRepository {
   Future<void> uploadImagesToS3({
     required List<LocalImage> localImages,
     required List<PresignedUrlImage> presignedUrls,
-    void Function(int currentIndex, int total, int sent, int totalBytes)? onProgress,
+    void Function(int currentIndex, int total, int sent, int totalBytes)?
+    onProgress,
   }) async {
     for (var i = 0; i < localImages.length; i++) {
       final localImage = localImages[i];
       final presignedUrl = presignedUrls.firstWhere(
         (url) => url.name == localImage.key,
-        orElse: () => throw Exception('Presigned URL not found for ${localImage.key}'),
+        orElse: () =>
+            throw Exception('Presigned URL not found for ${localImage.key}'),
       );
 
       await uploadToS3WithPresignedUrl(
@@ -100,6 +101,19 @@ class GoodsRepository {
             : null,
       );
     }
+  }
+
+  Future<bool> setGoodsSaleStatus({
+    required String id,
+    required bool saleStatus,
+  }) async {
+    final res = await _dio.patch(
+      "v1/goods/status",
+      data: {"goodsId": id, "saleStatus": saleStatus ? "ON" : "OFF"},
+    );
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return false;
+    return true;
   }
 }
 
