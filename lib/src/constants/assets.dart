@@ -30,6 +30,9 @@ class R {
 
   static const String ASSETS_ICONS_SVG_FILE_SVG = 'assets/icons/svg/file.svg';
 
+  static const String ASSETS_ICONS_SVG_FILLED_APPLE_SVG =
+      'assets/icons/svg/filled/apple.svg';
+
   static const String ASSETS_ICONS_SVG_FILLED_HEART_SVG =
       'assets/icons/svg/filled/heart.svg';
 
@@ -124,6 +127,8 @@ class R {
   static const String ASSETS_ICONS_SVG_UPLOAD_SVG =
       'assets/icons/svg/upload.svg';
 
+  static const String ASSETS_IMAGES_APPLE_PNG = 'assets/images/apple.png';
+
   static const String ASSETS_IMAGES_HOME_OPEN_AFTER_PNG =
       'assets/images/home_open_after.png';
 
@@ -143,11 +148,15 @@ class R {
   static const String ASSETS_IMAGES_ORDER_CAUTION_2_PNG =
       'assets/images/order_caution_2.png';
 
+  static const String ASSETS_IMAGES_OWNER_PNG = 'assets/images/owner.png';
+
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
 
   static const String ASSETS_IMAGES_TOSS_PAYMENTS_PNG =
       'assets/images/toss_payments.png';
+
+  static const String ASSETS_IMAGES_USER_PNG = 'assets/images/user.png';
 
   static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }
