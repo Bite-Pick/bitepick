@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -80,6 +81,17 @@ class StoreRepository {
       },
     );
   }
+
+  Future<Store?> getOwnerStore() async {
+    final res = await _dio.get('/v1/store/owner');
+
+    if (res.data['status'] != 'OK') return null;
+
+    final data = res.data['data'];
+    if (data == null) return null;
+
+    return Store.fromJson(data as Map<String, dynamic>);
+  }
 }
 
 @riverpod
@@ -114,4 +126,9 @@ Future<List<Goods>> storeGoodsList(
 @riverpod
 Future<Goods?> storeGoodsDetail(Ref ref, String id) async {
   return ref.read(storeRepositoryProvider).getStoreGoodsDetail(id);
+}
+
+@riverpod
+Future<Store?> ownerStore(Ref ref) async {
+  return ref.read(storeRepositoryProvider).getOwnerStore();
 }

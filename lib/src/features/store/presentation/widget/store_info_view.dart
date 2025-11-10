@@ -15,31 +15,44 @@ import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
+import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class StoreInfoView extends ConsumerWidget {
-  const StoreInfoView({super.key, required this.store, required this.id});
+  const StoreInfoView({super.key, this.goods, this.store})
+    : assert(
+        goods != null || store != null,
+        'Either goods or store must be provided',
+      );
 
-  final Goods store;
-  final String id;
+  final Goods? goods;
+  final Store? store;
+
+  String get storeId => goods?.storeId ?? store?.storeId ?? '';
+  String get storeName => goods?.storeName ?? store?.storeName ?? '';
+  String get address => goods?.address ?? store?.address ?? '';
+  List<String> get imageUrls => goods?.ImageUrl ?? store?.storeImageUrls ?? [];
+  double? get latitude => goods?.latitude;
+  double? get longitude => goods?.longitude;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildThumbnailImageView(store),
-        _buildStoreDescriptionSection(context, ref, store),
+        _buildThumbnailImageView(),
+        _buildStoreDescriptionSection(context, ref),
         Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
-        _buildStoreLocationInfoSection(store),
+        _buildStoreLocationInfoSection(),
         Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
       ],
     );
   }
 
-  Widget _buildThumbnailImageView(Goods store) {
-    if (store.ImageUrl.isEmpty) {
+  Widget _buildThumbnailImageView() {
+    if (imageUrls.isEmpty) {
       return Container(
         height: 300,
         color: MgColorScheme.gray2,
@@ -52,8 +65,8 @@ class StoreInfoView extends ConsumerWidget {
       child: Swiper(
         autoplay: true,
         autoplayDelay: 4000,
-        loop: store.ImageUrl.length > 1,
-        itemCount: store.ImageUrl.length,
+        loop: imageUrls.length > 1,
+        itemCount: imageUrls.length,
         pagination: SwiperPagination(
           builder: DotSwiperPaginationBuilder(
             activeColor: MgColorScheme.primary,
@@ -61,7 +74,7 @@ class StoreInfoView extends ConsumerWidget {
           ),
         ),
         itemBuilder: (context, index) {
-          final imageUrl = store.ImageUrl[index];
+          final imageUrl = imageUrls[index];
           if (imageUrl.isEmpty) {
             return Container(
               color: MgColorScheme.gray2,
@@ -74,108 +87,119 @@ class StoreInfoView extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoreDescriptionSection(
-    BuildContext context,
-    WidgetRef ref,
-    Goods store,
-  ) {
-    final favoriteAsync = ref.watch(favoriteProvider(storeId: id));
+  Widget _buildStoreDescriptionSection(BuildContext context, WidgetRef ref) {
+    final favoriteAsync = ref.watch(favoriteProvider(storeId: storeId));
+
+    // Goods 데이터가 있는 경우에만 표시
+    final quantity = goods?.quantity ?? 0;
+    final saleStatus = goods?.saleStatus ?? '';
+    final discount = goods?.discount ?? 0;
+    final salePrice = goods?.salePrice ?? 0;
+    final originPrice = goods?.originPrice ?? 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            StoreTags(quantity: store.quantity, saleStatus: store.saleStatus),
-            // TODO[review]: 리뷰영역으로 스크롤내리는 버튼 추가
-            const Spacer(),
-            GestureDetector(
-              onTap: () async {
-                context.showFlash(
-                  duration: const Duration(milliseconds: 2000),
-                  builder: (context, controller) {
-                    return FlashBar(
-                      controller: controller,
-                      content: const Text("로그인 기능 구현 이후에 작동가능"),
-                    );
-                  },
-                );
-                // final repo = ref.read(favoriteRepositoryProvider);
-                // final currentFavorite = favoriteAsync.asData?.value;
-                // currentFavorite == true
-                //     ? await repo.removeFavorite(id)
-                //     : await repo.addFavorite(id);
-                // ref.invalidate(favoriteProvider(storeId: id));
-              },
-              child: MgAsyncAnimatedSwitcher(
-                asyncValue: favoriteAsync,
-                builder: (isFavorite) {
-                  return (isFavorite == true)
-                      ? BaseSvgIcon.heartFilled(
-                          color: MgColorScheme.navigationPrimary,
-                        )
-                      : BaseSvgIcon.heart();
-                },
-              ),
-            ),
-          ],
-        ),
-        Gaps.h12,
-        Text(store.storeName).md().bold(),
-        Text("ㅇㅇㅇㅇ").regular().textGray().margin(
-          top: MgSizes.size4,
-          bottom: MgSizes.size8,
-        ), //store.description
-        DefaultTextStyle(
-          style: context.textTheme.titleLarge!,
-          child: Row(
+        if (goods != null) ...[
+          Row(
             children: [
-              Text('${store.discount}%').red(),
-              Text(
-                '${store.salePrice.toPrice()}원',
-              ).margin(left: MgSizes.size4, right: MgSizes.size8),
-              Text(
-                '${store.originPrice.toPrice()}원',
-                style: TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  decorationColor: MgColorScheme.gray6,
-                  color: MgColorScheme.gray6,
+              StoreTags(quantity: quantity, saleStatus: saleStatus),
+              // TODO[review]: 리뷰영역으로 스크롤내리는 버튼 추가
+              const Spacer(),
+              GestureDetector(
+                onTap: () async {
+                  context.showFlash(
+                    duration: const Duration(milliseconds: 2000),
+                    builder: (context, controller) {
+                      return FlashBar(
+                        controller: controller,
+                        content: const Text("로그인 기능 구현 이후에 작동가능"),
+                      );
+                    },
+                  );
+                  // final repo = ref.read(favoriteRepositoryProvider);
+                  // final currentFavorite = favoriteAsync.asData?.value;
+                  // currentFavorite == true
+                  //     ? await repo.removeFavorite(storeId)
+                  //     : await repo.addFavorite(storeId);
+                  // ref.invalidate(favoriteProvider(storeId: storeId));
+                },
+                child: MgAsyncAnimatedSwitcher(
+                  asyncValue: favoriteAsync,
+                  builder: (isFavorite) {
+                    return (isFavorite == true)
+                        ? BaseSvgIcon.heartFilled(
+                            color: MgColorScheme.navigationPrimary,
+                          )
+                        : BaseSvgIcon.heart();
+                  },
                 ),
               ),
             ],
           ),
-        ),
+          Gaps.h12,
+        ],
+        Text(storeName).md().bold(),
+        Text("ㅇㅇㅇㅇ").regular().textGray().margin(
+          top: MgSizes.size4,
+          bottom: MgSizes.size8,
+        ), //description
+        if (goods != null)
+          DefaultTextStyle(
+            style: context.textTheme.titleLarge!,
+            child: Row(
+              children: [
+                Text('${discount.toInt()}%').red(),
+                Text(
+                  '${salePrice.toInt().toPrice()}원',
+                ).margin(left: MgSizes.size4, right: MgSizes.size8),
+                Text(
+                  '${originPrice.toInt().toPrice()}원',
+                  style: TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: MgColorScheme.gray6,
+                    color: MgColorScheme.gray6,
+                  ),
+                ),
+              ],
+            ),
+          ),
       ],
     ).margin(all: MgSizes.md, bottom: 0);
   }
 
-  Widget _buildStoreLocationInfoSection(Goods store) {
+  Widget _buildStoreLocationInfoSection() {
+    final startTime = goods?.startTime ?? '';
+    final endTime = goods?.endTime ?? '';
+
     return Column(
       spacing: MgSizes.size8,
       children: [
-        _buildStoreInfoItem(
-          '픽업시간',
-          "${store.startTime.convertTime() ?? ''} ~ ${store.endTime.convertTime() ?? ''}",
-        ),
+        if (goods != null && startTime.isNotEmpty && endTime.isNotEmpty)
+          _buildStoreInfoItem(
+            '픽업시간',
+            "${startTime.convertTime() ?? ''} ~ ${endTime.convertTime() ?? ''}",
+          ),
         _buildStoreInfoItem('주차안내', "TODO"),
         _buildStoreInfoItem(
           '가게 주소',
-          store.address,
+          address,
           suffix: GestureDetector(
             onTap: () async {
-              await Clipboard.setData(ClipboardData(text: store.address));
+              await Clipboard.setData(ClipboardData(text: address));
               // TODO: Flash 메시지로 복사완료 알림
             },
             child: const Text("복사").textColor(Color(0xff0077FF)),
           ),
         ),
-        StoreLocationInfoView(
-          storeId: id,
-          latitude: store.latitude,
-          longitude: store.longitude,
-          storeName: store.storeName,
-          address: store.address,
-        ).margin(vertical: MgSizes.md),
+        if (latitude != null && longitude != null)
+          StoreLocationInfoView(
+            storeId: storeId,
+            latitude: latitude!,
+            longitude: longitude!,
+            storeName: storeName,
+            address: address,
+          ).margin(vertical: MgSizes.md),
       ],
     ).margin(horizontal: MgSizes.md);
   }

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
@@ -16,7 +14,6 @@ import 'package:magambell/src/features/store/presentation/widget/store_info_view
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
-import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/quantity_picker.dart';
 
@@ -61,14 +58,12 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   @override
   Widget build(BuildContext context) {
     // final store = ref.watch(storeGoodsDetailProvider(id));
-    final store = mockStore;
+    final goods = mockGoods;
     return BaseScaffold(
       appBar: BaseAppBar(),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverToBoxAdapter(
-            child: StoreInfoView(store: store, id: widget.id),
-          ),
+          SliverToBoxAdapter(child: StoreInfoView(goods: goods)),
           SliverPersistentHeader(
             pinned: true,
             delegate: _SliverAppBarDelegate(
@@ -96,11 +91,11 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
           children: [StoreBiteBagView(), StoreReviewListView(widget.id)],
         ),
       ),
-      bottomNavigationBar: _buildBottomButton(store),
+      bottomNavigationBar: _buildBottomButton(goods),
     );
   }
 
-  Widget _buildBottomButton(Goods store) {
+  Widget _buildBottomButton(Goods goods) {
     return SafeArea(
           child: Row(
             children: [
@@ -117,9 +112,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                         .setOrderInfo(
                           goodsId: widget.id,
                           quantity: count,
-                          totalPrice: store.salePrice * count,
-                          salePrice: store.salePrice,
-                          originalPrice: store.originPrice.toDouble(),
+                          totalPrice: goods.salePrice * count,
+                          salePrice: goods.salePrice,
+                          originalPrice: goods.originPrice.toDouble(),
                         );
                     // 주문 확인 화면으로 이동
                     await const OrderCautionRoute().push(context);

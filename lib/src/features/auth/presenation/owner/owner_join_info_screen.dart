@@ -177,7 +177,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
       MaterialPageRoute(
         builder: (_) => KpostalView(
           useLocalServer: false,
-          kakaoKey: Environment.kakaoJavascriptKey,
+          // kakaoKey: Environment.kakaoJavascriptKey, // TODO: 활성화화면 callback 작동
           callback: (Kpostal result) {
             // TODO[auth]: 동작 확인필요(카카오 key 확인)
             final latitude = result.kakaoLatitude;

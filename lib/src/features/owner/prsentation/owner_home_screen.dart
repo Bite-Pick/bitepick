@@ -74,7 +74,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [OwnerOrderListView(), OwnerGoodsView(null)],
+        children: [OwnerOrderListView(), OwnerGoodsView()],
       ),
     );
   }
