@@ -144,6 +144,9 @@ class R {
   static const String ASSETS_ICONS_SVG_FILLED_STAR_SVG =
       'assets/icons/svg/filled/star.svg';
 
+  static const String ASSETS_ICONS_SVG_FILLED_TIME_SVG =
+      'assets/icons/svg/filled/time.svg';
+
   static const String ASSETS_ICONS_SVG_FILLED_USER_SVG =
       'assets/icons/svg/filled/user.svg';
 

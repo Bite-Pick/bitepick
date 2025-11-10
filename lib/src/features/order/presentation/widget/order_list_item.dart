@@ -7,6 +7,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
 import 'package:magambell/src/features/order/domain/entities/order_guest.dart';
+import 'package:magambell/src/features/order/domain/entities/order_status.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';

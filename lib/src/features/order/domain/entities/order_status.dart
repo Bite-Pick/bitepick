@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
 
 enum OrderStatus {
   @JsonValue('PENDING')
@@ -40,18 +41,17 @@ extension OrderStatusExt on OrderStatus {
 
   Color get color {
     switch (this) {
-      case OrderStatus.pending:
-        return Color(0xffFFE7B3);
       case OrderStatus.paid:
-        return Color(0xffCDE3FF);
+        return MgColorScheme.primary;
       case OrderStatus.accepted:
-        return Color(0xffD7F3D4);
+        return MgColorScheme.secondary;
+      case OrderStatus.completed:
+        return MgColorScheme.gray5;
+      case OrderStatus.pending:
       case OrderStatus.rejected:
       case OrderStatus.canceled:
       case OrderStatus.failed:
-        return Color(0xffEF444D);
-      case OrderStatus.completed:
-        return Color(0xffE2E2E2);
+        return MgColorScheme.subpointRed;
     }
   }
 }
