@@ -1,7 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'owner_order_list_view.controller.freezed.dart';
@@ -12,8 +13,8 @@ class OwnerOrderListState with _$OwnerOrderListState {
   const factory OwnerOrderListState({
     @Default([]) List<OrderOwner> orders,
     @Default(false) bool isLoading,
-    OrderStatus? selectedStatus,
-    @Default({}) Map<OrderStatus?, int> statusCounts,
+    OrderOwnerStatus? selectedStatus,
+    @Default({}) Map<OrderOwnerStatus?, int> statusCounts,
     String? error,
   }) = _OwnerOrderListState;
 }
@@ -60,35 +61,39 @@ class OwnerOrderListController extends _$OwnerOrderListController {
       final orders = currentState.selectedStatus == null
           ? mockOrderOwners
           : mockOrderOwners
-              .where((order) => order.orderStatus == currentState.selectedStatus)
-              .toList();
+                .where(
+                  (order) => order.orderStatus == currentState.selectedStatus,
+                )
+                .toList();
 
       return currentState.copyWith(orders: orders, isLoading: false);
     });
   }
 
-  Map<OrderStatus?, int> _calculateStatusCounts() {
+  Map<OrderOwnerStatus?, int> _calculateStatusCounts() {
     // TODO: API 호출로 각 상태별 카운트 가져오기
     // 임시로 mock 데이터 기반 카운트
     return {
       null: mockOrderOwners.length,
-      OrderStatus.pending: mockOrderOwners
-          .where((order) => order.orderStatus == OrderStatus.pending)
+      OrderOwnerStatus.paid: mockOrderOwners
+          .where((order) => order.orderStatus == OrderOwnerStatus.paid)
           .length,
-      OrderStatus.accepted: mockOrderOwners
-          .where((order) => order.orderStatus == OrderStatus.accepted)
+      OrderOwnerStatus.accepted: mockOrderOwners
+          .where((order) => order.orderStatus == OrderOwnerStatus.accepted)
           .length,
-      OrderStatus.completed: mockOrderOwners
-          .where((order) => order.orderStatus == OrderStatus.completed)
+      OrderOwnerStatus.completed: mockOrderOwners
+          .where((order) => order.orderStatus == OrderOwnerStatus.completed)
           .length,
     };
   }
 
-  Future<void> changeStatus(OrderStatus? status) async {
+  Future<void> changeStatus(OrderOwnerStatus? status) async {
     final currentState = state.requireValue;
     if (currentState.selectedStatus == status) return;
 
-    state = AsyncValue.data(currentState.copyWith(selectedStatus: status, isLoading: true));
+    state = AsyncValue.data(
+      currentState.copyWith(selectedStatus: status, isLoading: true),
+    );
     await _loadOrders();
   }
 

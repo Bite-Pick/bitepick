@@ -7,7 +7,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
 import 'package:magambell/src/features/order/domain/entities/order_guest.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
@@ -33,7 +33,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           child: Text(widget.order.orderStatus.label),
         ),
         Gaps.h8,
-        if (widget.order.orderStatus != OrderStatus.completed) ...[
+        if (widget.order.orderStatus != OrderGuestStatus.completed) ...[
           Text("픽업 예정").lg().bold(), //pickupTime
           Text("픽업 예정 시간을 꼭 지켜서 와주세요!").md().textGray(),
           Gaps.h20,
@@ -47,7 +47,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           price: 5000,
           count: 2,
         ),
-        if (widget.order.orderStatus != OrderStatus.completed) ...[
+        if (widget.order.orderStatus != OrderGuestStatus.completed) ...[
           Column(
             children: [
               StoreLocationInfoView(
@@ -58,7 +58,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
                 storeName: widget.order.storeName,
                 mapHeight: 160,
               ),
-              if (widget.order.orderStatus == OrderStatus.pending)
+              if (widget.order.orderStatus == OrderGuestStatus.pending)
                 MgButton(
                   content: Text("주문 취소").textGray().regular(),
                   onPressed: () {

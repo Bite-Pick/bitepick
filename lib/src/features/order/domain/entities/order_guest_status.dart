@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 
-enum OrderStatus {
+enum OrderGuestStatus {
   @JsonValue('PENDING')
   pending,
   @JsonValue('PAID')
@@ -19,39 +19,38 @@ enum OrderStatus {
   failed,
 }
 
-extension OrderStatusExt on OrderStatus {
+extension OrderStatusExt on OrderGuestStatus {
   String get label {
     switch (this) {
-      case OrderStatus.pending:
+      case OrderGuestStatus.pending:
         return '수락대기';
-      case OrderStatus.paid:
+      case OrderGuestStatus.paid:
         return '주문 접수';
-      case OrderStatus.accepted:
+      case OrderGuestStatus.accepted:
         return '픽업 대기';
-      case OrderStatus.rejected:
+      case OrderGuestStatus.rejected:
         return '매장 취소';
-      case OrderStatus.completed:
+      case OrderGuestStatus.completed:
         return '픽업 완료';
-      case OrderStatus.canceled:
+      case OrderGuestStatus.canceled:
         return '본인 취소';
-      case OrderStatus.failed:
+      case OrderGuestStatus.failed:
         return '주문 실패';
     }
   }
 
   Color get color {
     switch (this) {
-      case OrderStatus.paid:
+      case OrderGuestStatus.paid:
         return MgColorScheme.primary;
-      case OrderStatus.accepted:
+      case OrderGuestStatus.accepted:
         return MgColorScheme.secondary;
-      case OrderStatus.completed:
+      case OrderGuestStatus.pending:
+      case OrderGuestStatus.completed:
+      case OrderGuestStatus.canceled:
+      case OrderGuestStatus.rejected:
+      case OrderGuestStatus.failed:
         return MgColorScheme.gray5;
-      case OrderStatus.pending:
-      case OrderStatus.rejected:
-      case OrderStatus.canceled:
-      case OrderStatus.failed:
-        return MgColorScheme.subpointRed;
     }
   }
 }

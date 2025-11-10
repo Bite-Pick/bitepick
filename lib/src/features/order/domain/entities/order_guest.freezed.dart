@@ -22,7 +22,7 @@ OrderGuest _$OrderGuestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OrderGuest {
   String get orderId => throw _privateConstructorUsedError;
-  OrderStatus get orderStatus => throw _privateConstructorUsedError;
+  OrderGuestStatus get orderStatus => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   String? get memo => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
@@ -52,7 +52,7 @@ abstract class $OrderGuestCopyWith<$Res> {
   @useResult
   $Res call({
     String orderId,
-    OrderStatus orderStatus,
+    OrderGuestStatus orderStatus,
     DateTime createdAt,
     String? memo,
     String storeId,
@@ -101,7 +101,7 @@ class _$OrderGuestCopyWithImpl<$Res, $Val extends OrderGuest>
             orderStatus: null == orderStatus
                 ? _value.orderStatus
                 : orderStatus // ignore: cast_nullable_to_non_nullable
-                      as OrderStatus,
+                      as OrderGuestStatus,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -155,7 +155,7 @@ abstract class _$$OrderGuestImplCopyWith<$Res>
   @useResult
   $Res call({
     String orderId,
-    OrderStatus orderStatus,
+    OrderGuestStatus orderStatus,
     DateTime createdAt,
     String? memo,
     String storeId,
@@ -203,7 +203,7 @@ class __$$OrderGuestImplCopyWithImpl<$Res>
         orderStatus: null == orderStatus
             ? _value.orderStatus
             : orderStatus // ignore: cast_nullable_to_non_nullable
-                  as OrderStatus,
+                  as OrderGuestStatus,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -270,7 +270,7 @@ class _$OrderGuestImpl implements _OrderGuest {
   @override
   final String orderId;
   @override
-  final OrderStatus orderStatus;
+  final OrderGuestStatus orderStatus;
   @override
   final DateTime createdAt;
   @override
@@ -378,7 +378,7 @@ class _$OrderGuestImpl implements _OrderGuest {
 abstract class _OrderGuest implements OrderGuest {
   const factory _OrderGuest({
     required final String orderId,
-    required final OrderStatus orderStatus,
+    required final OrderGuestStatus orderStatus,
     required final DateTime createdAt,
     final String? memo,
     required final String storeId,
@@ -396,7 +396,7 @@ abstract class _OrderGuest implements OrderGuest {
   @override
   String get orderId;
   @override
-  OrderStatus get orderStatus;
+  OrderGuestStatus get orderStatus;
   @override
   DateTime get createdAt;
   @override

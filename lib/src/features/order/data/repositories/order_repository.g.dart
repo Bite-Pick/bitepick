@@ -23,7 +23,7 @@ final orderRepositoryProvider = AutoDisposeProvider<OrderRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef OrderRepositoryRef = AutoDisposeProviderRef<OrderRepository>;
-String _$storeOrdersHash() => r'18f2cf2b54672f51a29bc868c376241d253f4a75';
+String _$storeOrdersHash() => r'8cdc100618dfb45584f0f742bc1d17b73382ebd2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -59,7 +59,7 @@ class StoreOrdersFamily extends Family<AsyncValue<List<OrderOwner>>> {
   StoreOrdersProvider call({
     int page = 1,
     int size = 10,
-    OrderStatus? orderStatus,
+    OrderGuestStatus? orderStatus,
   }) {
     return StoreOrdersProvider(
       page: page,
@@ -97,25 +97,29 @@ class StoreOrdersFamily extends Family<AsyncValue<List<OrderOwner>>> {
 /// See also [storeOrders].
 class StoreOrdersProvider extends AutoDisposeFutureProvider<List<OrderOwner>> {
   /// See also [storeOrders].
-  StoreOrdersProvider({int page = 1, int size = 10, OrderStatus? orderStatus})
-    : this._internal(
-        (ref) => storeOrders(
-          ref as StoreOrdersRef,
-          page: page,
-          size: size,
-          orderStatus: orderStatus,
-        ),
-        from: storeOrdersProvider,
-        name: r'storeOrdersProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$storeOrdersHash,
-        dependencies: StoreOrdersFamily._dependencies,
-        allTransitiveDependencies: StoreOrdersFamily._allTransitiveDependencies,
-        page: page,
-        size: size,
-        orderStatus: orderStatus,
-      );
+  StoreOrdersProvider({
+    int page = 1,
+    int size = 10,
+    OrderGuestStatus? orderStatus,
+  }) : this._internal(
+         (ref) => storeOrders(
+           ref as StoreOrdersRef,
+           page: page,
+           size: size,
+           orderStatus: orderStatus,
+         ),
+         from: storeOrdersProvider,
+         name: r'storeOrdersProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$storeOrdersHash,
+         dependencies: StoreOrdersFamily._dependencies,
+         allTransitiveDependencies:
+             StoreOrdersFamily._allTransitiveDependencies,
+         page: page,
+         size: size,
+         orderStatus: orderStatus,
+       );
 
   StoreOrdersProvider._internal(
     super._createNotifier, {
@@ -131,7 +135,7 @@ class StoreOrdersProvider extends AutoDisposeFutureProvider<List<OrderOwner>> {
 
   final int page;
   final int size;
-  final OrderStatus? orderStatus;
+  final OrderGuestStatus? orderStatus;
 
   @override
   Override overrideWith(
@@ -187,7 +191,7 @@ mixin StoreOrdersRef on AutoDisposeFutureProviderRef<List<OrderOwner>> {
   int get size;
 
   /// The parameter `orderStatus` of this provider.
-  OrderStatus? get orderStatus;
+  OrderGuestStatus? get orderStatus;
 }
 
 class _StoreOrdersProviderElement
@@ -200,7 +204,8 @@ class _StoreOrdersProviderElement
   @override
   int get size => (origin as StoreOrdersProvider).size;
   @override
-  OrderStatus? get orderStatus => (origin as StoreOrdersProvider).orderStatus;
+  OrderGuestStatus? get orderStatus =>
+      (origin as StoreOrdersProvider).orderStatus;
 }
 
 // ignore_for_file: type=lint

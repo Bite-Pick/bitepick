@@ -9,7 +9,7 @@ part of 'order_owner.dart';
 _$OrderOwnerImpl _$$OrderOwnerImplFromJson(Map<String, dynamic> json) =>
     _$OrderOwnerImpl(
       orderId: json['orderId'] as String,
-      orderStatus: $enumDecode(_$OrderStatusEnumMap, json['orderStatus']),
+      orderStatus: $enumDecode(_$OrderOwnerStatusEnumMap, json['orderStatus']),
       createdAt: DateTime.parse(json['createdAt'] as String),
       pickupTime: DateTime.parse(json['pickupTime'] as String),
       memo: json['memo'] as String?,
@@ -22,7 +22,7 @@ _$OrderOwnerImpl _$$OrderOwnerImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$OrderOwnerImplToJson(_$OrderOwnerImpl instance) =>
     <String, dynamic>{
       'orderId': instance.orderId,
-      'orderStatus': _$OrderStatusEnumMap[instance.orderStatus]!,
+      'orderStatus': _$OrderOwnerStatusEnumMap[instance.orderStatus]!,
       'createdAt': instance.createdAt.toIso8601String(),
       'pickupTime': instance.pickupTime.toIso8601String(),
       'memo': instance.memo,
@@ -32,12 +32,8 @@ Map<String, dynamic> _$$OrderOwnerImplToJson(_$OrderOwnerImpl instance) =>
       'goodsName': instance.goodsName,
     };
 
-const _$OrderStatusEnumMap = {
-  OrderStatus.pending: 'PENDING',
-  OrderStatus.paid: 'PAID',
-  OrderStatus.accepted: 'ACCEPTED',
-  OrderStatus.rejected: 'REJECTED',
-  OrderStatus.completed: 'COMPLETED',
-  OrderStatus.canceled: 'CANCELED',
-  OrderStatus.failed: 'FAILED',
+const _$OrderOwnerStatusEnumMap = {
+  OrderOwnerStatus.paid: 'paid',
+  OrderOwnerStatus.accepted: 'accepted',
+  OrderOwnerStatus.completed: 'completed',
 };

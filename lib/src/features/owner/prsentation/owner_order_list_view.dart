@@ -4,7 +4,8 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_owner_info_item.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.controller.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/order_status_tabs.dart';
@@ -54,13 +55,14 @@ class OwnerOrderListView extends ConsumerWidget {
                               await controller.rejectOrder(order.orderId);
                             },
                             onAccept: () async {
-                              if (order.orderStatus == OrderStatus.pending ||
-                                  order.orderStatus == OrderStatus.paid) {
-                                await controller.approveOrder(order.orderId);
-                              } else if (order.orderStatus ==
-                                  OrderStatus.accepted) {
-                                await controller.completeOrder(order.orderId);
-                              }
+                              // if (order.orderStatus ==
+                              //         OrderOwnerStatus.pending ||
+                              //     order.orderStatus == OrderGuestStatus.paid) {
+                              //   await controller.approveOrder(order.orderId);
+                              // } else if (order.orderStatus ==
+                              //     OrderGuestStatus.accepted) {
+                              //   await controller.completeOrder(order.orderId);
+                              // }
                             },
                           ).margin(top: index == 0 ? MgSizes.lg : 0);
                         },

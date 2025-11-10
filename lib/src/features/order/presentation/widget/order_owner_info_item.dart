@@ -9,7 +9,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
@@ -25,10 +25,10 @@ class OrderOwnerInfoItem extends ConsumerWidget {
     this.onAccept,
   });
 
-  String _getPaymentStatusText(OrderStatus status) {
+  String _getPaymentStatusText(OrderOwnerStatus status) {
     return switch (status) {
-      OrderStatus.canceled => '결제 취소',
-      OrderStatus.failed => '결제 실패',
+      // OrderGuestStatus.canceled => '결제 취소',
+      // OrderGuestStatus.failed => '결제 실패',
       _ => '결제완료',
     };
   }
@@ -85,7 +85,7 @@ class OrderOwnerInfoItem extends ConsumerWidget {
 
   Widget? _buildActionButtons() {
     return switch (order.orderStatus) {
-      OrderStatus.pending || OrderStatus.paid => Row(
+      OrderOwnerStatus.paid => Row(
         children: [
           Expanded(
             child: MgButton(
@@ -102,7 +102,7 @@ class OrderOwnerInfoItem extends ConsumerWidget {
           ),
         ],
       ),
-      OrderStatus.accepted => Row(
+      OrderOwnerStatus.accepted => Row(
         children: [
           Expanded(
             child: MgButton(

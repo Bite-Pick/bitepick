@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_repository.g.dart';
@@ -14,7 +15,7 @@ class OrderRepository {
   Future<List<OrderOwner>> getStoreOrders({
     int page = 1,
     int size = 10,
-    OrderStatus? orderStatus,
+    OrderOwnerStatus? orderStatus,
   }) async {
     final res = await _dio.get(
       '/v1/order/store',
@@ -67,7 +68,7 @@ Future<List<OrderOwner>> storeOrders(
   Ref ref, {
   int page = 1,
   int size = 10,
-  OrderStatus? orderStatus,
+  OrderGuestStatus? orderStatus,
 }) async {
   return ref
       .read(orderRepositoryProvider)

@@ -9,7 +9,7 @@ part of 'order_guest.dart';
 _$OrderGuestImpl _$$OrderGuestImplFromJson(Map<String, dynamic> json) =>
     _$OrderGuestImpl(
       orderId: json['orderId'] as String,
-      orderStatus: $enumDecode(_$OrderStatusEnumMap, json['orderStatus']),
+      orderStatus: $enumDecode(_$OrderGuestStatusEnumMap, json['orderStatus']),
       createdAt: DateTime.parse(json['createdAt'] as String),
       memo: json['memo'] as String?,
       storeId: json['storeId'] as String,
@@ -30,7 +30,7 @@ _$OrderGuestImpl _$$OrderGuestImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$OrderGuestImplToJson(_$OrderGuestImpl instance) =>
     <String, dynamic>{
       'orderId': instance.orderId,
-      'orderStatus': _$OrderStatusEnumMap[instance.orderStatus]!,
+      'orderStatus': _$OrderGuestStatusEnumMap[instance.orderStatus]!,
       'createdAt': instance.createdAt.toIso8601String(),
       'memo': instance.memo,
       'storeId': instance.storeId,
@@ -42,14 +42,14 @@ Map<String, dynamic> _$$OrderGuestImplToJson(_$OrderGuestImpl instance) =>
       'easyPayProvider': instance.easyPayProvider,
     };
 
-const _$OrderStatusEnumMap = {
-  OrderStatus.pending: 'PENDING',
-  OrderStatus.paid: 'PAID',
-  OrderStatus.accepted: 'ACCEPTED',
-  OrderStatus.rejected: 'REJECTED',
-  OrderStatus.completed: 'COMPLETED',
-  OrderStatus.canceled: 'CANCELED',
-  OrderStatus.failed: 'FAILED',
+const _$OrderGuestStatusEnumMap = {
+  OrderGuestStatus.pending: 'PENDING',
+  OrderGuestStatus.paid: 'PAID',
+  OrderGuestStatus.accepted: 'ACCEPTED',
+  OrderGuestStatus.rejected: 'REJECTED',
+  OrderGuestStatus.completed: 'COMPLETED',
+  OrderGuestStatus.canceled: 'CANCELED',
+  OrderGuestStatus.failed: 'FAILED',
 };
 
 _$OrderGoodsImpl _$$OrderGoodsImplFromJson(Map<String, dynamic> json) =>

@@ -19,8 +19,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$OwnerOrderListState {
   List<OrderOwner> get orders => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
-  OrderStatus? get selectedStatus => throw _privateConstructorUsedError;
-  Map<OrderStatus?, int> get statusCounts => throw _privateConstructorUsedError;
+  OrderOwnerStatus? get selectedStatus => throw _privateConstructorUsedError;
+  Map<OrderOwnerStatus?, int> get statusCounts =>
+      throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
   /// Create a copy of OwnerOrderListState
@@ -40,8 +41,8 @@ abstract class $OwnerOrderListStateCopyWith<$Res> {
   $Res call({
     List<OrderOwner> orders,
     bool isLoading,
-    OrderStatus? selectedStatus,
-    Map<OrderStatus?, int> statusCounts,
+    OrderOwnerStatus? selectedStatus,
+    Map<OrderOwnerStatus?, int> statusCounts,
     String? error,
   });
 }
@@ -80,11 +81,11 @@ class _$OwnerOrderListStateCopyWithImpl<$Res, $Val extends OwnerOrderListState>
             selectedStatus: freezed == selectedStatus
                 ? _value.selectedStatus
                 : selectedStatus // ignore: cast_nullable_to_non_nullable
-                      as OrderStatus?,
+                      as OrderOwnerStatus?,
             statusCounts: null == statusCounts
                 ? _value.statusCounts
                 : statusCounts // ignore: cast_nullable_to_non_nullable
-                      as Map<OrderStatus?, int>,
+                      as Map<OrderOwnerStatus?, int>,
             error: freezed == error
                 ? _value.error
                 : error // ignore: cast_nullable_to_non_nullable
@@ -107,8 +108,8 @@ abstract class _$$OwnerOrderListStateImplCopyWith<$Res>
   $Res call({
     List<OrderOwner> orders,
     bool isLoading,
-    OrderStatus? selectedStatus,
-    Map<OrderStatus?, int> statusCounts,
+    OrderOwnerStatus? selectedStatus,
+    Map<OrderOwnerStatus?, int> statusCounts,
     String? error,
   });
 }
@@ -146,11 +147,11 @@ class __$$OwnerOrderListStateImplCopyWithImpl<$Res>
         selectedStatus: freezed == selectedStatus
             ? _value.selectedStatus
             : selectedStatus // ignore: cast_nullable_to_non_nullable
-                  as OrderStatus?,
+                  as OrderOwnerStatus?,
         statusCounts: null == statusCounts
             ? _value._statusCounts
             : statusCounts // ignore: cast_nullable_to_non_nullable
-                  as Map<OrderStatus?, int>,
+                  as Map<OrderOwnerStatus?, int>,
         error: freezed == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
@@ -167,7 +168,7 @@ class _$OwnerOrderListStateImpl implements _OwnerOrderListState {
     final List<OrderOwner> orders = const [],
     this.isLoading = false,
     this.selectedStatus,
-    final Map<OrderStatus?, int> statusCounts = const {},
+    final Map<OrderOwnerStatus?, int> statusCounts = const {},
     this.error,
   }) : _orders = orders,
        _statusCounts = statusCounts;
@@ -185,11 +186,11 @@ class _$OwnerOrderListStateImpl implements _OwnerOrderListState {
   @JsonKey()
   final bool isLoading;
   @override
-  final OrderStatus? selectedStatus;
-  final Map<OrderStatus?, int> _statusCounts;
+  final OrderOwnerStatus? selectedStatus;
+  final Map<OrderOwnerStatus?, int> _statusCounts;
   @override
   @JsonKey()
-  Map<OrderStatus?, int> get statusCounts {
+  Map<OrderOwnerStatus?, int> get statusCounts {
     if (_statusCounts is EqualUnmodifiableMapView) return _statusCounts;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_statusCounts);
@@ -246,8 +247,8 @@ abstract class _OwnerOrderListState implements OwnerOrderListState {
   const factory _OwnerOrderListState({
     final List<OrderOwner> orders,
     final bool isLoading,
-    final OrderStatus? selectedStatus,
-    final Map<OrderStatus?, int> statusCounts,
+    final OrderOwnerStatus? selectedStatus,
+    final Map<OrderOwnerStatus?, int> statusCounts,
     final String? error,
   }) = _$OwnerOrderListStateImpl;
 
@@ -256,9 +257,9 @@ abstract class _OwnerOrderListState implements OwnerOrderListState {
   @override
   bool get isLoading;
   @override
-  OrderStatus? get selectedStatus;
+  OrderOwnerStatus? get selectedStatus;
   @override
-  Map<OrderStatus?, int> get statusCounts;
+  Map<OrderOwnerStatus?, int> get statusCounts;
   @override
   String? get error;
 

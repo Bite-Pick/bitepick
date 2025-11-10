@@ -22,7 +22,7 @@ OrderOwner _$OrderOwnerFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OrderOwner {
   String get orderId => throw _privateConstructorUsedError;
-  OrderStatus get orderStatus => throw _privateConstructorUsedError;
+  OrderOwnerStatus get orderStatus => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get pickupTime => throw _privateConstructorUsedError;
   String? get memo => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $OrderOwnerCopyWith<$Res> {
   @useResult
   $Res call({
     String orderId,
-    OrderStatus orderStatus,
+    OrderOwnerStatus orderStatus,
     DateTime createdAt,
     DateTime pickupTime,
     String? memo,
@@ -95,7 +95,7 @@ class _$OrderOwnerCopyWithImpl<$Res, $Val extends OrderOwner>
             orderStatus: null == orderStatus
                 ? _value.orderStatus
                 : orderStatus // ignore: cast_nullable_to_non_nullable
-                      as OrderStatus,
+                      as OrderOwnerStatus,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -141,7 +141,7 @@ abstract class _$$OrderOwnerImplCopyWith<$Res>
   @useResult
   $Res call({
     String orderId,
-    OrderStatus orderStatus,
+    OrderOwnerStatus orderStatus,
     DateTime createdAt,
     DateTime pickupTime,
     String? memo,
@@ -185,7 +185,7 @@ class __$$OrderOwnerImplCopyWithImpl<$Res>
         orderStatus: null == orderStatus
             ? _value.orderStatus
             : orderStatus // ignore: cast_nullable_to_non_nullable
-                  as OrderStatus,
+                  as OrderOwnerStatus,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -240,7 +240,7 @@ class _$OrderOwnerImpl implements _OrderOwner {
   @override
   final String orderId;
   @override
-  final OrderStatus orderStatus;
+  final OrderOwnerStatus orderStatus;
   @override
   final DateTime createdAt;
   @override
@@ -316,7 +316,7 @@ class _$OrderOwnerImpl implements _OrderOwner {
 abstract class _OrderOwner implements OrderOwner {
   const factory _OrderOwner({
     required final String orderId,
-    required final OrderStatus orderStatus,
+    required final OrderOwnerStatus orderStatus,
     required final DateTime createdAt,
     required final DateTime pickupTime,
     final String? memo,
@@ -332,7 +332,7 @@ abstract class _OrderOwner implements OrderOwner {
   @override
   String get orderId;
   @override
-  OrderStatus get orderStatus;
+  OrderOwnerStatus get orderStatus;
   @override
   DateTime get createdAt;
   @override

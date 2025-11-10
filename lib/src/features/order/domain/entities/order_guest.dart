@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
 
 part 'order_guest.freezed.dart';
 part 'order_guest.g.dart';
@@ -10,7 +10,7 @@ part 'order_guest.g.dart';
 class OrderGuest with _$OrderGuest {
   const factory OrderGuest({
     required String orderId,
-    required OrderStatus orderStatus,
+    required OrderGuestStatus orderStatus,
     required DateTime createdAt,
     String? memo,
     required String storeId,
@@ -43,7 +43,7 @@ class OrderGoods with _$OrderGoods {
 final List<OrderGuest> mockOrders = [
   OrderGuest(
     orderId: 'order_001',
-    orderStatus: OrderStatus.accepted,
+    orderStatus: OrderGuestStatus.accepted,
     createdAt: DateTime.now().subtract(Duration(hours: 2)),
     memo: '일회용 수저 빼주세요',
     storeId: 'store_001',
@@ -72,7 +72,7 @@ final List<OrderGuest> mockOrders = [
   ),
   OrderGuest(
     orderId: 'order_002',
-    orderStatus: OrderStatus.completed,
+    orderStatus: OrderGuestStatus.completed,
     createdAt: DateTime.now().subtract(Duration(days: 1)),
     memo: null,
     storeId: 'store_002',
@@ -92,7 +92,7 @@ final List<OrderGuest> mockOrders = [
   ),
   OrderGuest(
     orderId: 'order_003',
-    orderStatus: OrderStatus.paid,
+    orderStatus: OrderGuestStatus.paid,
     createdAt: DateTime.now().subtract(Duration(minutes: 30)),
     memo: '픽업 시간 18:00으로 부탁드려요',
     storeId: 'store_003',

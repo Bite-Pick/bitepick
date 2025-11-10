@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:magambell/src/features/order/domain/entities/order_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 
 part 'order_owner.freezed.dart';
 part 'order_owner.g.dart';
@@ -8,7 +8,7 @@ part 'order_owner.g.dart';
 class OrderOwner with _$OrderOwner {
   const factory OrderOwner({
     required String orderId,
-    required OrderStatus orderStatus,
+    required OrderOwnerStatus orderStatus,
     required DateTime createdAt,
     required DateTime pickupTime,
     String? memo,
@@ -25,7 +25,7 @@ class OrderOwner with _$OrderOwner {
 final List<OrderOwner> mockOrderOwners = [
   OrderOwner(
     orderId: 'ORD-20231107-001',
-    orderStatus: OrderStatus.pending,
+    orderStatus: OrderOwnerStatus.paid,
     createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
     pickupTime: DateTime.now().add(const Duration(hours: 1)),
     memo: '문 앞에 놓아주세요',
@@ -36,7 +36,7 @@ final List<OrderOwner> mockOrderOwners = [
   ),
   OrderOwner(
     orderId: 'ORD-20231107-002',
-    orderStatus: OrderStatus.accepted,
+    orderStatus: OrderOwnerStatus.accepted,
     createdAt: DateTime.now().subtract(const Duration(hours: 1)),
     pickupTime: DateTime.now().add(const Duration(minutes: 30)),
     memo: '빨리 부탁드립니다!',
@@ -47,7 +47,7 @@ final List<OrderOwner> mockOrderOwners = [
   ),
   OrderOwner(
     orderId: 'ORD-20231107-003',
-    orderStatus: OrderStatus.canceled,
+    orderStatus: OrderOwnerStatus.completed,
     createdAt: DateTime.now().subtract(const Duration(hours: 2)),
     pickupTime: DateTime.now().add(const Duration(hours: 2)),
     memo: '고객 요청으로 취소',
@@ -56,15 +56,15 @@ final List<OrderOwner> mockOrderOwners = [
     phoneNumber: '010-1111-2222',
     goodsName: '샐러드 세트',
   ),
-  OrderOwner(
-    orderId: 'ORD-20231107-004',
-    orderStatus: OrderStatus.failed,
-    createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    pickupTime: DateTime.now().add(const Duration(hours: 3)),
-    memo: '결제 실패',
-    quantity: 1,
-    totalPrice: 7000,
-    phoneNumber: '010-3333-4444',
-    goodsName: '케이크 한 조각',
-  ),
+  // OrderOwner(
+  //   orderId: 'ORD-20231107-004',
+  //   orderStatus: OrderOwnerStatus.failed,
+  //   createdAt: DateTime.now().subtract(const Duration(days: 1)),
+  //   pickupTime: DateTime.now().add(const Duration(hours: 3)),
+  //   memo: '결제 실패',
+  //   quantity: 1,
+  //   totalPrice: 7000,
+  //   phoneNumber: '010-3333-4444',
+  //   goodsName: '케이크 한 조각',
+  // ),
 ];
