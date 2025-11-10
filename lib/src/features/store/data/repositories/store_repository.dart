@@ -64,7 +64,7 @@ class StoreRepository {
     required String bankAccount,
     List<Map<String, dynamic>>? storeImagesRegisters,
   }) async {
-    await _dio.post(
+    final res = await _dio.post(
       '/v1/store',
       data: {
         'name': name,
@@ -80,6 +80,10 @@ class StoreRepository {
           'storeImagesRegisters': storeImagesRegisters,
       },
     );
+    if (res.data['status'] != 'OK') return null;
+
+    final data = res.data['data'];
+    if (data == null) return null;
   }
 
   Future<Store?> getOwnerStore() async {
