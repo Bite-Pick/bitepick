@@ -32,6 +32,8 @@ class Gaps {
   static const h20 = SizedBox(height: MgSizes.size20);
   static const h24 = SizedBox(height: MgSizes.size24);
   static const h32 = SizedBox(height: MgSizes.size32);
+  static const h40 = SizedBox(height: MgSizes.size40);
+
   static const h64 = SizedBox(height: MgSizes.size64);
   static const h128 = SizedBox(height: MgSizes.size128);
 }

@@ -21,6 +21,18 @@ RouteBase get $loginRoute => GoRouteData.$route(
       factory: $SelectUserTypeRouteExtension._fromState,
     ),
     GoRouteData.$route(
+      path: 'join/basic-info',
+      name: 'JoinBasicInfoRoute',
+
+      factory: $JoinBasicInfoRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'join/success',
+      name: 'JoinSuccessRoute',
+
+      factory: $JoinSuccessRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
       path: 'owner/join/info',
       name: 'OwnerJoinInfoRoute',
 
@@ -49,6 +61,38 @@ extension $SelectUserTypeRouteExtension on SelectUserTypeRoute {
       const SelectUserTypeRoute();
 
   String get location => GoRouteData.$location('/auth/select-user-type');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $JoinBasicInfoRouteExtension on JoinBasicInfoRoute {
+  static JoinBasicInfoRoute _fromState(GoRouterState state) =>
+      const JoinBasicInfoRoute();
+
+  String get location => GoRouteData.$location('/auth/join/basic-info');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $JoinSuccessRouteExtension on JoinSuccessRoute {
+  static JoinSuccessRoute _fromState(GoRouterState state) =>
+      const JoinSuccessRoute();
+
+  String get location => GoRouteData.$location('/auth/join/success');
 
   void go(BuildContext context) => context.go(location);
 

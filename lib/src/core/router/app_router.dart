@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
+import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
+import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
@@ -23,6 +25,29 @@ class GlobalVariable {
       GlobalKey<NavigatorState>();
 }
 
+// GoRouter가 userState 변경을 감지하기 위한 Notifier
+class _UserStateNotifier extends ChangeNotifier {
+  _UserStateNotifier(this.ref) {
+    ref.listen<AsyncValue<User?>>(userStateProvider, (previous, next) {
+      notifyListeners();
+    });
+  }
+  final Ref ref;
+}
+
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final notifier = _UserStateNotifier(ref);
+
+  return GoRouter(
+    initialLocation: '/',
+    navigatorKey: GlobalVariable.navigatorKey,
+    debugLogDiagnostics: true,
+    routes: $appRoutes,
+    refreshListenable: notifier,
+  );
+});
+
+// 하위 호환성을 위한 기존 appRouter (deprecated)
 final appRouter = GoRouter(
   initialLocation: '/',
   navigatorKey: GlobalVariable.navigatorKey,
@@ -37,6 +62,14 @@ final appRouter = GoRouter(
     TypedGoRoute<SelectUserTypeRoute>(
       name: 'SelectUserTypeRoute',
       path: 'select-user-type',
+    ),
+    TypedGoRoute<JoinBasicInfoRoute>(
+      name: 'JoinBasicInfoRoute',
+      path: 'join/basic-info',
+    ),
+    TypedGoRoute<JoinSuccessRoute>(
+      name: 'JoinSuccessRoute',
+      path: 'join/success',
     ),
     TypedGoRoute<OwnerJoinInfoRoute>(
       name: 'OwnerJoinInfoRoute',
@@ -95,13 +128,12 @@ class DefaultRoute extends GoRouteData {
     if (state.uri.path != '/') return null;
 
     // ProviderContainer를 통해 userProvider 접근
-    final container = ProviderScope.containerOf(context);
-    final user = container.read(userStateProvider);
+    final ref = ProviderScope.containerOf(context);
+    final userAsync = ref.read(userStateProvider);
 
-    // 로그인하지 않은 경우
-    if (user == null) {
-      return LoginRoute().location;
-    }
+    // 에러가 발생했거나 유저가 없으면 로그인 화면으로
+    final user = userAsync.valueOrNull;
+    if (user == null) return LoginRoute().location;
 
     // userRole에 따라 다른 홈 화면으로 리다이렉트
     switch (user.userRole) {

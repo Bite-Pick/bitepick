@@ -226,6 +226,9 @@ class R {
   static const String ASSETS_IMAGES_HOME_OPEN_BEFORE_PNG =
       'assets/images/home_open_before.png';
 
+  static const String ASSETS_IMAGES_JOIN_SUCCESS_PNG =
+      'assets/images/join_success.png';
+
   static const String ASSETS_IMAGES_KAKAO_CHANNEL_PNG =
       'assets/images/kakao_channel.png';
 
