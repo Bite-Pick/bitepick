@@ -194,6 +194,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
 
       factory: $OwnerStoreWaitingRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'owner/goods/empty',
+      name: 'OwnerGoodsEmptyRoute',
+
+      factory: $OwnerGoodsEmptyRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -380,6 +386,22 @@ extension $OwnerStoreWaitingRouteExtension on OwnerStoreWaitingRoute {
       const OwnerStoreWaitingRoute();
 
   String get location => GoRouteData.$location('/owner/store/waiting');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerGoodsEmptyRouteExtension on OwnerGoodsEmptyRoute {
+  static OwnerGoodsEmptyRoute _fromState(GoRouterState state) =>
+      OwnerGoodsEmptyRoute();
+
+  String get location => GoRouteData.$location('/owner/goods/empty');
 
   void go(BuildContext context) => context.go(location);
 

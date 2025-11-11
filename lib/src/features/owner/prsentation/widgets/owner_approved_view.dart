@@ -8,6 +8,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
+import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -71,12 +72,8 @@ class OwnerApprovedView extends ConsumerWidget {
           Image.asset(assetName).constrained(height: 225.h),
           Spacer(),
           MgButton(
-            onPressed: () async {
-              await ref.read(authTokenManagerProvider.notifier).deleteTokens();
-              ref.invalidate(userStateProvider);
-              context.go('/');
-            },
-            content: Text("로그아웃"),
+            onPressed: () => logout(ref, context),
+            content: const Text("로그아웃"),
           ),
         ],
       ),
