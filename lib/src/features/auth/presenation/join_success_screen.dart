@@ -7,6 +7,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
@@ -36,11 +37,10 @@ class JoinSuccessScreen extends ConsumerWidget {
         children: [
           Spacer(),
           // 성공 아이콘 또는 이미지
-          Lottie.asset(R.ASSETS_LOTTIE_SUCCESS_JSON),
-          Gaps.h32,
-          Text("회원가입 완료").xxl().bold(),
+          Lottie.asset(R.ASSETS_LOTTIE_SUCCESS_JSON, repeat: false),
+          Text("회원가입 완료").xl().bold(),
           Gaps.h16,
-          Text("마감벨에 오신 것을 환영합니다\n이제 마감벨의 모든 서비스를 이용하실 수 있어요").md(),
+          Text("이제 바이트픽의 모든 서비스를 이용하실 수 있어요").md(),
           Spacer(),
           MgButton(
             onPressed: () {
@@ -48,7 +48,7 @@ class JoinSuccessScreen extends ConsumerWidget {
               if (userRole == UserRole.owner) {
                 OwnerJoinInfoRoute().go(context);
               } else {
-                context.go('/');
+                SelectAddressRoute().go(context);
               }
             },
             content: const Text("시작하기"),

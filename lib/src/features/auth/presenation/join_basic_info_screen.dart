@@ -60,7 +60,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
       await ref.read(userStateProvider.notifier).refresh();
 
       if (!mounted) return;
-      DefaultRoute().go(context);
+      JoinSuccessRoute().go(context);
     } else {
       // 에러 표시
       final error = ref.read(joinControllerProvider).error;
