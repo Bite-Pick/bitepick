@@ -200,6 +200,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
 
       factory: $OwnerGoodsEmptyRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'owner/store/edit',
+      name: 'GoodsEditRoute',
+
+      factory: $GoodsEditRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -411,4 +417,22 @@ extension $OwnerGoodsEmptyRouteExtension on OwnerGoodsEmptyRoute {
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
+}
+
+extension $GoodsEditRouteExtension on GoodsEditRoute {
+  static GoodsEditRoute _fromState(GoRouterState state) =>
+      GoodsEditRoute($extra: state.extra as Map<String, dynamic>?);
+
+  String get location => GoRouteData.$location('/owner/store/edit');
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }

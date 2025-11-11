@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
@@ -37,8 +38,10 @@ class OwnerGoodsView extends ConsumerWidget {
               ),
             ),
             MgButton(
-              onPressed: () {
-                GoodsRegisterRoute().push(context);
+              onPressed: () async {
+                await GoodsEditRoute(
+                  $extra: {"goods": store.goodsList[0]},
+                ).push(context);
               },
               content: Text("상품 관리하기"),
             ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md),

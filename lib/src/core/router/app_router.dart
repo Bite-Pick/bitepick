@@ -7,6 +7,7 @@ import 'package:magambell/src/features/auth/presenation/join_success_screen.dart
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
+import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
@@ -124,6 +125,10 @@ class LoginRoute extends GoRouteData {
     TypedGoRoute<OwnerGoodsEmptyRoute>(
       name: 'OwnerGoodsEmptyRoute',
       path: 'owner/goods/empty',
+    ),
+     TypedGoRoute<GoodsEditRoute>(
+      name: 'GoodsEditRoute',
+      path: 'owner/store/edit',
     ),
   ],
 )
