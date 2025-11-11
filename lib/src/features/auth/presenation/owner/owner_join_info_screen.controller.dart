@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:dartx/dartx.dart';
+import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,6 +12,7 @@ part 'owner_join_info_screen.controller.g.dart';
 @Riverpod(keepAlive: true)
 class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
   late FormGroup form;
+  List<LocalImage> localImages = [];
 
   @override
   FutureOr<void> build() {
@@ -25,7 +29,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'addressDetail': FormControl<String>(validators: [Validators.required]),
       'latitude': FormControl<double>(),
       'longitude': FormControl<double>(),
-
+      'images': FormControl<int>(value: 0),
       'parkingDescription': FormControl<String>(),
 
       'representativeName': FormControl<String>(
@@ -45,6 +49,41 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         validators: [Validators.required, Validators.pattern(r'^\d+$')],
       ),
     });
+  }
+
+  // 로컬 이미지 추가
+  void addLocalImages(List<File> files) {
+    final newImages = <LocalImage>[];
+    var currentId = localImages.length;
+
+    for (final file in files) {
+      final fileName = file.path.split('/').last;
+      newImages.add(LocalImage(id: currentId, key: fileName, file: file));
+      currentId++;
+    }
+
+    localImages = [...localImages, ...newImages];
+    // Form에 이미지 개수 업데이트
+    form.control('images').value = localImages.length;
+    // Rebuild the UI by putting the controller in a loading state and then back to data
+    state = const AsyncLoading();
+    state = const AsyncData(null);
+  }
+
+  void fillWithMockData(Map<String, Object> data) {
+    form.patchValue(data);
+  }
+
+  // 이미지 제거
+  void removeImage(int index) {
+    if (index >= 0 && index < localImages.length) {
+      localImages.removeAt(index);
+      // Form에 이미지 개수 업데이트
+      form.control('images').value = localImages.length;
+      // Rebuild the UI
+      state = const AsyncLoading();
+      state = const AsyncData(null);
+    }
   }
 
   void updateAddress({
@@ -96,6 +135,13 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       // if (latitude == null || longitude == null)
       //   throw Exception('위치 정보가 없습니다. 주소 찾기를 다시 시도해주세요.');
 
+      // TODO: 이미지 업로드 구현
+      final imageUploads = localImages.mapIndexed((index, localImage) {
+        // This is where you would handle file upload and get back a key or URL
+        // For now, we'll just use the local file name as a placeholder key.
+        return {'key': localImage.key, 'id': index + 1};
+      }).toList();
+
       final result = await ref
           .read(storeRepositoryProvider)
           .createStore(
@@ -108,7 +154,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
             businessNumber: formValue['businessNumber'] as String,
             bankName: formValue['bankName'] as String,
             bankAccount: formValue['accountNumber'] as String,
-            storeImagesRegisters: null, // TODO: 이미지 업로드 구현
+            storeImagesRegisters: imageUploads,
             // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
           );
 

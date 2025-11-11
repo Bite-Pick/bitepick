@@ -24,7 +24,7 @@ class PreSignedImageRepository {
   }) async {
     try {
       final bytes = await file.readAsBytes();
-
+      // TODO: baseUrl 교체 필요
       await _dio.put(
         presignedUrl,
         data: bytes,
@@ -63,6 +63,7 @@ class PreSignedImageRepository {
     }
   }
 }
+
 @riverpod
 PreSignedImageRepository presignedImageRepository(Ref ref) {
   return PreSignedImageRepository(ref);
