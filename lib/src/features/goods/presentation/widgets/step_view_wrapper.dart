@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 
 class StoreRegisterViewWrapper extends StatelessWidget {
   final List<Widget> children;
@@ -8,12 +9,9 @@ class StoreRegisterViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: MgSizes.xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      ),
-    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    ).margin(horizontal: MgSizes.xl);
   }
 }
