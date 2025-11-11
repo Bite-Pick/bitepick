@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -89,6 +90,11 @@ class AppInterceptor extends Interceptor {
     if (data is Map) {
       final code = data['statusCode'] ?? statusCode ?? -1;
       final message = data['message'] as String? ?? '알 수 없는 오류가 발생했습니다.';
+
+      switch (data['code']) {
+        case 'STORE_NOT_FOUND':
+          return _navigateToRegisterStore();
+      }
 
       switch (code) {
         case 400: // Bad Request
@@ -378,6 +384,14 @@ class AppInterceptor extends Interceptor {
     final context = GlobalVariable.navigatorKey.currentContext;
     if (context != null) context.go('/auth');
     debugPrint('🔐 Navigate to login');
+  }
+
+  void _navigateToRegisterStore() {
+    final router = ref.read(appRouterProvider);
+    // final context = GlobalVariable.navigatorKey.currentContext;
+    // if (context != null)
+    router.go(OwnerJoinInfoRoute().location);
+    debugPrint('🔐 Navigate to store register');
   }
 
   /// 점검 화면으로 이동

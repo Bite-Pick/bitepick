@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
 
     return BottomNavigationBarItem(
       icon: BaseSvgIcon(
-        assetName: 'filled/$assetName',
+        assetName: 'filled/$assetName.svg',
         size: MgSizes.xxl,
       ),
       label: label,

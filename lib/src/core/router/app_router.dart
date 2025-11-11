@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,7 @@ import 'package:magambell/src/features/order/presentation/order_caution_screen.d
 import 'package:magambell/src/features/order/presentation/order_pay_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
@@ -123,25 +125,40 @@ class DefaultRoute extends GoRouteData {
   }
 
   @override
-  String? redirect(BuildContext context, GoRouterState state) {
+  Future<String?> redirect(BuildContext context, GoRouterState state) async {
     // 최초 실행일때만 하위 로직을 수행하기 위함
     if (state.uri.path != '/') return null;
 
-    // ProviderContainer를 통해 userProvider 접근
-    final ref = ProviderScope.containerOf(context);
-    final userAsync = ref.read(userStateProvider);
+    try {
+      // ProviderContainer를 통해 userProvider 접근
+      final ref = ProviderScope.containerOf(context);
+      final user = await ref.read(userStateProvider.future);
+      if (user == null) return LoginRoute().location;
 
-    // 에러가 발생했거나 유저가 없으면 로그인 화면으로
-    final user = userAsync.valueOrNull;
-    if (user == null) return LoginRoute().location;
-
-    // userRole에 따라 다른 홈 화면으로 리다이렉트
-    switch (user.userRole) {
-      case UserRole.owner:
-        return OwnerHomeRoute().location;
-      case UserRole.guest:
-      case UserRole.admin: // TODO: 확인 필요
-        return MainRoute().location;
+      // userRole에 따라 다른 홈 화면으로 리다이렉트
+      switch (user.userRole) {
+        case UserRole.owner:
+          // Owner인 경우 가게 등록 여부 확인
+          final store = await ref.read(storeRepositoryProvider).getOwnerStore();
+          if (store == null) {
+            // 가게가 등록되지 않았으면 가게 정보 입력 화면으로
+            return OwnerJoinInfoRoute().location;
+          }
+          return OwnerHomeRoute().location;
+        case UserRole.guest:
+        case UserRole.admin: // TODO: 확인 필요
+          return MainRoute().location;
+      }
+    } catch (error) {
+      // 에러 체크 - STORE_NOT_FOUND인 경우 Owner 매장 등록 화면으로
+      if (error is DioException && error.response?.data != null) {
+        final errorCode = error.response?.data['code'];
+        if (errorCode == 'STORE_NOT_FOUND') {
+          // STORE_NOT_FOUND 에러면 매장 등록 화면으로
+          return OwnerJoinInfoRoute().location;
+        }
+        return LoginRoute().location;
+      }
     }
   }
 }

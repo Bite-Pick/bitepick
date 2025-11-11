@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:magambell/src/features/user/data/repositories/user_repository.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,8 +14,8 @@ class UserState extends _$UserState {
       final user = await ref.read(userRepositoryProvider).getMe();
       return user;
     } catch (e) {
-      // API 호출 실패시 null 반환 (로그인하지 않은 상태)
-      return null;
+      // 에러를 그대로 throw하여 router에서 처리
+      rethrow;
     }
   }
 

@@ -57,7 +57,7 @@ class StoreRepository {
     return Goods.fromJson(data as Map<String, dynamic>);
   }
 
-  Future<void> createStore({
+  Future<bool> createStore({
     required String name,
     required String address,
     required double latitude,
@@ -85,10 +85,11 @@ class StoreRepository {
           'storeImagesRegisters': storeImagesRegisters,
       },
     );
-    if (res.data['status'] != 'OK') return null;
+    if (res.data['status'] != 'OK') return true;
 
     final data = res.data['data'];
-    if (data == null) return null;
+    if (data != null) return true;
+    return false;
   }
 
   Future<Store?> getOwnerStore() async {
@@ -107,6 +108,7 @@ class StoreRepository {
 StoreRepository storeRepository(Ref ref) {
   return StoreRepository(ref);
 }
+
 @riverpod
 Future<List<Goods>> storeGoodsList(
   Ref ref, {

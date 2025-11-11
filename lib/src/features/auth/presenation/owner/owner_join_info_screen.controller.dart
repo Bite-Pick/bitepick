@@ -25,6 +25,9 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'addressDetail': FormControl<String>(validators: [Validators.required]),
       'latitude': FormControl<double>(),
       'longitude': FormControl<double>(),
+
+      'parkingDescription': FormControl<String>(),
+
       'representativeName': FormControl<String>(
         validators: [Validators.required, Validators.minLength(1)],
       ),
@@ -62,7 +65,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
     }
   }
 
-  Future<void> submit() async {
+  Future<bool> submit() async {
     if (!form.valid) {
       form.markAllAsTouched();
 
@@ -73,7 +76,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         }
       });
 
-      return;
+      return false;
     }
 
     state = const AsyncValue.loading();
@@ -93,7 +96,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       // if (latitude == null || longitude == null)
       //   throw Exception('위치 정보가 없습니다. 주소 찾기를 다시 시도해주세요.');
 
-      await ref
+      final result = await ref
           .read(storeRepositoryProvider)
           .createStore(
             name: formValue['storeName'] as String,
@@ -106,12 +109,15 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
             bankName: formValue['bankName'] as String,
             bankAccount: formValue['accountNumber'] as String,
             storeImagesRegisters: null, // TODO: 이미지 업로드 구현
+            // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
           );
 
       // 성공 시
       state = const AsyncValue.data(null);
+      return true;
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
+      return false;
     }
   }
 

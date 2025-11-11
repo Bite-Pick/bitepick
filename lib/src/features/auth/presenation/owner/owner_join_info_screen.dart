@@ -5,11 +5,13 @@ import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -98,6 +100,11 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                       hintText: '상세주소 ',
                     ),
 
+                    _buildSectionTitle("주차안내"),
+                    MgReactiveTextField(formControlName: 'parkingDescription'),
+
+                    _buildSectionTitle("대표이미지"),
+
                     // 3. 대표자 정보
                     _buildSectionTitle('대표자 정보'),
                     MgReactiveTextField(
@@ -143,7 +150,10 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
             ),
             // 확인 버튼
             MgButton(
-              onPressed: () => controller.submit(),
+              onPressed: () async {
+                final result = await controller.submit();
+                if (result && mounted) OwnerHomeRoute().go(context);
+              },
               content: const Text('확인'),
             ).primary().margin(
               horizontal: MgSizes.md,
