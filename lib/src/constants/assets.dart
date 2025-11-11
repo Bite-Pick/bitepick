@@ -126,14 +126,26 @@ class R {
   static const String ASSETS_ICONS_SVG_FILLED_HOME_SVG =
       'assets/icons/svg/filled/home.svg';
 
+  static const String ASSETS_ICONS_SVG_FILLED_HOME_GRAY_SVG =
+      'assets/icons/svg/filled/home_gray.svg';
+
   static const String ASSETS_ICONS_SVG_FILLED_KAKAO_SVG =
       'assets/icons/svg/filled/kakao.svg';
 
   static const String ASSETS_ICONS_SVG_FILLED_MAP_PIN_SVG =
       'assets/icons/svg/filled/map-pin.svg';
 
-  static const String ASSETS_ICONS_SVG_FILLED_ORDER_LIST_SVG =
-      'assets/icons/svg/filled/order list.svg';
+  static const String ASSETS_ICONS_SVG_FILLED_MYPAGE_SVG =
+      'assets/icons/svg/filled/mypage.svg';
+
+  static const String ASSETS_ICONS_SVG_FILLED_MYPAGE_GRAY_SVG =
+      'assets/icons/svg/filled/mypage_gray.svg';
+
+  static const String ASSETS_ICONS_SVG_FILLED_ORDER_SVG =
+      'assets/icons/svg/filled/order.svg';
+
+  static const String ASSETS_ICONS_SVG_FILLED_ORDER_GRAY_SVG =
+      'assets/icons/svg/filled/order_gray.svg';
 
   static const String ASSETS_ICONS_SVG_FILLED_SHARE_2_SVG =
       'assets/icons/svg/filled/share-2.svg';
@@ -255,6 +267,12 @@ class R {
 
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
       'assets/images/placeholder.png';
+
+  static const String ASSETS_IMAGES_STORE_REGISTER_SUCCESS_PNG =
+      'assets/images/store_register_success.png';
+
+  static const String ASSETS_IMAGES_STORE_REIGSTER_WAITING_PNG =
+      'assets/images/store_reigster_waiting.png';
 
   static const String ASSETS_IMAGES_TOSS_PAYMENTS_PNG =
       'assets/images/toss_payments.png';

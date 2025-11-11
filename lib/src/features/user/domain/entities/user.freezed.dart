@@ -25,7 +25,7 @@ mixin _$User {
   String get nickName => throw _privateConstructorUsedError;
   UserRole get userRole => throw _privateConstructorUsedError;
   ProviderType get providerType => throw _privateConstructorUsedError;
-  ApprovedStatus get approved => throw _privateConstructorUsedError;
+  ApprovedStatus? get approved => throw _privateConstructorUsedError;
   String? get goodsId => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
@@ -47,7 +47,7 @@ abstract class $UserCopyWith<$Res> {
     String nickName,
     UserRole userRole,
     ProviderType providerType,
-    ApprovedStatus approved,
+    ApprovedStatus? approved,
     String? goodsId,
   });
 }
@@ -71,7 +71,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? nickName = null,
     Object? userRole = null,
     Object? providerType = null,
-    Object? approved = null,
+    Object? approved = freezed,
     Object? goodsId = freezed,
   }) {
     return _then(
@@ -92,10 +92,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
                 ? _value.providerType
                 : providerType // ignore: cast_nullable_to_non_nullable
                       as ProviderType,
-            approved: null == approved
+            approved: freezed == approved
                 ? _value.approved
                 : approved // ignore: cast_nullable_to_non_nullable
-                      as ApprovedStatus,
+                      as ApprovedStatus?,
             goodsId: freezed == goodsId
                 ? _value.goodsId
                 : goodsId // ignore: cast_nullable_to_non_nullable
@@ -119,7 +119,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
     String nickName,
     UserRole userRole,
     ProviderType providerType,
-    ApprovedStatus approved,
+    ApprovedStatus? approved,
     String? goodsId,
   });
 }
@@ -140,7 +140,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? nickName = null,
     Object? userRole = null,
     Object? providerType = null,
-    Object? approved = null,
+    Object? approved = freezed,
     Object? goodsId = freezed,
   }) {
     return _then(
@@ -161,10 +161,10 @@ class __$$UserImplCopyWithImpl<$Res>
             ? _value.providerType
             : providerType // ignore: cast_nullable_to_non_nullable
                   as ProviderType,
-        approved: null == approved
+        approved: freezed == approved
             ? _value.approved
             : approved // ignore: cast_nullable_to_non_nullable
-                  as ApprovedStatus,
+                  as ApprovedStatus?,
         goodsId: freezed == goodsId
             ? _value.goodsId
             : goodsId // ignore: cast_nullable_to_non_nullable
@@ -182,7 +182,7 @@ class _$UserImpl extends _User {
     required this.nickName,
     required this.userRole,
     required this.providerType,
-    required this.approved,
+    this.approved,
     this.goodsId,
   }) : super._();
 
@@ -198,7 +198,7 @@ class _$UserImpl extends _User {
   @override
   final ProviderType providerType;
   @override
-  final ApprovedStatus approved;
+  final ApprovedStatus? approved;
   @override
   final String? goodsId;
 
@@ -256,7 +256,7 @@ abstract class _User extends User {
     required final String nickName,
     required final UserRole userRole,
     required final ProviderType providerType,
-    required final ApprovedStatus approved,
+    final ApprovedStatus? approved,
     final String? goodsId,
   }) = _$UserImpl;
   const _User._() : super._();
@@ -272,7 +272,7 @@ abstract class _User extends User {
   @override
   ProviderType get providerType;
   @override
-  ApprovedStatus get approved;
+  ApprovedStatus? get approved;
   @override
   String? get goodsId;
 

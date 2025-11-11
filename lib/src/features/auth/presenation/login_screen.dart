@@ -34,7 +34,7 @@ class LoginScreen extends ConsumerWidget {
         data: (authResult) {
           if (authResult == null) {
             // 기존 회원 - 로그인 성공 → DefaultRoute의 redirect 로직을 타도록
-            context.go('/');
+            DefaultRoute().go(context);
           } else {
             // 신규 회원 - 회원가입 화면으로 이동
             ref

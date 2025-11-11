@@ -4,8 +4,8 @@ part 'user.freezed.dart';
 part 'user.g.dart';
 
 enum UserRole {
-  @JsonValue('GUEST')
-  guest,
+  @JsonValue('CUSTOMER')
+  customer,
   @JsonValue('OWNER')
   owner,
   @JsonValue('ADMIN')
@@ -26,10 +26,10 @@ enum ProviderType {
 enum ApprovedStatus {
   @JsonValue('APPROVED')
   approved,
-  @JsonValue('PENDING')
-  pending,
   @JsonValue('REJECTED')
   rejected,
+  @JsonValue('WAITING')
+  waiting,
 }
 
 @freezed
@@ -39,7 +39,7 @@ class User with _$User {
     required String nickName,
     required UserRole userRole,
     required ProviderType providerType,
-    required ApprovedStatus approved,
+    ApprovedStatus? approved,
     String? goodsId,
   }) = _User;
   const User._();

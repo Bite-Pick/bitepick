@@ -13,7 +13,9 @@ import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
+import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
@@ -113,6 +115,18 @@ class LoginRoute extends GoRouteData {
       path: 'order/caution',
     ),
     TypedGoRoute<OrderPayRoute>(name: 'OrderPayRoute', path: 'order/pay'),
+    TypedGoRoute<OwnerStoreApprovedRoute>(
+      name: 'OwnerStoreApprovedRoute',
+      path: 'owner/store/approved',
+    ),
+    TypedGoRoute<OwnerStoreWaitingRoute>(
+      name: 'OwnerStoreWaitingRoute',
+      path: 'owner/store/waiting',
+    ),
+    TypedGoRoute<OwnerGoodsEmptyRoute>(
+      name: 'OwnerGoodsEmptyRoute',
+      path: 'owner/goods/empty',
+    ),
   ],
 )
 class DefaultRoute extends GoRouteData {
@@ -138,28 +152,31 @@ class DefaultRoute extends GoRouteData {
       // userRole에 따라 다른 홈 화면으로 리다이렉트
       switch (user.userRole) {
         case UserRole.owner:
-          // Owner인 경우 가게 등록 여부 확인
-          final store = await ref.read(storeRepositoryProvider).getOwnerStore();
-          if (store == null) {
-            // 가게가 등록되지 않았으면 가게 정보 입력 화면으로
-            return OwnerJoinInfoRoute().location;
+          if (user.goodsId == "null") {
+            return OwnerGoodsEmptyRoute().location;
+          }
+          if (user.approved == ApprovedStatus.waiting) {
+            return OwnerStoreWaitingRoute().location;
           }
           return OwnerHomeRoute().location;
-        case UserRole.guest:
+        case UserRole.customer:
+          return MainRoute().location;
         case UserRole.admin: // TODO: 확인 필요
           return MainRoute().location;
       }
     } catch (error) {
-      // 에러 체크 - STORE_NOT_FOUND인 경우 Owner 매장 등록 화면으로
-      if (error is DioException && error.response?.data != null) {
-        final errorCode = error.response?.data['code'];
-        if (errorCode == 'STORE_NOT_FOUND') {
-          // STORE_NOT_FOUND 에러면 매장 등록 화면으로
-          return OwnerJoinInfoRoute().location;
-        }
-        return LoginRoute().location;
-      }
+      // NOTE: [AppInterceptor]에서 처리
+      // // 에러 체크 - STORE_NOT_FOUND인 경우 Owner 매장 등록 화면으로
+      // if (error is DioException && error.response?.data != null) {
+      //   final errorCode = error.response?.data['code'];
+      //   if (errorCode == 'STORE_NOT_FOUND') {
+      //     // STORE_NOT_FOUND 에러면 매장 등록 화면으로
+      //     return OwnerJoinInfoRoute().location;
+      //   }
+      //   return LoginRoute().location;
+      // }
     }
+    return null; // Default return if no redirection is needed or error handled
   }
 }
 

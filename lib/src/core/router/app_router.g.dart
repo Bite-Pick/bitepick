@@ -182,6 +182,18 @@ RouteBase get $defaultRoute => GoRouteData.$route(
 
       factory: $OrderPayRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'owner/store/approved',
+      name: 'OwnerStoreApprovedRoute',
+
+      factory: $OwnerStoreApprovedRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'owner/store/waiting',
+      name: 'OwnerStoreWaitingRoute',
+
+      factory: $OwnerStoreWaitingRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -336,6 +348,38 @@ extension $OrderPayRouteExtension on OrderPayRoute {
   static OrderPayRoute _fromState(GoRouterState state) => const OrderPayRoute();
 
   String get location => GoRouteData.$location('/order/pay');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerStoreApprovedRouteExtension on OwnerStoreApprovedRoute {
+  static OwnerStoreApprovedRoute _fromState(GoRouterState state) =>
+      const OwnerStoreApprovedRoute();
+
+  String get location => GoRouteData.$location('/owner/store/approved');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerStoreWaitingRouteExtension on OwnerStoreWaitingRoute {
+  static OwnerStoreWaitingRoute _fromState(GoRouterState state) =>
+      const OwnerStoreWaitingRoute();
+
+  String get location => GoRouteData.$location('/owner/store/waiting');
 
   void go(BuildContext context) => context.go(location);
 
