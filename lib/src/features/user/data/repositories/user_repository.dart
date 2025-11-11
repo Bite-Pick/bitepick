@@ -7,7 +7,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_repository.g.dart';
 
 class UserRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+  UserRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   Future<User?> getMe() async {
     try {
@@ -19,6 +23,13 @@ class UserRepository {
       if (data == null) return null;
 
       return User.fromJson(data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      // STORE_NOT_FOUND 에러는 재throw하여 상위에서 처리
+      if (e.response?.data != null) {
+        final errorCode = e.response?.data['statusCode'];
+        if (errorCode == 'STORE_NOT_FOUND') rethrow;
+      }
+      return null;
     } catch (e) {
       return null;
     }
@@ -27,7 +38,7 @@ class UserRepository {
 
 @riverpod
 UserRepository userRepository(Ref ref) {
-  return UserRepository();
+  return UserRepository(ref);
 }
 
 @riverpod

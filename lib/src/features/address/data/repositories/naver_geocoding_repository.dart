@@ -1,23 +1,21 @@
 import 'dart:developer' show log;
 
 import 'package:dio/dio.dart';
-import '../../../../core/config/environment.dart';
-import '../../../../core/network/api_client.dart';
-import '../../domain/entities/area.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:magambell/src/core/network/api_client.dart';
+
+import 'package:magambell/src/features/address/domain/entities/area.dart';
+
+part 'naver_geocoding_repository.g.dart';
 
 class NaverGeocodingRepository {
+  final Ref ref;
   late final Dio _dio;
 
-  NaverGeocodingRepository() {
-    _dio = ApiClient().createCustomDio(
-      baseUrl: Environment.geocodingApiUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      headers: {
-        'x-ncp-apigw-api-key-id': Environment.ncpApiKeyId,
-        'x-ncp-apigw-api-key': Environment.ncpApiKey,
-      },
-    );
+  NaverGeocodingRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
   }
 
   /// ====== 동(Dong) 키워드 검색 ======
@@ -190,4 +188,9 @@ class NaverGeocodingRepository {
 
   //   return results;
   // }
+}
+
+@riverpod
+NaverGeocodingRepository naverGeocodingRepository(Ref ref) {
+  return NaverGeocodingRepository(ref);
 }

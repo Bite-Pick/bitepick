@@ -7,7 +7,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'vertify_repository.g.dart';
 
 class VertifyRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+
+  VertifyRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   Future<bool> vertifySocial(
     AuthProviderType authProviderType,
@@ -29,5 +34,5 @@ class VertifyRepository {
 
 @riverpod
 VertifyRepository vertifyRepository(Ref ref) {
-  return VertifyRepository();
+  return VertifyRepository(ref);
 }

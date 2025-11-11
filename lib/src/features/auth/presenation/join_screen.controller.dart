@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
-import 'package:magambell/src/features/auth/data/repositories/social_auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';

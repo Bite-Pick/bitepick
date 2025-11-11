@@ -9,7 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'store_repository.g.dart';
 
 class StoreRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+
+  StoreRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   Future<List<Goods>> getStoreGoodsList({
     required double latitude,
@@ -100,9 +105,8 @@ class StoreRepository {
 
 @riverpod
 StoreRepository storeRepository(Ref ref) {
-  return StoreRepository();
+  return StoreRepository(ref);
 }
-
 @riverpod
 Future<List<Goods>> storeGoodsList(
   Ref ref, {

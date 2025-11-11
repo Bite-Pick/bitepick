@@ -6,7 +6,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'favorite_repository.g.dart';
 
 class FavoriteRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+
+  FavoriteRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   Future<bool> addFavorite(String storeId) async {
     final res = await _dio.post('/v1/favorite/$storeId');
@@ -32,9 +37,8 @@ class FavoriteRepository {
 
 @riverpod
 FavoriteRepository favoriteRepository(Ref ref) {
-  return FavoriteRepository();
+  return FavoriteRepository(ref);
 }
-
 @riverpod
 Future<bool?> favorite(Ref ref, {required String storeId}) async {
   return ref.read(favoriteRepositoryProvider).getFavorite(storeId);

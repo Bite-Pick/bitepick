@@ -1,28 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'vertify_repository.dart';
+part of 'naver_geocoding_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vertifyRepositoryHash() => r'01c78a295dbc8bdc5944678861f3eb160ed55f03';
+String _$naverGeocodingRepositoryHash() =>
+    r'7d99be2344600a7c5f48ac6fa13a609034a3ce2f';
 
-/// See also [vertifyRepository].
-@ProviderFor(vertifyRepository)
-final vertifyRepositoryProvider =
-    AutoDisposeProvider<VertifyRepository>.internal(
-      vertifyRepository,
-      name: r'vertifyRepositoryProvider',
+/// See also [naverGeocodingRepository].
+@ProviderFor(naverGeocodingRepository)
+final naverGeocodingRepositoryProvider =
+    AutoDisposeProvider<NaverGeocodingRepository>.internal(
+      naverGeocodingRepository,
+      name: r'naverGeocodingRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$vertifyRepositoryHash,
+          : _$naverGeocodingRepositoryHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef VertifyRepositoryRef = AutoDisposeProviderRef<VertifyRepository>;
+typedef NaverGeocodingRepositoryRef =
+    AutoDisposeProviderRef<NaverGeocodingRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
