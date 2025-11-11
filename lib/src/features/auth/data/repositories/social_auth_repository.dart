@@ -37,7 +37,7 @@ class SocialAuthRepository {
 
       // 4. 결과 반환
       return SocialAuthResult(
-        providerType: AuthProviderType.naver,
+        providerType: AuthProviderType.NAVER,
         authCode: token.accessToken, // Access Token을 authCode로 전달
         email: account.email ?? '',
         name: account.nickname ?? account.name ?? '',
@@ -78,7 +78,7 @@ class SocialAuthRepository {
 
       // 3. 결과 반환
       return SocialAuthResult(
-        providerType: AuthProviderType.kakao,
+        providerType: AuthProviderType.KAKAO,
         authCode: token.accessToken,
         email: user.kakaoAccount?.email ?? '',
         name: user.kakaoAccount?.profile?.nickname ?? '',
@@ -128,7 +128,7 @@ class SocialAuthRepository {
 
       // 3. 결과 반환
       return SocialAuthResult(
-        providerType: AuthProviderType.apple,
+        providerType: AuthProviderType.APPLE,
         authCode: credential.identityToken!,
         email: email,
         name: name,

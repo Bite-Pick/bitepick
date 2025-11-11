@@ -8,6 +8,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/core/utils/inquiry_button.dart';
+import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
@@ -67,7 +68,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                   store?.goodsList[0].goodsId ?? "",
                   store?.goodsList[0].saleStatus == "ON",
                 ),
-                _buildMoreButton(),
+                _buildMoreButton(store?.storeId ?? ""),
               ],
             ),
             bottom: TabBar(
@@ -134,28 +135,32 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildMoreButton() {
+  Widget _buildMoreButton(String storeId) {
+    final List<(String, String)> menus = [
+      ('logout', '로그아웃'),
+      ('support', '고객센터'),
+      ('withdraw', '회원탈퇴'),
+    ];
     return PopupMenuButton<String>(
       icon: BaseSvgIcon.moreVertical(),
       onSelected: (value) {
         return switch (value) {
           'logout' => logout(ref, context), // TODO: dialog로 묻기
           'support' => InquiryButton.showInquiryBottomSheet(context),
+          'withdraw' => withDraw(ref, context),
           _ => null,
         };
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       offset: const Offset(0, 36), // 클릭 위치로부터 아래로 띄움
       itemBuilder: (context) => [
-        const PopupMenuItem<String>(
-          value: 'logout',
-          child: Center(child: Text('로그아웃')),
-        ),
-        const PopupMenuDivider(),
-        const PopupMenuItem<String>(
-          value: 'support',
-          child: Center(child: Text('고객센터')),
-        ),
+        for (final (value, label) in menus) ...[
+          PopupMenuItem<String>(
+            value: value,
+            child: Center(child: Text(label)),
+          ),
+          if (value != menus.last.$1) const PopupMenuDivider(),
+        ],
       ],
     );
   }

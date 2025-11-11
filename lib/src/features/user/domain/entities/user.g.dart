@@ -10,7 +10,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
   email: json['email'] as String,
   nickName: json['nickName'] as String,
   userRole: $enumDecode(_$UserRoleEnumMap, json['userRole']),
-  providerType: $enumDecode(_$ProviderTypeEnumMap, json['providerType']),
+  providerType: $enumDecode(_$AuthProviderTypeEnumMap, json['providerType']),
   approved: $enumDecodeNullable(_$ApprovedStatusEnumMap, json['approved']),
   goodsId: json['goodsId'] as String?,
 );
@@ -20,7 +20,7 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'email': instance.email,
       'nickName': instance.nickName,
       'userRole': _$UserRoleEnumMap[instance.userRole]!,
-      'providerType': _$ProviderTypeEnumMap[instance.providerType]!,
+      'providerType': _$AuthProviderTypeEnumMap[instance.providerType]!,
       'approved': _$ApprovedStatusEnumMap[instance.approved],
       'goodsId': instance.goodsId,
     };
@@ -31,11 +31,10 @@ const _$UserRoleEnumMap = {
   UserRole.admin: 'ADMIN',
 };
 
-const _$ProviderTypeEnumMap = {
-  ProviderType.kakao: 'KAKAO',
-  ProviderType.naver: 'NAVER',
-  ProviderType.google: 'GOOGLE',
-  ProviderType.apple: 'APPLE',
+const _$AuthProviderTypeEnumMap = {
+  AuthProviderType.NAVER: 'NAVER',
+  AuthProviderType.KAKAO: 'KAKAO',
+  AuthProviderType.APPLE: 'APPLE',
 };
 
 const _$ApprovedStatusEnumMap = {
