@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
-import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,17 +22,8 @@ class OwnerOrderListState with _$OwnerOrderListState {
 class OwnerOrderListController extends _$OwnerOrderListController {
   @override
   Future<OwnerOrderListState> build() async {
-    // TODO: API 호출로 변경
-    // final repository = ref.read(orderRepositoryProvider);
-    // final orders = await repository.getStoreOrders(
-    //   page: 1,
-    //   size: 10,
-    // );
+    final orders = await ref.read(orderRepositoryProvider).getStoreOrders();
 
-    // 임시로 mock 데이터 사용
-    await Future.delayed(Duration(milliseconds: 500));
-
-    final orders = mockOrderOwners;
     final counts = _calculateStatusCounts();
 
     return OwnerOrderListState(
@@ -46,21 +36,12 @@ class OwnerOrderListController extends _$OwnerOrderListController {
   Future<void> _loadOrders() async {
     state = await AsyncValue.guard(() async {
       final currentState = state.requireValue;
-
-      // TODO: API 호출로 변경
-      // final repository = ref.read(orderRepositoryProvider);
-      // final orders = await repository.getStoreOrders(
-      //   page: 1,
-      //   size: 10,
-      //   orderStatus: currentState.selectedStatus,
-      // );
-
-      // 임시로 mock 데이터 사용
-      await Future.delayed(Duration(milliseconds: 500));
-
+      final orginOrders = await ref
+          .read(orderRepositoryProvider)
+          .getStoreOrders();
       final orders = currentState.selectedStatus == null
-          ? mockOrderOwners
-          : mockOrderOwners
+          ? orginOrders
+          : orginOrders
                 .where(
                   (order) => order.orderStatus == currentState.selectedStatus,
                 )
@@ -71,17 +52,16 @@ class OwnerOrderListController extends _$OwnerOrderListController {
   }
 
   Map<OrderOwnerStatus?, int> _calculateStatusCounts() {
-    // TODO: API 호출로 각 상태별 카운트 가져오기
-    // 임시로 mock 데이터 기반 카운트
+    final orders = state.value?.orders ?? [];
     return {
-      null: mockOrderOwners.length,
-      OrderOwnerStatus.paid: mockOrderOwners
+      null: orders.length,
+      OrderOwnerStatus.paid: orders
           .where((order) => order.orderStatus == OrderOwnerStatus.paid)
           .length,
-      OrderOwnerStatus.accepted: mockOrderOwners
+      OrderOwnerStatus.accepted: orders
           .where((order) => order.orderStatus == OrderOwnerStatus.accepted)
           .length,
-      OrderOwnerStatus.completed: mockOrderOwners
+      OrderOwnerStatus.completed: orders
           .where((order) => order.orderStatus == OrderOwnerStatus.completed)
           .length,
     };

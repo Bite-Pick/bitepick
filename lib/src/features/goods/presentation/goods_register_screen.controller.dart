@@ -52,10 +52,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       'description': FormControl<String>(
         validators: [Validators.required, Validators.minLength(10)],
       ),
-      'images': FormControl<int>(
-        value: 0,
-        validators: [Validators.required, Validators.min(1)],
-      ),
       // Step 2: 수량, 판매 시작,마감 시간
       'quantity': FormControl<int>(
         value: 0,
@@ -88,80 +84,26 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
     state.form.control('salePrice').value = salePrice;
   }
 
-  // 다음 단계로 이동
-  void nextStep() {
-    if (state.currentStep < 4) {
-      state = state.copyWith(currentStep: state.currentStep + 1);
-    }
-  }
-
-  // 이전 단계로 이동
-  void previousStep() {
-    if (state.currentStep > 0) {
-      state = state.copyWith(currentStep: state.currentStep - 1);
-    }
-  }
-
-  // 특정 단계로 이동
-  void goToStep(int step) {
-    if (step >= 0 && step <= 4) {
-      state = state.copyWith(currentStep: step);
-    }
-  }
-
-  // 진행률 계산 (0.0 ~ 1.0)
-  double get progress => (state.currentStep + 1) / 5;
-
-  // Step별 validation
-  bool validateStep(int step) {
-    switch (step) {
-      case 0:
-        return state.form.control('description').valid &&
-            state.form.control('images').valid;
-      case 1:
-        return state.form.control('originalPrice').valid &&
-            state.form.control('discount').valid;
-      case 2:
-        return state.form.control('quantity').valid;
-      case 3:
-        return state.form.control('startTime').valid &&
-            state.form.control('endTime').valid;
-      case 4:
-        return state.form.valid;
-      default:
-        return false;
-    }
-  }
-
-  // 로컬 이미지 추가 (갤러리에서 선택한 파일)
-  void addLocalImages(List<File> files) {
-    final newImages = <LocalImage>[];
-    var currentId = state.localImages.length;
-
-    for (final file in files) {
-      final fileName = file.path.split('/').last;
-      newImages.add(LocalImage(id: currentId, key: fileName, file: file));
-      currentId++;
-    }
-
-    final updatedImages = [...state.localImages, ...newImages];
-    state = state.copyWith(localImages: updatedImages);
-
-    // Form에 이미지 개수 업데이트
-    state.form.control('images').value = updatedImages.length;
-  }
-
-  // 이미지 제거
-  void removeImage(int index) {
-    if (index >= 0 && index < state.localImages.length) {
-      final updatedImages = List<LocalImage>.from(state.localImages)
-        ..removeAt(index);
-      state = state.copyWith(localImages: updatedImages);
-
-      // Form에 이미지 개수 업데이트
-      state.form.control('images').value = updatedImages.length;
-    }
-  }
+  // // Step별 validation
+  // bool validateStep(int step) {
+  //   switch (step) {
+  //     case 0:
+  //       return state.form.control('description').valid &&
+  //           state.form.control('images').valid;
+  //     case 1:
+  //       return state.form.control('originalPrice').valid &&
+  //           state.form.control('discount').valid;
+  //     case 2:
+  //       return state.form.control('quantity').valid;
+  //     case 3:
+  //       return state.form.control('startTime').valid &&
+  //           state.form.control('endTime').valid;
+  //     case 4:
+  //       return state.form.valid;
+  //     default:
+  //       return false;
+  //   }
+  // }
 
   void fillWithMockData(Map<String, Object> data) {
     state.form.patchValue(data);
@@ -212,6 +154,12 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   Future<bool> submit() async {
     if (!state.form.valid) {
       state.form.markAllAsTouched();
+      // Iterate over the form controls and print errors for invalid ones.
+      state.form.controls.forEach((key, control) {
+        if (control.invalid) {
+          print('Invalid field: [$key], Errors: ${control.errors}');
+        }
+      });
       return false;
     }
 
@@ -223,12 +171,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       );
 
       final formValue = state.form.value;
-      final repository = ref.read(goodsRepositoryProvider);
-
-      // 1. 대표 이미지 메타데이터 생성
-      final imageMetadataList = state.localImages
-          .map((img) => ImageMetadata(id: img.id, key: img.key))
-          .toList();
 
       // 2. Goods 등록 API 호출 (presigned URL 받기)
       final presignedUrls = await ref
@@ -241,10 +183,11 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
             quantity: formValue['quantity'] as int,
             startTime: formValue['startTime'] as DateTime,
             endTime: formValue['endTime'] as DateTime,
-            goodsImagesRegisters: imageMetadataList,
+            // TODO: 상세 설명추가
           );
 
       // 3. Presigned URL로 S3에 이미지 업로드
+      // TODO: 상세설명 API 수정 이후 연결
       // await ref
       //     .read(presignedImageRepositoryProvider)
       //     .uploadImagesToS3(

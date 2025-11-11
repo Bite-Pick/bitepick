@@ -21,12 +21,12 @@ class InquiryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MgButton(
-      onPressed: () async => _showInquiryBottomSheet(context),
+      onPressed: () async => showInquiryBottomSheet(context),
       content: Text("문의하기"),
     );
   }
 
-  void _showInquiryBottomSheet(BuildContext context) {
+  static void showInquiryBottomSheet(BuildContext context) {
     MgBottomsheet.show(context, (context, bottomState) {
       return MgBottomsheet(
         Column(
@@ -39,7 +39,7 @@ class InquiryButton extends StatelessWidget {
     }, height: 250);
   }
 
-  Widget _buildInquiryItem(BuildContext context) {
+  static Widget _buildInquiryItem(BuildContext context) {
     return GestureDetector(
       onTap: () async {
         Navigator.of(context).pop();
@@ -57,7 +57,7 @@ class InquiryButton extends StatelessWidget {
     );
   }
 
-  Future<void> _openKakaoChannel() async {
+  static Future<void> _openKakaoChannel() async {
     final uri = Uri.parse(kakaoChannelUrl);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);

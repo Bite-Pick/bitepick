@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +7,7 @@ import 'package:magambell/src/features/auth/presenation/join_success_screen.dart
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
+import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
@@ -17,7 +17,6 @@ import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_scree
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
-import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
@@ -126,6 +125,10 @@ class LoginRoute extends GoRouteData {
     TypedGoRoute<OwnerGoodsEmptyRoute>(
       name: 'OwnerGoodsEmptyRoute',
       path: 'owner/goods/empty',
+    ),
+     TypedGoRoute<GoodsEditRoute>(
+      name: 'GoodsEditRoute',
+      path: 'owner/store/edit',
     ),
   ],
 )

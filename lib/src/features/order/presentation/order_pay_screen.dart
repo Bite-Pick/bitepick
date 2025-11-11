@@ -44,9 +44,9 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     final storeName = '가게명';
     final storeAddress = '경상북도 경산시 백자로 76 3층';
     final pickupTime = '오늘 7:00';
-    final double originalPrice = orderInfo.originalPrice;
-    final double salePrice = orderInfo.salePrice;
-    final double discount = orderInfo.discount;
+    final int originalPrice = orderInfo.originalPrice;
+    final int salePrice = orderInfo.salePrice;
+    final int discount = orderInfo.discount;
     final quantity = orderInfo.quantity;
     final totalPrice = orderInfo.totalPrice;
 
@@ -128,7 +128,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   Widget _buildOrderItemInfoCard(
     String storeName,
     String storeAddress,
-    double salePrice,
+    int salePrice,
     int quantity,
     String time,
   ) {
@@ -154,8 +154,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   Widget _buildOrderItemCard({
     required String storeName,
     required String address,
-    required double discount,
-    required double price,
+    required int discount,
+    required int price,
     required int count,
     String time = '오후 7:00',
   }) {
@@ -187,7 +187,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         );
   }
 
-  Widget _buildPriceRow(String label, double price) {
+  Widget _buildPriceRow(String label, int price) {
     final isDiscount = price < 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -210,9 +210,9 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   }
 
   Widget _buildPriceInfoSection(
-    double originalPrice,
-    double discountPrice,
-    double totalPrice,
+    int originalPrice,
+    int discountPrice,
+    int totalPrice,
     int quantity,
   ) {
     return Column(

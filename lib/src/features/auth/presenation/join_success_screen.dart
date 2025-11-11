@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -35,11 +36,7 @@ class JoinSuccessScreen extends ConsumerWidget {
         children: [
           Spacer(),
           // 성공 아이콘 또는 이미지
-          Image.asset(
-            R.ASSETS_IMAGES_JOIN_SUCCESS_PNG,
-            width: 120,
-            height: 120,
-          ),
+          Lottie.asset(R.ASSETS_LOTTIE_SUCCESS_JSON),
           Gaps.h32,
           Text("회원가입 완료").xxl().bold(),
           Gaps.h16,

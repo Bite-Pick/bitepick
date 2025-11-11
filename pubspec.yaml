@@ -52,6 +52,7 @@ dependencies:
   kpostal: ^0.4.1
   image_picker: ^1.2.0
   dotted_border: ^3.1.0
+  lottie: ^3.3.2
 
 
 dev_dependencies:
@@ -78,6 +79,7 @@ flutter:
     - assets/icons/svg/
     - assets/icons/svg/filled/
     - assets/icons/svg/bank/
+    - assets/lottie/
     - shorebird.yaml
 
   fonts:

@@ -63,7 +63,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
       appBar: BaseAppBar(),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverToBoxAdapter(child: StoreInfoView(goods: goods)),
+          SliverToBoxAdapter(child: StoreInfoView(goods.toStoreInfoData())),
           SliverPersistentHeader(
             pinned: true,
             delegate: _SliverAppBarDelegate(
@@ -114,7 +114,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                           quantity: count,
                           totalPrice: goods.salePrice * count,
                           salePrice: goods.salePrice,
-                          originalPrice: goods.originPrice.toDouble(),
+                          originalPrice: goods.originPrice,
                         );
                     // 주문 확인 화면으로 이동
                     await const OrderCautionRoute().push(context);

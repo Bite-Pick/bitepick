@@ -5,9 +5,9 @@ part 'order_pay_screen.controller.g.dart';
 class OrderInfo {
   final String goodsId;
   final int quantity;
-  final double totalPrice;
-  final double salePrice;
-  final double originalPrice;
+  final int totalPrice;
+  final int salePrice;
+  final int originalPrice;
 
   OrderInfo({
     required this.goodsId,
@@ -20,9 +20,9 @@ class OrderInfo {
   OrderInfo copyWith({
     String? goodsId,
     int? quantity,
-    double? totalPrice,
-    double? salePrice,
-    double? originalPrice,
+    int? totalPrice,
+    int? salePrice,
+    int? originalPrice,
   }) {
     return OrderInfo(
       goodsId: goodsId ?? this.goodsId,
@@ -33,7 +33,7 @@ class OrderInfo {
     );
   }
 
-  double get discount => originalPrice - salePrice;
+  int get discount => originalPrice - salePrice;
 }
 
 @Riverpod(keepAlive: true)
@@ -52,9 +52,9 @@ class OrderPayScreenController extends _$OrderPayScreenController {
   void setOrderInfo({
     required String goodsId,
     required int quantity,
-    required double totalPrice,
-    required double salePrice,
-    required double originalPrice,
+    required int totalPrice,
+    required int salePrice,
+    required int originalPrice,
   }) {
     state = OrderInfo(
       goodsId: goodsId,

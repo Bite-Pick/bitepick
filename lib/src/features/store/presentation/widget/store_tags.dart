@@ -11,7 +11,7 @@ class StoreTags extends StatelessWidget {
     required this.quantity,
     required this.saleStatus,
   });
-  final double quantity;
+  final int quantity;
   final String saleStatus;
   @override
   Widget build(BuildContext context) {

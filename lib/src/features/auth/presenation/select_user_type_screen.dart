@@ -14,6 +14,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
@@ -148,7 +149,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
                   .setUserRole(selectedUserRole!);
 
               Navigator.of(context).pop();
-              JoinBasicInfoRoute().push(context);
+              JoinSuccessRoute().push(context);
             },
             content: const Text("확인"),
           ).primary(),

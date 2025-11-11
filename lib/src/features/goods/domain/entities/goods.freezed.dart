@@ -22,20 +22,21 @@ Goods _$GoodsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Goods {
   String get goodsId => throw _privateConstructorUsedError;
-  String get storeId => throw _privateConstructorUsedError;
-  String get storeName => throw _privateConstructorUsedError;
-  List<String> get ImageUrl => throw _privateConstructorUsedError;
-  double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
-  String get address => throw _privateConstructorUsedError;
+  String? get storeId => throw _privateConstructorUsedError;
+  String? get storeName => throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
+  List<String>? get ImageUrl => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  double? get distance => throw _privateConstructorUsedError;
+  String? get address => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
   int get originPrice => throw _privateConstructorUsedError;
-  double get discount => throw _privateConstructorUsedError;
-  double get salePrice => throw _privateConstructorUsedError;
-  double get quantity => throw _privateConstructorUsedError;
-  double get distance => throw _privateConstructorUsedError;
+  int get discount => throw _privateConstructorUsedError;
+  int get salePrice => throw _privateConstructorUsedError;
+  int get stockQuantity => throw _privateConstructorUsedError;
   String get saleStatus => throw _privateConstructorUsedError;
 
   /// Serializes this Goods to a JSON map.
@@ -54,20 +55,21 @@ abstract class $GoodsCopyWith<$Res> {
   @useResult
   $Res call({
     String goodsId,
-    String storeId,
-    String storeName,
-    List<String> ImageUrl,
-    double latitude,
-    double longitude,
-    String address,
+    String? storeId,
+    String? storeName,
     String? goodsName,
+    List<String>? ImageUrl,
+    double? latitude,
+    double? longitude,
+    double? distance,
+    String? address,
+    String? description,
     String startTime,
     String endTime,
     int originPrice,
-    double discount,
-    double salePrice,
-    double quantity,
-    double distance,
+    int discount,
+    int salePrice,
+    int stockQuantity,
     String saleStatus,
   });
 }
@@ -88,20 +90,21 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
   @override
   $Res call({
     Object? goodsId = null,
-    Object? storeId = null,
-    Object? storeName = null,
-    Object? ImageUrl = null,
-    Object? latitude = null,
-    Object? longitude = null,
-    Object? address = null,
+    Object? storeId = freezed,
+    Object? storeName = freezed,
     Object? goodsName = freezed,
+    Object? ImageUrl = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? distance = freezed,
+    Object? address = freezed,
+    Object? description = freezed,
     Object? startTime = null,
     Object? endTime = null,
     Object? originPrice = null,
     Object? discount = null,
     Object? salePrice = null,
-    Object? quantity = null,
-    Object? distance = null,
+    Object? stockQuantity = null,
     Object? saleStatus = null,
   }) {
     return _then(
@@ -110,33 +113,41 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
                 ? _value.goodsId
                 : goodsId // ignore: cast_nullable_to_non_nullable
                       as String,
-            storeId: null == storeId
+            storeId: freezed == storeId
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            storeName: null == storeName
+                      as String?,
+            storeName: freezed == storeName
                 ? _value.storeName
                 : storeName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            ImageUrl: null == ImageUrl
-                ? _value.ImageUrl
-                : ImageUrl // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            latitude: null == latitude
-                ? _value.latitude
-                : latitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            longitude: null == longitude
-                ? _value.longitude
-                : longitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            address: null == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             goodsName: freezed == goodsName
                 ? _value.goodsName
                 : goodsName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            ImageUrl: freezed == ImageUrl
+                ? _value.ImageUrl
+                : ImageUrl // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            latitude: freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            longitude: freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            distance: freezed == distance
+                ? _value.distance
+                : distance // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            address: freezed == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
                       as String?,
             startTime: null == startTime
                 ? _value.startTime
@@ -153,19 +164,15 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
             discount: null == discount
                 ? _value.discount
                 : discount // ignore: cast_nullable_to_non_nullable
-                      as double,
+                      as int,
             salePrice: null == salePrice
                 ? _value.salePrice
                 : salePrice // ignore: cast_nullable_to_non_nullable
-                      as double,
-            quantity: null == quantity
-                ? _value.quantity
-                : quantity // ignore: cast_nullable_to_non_nullable
-                      as double,
-            distance: null == distance
-                ? _value.distance
-                : distance // ignore: cast_nullable_to_non_nullable
-                      as double,
+                      as int,
+            stockQuantity: null == stockQuantity
+                ? _value.stockQuantity
+                : stockQuantity // ignore: cast_nullable_to_non_nullable
+                      as int,
             saleStatus: null == saleStatus
                 ? _value.saleStatus
                 : saleStatus // ignore: cast_nullable_to_non_nullable
@@ -186,20 +193,21 @@ abstract class _$$GoodsImplCopyWith<$Res> implements $GoodsCopyWith<$Res> {
   @useResult
   $Res call({
     String goodsId,
-    String storeId,
-    String storeName,
-    List<String> ImageUrl,
-    double latitude,
-    double longitude,
-    String address,
+    String? storeId,
+    String? storeName,
     String? goodsName,
+    List<String>? ImageUrl,
+    double? latitude,
+    double? longitude,
+    double? distance,
+    String? address,
+    String? description,
     String startTime,
     String endTime,
     int originPrice,
-    double discount,
-    double salePrice,
-    double quantity,
-    double distance,
+    int discount,
+    int salePrice,
+    int stockQuantity,
     String saleStatus,
   });
 }
@@ -219,20 +227,21 @@ class __$$GoodsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? goodsId = null,
-    Object? storeId = null,
-    Object? storeName = null,
-    Object? ImageUrl = null,
-    Object? latitude = null,
-    Object? longitude = null,
-    Object? address = null,
+    Object? storeId = freezed,
+    Object? storeName = freezed,
     Object? goodsName = freezed,
+    Object? ImageUrl = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? distance = freezed,
+    Object? address = freezed,
+    Object? description = freezed,
     Object? startTime = null,
     Object? endTime = null,
     Object? originPrice = null,
     Object? discount = null,
     Object? salePrice = null,
-    Object? quantity = null,
-    Object? distance = null,
+    Object? stockQuantity = null,
     Object? saleStatus = null,
   }) {
     return _then(
@@ -241,33 +250,41 @@ class __$$GoodsImplCopyWithImpl<$Res>
             ? _value.goodsId
             : goodsId // ignore: cast_nullable_to_non_nullable
                   as String,
-        storeId: null == storeId
+        storeId: freezed == storeId
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        storeName: null == storeName
+                  as String?,
+        storeName: freezed == storeName
             ? _value.storeName
             : storeName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        ImageUrl: null == ImageUrl
-            ? _value._ImageUrl
-            : ImageUrl // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        latitude: null == latitude
-            ? _value.latitude
-            : latitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        longitude: null == longitude
-            ? _value.longitude
-            : longitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        address: null == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         goodsName: freezed == goodsName
             ? _value.goodsName
             : goodsName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        ImageUrl: freezed == ImageUrl
+            ? _value._ImageUrl
+            : ImageUrl // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        latitude: freezed == latitude
+            ? _value.latitude
+            : latitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        longitude: freezed == longitude
+            ? _value.longitude
+            : longitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        distance: freezed == distance
+            ? _value.distance
+            : distance // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        address: freezed == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
                   as String?,
         startTime: null == startTime
             ? _value.startTime
@@ -284,19 +301,15 @@ class __$$GoodsImplCopyWithImpl<$Res>
         discount: null == discount
             ? _value.discount
             : discount // ignore: cast_nullable_to_non_nullable
-                  as double,
+                  as int,
         salePrice: null == salePrice
             ? _value.salePrice
             : salePrice // ignore: cast_nullable_to_non_nullable
-                  as double,
-        quantity: null == quantity
-            ? _value.quantity
-            : quantity // ignore: cast_nullable_to_non_nullable
-                  as double,
-        distance: null == distance
-            ? _value.distance
-            : distance // ignore: cast_nullable_to_non_nullable
-                  as double,
+                  as int,
+        stockQuantity: null == stockQuantity
+            ? _value.stockQuantity
+            : stockQuantity // ignore: cast_nullable_to_non_nullable
+                  as int,
         saleStatus: null == saleStatus
             ? _value.saleStatus
             : saleStatus // ignore: cast_nullable_to_non_nullable
@@ -311,20 +324,21 @@ class __$$GoodsImplCopyWithImpl<$Res>
 class _$GoodsImpl extends _Goods {
   const _$GoodsImpl({
     required this.goodsId,
-    required this.storeId,
-    required this.storeName,
-    required final List<String> ImageUrl,
-    required this.latitude,
-    required this.longitude,
-    required this.address,
+    this.storeId,
+    this.storeName,
     this.goodsName,
+    final List<String>? ImageUrl,
+    this.latitude,
+    this.longitude,
+    this.distance,
+    this.address,
+    this.description,
     required this.startTime,
     required this.endTime,
     required this.originPrice,
     required this.discount,
     required this.salePrice,
-    required this.quantity,
-    required this.distance,
+    required this.stockQuantity,
     required this.saleStatus,
   }) : _ImageUrl = ImageUrl,
        super._();
@@ -335,25 +349,31 @@ class _$GoodsImpl extends _Goods {
   @override
   final String goodsId;
   @override
-  final String storeId;
+  final String? storeId;
   @override
-  final String storeName;
-  final List<String> _ImageUrl;
+  final String? storeName;
   @override
-  List<String> get ImageUrl {
+  final String? goodsName;
+  final List<String>? _ImageUrl;
+  @override
+  List<String>? get ImageUrl {
+    final value = _ImageUrl;
+    if (value == null) return null;
     if (_ImageUrl is EqualUnmodifiableListView) return _ImageUrl;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_ImageUrl);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
-  final double latitude;
+  final double? latitude;
   @override
-  final double longitude;
+  final double? longitude;
   @override
-  final String address;
+  final double? distance;
   @override
-  final String? goodsName;
+  final String? address;
+  @override
+  final String? description;
   @override
   final String startTime;
   @override
@@ -361,19 +381,17 @@ class _$GoodsImpl extends _Goods {
   @override
   final int originPrice;
   @override
-  final double discount;
+  final int discount;
   @override
-  final double salePrice;
+  final int salePrice;
   @override
-  final double quantity;
-  @override
-  final double distance;
+  final int stockQuantity;
   @override
   final String saleStatus;
 
   @override
   String toString() {
-    return 'Goods(goodsId: $goodsId, storeId: $storeId, storeName: $storeName, ImageUrl: $ImageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
+    return 'Goods(goodsId: $goodsId, storeId: $storeId, storeName: $storeName, goodsName: $goodsName, ImageUrl: $ImageUrl, latitude: $latitude, longitude: $longitude, distance: $distance, address: $address, description: $description, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, stockQuantity: $stockQuantity, saleStatus: $saleStatus)';
   }
 
   @override
@@ -385,14 +403,18 @@ class _$GoodsImpl extends _Goods {
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
+            (identical(other.goodsName, goodsName) ||
+                other.goodsName == goodsName) &&
             const DeepCollectionEquality().equals(other._ImageUrl, _ImageUrl) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
+            (identical(other.distance, distance) ||
+                other.distance == distance) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.goodsName, goodsName) ||
-                other.goodsName == goodsName) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
@@ -402,10 +424,8 @@ class _$GoodsImpl extends _Goods {
                 other.discount == discount) &&
             (identical(other.salePrice, salePrice) ||
                 other.salePrice == salePrice) &&
-            (identical(other.quantity, quantity) ||
-                other.quantity == quantity) &&
-            (identical(other.distance, distance) ||
-                other.distance == distance) &&
+            (identical(other.stockQuantity, stockQuantity) ||
+                other.stockQuantity == stockQuantity) &&
             (identical(other.saleStatus, saleStatus) ||
                 other.saleStatus == saleStatus));
   }
@@ -417,18 +437,19 @@ class _$GoodsImpl extends _Goods {
     goodsId,
     storeId,
     storeName,
+    goodsName,
     const DeepCollectionEquality().hash(_ImageUrl),
     latitude,
     longitude,
+    distance,
     address,
-    goodsName,
+    description,
     startTime,
     endTime,
     originPrice,
     discount,
     salePrice,
-    quantity,
-    distance,
+    stockQuantity,
     saleStatus,
   );
 
@@ -449,20 +470,21 @@ class _$GoodsImpl extends _Goods {
 abstract class _Goods extends Goods {
   const factory _Goods({
     required final String goodsId,
-    required final String storeId,
-    required final String storeName,
-    required final List<String> ImageUrl,
-    required final double latitude,
-    required final double longitude,
-    required final String address,
+    final String? storeId,
+    final String? storeName,
     final String? goodsName,
+    final List<String>? ImageUrl,
+    final double? latitude,
+    final double? longitude,
+    final double? distance,
+    final String? address,
+    final String? description,
     required final String startTime,
     required final String endTime,
     required final int originPrice,
-    required final double discount,
-    required final double salePrice,
-    required final double quantity,
-    required final double distance,
+    required final int discount,
+    required final int salePrice,
+    required final int stockQuantity,
     required final String saleStatus,
   }) = _$GoodsImpl;
   const _Goods._() : super._();
@@ -472,19 +494,23 @@ abstract class _Goods extends Goods {
   @override
   String get goodsId;
   @override
-  String get storeId;
+  String? get storeId;
   @override
-  String get storeName;
-  @override
-  List<String> get ImageUrl;
-  @override
-  double get latitude;
-  @override
-  double get longitude;
-  @override
-  String get address;
+  String? get storeName;
   @override
   String? get goodsName;
+  @override
+  List<String>? get ImageUrl;
+  @override
+  double? get latitude;
+  @override
+  double? get longitude;
+  @override
+  double? get distance;
+  @override
+  String? get address;
+  @override
+  String? get description;
   @override
   String get startTime;
   @override
@@ -492,13 +518,11 @@ abstract class _Goods extends Goods {
   @override
   int get originPrice;
   @override
-  double get discount;
+  int get discount;
   @override
-  double get salePrice;
+  int get salePrice;
   @override
-  double get quantity;
-  @override
-  double get distance;
+  int get stockQuantity;
   @override
   String get saleStatus;
 

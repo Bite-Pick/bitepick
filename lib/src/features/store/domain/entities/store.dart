@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/features/store/domain/entities/store_info_ui_data.dart';
 
 part 'store.freezed.dart';
 part 'store.g.dart';
@@ -13,8 +14,30 @@ class Store with _$Store {
     required List<String> storeImageUrls,
     required List<Goods> goodsList,
   }) = _Store;
+  const Store._();
 
   factory Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
+
+  StoreInfoUiData toStoreInfoData() {
+    // For a store, we might display info from the first available goods item
+    final firstGoods = goodsList.isNotEmpty ? goodsList.first : null;
+    return StoreInfoUiData(
+      storeId: storeId,
+      storeName: storeName,
+      address: address,
+      imageUrls: storeImageUrls,
+      latitude: firstGoods?.latitude,
+      longitude: firstGoods?.longitude,
+      stockQuantity: firstGoods?.stockQuantity ?? 0,
+      saleStatus: firstGoods?.saleStatus ?? "OFF",
+      discount: firstGoods?.discount ?? 0,
+      salePrice: firstGoods?.salePrice ?? 0,
+      originPrice: firstGoods?.originPrice ?? 0,
+      startTime: firstGoods?.startTime ?? "",
+      endTime: firstGoods?.endTime ?? "",
+      description: firstGoods?.description ?? "",
+    );
+  }
 }
 
 final mockStore = Store(
@@ -43,7 +66,7 @@ final mockStore = Store(
       originPrice: 15000,
       discount: 30,
       salePrice: 10500,
-      quantity: 5,
+      stockQuantity: 5,
       distance: 0,
       saleStatus: "ON",
     ),
@@ -63,7 +86,7 @@ final mockStore = Store(
       originPrice: 12000,
       discount: 40,
       salePrice: 7200,
-      quantity: 3,
+      stockQuantity: 3,
       distance: 0,
       saleStatus: "ON",
     ),

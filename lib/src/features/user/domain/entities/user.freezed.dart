@@ -24,7 +24,7 @@ mixin _$User {
   String get email => throw _privateConstructorUsedError;
   String get nickName => throw _privateConstructorUsedError;
   UserRole get userRole => throw _privateConstructorUsedError;
-  ProviderType get providerType => throw _privateConstructorUsedError;
+  AuthProviderType get providerType => throw _privateConstructorUsedError;
   ApprovedStatus? get approved => throw _privateConstructorUsedError;
   String? get goodsId => throw _privateConstructorUsedError;
 
@@ -46,7 +46,7 @@ abstract class $UserCopyWith<$Res> {
     String email,
     String nickName,
     UserRole userRole,
-    ProviderType providerType,
+    AuthProviderType providerType,
     ApprovedStatus? approved,
     String? goodsId,
   });
@@ -91,7 +91,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
             providerType: null == providerType
                 ? _value.providerType
                 : providerType // ignore: cast_nullable_to_non_nullable
-                      as ProviderType,
+                      as AuthProviderType,
             approved: freezed == approved
                 ? _value.approved
                 : approved // ignore: cast_nullable_to_non_nullable
@@ -118,7 +118,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
     String email,
     String nickName,
     UserRole userRole,
-    ProviderType providerType,
+    AuthProviderType providerType,
     ApprovedStatus? approved,
     String? goodsId,
   });
@@ -160,7 +160,7 @@ class __$$UserImplCopyWithImpl<$Res>
         providerType: null == providerType
             ? _value.providerType
             : providerType // ignore: cast_nullable_to_non_nullable
-                  as ProviderType,
+                  as AuthProviderType,
         approved: freezed == approved
             ? _value.approved
             : approved // ignore: cast_nullable_to_non_nullable
@@ -196,7 +196,7 @@ class _$UserImpl extends _User {
   @override
   final UserRole userRole;
   @override
-  final ProviderType providerType;
+  final AuthProviderType providerType;
   @override
   final ApprovedStatus? approved;
   @override
@@ -255,7 +255,7 @@ abstract class _User extends User {
     required final String email,
     required final String nickName,
     required final UserRole userRole,
-    required final ProviderType providerType,
+    required final AuthProviderType providerType,
     final ApprovedStatus? approved,
     final String? goodsId,
   }) = _$UserImpl;
@@ -270,7 +270,7 @@ abstract class _User extends User {
   @override
   UserRole get userRole;
   @override
-  ProviderType get providerType;
+  AuthProviderType get providerType;
   @override
   ApprovedStatus? get approved;
   @override

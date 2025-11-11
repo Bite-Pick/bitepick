@@ -62,9 +62,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
               ),
               Text("|").margin(horizontal: MgSizes.xss),
               MgButton(
-                onPressed: () {
-                  // TODO: 회원탈퇴 API 연동
-                },
+                onPressed: () => withDraw(ref, context),
                 content: Text("회원탈퇴").textGray().regular(),
               ),
             ],

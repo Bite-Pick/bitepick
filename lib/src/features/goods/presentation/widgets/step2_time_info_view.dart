@@ -49,7 +49,10 @@ class Step2TimeInfoView extends ConsumerWidget {
               placeholder: '판매 종료 시간',
             ),
             Gaps.h32,
-            GoodsRegisterFormTitle(title: "판매 개수"),
+            GoodsRegisterFormTitle(
+              title: "판매 개수",
+              subtitles: [TextSpan(text: "하루에 판매할 양을 설정해주세요")],
+            ),
             MgFormItem(
               name: 'quantity',
               child:

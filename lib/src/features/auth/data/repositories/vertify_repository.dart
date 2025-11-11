@@ -21,7 +21,7 @@ class VertifyRepository {
     final res = await _dio.get(
       '/v1/verify/social',
       queryParameters: {
-        'providerType': authProviderType.value,
+        'providerType': authProviderType.name,
         'authCode': authCode,
       },
     );

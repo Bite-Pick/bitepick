@@ -30,7 +30,7 @@ class AuthRepository {
     try {
       // null 또는 빈 값 제거
       final requestData = JsonUtils.removeEmpty({
-        "providerType": providerType.value,
+        "providerType": providerType.name,
         "authCode": authCode,
         "name": name,
         "nickName": nickName,
@@ -38,10 +38,7 @@ class AuthRepository {
         "userRole": userRole,
       });
 
-      final res = await _dio.post(
-        '/v1/auth/oauth/login',
-        data: requestData,
-      );
+      final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
 
       if (res.statusCode != 200) {
         print('Authentication failed: ${res.statusCode}');
@@ -73,6 +70,18 @@ class AuthRepository {
     }
   }
 
+  Future<bool> withdraw({
+    required AuthProviderType providerType,
+    required String authCode,
+  }) async {
+    final res = await _dio.delete(
+      '/v1/auth/withdraw',
+      data: {"providerType": providerType.name, "authCode": authCode},
+    );
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return false;
+    return true;
+  }
 }
 
 @riverpod
