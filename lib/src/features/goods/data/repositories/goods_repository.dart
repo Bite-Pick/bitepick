@@ -105,7 +105,7 @@ class GoodsRepository {
     required bool saleStatus,
   }) async {
     final res = await _dio.patch(
-      "v1/goods/status",
+      "/v1/goods/status",
       data: {"goodsId": id, "saleStatus": saleStatus ? "ON" : "OFF"},
     );
     final data = res.data['data'] as String?;

@@ -16,6 +16,7 @@ import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class OwnerHomeRoute extends GoRouteData {
   const OwnerHomeRoute();
@@ -51,39 +52,47 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final store = ref.watch(storeStateProvider);
-    return BaseScaffold(
-      appBar: BaseAppBar(
-        // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
-        // leadingWidth: 120,
-        leading: SizedBox.shrink(),
-        action: Row(
-          children: [
-            _buildServiceSwitch(store?.goodsList[0].goodsId ?? ""),
-            _buildMoreButton(),
-          ],
-        ),
-        bottom: TabBar(
-          dividerColor: Colors.transparent,
-          controller: _tabController,
-          labelColor: MgColorScheme.text,
-          unselectedLabelColor: MgColorScheme.gray5,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicator: UnderlineTabIndicator(
-            borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+    final storeAsync = ref.watch(storeStateProvider);
+    return MgAsyncAnimatedSwitcher(
+      asyncValue: storeAsync,
+      builder: (store) {
+        return BaseScaffold(
+          appBar: BaseAppBar(
+            // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
+            // leadingWidth: 120,
+            leading: SizedBox.shrink(),
+            action: Row(
+              children: [
+                _buildServiceSwitch(
+                  store?.goodsList[0].goodsId ?? "",
+                  store?.goodsList[0].saleStatus == "ON",
+                ),
+                _buildMoreButton(),
+              ],
+            ),
+            bottom: TabBar(
+              dividerColor: Colors.transparent,
+              controller: _tabController,
+              labelColor: MgColorScheme.text,
+              unselectedLabelColor: MgColorScheme.gray5,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+              ),
+              labelStyle: context.textTheme.titleLarge,
+              unselectedLabelStyle: context.textTheme.bodyLarge,
+              tabs: [
+                Tab(text: '주문'),
+                Tab(text: '판매'),
+              ],
+            ),
           ),
-          labelStyle: context.textTheme.titleLarge,
-          unselectedLabelStyle: context.textTheme.bodyLarge,
-          tabs: [
-            Tab(text: '주문'),
-            Tab(text: '판매'),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [OwnerOrderListView(), OwnerGoodsView()],
-      ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [OwnerOrderListView(), OwnerGoodsView()],
+          ),
+        );
+      },
     );
   }
 
@@ -102,20 +111,24 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildServiceSwitch(String id) {
+  Widget _buildServiceSwitch(String id, bool saleStatus) {
     return Row(
       children: [
         Text("영업중").bold().md(),
         Gaps.w8,
-        // TODO: 스위치 색상 변경
         Switch(
-          value: true,
+          value: saleStatus,
           onChanged: (value) async {
             await ref
                 .read(goodsRepositoryProvider)
                 .setGoodsSaleStatus(id: id, saleStatus: value);
             ref.invalidate(storeStateProvider);
           },
+          activeColor: MgColorScheme.white,
+          activeTrackColor: MgColorScheme.subpointGreen, // 활성화(ON) 시 트랙 색상
+          inactiveThumbColor: MgColorScheme.white, // 비활성화 원 색
+          inactiveTrackColor: MgColorScheme.gray, // 비활성화(OFF) 시 트랙 색상
+          trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
         ),
       ],
     );
