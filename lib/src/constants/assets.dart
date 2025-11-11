@@ -279,5 +279,7 @@ class R {
 
   static const String ASSETS_IMAGES_USER_PNG = 'assets/images/user.png';
 
+  static const String ASSETS_LOTTIE_SUCCESS_JSON = 'assets/lottie/success.json';
+
   static const String SHOREBIRD_YAML = 'shorebird.yaml';
 }

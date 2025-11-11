@@ -1,6 +1,5 @@
 exclude:
   - '.env'
-  - '**/*.json'
   - '**/*.ttf'
 
 # include:
