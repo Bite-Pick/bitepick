@@ -152,11 +152,15 @@ class BaseSvgIcon extends StatelessWidget {
       _makeIcon('filled/kakao.svg', size, color);
   factory BaseSvgIcon.camera({double? size, Color? color}) =>
       _makeIcon('camera.svg', size, color);
+
   factory BaseSvgIcon.filledTime({
     double? size,
     Color? color,
     bool? hasColorFilter,
   }) => _makeIcon('filled/time.svg', size, color);
+
+  factory BaseSvgIcon.homeLogo({double? size, Color? color}) =>
+      _makeIcon('home_logo.svg', size, color);
 
   BaseSvgIcon copyWith({Color? color, double? size, bool? hasColorFilter}) {
     return BaseSvgIcon(

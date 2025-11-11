@@ -6,7 +6,7 @@ part of 'review_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$reviewRepositoryHash() => r'9074e9261943e5c6b2bb9fdd2f37ccb86cd6f931';
+String _$reviewRepositoryHash() => r'7eda43b044f8ce4f9523571dbfdec0f4d931c2be';
 
 /// See also [reviewRepository].
 @ProviderFor(reviewRepository)

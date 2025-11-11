@@ -6,7 +6,7 @@ part of 'vertify_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vertifyRepositoryHash() => r'52e69a46e033488b8ec169f78fbf3da5ae78317a';
+String _$vertifyRepositoryHash() => r'01c78a295dbc8bdc5944678861f3eb160ed55f03';
 
 /// See also [vertifyRepository].
 @ProviderFor(vertifyRepository)

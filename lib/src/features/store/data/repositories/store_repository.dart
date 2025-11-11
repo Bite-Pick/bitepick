@@ -9,7 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'store_repository.g.dart';
 
 class StoreRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+
+  StoreRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   Future<List<Goods>> getStoreGoodsList({
     required double latitude,
@@ -52,7 +57,7 @@ class StoreRepository {
     return Goods.fromJson(data as Map<String, dynamic>);
   }
 
-  Future<void> createStore({
+  Future<bool> createStore({
     required String name,
     required String address,
     required double latitude,
@@ -64,7 +69,7 @@ class StoreRepository {
     required String bankAccount,
     List<Map<String, dynamic>>? storeImagesRegisters,
   }) async {
-    await _dio.post(
+    final res = await _dio.post(
       '/v1/store',
       data: {
         'name': name,
@@ -80,6 +85,11 @@ class StoreRepository {
           'storeImagesRegisters': storeImagesRegisters,
       },
     );
+    if (res.data['status'] != 'OK') return true;
+
+    final data = res.data['data'];
+    if (data != null) return true;
+    return false;
   }
 
   Future<Store?> getOwnerStore() async {
@@ -96,7 +106,7 @@ class StoreRepository {
 
 @riverpod
 StoreRepository storeRepository(Ref ref) {
-  return StoreRepository();
+  return StoreRepository(ref);
 }
 
 @riverpod

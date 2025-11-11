@@ -30,7 +30,7 @@ class GoodsRepository {
     required DateTime endTime,
     required List<ImageMetadata> goodsImagesRegisters,
   }) async {
-    final response = await _dio.post(
+    final res = await _dio.post(
       '/v1/goods',
       data: {
         'description': description,
@@ -40,67 +40,22 @@ class GoodsRepository {
         'quantity': quantity,
         'startTime': startTime.toIso8601String(),
         'endTime': endTime.toIso8601String(),
-        'goodsImagesRegisters': goodsImagesRegisters
-            .map((e) => e.toJson())
-            .toList(),
+        // 'goodsImagesRegisters': goodsImagesRegisters
+        //     .map((e) => e.toJson())
+        //     .toList(),
+        // TODO: 추후 상세설명 추가 예정
       },
     );
 
     // data['goodsPreSignedImages']에서 presigned URL 배열만 추출
-    final presignedImagesData =
-        response.data['data']['goodsPreSignedImages'] as List;
-    return presignedImagesData
-        .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
-        .toList();
-  }
-
-  /// Presigned URL로 S3에 직접 업로드 (PUT 요청)
-  Future<void> uploadToS3WithPresignedUrl({
-    required String presignedUrl,
-    required File file,
-    void Function(int, int)? onProgress,
-  }) async {
-    try {
-      final bytes = await file.readAsBytes();
-      final dio = Dio();
-
-      await dio.put(
-        presignedUrl,
-        data: bytes,
-        options: Options(
-          headers: {'Content-Type': 'image/jpeg'},
-          contentType: 'image/jpeg',
-        ),
-        onSendProgress: onProgress,
-      );
-    } catch (e) {
-      throw Exception('S3 업로드 실패: $e');
-    }
-  }
-
-  /// 여러 이미지를 presigned URL로 업로드
-  Future<void> uploadImagesToS3({
-    required List<LocalImage> localImages,
-    required List<PresignedUrlImage> presignedUrls,
-    void Function(int currentIndex, int total, int sent, int totalBytes)?
-    onProgress,
-  }) async {
-    for (var i = 0; i < localImages.length; i++) {
-      final localImage = localImages[i];
-      final presignedUrl = presignedUrls.firstWhere(
-        (url) => url.name == localImage.key,
-        orElse: () =>
-            throw Exception('Presigned URL not found for ${localImage.key}'),
-      );
-
-      await uploadToS3WithPresignedUrl(
-        presignedUrl: presignedUrl.url,
-        file: localImage.file,
-        onProgress: onProgress != null
-            ? (sent, total) => onProgress(i, localImages.length, sent, total)
-            : null,
-      );
-    }
+    // final presignedImagesData =
+    //     res.data['data']['goodsPreSignedImages'] as List;
+    // return presignedImagesData
+    //     .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
+    //     .toList();
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return [];
+    return [];
   }
 
   Future<bool> setGoodsSaleStatus({

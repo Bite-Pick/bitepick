@@ -4,10 +4,8 @@ import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_list_screen.dart';
-import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/user/presentation/mypage_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -76,19 +74,19 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: MgColorScheme.white,
       items: [
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_SVG_FILLED_HOME_SVG,
+          iconName: 'home',
           label: '메인',
           index: 0,
           currentIndex: navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_SVG_FILLED_ORDER_LIST_SVG,
+          iconName: 'order',
           label: '주문내역',
           index: 1,
           currentIndex: navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
-          iconPath: R.ASSETS_ICONS_SVG_FILLED_USER_SVG,
+          iconName: 'mypage',
           label: '마이페이지',
           index: 2,
           currentIndex: navState.tabIndex,
@@ -98,17 +96,17 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   BottomNavigationBarItem _buildBottomNavigationBarItem({
-    required String iconPath,
+    required String iconName,
     required String label,
     required int index,
     required int currentIndex,
   }) {
+    final isSelected = currentIndex == index;
+    final assetName = isSelected ? iconName : '${iconName}_gray';
+
     return BottomNavigationBarItem(
       icon: BaseSvgIcon(
-        assetName: iconPath.replaceFirst('assets/icons/svg/', ''),
-        color: currentIndex == index
-            ? MgColorScheme.black
-            : MgColorScheme.gray5,
+        assetName: 'filled/$assetName.svg',
         size: MgSizes.xxl,
       ),
       label: label,

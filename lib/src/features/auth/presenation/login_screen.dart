@@ -1,8 +1,6 @@
-import 'package:flash/flash.dart';
 import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -10,9 +8,11 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
+import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -25,13 +25,23 @@ class LoginScreen extends ConsumerWidget {
       previous,
       next,
     ) {
+      // 초기 상태(previous == null)는 무시
+      if (previous == null) return;
+
       next.when(
         data: (authResult) {
-          // 로그인 성공 시 메인 화면으로 이동
           if (authResult == null) {
-            MainRoute().go(context);
+            // 기존 회원 - 로그인 성공 → DefaultRoute의 redirect 로직을 타도록
+            DefaultRoute().go(context);
           } else {
             // 신규 회원 - 회원가입 화면으로 이동
+            ref
+                .read(joinControllerProvider.notifier)
+                .setSocialLoginInfo(
+                  providerType: authResult.providerType,
+                  socialToken: authResult.authCode,
+                );
+
             SelectUserTypeRoute().push(context);
           }
         },
@@ -51,7 +61,7 @@ class LoginScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("BITE PICK").xxl().bold(), // TODO: 로고 추가
+            BaseSvgIcon.homeLogo(size: MgSizes.xxxxl),
             Gaps.h24,
             if (isLoading) ...[const CircularProgressIndicator(), Gaps.h24],
             Column(

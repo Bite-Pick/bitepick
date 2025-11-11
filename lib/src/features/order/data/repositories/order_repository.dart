@@ -9,7 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'order_repository.g.dart';
 
 class OrderRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+
+  OrderRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   ///
   Future<List<OrderOwner>> getStoreOrders({
@@ -70,9 +75,8 @@ class OrderRepository {
 
 @riverpod
 OrderRepository orderRepository(Ref ref) {
-  return OrderRepository();
+  return OrderRepository(ref);
 }
-
 @riverpod
 Future<List<OrderOwner>> storeOrders(
   Ref ref, {

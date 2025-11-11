@@ -7,7 +7,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'review_repository.g.dart';
 
 class ReviewRepository {
-  final Dio _dio = ApiClient().dio;
+  final Ref ref;
+  late final Dio _dio;
+
+  ReviewRepository(this.ref) {
+    _dio = ref.read(apiClientProvider);
+  }
 
   Future<List<Review>> getReviews({
     required String goodsId,
@@ -35,9 +40,8 @@ class ReviewRepository {
 
 @riverpod
 ReviewRepository reviewRepository(Ref ref) {
-  return ReviewRepository();
+  return ReviewRepository(ref);
 }
-
 @riverpod
 Future<List<Review>> reviews(
   Ref ref, {

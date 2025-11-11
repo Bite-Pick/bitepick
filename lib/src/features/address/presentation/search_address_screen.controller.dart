@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/shared_preference_store.dart';
-import '../data/repository/naver_geocoding_repository.dart';
+import '../data/repositories/naver_geocoding_repository.dart';
 import '../domain/entities/address.dart';
 import '../domain/entities/area.dart';
 
@@ -39,7 +39,7 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
   @override
   SearchAddressState build() {
     _store = SharedPreferenceStore();
-    _repository = NaverGeocodingRepository();
+    _repository = NaverGeocodingRepository(ref);
 
     ref.onDispose(() => _debounceTimer?.cancel());
     _loadFromStorage();
@@ -161,7 +161,9 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
   /// 기존 목록에서 선택(기본주소로 설정)
   Future<void> selectFromSaved(Address originAddress) async {
     final updated = state.addresses.map((address) {
-      final isSame = (address.label == originAddress.label && address.name == originAddress.name);
+      final isSame =
+          (address.label == originAddress.label &&
+          address.name == originAddress.name);
       return address.copyWith(isDefault: isSame);
     }).toList()..sort(_defaultFirst);
 

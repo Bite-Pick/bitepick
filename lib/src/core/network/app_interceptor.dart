@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -20,7 +24,6 @@ class AppInterceptor extends Interceptor {
 
   AppInterceptor(this.ref);
 
-  static String? _sessionCookie;
   static String? _cachedUserAgent;
 
   // 🔄 토큰 갱신 중 여부 플래그
@@ -56,11 +59,11 @@ class AppInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    // 쿠키 저장
-    final setCookie = response.headers['set-cookie']?.firstOrNull;
-    if (setCookie != null) {
-      _sessionCookie = setCookie.split(';').first;
-    }
+    // // 쿠키 저장
+    // final setCookie = response.headers['set-cookie']?.firstOrNull;
+    // if (setCookie != null) {
+    //   _sessionCookie = setCookie.split(';').first;
+    // }
 
     return super.onResponse(response, handler);
   }
@@ -85,8 +88,13 @@ class AppInterceptor extends Interceptor {
 
     // 응답 데이터가 Map인 경우 커스텀 에러 코드 처리
     if (data is Map) {
-      final code = data['code'] ?? statusCode ?? -1;
+      final code = data['statusCode'] ?? statusCode ?? -1;
       final message = data['message'] as String? ?? '알 수 없는 오류가 발생했습니다.';
+
+      switch (data['code']) {
+        case 'STORE_NOT_FOUND':
+          return _navigateToRegisterStore();
+      }
 
       switch (code) {
         case 400: // Bad Request
@@ -267,8 +275,7 @@ class AppInterceptor extends Interceptor {
 
   /// 인증 토큰 가져오기
   Future<String?> _getAuthToken() async {
-    final tokenManager = ref.read(authTokenManagerProvider.notifier);
-    return tokenManager.getAccessToken();
+    return (await ref.read(authTokenManagerProvider.future))?.accessToken;
   }
 
   /// 인증 토큰 갱신
@@ -277,8 +284,8 @@ class AppInterceptor extends Interceptor {
   /// - Refresh Token이 만료된 경우 로그인 화면으로 이동
   Future<String?> _refreshAuthToken() async {
     try {
-      final tokenManager = ref.read(authTokenManagerProvider.notifier);
-      final refreshToken = tokenManager.getRefreshToken();
+      final token = await ref.read(authTokenManagerProvider.future);
+      final refreshToken = token?.refreshToken;
 
       if (refreshToken == null) {
         debugPrint('⚠️ No refresh token available');
@@ -294,9 +301,7 @@ class AppInterceptor extends Interceptor {
           connectTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(seconds: 10),
           contentType: ContentType.json.mimeType,
-          headers: {
-            'Accept': 'application/json',
-          },
+          headers: {'Accept': 'application/json'},
         ),
       );
 
@@ -351,7 +356,7 @@ class AppInterceptor extends Interceptor {
         accessToken: accessToken,
         refreshToken: refresh,
       );
-      await tokenManager.saveTokens(newTokens);
+      await ref.read(authTokenManagerProvider.notifier).saveTokens(newTokens);
 
       debugPrint('✅ Token refreshed and saved');
       return accessToken;
@@ -373,21 +378,23 @@ class AppInterceptor extends Interceptor {
   }
 
   /// 로그인 화면으로 이동
-  ///
-  /// TODO: 네비게이션 로직 구현
   void _navigateToLogin() {
-    // 예시: GoRouter 사용
-    // final context = navigatorKey.currentContext;
-    // if (context != null) {
-    //   context.go('/login');
-    // }
+    unawaited(ref.read(authTokenManagerProvider.notifier).deleteTokens());
 
+    final context = GlobalVariable.navigatorKey.currentContext;
+    if (context != null) context.go('/auth');
     debugPrint('🔐 Navigate to login');
   }
 
+  void _navigateToRegisterStore() {
+    final router = ref.read(appRouterProvider);
+    // final context = GlobalVariable.navigatorKey.currentContext;
+    // if (context != null)
+    router.go(OwnerJoinInfoRoute().location);
+    debugPrint('🔐 Navigate to store register');
+  }
+
   /// 점검 화면으로 이동
-  ///
-  /// TODO: 네비게이션 로직 구현
   void _navigateToMaintenance() {
     // 예시: GoRouter 사용
     // final context = navigatorKey.currentContext;
@@ -403,9 +410,9 @@ class AppInterceptor extends Interceptor {
   // ========================================
 
   /// 세션 쿠키 삭제 (로그아웃 후 호출)
-  static void clearSessionCookie() {
-    _sessionCookie = null;
-  }
+  // static void clearSessionCookie() {
+  //   _sessionCookie = null;
+  // }
 }
 
 // ========================================

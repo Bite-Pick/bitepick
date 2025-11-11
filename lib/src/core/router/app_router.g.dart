@@ -21,6 +21,18 @@ RouteBase get $loginRoute => GoRouteData.$route(
       factory: $SelectUserTypeRouteExtension._fromState,
     ),
     GoRouteData.$route(
+      path: 'join/basic-info',
+      name: 'JoinBasicInfoRoute',
+
+      factory: $JoinBasicInfoRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'join/success',
+      name: 'JoinSuccessRoute',
+
+      factory: $JoinSuccessRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
       path: 'owner/join/info',
       name: 'OwnerJoinInfoRoute',
 
@@ -49,6 +61,38 @@ extension $SelectUserTypeRouteExtension on SelectUserTypeRoute {
       const SelectUserTypeRoute();
 
   String get location => GoRouteData.$location('/auth/select-user-type');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $JoinBasicInfoRouteExtension on JoinBasicInfoRoute {
+  static JoinBasicInfoRoute _fromState(GoRouterState state) =>
+      const JoinBasicInfoRoute();
+
+  String get location => GoRouteData.$location('/auth/join/basic-info');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $JoinSuccessRouteExtension on JoinSuccessRoute {
+  static JoinSuccessRoute _fromState(GoRouterState state) =>
+      const JoinSuccessRoute();
+
+  String get location => GoRouteData.$location('/auth/join/success');
 
   void go(BuildContext context) => context.go(location);
 
@@ -137,6 +181,24 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       name: 'OrderPayRoute',
 
       factory: $OrderPayRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'owner/store/approved',
+      name: 'OwnerStoreApprovedRoute',
+
+      factory: $OwnerStoreApprovedRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'owner/store/waiting',
+      name: 'OwnerStoreWaitingRoute',
+
+      factory: $OwnerStoreWaitingRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'owner/goods/empty',
+      name: 'OwnerGoodsEmptyRoute',
+
+      factory: $OwnerGoodsEmptyRouteExtension._fromState,
     ),
   ],
 );
@@ -292,6 +354,54 @@ extension $OrderPayRouteExtension on OrderPayRoute {
   static OrderPayRoute _fromState(GoRouterState state) => const OrderPayRoute();
 
   String get location => GoRouteData.$location('/order/pay');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerStoreApprovedRouteExtension on OwnerStoreApprovedRoute {
+  static OwnerStoreApprovedRoute _fromState(GoRouterState state) =>
+      const OwnerStoreApprovedRoute();
+
+  String get location => GoRouteData.$location('/owner/store/approved');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerStoreWaitingRouteExtension on OwnerStoreWaitingRoute {
+  static OwnerStoreWaitingRoute _fromState(GoRouterState state) =>
+      const OwnerStoreWaitingRoute();
+
+  String get location => GoRouteData.$location('/owner/store/waiting');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $OwnerGoodsEmptyRouteExtension on OwnerGoodsEmptyRoute {
+  static OwnerGoodsEmptyRoute _fromState(GoRouterState state) =>
+      OwnerGoodsEmptyRoute();
+
+  String get location => GoRouteData.$location('/owner/goods/empty');
 
   void go(BuildContext context) => context.go(location);
 

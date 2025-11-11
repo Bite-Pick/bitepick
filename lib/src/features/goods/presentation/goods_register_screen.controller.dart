@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
+import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/image_meta_data.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -162,11 +163,12 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
     }
   }
 
+  void fillWithMockData(Map<String, Object> data) {
+    state.form.patchValue(data);
+  }
+
   // 상품 상세 정보 추가
-  void addGoodsDetail({
-    required File file,
-    required String name,
-  }) {
+  void addGoodsDetail({required File file, required String name}) {
     final fileName = file.path.split('/').last;
     final newDetail = GoodsDetailItem(
       id: state.goodsDetails.length,
@@ -180,11 +182,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   }
 
   // 상품 상세 정보 업데이트
-  void updateGoodsDetail({
-    required int index,
-    File? file,
-    String? name,
-  }) {
+  void updateGoodsDetail({required int index, File? file, String? name}) {
     if (index >= 0 && index < state.goodsDetails.length) {
       final detail = state.goodsDetails[index];
       final updatedDetail = GoodsDetailItem(
@@ -211,10 +209,10 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   }
 
   // 최종 제출
-  Future<void> submit() async {
+  Future<bool> submit() async {
     if (!state.form.valid) {
       state.form.markAllAsTouched();
-      return;
+      return false;
     }
 
     try {
@@ -232,44 +230,41 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
           .map((img) => ImageMetadata(id: img.id, key: img.key))
           .toList();
 
-      // 2. 상품 상세 정보 메타데이터 생성 (API 요청용)
-      final goodsDetailsMetadataList = state.goodsDetails
-          .map((detail) => {
-                'id': detail.id,
-                'key': detail.key,
-                'name': detail.name,
-              })
-          .toList();
-
       // 2. Goods 등록 API 호출 (presigned URL 받기)
-      final presignedUrls = await repository.createGoods(
-        description: formValue['description'] as String,
-        originalPrice: formValue['originalPrice'] as int,
-        discount: formValue['discount'] as int,
-        salePrice: formValue['salePrice'] as int,
-        quantity: formValue['quantity'] as int,
-        startTime: formValue['startTime'] as DateTime,
-        endTime: formValue['endTime'] as DateTime,
-        goodsImagesRegisters: imageMetadataList,
-      );
+      final presignedUrls = await ref
+          .read(goodsRepositoryProvider)
+          .createGoods(
+            description: formValue['description'] as String,
+            originalPrice: formValue['originalPrice'] as int,
+            discount: formValue['discount'] as int,
+            salePrice: formValue['salePrice'] as int,
+            quantity: formValue['quantity'] as int,
+            startTime: formValue['startTime'] as DateTime,
+            endTime: formValue['endTime'] as DateTime,
+            goodsImagesRegisters: imageMetadataList,
+          );
 
       // 3. Presigned URL로 S3에 이미지 업로드
-      await repository.uploadImagesToS3(
-        localImages: state.localImages,
-        presignedUrls: presignedUrls,
-        onProgress: (currentIndex, total, sent, totalBytes) {
-          final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
-          final overallProgress = (currentIndex + fileProgress) / total;
-          state = state.copyWith(uploadProgress: overallProgress);
-        },
-      );
+      // await ref
+      //     .read(presignedImageRepositoryProvider)
+      //     .uploadImagesToS3(
+      //       localImages: state.localImages,
+      //       presignedUrls: presignedUrls,
+      //       onProgress: (currentIndex, total, sent, totalBytes) {
+      //         final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
+      //         final overallProgress = (currentIndex + fileProgress) / total;
+      //         state = state.copyWith(uploadProgress: overallProgress);
+      //       },
+      //     );
 
       state = state.copyWith(isSubmitting: false, uploadProgress: 1.0);
 
       // 성공 처리
       print('Goods 등록 및 이미지 업로드 완료');
+      return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: e.toString());
+      return false;
     }
   }
 }

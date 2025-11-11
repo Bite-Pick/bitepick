@@ -5,11 +5,14 @@ import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
+import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -37,6 +40,21 @@ class OwnerJoinInfoScreen extends ConsumerStatefulWidget {
 }
 
 class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
+  final mockFormData = {
+    'storeName': '마감벨 테스트 매장',
+    'postalCode': '12345',
+    'address': '서울특별시 강남구 테헤란로 427',
+    'addressDetail': '위워크타워 10층',
+    'latitude': 37.5058,
+    'longitude': 127.0516,
+    'parkingDescription': '건물 지하 주차장 2시간 무료',
+    'representativeName': '홍길동',
+    'representativePhone': '010-1234-5678',
+    'businessNumber': '1234567890',
+    'bankName': '004', // KB국민은행
+    'accountNumber': '111222333444',
+  };
+
   @override
   Widget build(BuildContext context) {
     final controller = ref.read(ownerJoinInfoScreenControllerProvider.notifier);
@@ -45,105 +63,33 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     return ReactiveForm(
       formGroup: form,
       child: BaseScaffold(
-        appBar: BaseAppBar(),
+        appBar: BaseAppBar(
+          // TODO: 삭제 필요
+          action: TextButton(
+            onPressed: () => controller.fillWithMockData(mockFormData),
+            child: const Text('임시완성'),
+          ),
+        ),
         backgroundColor: MgColorScheme.white,
         body: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 1. 매장 이름
-                    _buildSectionTitle(
-                      '매장 이름',
-                      subtitle: '체인점일 경우, 지점명까지 해주세요',
-                    ),
-                    Gaps.h8,
-                    MgReactiveTextField(
-                      formControlName: 'storeName',
-                      hintText: '매장 이름 ',
-                    ),
-
-                    // 2. 매장 주소
-                    _buildSectionTitle('매장 주소'),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: MgReactiveTextField(
-                            formControlName: 'postalCode',
-                            hintText: '우편번호',
-                            enabled: false,
-                          ),
-                        ),
-                        Gaps.w8,
-                        MgButton(
-                          onPressed: _findPostalCode,
-                          content: const Text('주소 찾기').bold(),
-                          borderRadius: MgRadius.md,
-                          borderColor: MgColorScheme.gray1,
-                          backgroundColor: MgColorScheme.white,
-                          textColor: MgColorScheme.text,
-                        ),
-                      ],
-                    ),
-                    MgReactiveTextField(
-                      formControlName: 'address',
-                      hintText: '주소',
-                      enabled: false,
-                    ),
-                    MgReactiveTextField(
-                      formControlName: 'addressDetail',
-                      hintText: '상세주소 ',
-                    ),
-
-                    // 3. 대표자 정보
-                    _buildSectionTitle('대표자 정보'),
-                    MgReactiveTextField(
-                      formControlName: 'representativeName',
-                      hintText: '대표자 성함 ',
-                    ),
-                    MgReactiveTextField(
-                      formControlName: 'representativePhone',
-                      hintText: '전화번호  (예: 01012345678)',
-                      keyboardType: TextInputType.phone,
-                    ),
-
-                    // 4. 사업자 등록 번호
-                    _buildSectionTitle('사업자 등록 번호'),
-                    MgReactiveTextField(
-                      formControlName: 'businessNumber',
-                      hintText: '"-" 제외한 10자리 숫자 ',
-                      keyboardType: TextInputType.number,
-                    ),
-
-                    // 5. 계좌 등록
-                    _buildSectionTitle('계좌 등록'),
-                    MgSelect<String?>(
-                      formControlName: 'bankName',
-                      hintText: '은행 선택',
-                      bottomSheetTitle: '은행 선택해주세요',
-                      options: financialInstitutions.values
-                          .map(
-                            (e) => MgSelectOption(value: e.code, label: e.name),
-                          )
-                          .toList(),
-                      customBottomSheet: _showBankBottomSheet,
-                    ),
-                    Gaps.h8,
-                    MgReactiveTextField(
-                      formControlName: 'accountNumber',
-                      hintText: '"-" 제외한 계좌번호 ',
-                      keyboardType: TextInputType.number,
-                    ),
+                    _buildStoreInfoSection().margin(horizontal: MgSizes.xl),
+                    Divider(thickness: MgSizes.size6).margin(top: MgSizes.xxxl),
+                    _buildOwnerInfoSection().margin(horizontal: MgSizes.xl),
                   ],
-                ).margin(horizontal: MgSizes.xl),
+                ),
               ),
             ),
             // 확인 버튼
             MgButton(
-              onPressed: () => controller.submit(),
+              onPressed: () async {
+                final result = await controller.submit();
+                if (result && mounted) OwnerHomeRoute().go(context);
+              },
               content: const Text('확인'),
             ).primary().margin(
               horizontal: MgSizes.md,
@@ -153,6 +99,107 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStoreInfoSection() {
+    final controller = ref.read(ownerJoinInfoScreenControllerProvider.notifier);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 1. 매장 이름
+        _buildSectionTitle('매장 이름', subtitle: '체인점일 경우, 지점명까지 해주세요'),
+        Gaps.h8,
+        MgReactiveTextField(formControlName: 'storeName', hintText: '매장 이름 '),
+
+        // 2. 매장 주소
+        _buildSectionTitle('매장 주소'),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: MgReactiveTextField(
+                formControlName: 'postalCode',
+                hintText: '우편번호',
+                enabled: false,
+              ),
+            ),
+            Gaps.w8,
+            MgButton(
+              onPressed: _findPostalCode,
+              content: const Text('주소 찾기').bold(),
+              borderRadius: MgRadius.md,
+              borderColor: MgColorScheme.gray1,
+              backgroundColor: MgColorScheme.white,
+              textColor: MgColorScheme.text,
+            ),
+          ],
+        ),
+        MgReactiveTextField(
+          formControlName: 'address',
+          hintText: '주소',
+          enabled: false,
+        ),
+        MgReactiveTextField(
+          formControlName: 'addressDetail',
+          hintText: '상세주소 ',
+        ),
+
+        _buildSectionTitle("주차안내"),
+        MgReactiveTextField(formControlName: 'parkingDescription'),
+
+        _buildSectionTitle("대표 이미지"),
+        ImageUploadSection(
+          images: controller.localImages,
+          onAddImages: controller.addLocalImages,
+          onRemoveImage: controller.removeImage,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOwnerInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 3. 대표자 정보
+        _buildSectionTitle('대표자 정보'),
+        MgReactiveTextField(
+          formControlName: 'representativeName',
+          hintText: '대표자 성함 ',
+        ),
+        MgReactiveTextField(
+          formControlName: 'representativePhone',
+          hintText: '전화번호  (예: 01012345678)',
+          keyboardType: TextInputType.phone,
+        ),
+
+        // 4. 사업자 등록 번호
+        _buildSectionTitle('사업자 등록 번호'),
+        MgReactiveTextField(
+          formControlName: 'businessNumber',
+          hintText: '"-" 제외한 10자리 숫자 ',
+          keyboardType: TextInputType.number,
+        ),
+
+        // 5. 계좌 등록
+        _buildSectionTitle('계좌 등록'),
+        MgSelect<String?>(
+          formControlName: 'bankName',
+          hintText: '은행 선택',
+          bottomSheetTitle: '은행 선택해주세요',
+          options: financialInstitutions.values
+              .map((e) => MgSelectOption(value: e.name, label: e.name))
+              .toList(),
+          customBottomSheet: _showBankBottomSheet,
+        ),
+        Gaps.h8,
+        MgReactiveTextField(
+          formControlName: 'accountNumber',
+          hintText: '"-" 제외한 계좌번호 ',
+          keyboardType: TextInputType.number,
+        ),
+      ],
     );
   }
 

@@ -3,13 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.controller.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step1_basic_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step3_price_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step4_goods_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step2_time_info_view.dart';
-import 'package:magambell/src/features/goods/presentation/widgets/step5_tags_view.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -36,6 +37,15 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
   static const STEPS = 4;
   // TODO: tag추가시 5
 
+  final mockFormData = {
+    'description': '갓 구운 크로와상, 바게트, 식빵 세트입니다. 당일 생산, 당일 판매 원칙을 지킵니다.',
+    'originalPrice': 15000,
+    'discount': 30,
+    'quantity': 5,
+    'startTime': DateTime.now().add(const Duration(hours: 1)),
+    'endTime': DateTime.now().add(const Duration(hours: 3)),
+  };
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(goodsRegisterScreenControllerProvider);
@@ -44,7 +54,14 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
     return ReactiveForm(
       formGroup: state.form,
       child: BaseScaffold(
-        appBar: BaseAppBar(title: Text('마감백 등록')),
+        appBar: BaseAppBar(
+          title: const Text('마감백 등록'),
+          // TODO: 삭제 예정
+          action: TextButton(
+            onPressed: () => controller.fillWithMockData(mockFormData),
+            child: const Text('임시완성'),
+          ),
+        ),
         body: Column(
           children: [
             _buildProgressBar(state.currentStep),
@@ -61,8 +78,11 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
                   //   );
                   // }
                 } else {
-                  await controller.submit();
-                  if (context.mounted) context.pop();
+                  final result = await controller.submit();
+                  if (result && context.mounted) {
+                    ref.invalidate(userStateProvider);
+                    DefaultRoute().go(context);
+                  }
                 }
               },
               content: Text(state.currentStep < STEPS - 1 ? '다음' : '완료'),
