@@ -158,6 +158,9 @@ class R {
   static const String ASSETS_ICONS_SVG_HELP_CIRCLE_SVG =
       'assets/icons/svg/help-circle.svg';
 
+  static const String ASSETS_ICONS_SVG_HOME_LOGO_SVG =
+      'assets/icons/svg/home_logo.svg';
+
   static const String ASSETS_ICONS_SVG_IMAGE_SVG = 'assets/icons/svg/image.svg';
 
   static const String ASSETS_ICONS_SVG_INFO_SVG = 'assets/icons/svg/info.svg';
