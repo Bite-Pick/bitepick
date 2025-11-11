@@ -13,9 +13,6 @@ class Step1BasicInfoView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.read(goodsRegisterScreenControllerProvider.notifier);
-    final localImages = ref.watch(goodsRegisterScreenControllerProvider.select((s) => s.localImages));
-
     return ReactiveFormConsumer(
       builder: (context, form, child) {
         return StoreRegisterViewWrapper(
@@ -26,13 +23,6 @@ class Step1BasicInfoView extends ConsumerWidget {
               subtitles: [TextSpan(text: '마감백은 어떤빵으로 구성되어있나요?')],
             ),
             MgReactiveTextField(formControlName: 'description'),
-            Gaps.h32,
-            GoodsRegisterFormTitle(title: '대표 이미지'),
-            ImageUploadSection(
-              images: localImages,
-              onAddImages: (files) => controller.addLocalImages(files),
-              onRemoveImage: (index) => controller.removeImage(index),
-            ),
           ],
         );
       },

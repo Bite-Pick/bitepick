@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,10 +12,10 @@ part 'presigned_image_repository.g.dart';
 
 class PreSignedImageRepository {
   final Ref ref;
-  late final Dio _dio;
+  late final Dio _s3dio;
 
   PreSignedImageRepository(this.ref) {
-    _dio = ref.read(apiClientProvider);
+    _s3dio = Dio();
   }
 
   Future<void> uploadToS3WithPresignedUrl({
@@ -23,14 +24,18 @@ class PreSignedImageRepository {
     void Function(int, int)? onProgress,
   }) async {
     try {
-      final bytes = await file.readAsBytes();
-      // TODO: baseUrl 교체 필요
-      await _dio.put(
-        presignedUrl,
-        data: bytes,
+      final fileSize = await file.length();
+      final token = await ref.read(authTokenManagerProvider.future);
+
+      await _s3dio.put(
+        presignedUrl, // pre-signed URL을 전체 경로로 사용
+        data: file.openRead(), // 파일을 스트림으로 전송하여 메모리 효율성 확보
         options: Options(
-          headers: {'Content-Type': 'image/jpeg'},
-          contentType: 'image/jpeg',
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Content-Length': fileSize,
+            'Authorization': 'Bearer ${token!.accessToken}',
+          },
         ),
         onSendProgress: onProgress,
       );
