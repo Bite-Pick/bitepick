@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
+import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class MypageScreen extends StatefulWidget {
+class MypageScreen extends ConsumerStatefulWidget {
   const MypageScreen({super.key});
 
   @override
-  State<MypageScreen> createState() => _MypageScreenState();
+  ConsumerState<MypageScreen> createState() => _MypageScreenState();
 }
 
-class _MypageScreenState extends State<MypageScreen> {
+class _MypageScreenState extends ConsumerState<MypageScreen> {
   String _version = '';
   String _buildNumber = '';
   int? _patchNumber;
@@ -42,10 +45,30 @@ class _MypageScreenState extends State<MypageScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      appBar: BaseAppBar(title: const Text('마이페이지')),
+      appBar: BaseAppBar(
+        title: const Text('마이페이지'),
+        leading: SizedBox.shrink(),
+      ),
       body: ListView(
         children: [
           _buildVersionSection(),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MgButton(
+                onPressed: () => logout(ref, context),
+                content: Text("로그아웃").textGray().regular(),
+              ),
+              Text("|").margin(horizontal: MgSizes.xss),
+              MgButton(
+                onPressed: () {
+                  // TODO: 회원탈퇴 API 연동
+                },
+                content: Text("회원탈퇴").textGray().regular(),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -68,24 +91,17 @@ class _MypageScreenState extends State<MypageScreen> {
           ],
           if (!ShorebirdManager.isAvailable) ...[
             Gaps.h8,
-            Text('코드 푸시가 비활성화되어 있습니다.')
-                .sm()
-                .textGray()
-                .regular(),
+            Text('코드 푸시가 비활성화되어 있습니다.').sm().textGray().regular(),
           ],
         ],
       ).margin(all: MgSizes.md),
     );
-
   }
 
   Widget _buildVersionItem(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label).md().textGray(),
-        Text(value).md().bold(),
-      ],
+      children: [Text(label).md().textGray(), Text(value).md().bold()],
     );
   }
 }
