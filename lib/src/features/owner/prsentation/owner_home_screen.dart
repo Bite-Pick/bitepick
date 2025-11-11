@@ -7,6 +7,8 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
+import 'package:magambell/src/core/utils/inquiry_button.dart';
+import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
@@ -53,9 +55,14 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     return BaseScaffold(
       appBar: BaseAppBar(
         // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
-        // leadingWidth: 120, 
+        // leadingWidth: 120,
         leading: SizedBox.shrink(),
-        action: _buildServiceSwitch(store?.goodsList[0].goodsId ?? ""),
+        action: Row(
+          children: [
+            _buildServiceSwitch(store?.goodsList[0].goodsId ?? ""),
+            _buildMoreButton(),
+          ],
+        ),
         bottom: TabBar(
           dividerColor: Colors.transparent,
           controller: _tabController,
@@ -109,6 +116,32 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                 .setGoodsSaleStatus(id: id, saleStatus: value);
             ref.invalidate(storeStateProvider);
           },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMoreButton() {
+    return PopupMenuButton<String>(
+      icon: BaseSvgIcon.moreVertical(),
+      onSelected: (value) {
+        return switch (value) {
+          'logout' => logout(ref, context), // TODO: dialog로 묻기
+          'support' => InquiryButton.showInquiryBottomSheet(context),
+          _ => null,
+        };
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      offset: const Offset(0, 36), // 클릭 위치로부터 아래로 띄움
+      itemBuilder: (context) => [
+        const PopupMenuItem<String>(
+          value: 'logout',
+          child: Center(child: Text('로그아웃')),
+        ),
+        const PopupMenuDivider(),
+        const PopupMenuItem<String>(
+          value: 'support',
+          child: Center(child: Text('고객센터')),
         ),
       ],
     );
