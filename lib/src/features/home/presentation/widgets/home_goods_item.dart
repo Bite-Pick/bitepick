@@ -26,17 +26,17 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
   Widget build(BuildContext context) {
     final goods = widget.goods;
     return GestureDetector(
-      onTap: () => StoreRoute(id: goods.storeId).push(context),
+      onTap: () => StoreRoute(id: goods.storeId!).push(context),
       child: Column(
         children: [
-          _buildImageListView(goods.ImageUrl),
+          _buildImageListView(goods.ImageUrl ?? []),
           Gaps.h8,
           DefaultTextStyle(
             style: context.textTheme.titleLarge!,
             child: Row(
               children: [
                 Gaps.w4,
-                Text(goods.storeName),
+                Text(goods.storeName!),
                 Spacer(),
                 Text('${goods.discount}%').red(),
                 Gaps.w4,
@@ -63,7 +63,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
           ).margin(left: MgSizes.size4),
           Gaps.h4,
           StoreTags(
-            quantity: goods.quantity,
+            quantity: goods.stockQuantity,
             saleStatus: goods.saleStatus,
           ).margin(left: MgSizes.size4),
         ],

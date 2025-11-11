@@ -11,7 +11,7 @@ class GoodsInfoView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        CachedNetworkImage(imageUrl: goods.ImageUrl[0]),
+        // CachedNetworkImage(imageUrl: goods.ImageUrl[0]),
         Text("${goods.goodsName}"),
       ],
     );

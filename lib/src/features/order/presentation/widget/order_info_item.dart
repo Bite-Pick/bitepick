@@ -19,8 +19,8 @@ class OrderInfoItem extends StatelessWidget {
   final String imageUrl;
   final String storeName;
   final String address;
-  final double discount;
-  final double price;
+  final int discount;
+  final int price;
   final int count;
   final double imageSize;
 

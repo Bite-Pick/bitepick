@@ -47,11 +47,11 @@ class StoreState extends _$StoreState {
   }
 
   // 상품 재고 업데이트
-  void updateStock(String goodsName, double newStock) {
+  void updateStock(String goodsName, int newStock) {
     if (state == null) return;
     final updatedList = state!.goodsList.map((goods) {
       if (goods.goodsName == goodsName) {
-        return goods.copyWith(quantity: newStock);
+        return goods.copyWith(stockQuantity: newStock);
       }
       return goods;
     }).toList();

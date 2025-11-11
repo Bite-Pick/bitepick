@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +16,6 @@ import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_scree
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
-import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';

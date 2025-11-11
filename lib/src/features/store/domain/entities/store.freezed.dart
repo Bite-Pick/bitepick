@@ -165,7 +165,7 @@ class __$$StoreImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$StoreImpl implements _Store {
+class _$StoreImpl extends _Store {
   const _$StoreImpl({
     required this.storeId,
     required this.storeName,
@@ -173,7 +173,8 @@ class _$StoreImpl implements _Store {
     required final List<String> storeImageUrls,
     required final List<Goods> goodsList,
   }) : _storeImageUrls = storeImageUrls,
-       _goodsList = goodsList;
+       _goodsList = goodsList,
+       super._();
 
   factory _$StoreImpl.fromJson(Map<String, dynamic> json) =>
       _$$StoreImplFromJson(json);
@@ -249,7 +250,7 @@ class _$StoreImpl implements _Store {
   }
 }
 
-abstract class _Store implements Store {
+abstract class _Store extends Store {
   const factory _Store({
     required final String storeId,
     required final String storeName,
@@ -257,6 +258,7 @@ abstract class _Store implements Store {
     required final List<String> storeImageUrls,
     required final List<Goods> goodsList,
   }) = _$StoreImpl;
+  const _Store._() : super._();
 
   factory _Store.fromJson(Map<String, dynamic> json) = _$StoreImpl.fromJson;
 

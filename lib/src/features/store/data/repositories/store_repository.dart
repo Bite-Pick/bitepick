@@ -97,7 +97,7 @@ class StoreRepository {
 
     if (res.data['status'] != 'OK') return null;
 
-    final data = res.data['data'];
+    final data = res.data['data']['data'];
     if (data == null) return null;
 
     return Store.fromJson(data as Map<String, dynamic>);
