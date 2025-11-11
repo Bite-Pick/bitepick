@@ -52,10 +52,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       'description': FormControl<String>(
         validators: [Validators.required, Validators.minLength(10)],
       ),
-      'images': FormControl<int>(
-        value: 0,
-        validators: [Validators.required, Validators.min(1)],
-      ),
       // Step 2: 수량, 판매 시작,마감 시간
       'quantity': FormControl<int>(
         value: 0,
@@ -158,6 +154,12 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   Future<bool> submit() async {
     if (!state.form.valid) {
       state.form.markAllAsTouched();
+      // Iterate over the form controls and print errors for invalid ones.
+      state.form.controls.forEach((key, control) {
+        if (control.invalid) {
+          print('Invalid field: [$key], Errors: ${control.errors}');
+        }
+      });
       return false;
     }
 
