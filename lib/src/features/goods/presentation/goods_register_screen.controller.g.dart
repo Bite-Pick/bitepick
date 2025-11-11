@@ -7,7 +7,7 @@ part of 'goods_register_screen.controller.dart';
 // **************************************************************************
 
 String _$goodsRegisterScreenControllerHash() =>
-    r'0cf3f519ba3bf7bf1c50aac11f1813258180f875';
+    r'e44b3825db524cdb2c22c2d92fe4acd672eecebe';
 
 /// See also [GoodsRegisterScreenController].
 @ProviderFor(GoodsRegisterScreenController)

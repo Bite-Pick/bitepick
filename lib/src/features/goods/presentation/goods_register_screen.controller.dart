@@ -169,10 +169,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       );
 
       final formValue = state.form.value;
-      // 1. 대표 이미지 메타데이터 생성
-      final imageMetadataList = state.localImages
-          .map((img) => ImageMetadata(id: img.id, key: img.key))
-          .toList();
 
       // 2. Goods 등록 API 호출 (presigned URL 받기)
       final presignedUrls = await ref
@@ -185,7 +181,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
             quantity: formValue['quantity'] as int,
             startTime: formValue['startTime'] as DateTime,
             endTime: formValue['endTime'] as DateTime,
-            goodsImagesRegisters: imageMetadataList,
+            // TODO: 상세 설명추가
           );
 
       // 3. Presigned URL로 S3에 이미지 업로드

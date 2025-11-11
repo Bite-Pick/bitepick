@@ -39,10 +39,7 @@ class GoodsEditScreen extends ConsumerWidget {
     return ReactiveForm(
       formGroup: state.form,
       child: BaseScaffold(
-        appBar: BaseAppBar(
-          title: const Text('마감백 수정'),
-          // 편의용: 원복/되돌리기 등 필요 시 여기에 액션 추가 가능
-        ),
+        appBar: BaseAppBar(title: const Text('마감백 수정')),
         body: Column(
           children: [
             Expanded(child: _buildContent()),

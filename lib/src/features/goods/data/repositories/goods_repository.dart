@@ -28,11 +28,53 @@ class GoodsRepository {
     required int quantity,
     required DateTime startTime,
     required DateTime endTime,
-    required List<ImageMetadata> goodsImagesRegisters,
   }) async {
     final res = await _dio.post(
       '/v1/goods',
       data: {
+        'description': description,
+        'originalPrice': originalPrice,
+        'discount': discount,
+        'salePrice': salePrice,
+        'quantity': quantity,
+        'startTime': startTime.toIso8601String(),
+        'endTime': endTime.toIso8601String(),
+        // 'goodsImagesRegisters': goodsImagesRegisters
+        //     .map((e) => e.toJson())
+        //     .toList(),
+        // TODO: 추후 상세설명 추가 예정
+      },
+    );
+
+    // data['goodsPreSignedImages']에서 presigned URL 배열만 추출
+    // final presignedImagesData =
+    //     res.data['data']['goodsPreSignedImages'] as List;
+    // return presignedImagesData
+    //     .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
+    //     .toList();
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return [];
+    return [];
+  }
+
+  // TODO: 백엔드 수정 필요
+
+  Future<List<PresignedUrlImage>> editGoods({
+    required String goodsId,
+    String? name,
+    required String description,
+    required int originalPrice,
+    required int discount,
+    required int salePrice,
+    required int quantity,
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    final res = await _dio.patch(
+      '/v1/goods',
+      data: {
+        'goodsId': goodsId,
+        'name': name,
         'description': description,
         'originalPrice': originalPrice,
         'discount': discount,

@@ -50,6 +50,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     }
 
     return {
+      'name': g.storeName,
+      'goodsId': g.goodsId,
       'description': g.description,
       // 이미지 개수는 수정화면에서 필수가 아닐 수 있음(이미 업로드된 상태)
       'images': 0,
@@ -64,6 +66,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
 
   FormGroup _createForm() {
     return FormGroup({
+      'name':FormControl<String>(),
+      'goodsId':FormControl<String>(),
       'description': FormControl<String>(
         validators: [Validators.required, Validators.minLength(10)],
       ),
@@ -104,8 +108,36 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     try {
       state = state.copyWith(isSubmitting: true, error: null);
 
-      final v = form.value;
-      // TODO: edit api 호출
+      final formValue = form.value;
+
+      final presignedUrls = await ref
+          .read(goodsRepositoryProvider)
+          .editGoods(
+            name: formValue['name'] as String?,
+            goodsId: formValue['goodsId'] as String,
+            description: formValue['description'] as String,
+            originalPrice: formValue['originalPrice'] as int,
+            discount: formValue['discount'] as int,
+            salePrice: formValue['salePrice'] as int,
+            quantity: formValue['quantity'] as int,
+            startTime: formValue['startTime'] as DateTime,
+            endTime: formValue['endTime'] as DateTime,
+          );
+
+      // Presigned URL로 S3에 이미지 업로드
+      // TODO: 상세설명 API 수정 이후 연결
+      // await ref
+      //     .read(presignedImageRepositoryProvider)
+      //     .uploadImagesToS3(
+      //       localImages: state.localImages,
+      //       presignedUrls: presignedUrls,
+      //       onProgress: (currentIndex, total, sent, totalBytes) {
+      //         final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
+      //         final overallProgress = (currentIndex + fileProgress) / total;
+      //         state = state.copyWith(uploadProgress: overallProgress);
+      //       },
+      //     );
+
       state = state.copyWith(isSubmitting: false);
       return true;
     } catch (e) {
