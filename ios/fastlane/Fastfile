@@ -14,9 +14,11 @@ platform :ios do
     match(
       type: "appstore",
       api_key: api_key,
-      readonly: false,
+      readonly: true,
       force_for_new_devices: true,
       app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
+      git_url: "https://github.com/NewProject2025/ios-certifcate",
+      git_branch: "main",
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
@@ -143,9 +145,11 @@ platform :ios do
     match(
       type: "appstore",
       api_key: api_key,
-      readonly: false,
+      readonly: true,
       force_for_new_devices: true,
       app_identifier: ["com.trendflow.bread", "com.trendflow.bread.dev"],
+      git_url: "https://github.com/NewProject2025/ios-certifcate",
+      git_branch: "main",
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"]
     )
 
