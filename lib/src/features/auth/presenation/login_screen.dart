@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,16 +91,17 @@ class LoginScreen extends ConsumerWidget {
                   textColor: MgColorScheme.gray11,
                   isLoading: isLoading,
                 ),
-                _buildSocialLoginButton(
-                  onPressed: () async => await ref
-                      .read(loginScreenControllerProvider.notifier)
-                      .signInWithApple(),
-                  text: "Apple로 로그인",
-                  imagePath: R.ASSETS_IMAGES_APPLE_LOGIN_PNG,
-                  backgroundColor: MgColorScheme.gray1,
-                  textColor: MgColorScheme.gray11,
-                  isLoading: isLoading,
-                ),
+                if (Platform.isIOS)
+                  _buildSocialLoginButton(
+                    onPressed: () async => await ref
+                        .read(loginScreenControllerProvider.notifier)
+                        .signInWithApple(),
+                    text: "Apple로 로그인",
+                    imagePath: R.ASSETS_IMAGES_APPLE_LOGIN_PNG,
+                    backgroundColor: MgColorScheme.gray1,
+                    textColor: MgColorScheme.gray11,
+                    isLoading: isLoading,
+                  ),
               ],
             ),
           ],
