@@ -590,7 +590,7 @@ packages:
     source: hosted
     version: "4.0.0"
   geocoding:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: geocoding
       sha256: d580c801cba9386b4fac5047c4c785a4e19554f46be42f4f5e5b7deacd088a66

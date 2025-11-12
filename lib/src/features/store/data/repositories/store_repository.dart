@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,7 +58,7 @@ class StoreRepository {
     return Goods.fromJson(data as Map<String, dynamic>);
   }
 
-  Future<bool> createStore({
+  Future<List<PresignedUrlImage>> createStore({
     required String name,
     required String address,
     required double latitude,
@@ -67,7 +68,7 @@ class StoreRepository {
     required String businessNumber,
     required String bankName,
     required String bankAccount,
-    List<Map<String, dynamic>>? storeImagesRegisters,
+    required List<Map<String, dynamic>> storeImagesRegisters,
   }) async {
     final res = await _dio.post(
       '/v1/store',
@@ -81,15 +82,21 @@ class StoreRepository {
         'businessNumber': businessNumber,
         'bankName': bankName,
         'bankAccount': bankAccount,
-        if (storeImagesRegisters != null && storeImagesRegisters.isNotEmpty)
-          'storeImagesRegisters': storeImagesRegisters,
+        'storeImagesRegisters': storeImagesRegisters,
       },
     );
-    if (res.data['status'] != 'OK') return true;
+    final presignedImagesData =
+        res.data['data']['goodsPreSignedImages'] as List?;
+    if (res.data['status'] != 'OK' || presignedImagesData == null) return [];
 
-    final data = res.data['data'];
-    if (data != null) return true;
-    return false;
+    return presignedImagesData
+        .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
+        .toList();
+    // if (res.data['status'] != 'OK') return true;
+
+    // final data = res.data['data'];
+    // if (data != null) return true;
+    // return false;
   }
 
   Future<Store?> getOwnerStore() async {
