@@ -1,5 +1,9 @@
 // goods_edit_screen.controller.dart
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,6 +23,8 @@ class GoodsEditState with _$GoodsEditState {
   }) = _GoodsEditState;
 }
 
+const _minDuration = Duration(minutes: 1);
+
 @riverpod
 class GoodsEditScreenController extends _$GoodsEditScreenController {
   @override
@@ -31,6 +37,45 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     });
     form.control('discount').valueChanges.listen((_) {
       _calculateSalePrice(form);
+    });
+    // 시간 강제: startTime 변경 시 endTime 자동 보정
+    form.control('startTime').valueChanges.listen((start) {
+      if (start is! DateTime) return;
+      final endCtrl = form.control('endTime');
+      final end = endCtrl.value as DateTime?;
+      final minEnd = start.add(_minDuration);
+
+      if (end == null || end.isBefore(minEnd)) {
+        final context = GlobalVariable.navigatorKey.currentContext;
+        if (context != null) {
+          context.showFlash(
+            duration: const Duration(milliseconds: 2000),
+            builder: (context, controller) {
+              return FlashBar(
+                controller: controller,
+                content: Text("종료시간은 시작시간보다 뒤여야합니다"),
+              );
+            },
+          );
+        }
+        // emitEvent: false로 순환 이벤트/밸리데이션 폭주 방지
+        endCtrl.updateValue(minEnd, emitEvent: false);
+        // 필요하면 markAsDirty/markAsTouched로 UI 반영
+        endCtrl.markAsDirty();
+      }
+    });
+
+    // 사용자가 endTime을 과거로 선택해도 즉시 보정
+    form.control('endTime').valueChanges.listen((end) {
+      if (end is! DateTime) return;
+      final start = form.control('startTime').value as DateTime?;
+      if (start == null) return;
+      final minEnd = start.add(_minDuration);
+
+      if (end.isBefore(minEnd)) {
+        form.control('endTime').updateValue(minEnd, emitEvent: false);
+        form.control('endTime').markAsDirty();
+      }
     });
 
     // 서버에서 받은 Goods로 초기값 채우기
@@ -54,7 +99,6 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       'goodsId': g.goodsId,
       'description': g.description,
       // 이미지 개수는 수정화면에서 필수가 아닐 수 있음(이미 업로드된 상태)
-      'images': 0,
       'quantity': g.stockQuantity,
       'startTime': _tryParse(g.startTime),
       'endTime': _tryParse(g.endTime),
@@ -66,8 +110,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
 
   FormGroup _createForm() {
     return FormGroup({
-      'name':FormControl<String>(),
-      'goodsId':FormControl<String>(),
+      'name': FormControl<String>(),
+      'goodsId': FormControl<String>(),
       'description': FormControl<String>(
         validators: [Validators.required, Validators.minLength(10)],
       ),
