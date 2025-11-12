@@ -55,7 +55,6 @@ platform :ios do
       teamID: "JM239C9WFM",
       provisioningProfiles: provisioning_profiles,
       signingStyle: "manual",
-      signingCertificate: "iOS Distribution",
       uploadBitcode: false,
       uploadSymbols: true,
       compileBitcode: false,
