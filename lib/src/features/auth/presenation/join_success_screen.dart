@@ -46,6 +46,9 @@ class JoinSuccessScreen extends ConsumerWidget {
             onPressed: () {
               // Owner인 경우 매장 정보 입력 화면으로, 아니면 홈으로
               if (userRole == UserRole.owner) {
+                //  // 회원가입 성공 - 유저 정보 refresh
+                // await ref.read(userStateProvider.notifier).refresh();
+
                 OwnerJoinInfoRoute().go(context);
               } else {
                 SelectAddressRoute().go(context);

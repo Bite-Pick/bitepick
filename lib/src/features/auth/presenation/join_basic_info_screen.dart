@@ -56,9 +56,6 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     if (!mounted) return;
 
     if (success) {
-      // 회원가입 성공 - 유저 정보 refresh
-      await ref.read(userStateProvider.notifier).refresh();
-
       if (!mounted) return;
       JoinSuccessRoute().go(context);
     } else {
