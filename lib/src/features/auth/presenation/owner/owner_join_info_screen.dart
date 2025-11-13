@@ -1,14 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
@@ -50,7 +52,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     'longitude': 127.0516,
     'parkingDescription': '건물 지하 주차장 2시간 무료',
     'representativeName': '홍길동',
-    'representativePhone': '010-1234-5678',
+    'representativePhone': '01012345678',
     'businessNumber': '1234567890',
     'bankName': '004', // KB국민은행
     'accountNumber': '111222333444',
@@ -226,58 +228,22 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
       context,
       MaterialPageRoute(
         builder: (_) => KpostalView(
-          useLocalServer: false,
-          // kakaoKey: Environment.kakaoJavascriptKey, // TODO: 활성화화면 callback 작동
+          //javascripKey: 활성화시 주소가 선택되지 않는 이슈로, 직접 kakao api 호출
           callback: (Kpostal result) async {
-            // TODO[auth]: 동작 확인필요(카카오 key 확인)
-            // final latitude = result.kakaoLatitude;
-            // final longitude = result.kakaoLongitude;
+            double? latitude;
+            double? longitude;
 
-            // // 위경도가 없는 경우 경고 표시
-            // if (latitude == null || longitude == null) {
-            //   ScaffoldMessenger.of(context).showSnackBar(
-            //     const SnackBar(
-            //       content: Text('위치 정보를 가져올 수 없습니다. 주소는 저장되었습니다.'),
-            //       duration: Duration(seconds: 3),
-            //     ),
-            //   );
+            final latLng = await controller.geocodeWithKakao(result.address);
+            latitude = latLng?.lat;
+            longitude = latLng?.lng;
 
-            // Geocoding을 통한 위경도 변환
-            double latitude = 0;
-            double longitude = 0;
-            try {
-              // 도로명 주소 우선 사용 (더 정확함)
-              final addr = result.roadAddress.trim().isNotEmpty
-                  ? result.roadAddress
-                  : result.jibunAddress;
-
-              talker.info('[Geocoding] Attempting to geocode: $addr');
-
-              final locs = await locationFromAddress(addr);
-
-              if (locs.isNotEmpty) {
-                latitude = locs.first.latitude;
-                longitude = locs.first.longitude;
-                talker.info(
-                  '[Geocoding] Success: lat=$latitude, lng=$longitude',
-                );
-              } else {
-                talker.warning('[Geocoding] No results found for address');
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('지오코딩 실패: 좌표를 찾지 못했어요. 주소만 저장합니다.'),
-                    ),
-                  );
-                }
-              }
-            } catch (e, stackTrace) {
-              talker.error('[Geocoding] Error', e, stackTrace);
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('지오코딩 오류: $e')),
-                );
-              }
+            if ((latitude == null || longitude == null) && mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('위치 정보를 가져올 수 없습니다. 주소는 저장되었습니다.'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
             }
 
             controller.updateAddress(

@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartx/dartx.dart';
+import 'package:dio/dio.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
@@ -149,6 +152,10 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         // For now, we'll just use the local file name as a placeholder key.
         return {'key': localImage.key, 'id': index + 1};
       }).toList();
+      if (imageUploads.isEmpty) {
+        talker.debug("이미지는 최소 1장이상 업로드해주세요");
+        return false;
+      }
 
       talker.info('[Store] Creating store with ${imageUploads.length} images');
 
@@ -198,7 +205,61 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
     }
   }
 
+  Future<LatLng?> geocodeWithKakao(String query) async {
+    final restApiKey = Environment.kakaoRestApiKey;
+    final dio = Dio(
+      BaseOptions(
+        headers: {
+          'Authorization': 'KakaoAK $restApiKey',
+          "KA": "sdk/1.0 flutter os/ios-17.0 lang/ko-KR",
+        },
+      ),
+    );
+    try {
+      final res = await dio.get(
+        'https://dapi.kakao.com/v2/local/search/address.json',
+        queryParameters: {'query': query},
+      );
+
+      // Kakao 응답 구조는 항상 Map
+      if (res.statusCode != 200 || res.data == null) {
+        talker.warning('카카오 지오코딩 실패: ${res.statusCode} ${res.data}');
+        return null;
+      }
+
+      final data = res.data as Map<String, dynamic>;
+      final docs = data['documents'] as List<dynamic>;
+
+      if (docs.isEmpty) {
+        talker.debug('카카오 지오코딩: 결과 없음 ($query)');
+        return null;
+      }
+
+      final first = docs.first as Map<String, dynamic>;
+
+      final x = double.tryParse(first['x']?.toString() ?? '');
+      final y = double.tryParse(first['y']?.toString() ?? '');
+
+      if (x == null || y == null) {
+        talker.warning('카카오 지오코딩: 좌표 파싱 실패 ($query) → $first');
+        return null;
+      }
+
+      return LatLng(y, x); // Kakao: y=lat, x=lng
+    } catch (e, st) {
+      talker.error('카카오 지오코딩 오류', e, st);
+      return null;
+    }
+  }
+
   void dispose() {
     form.dispose();
   }
+}
+
+class LatLng {
+  final double lat;
+  final double lng;
+
+  LatLng(this.lat, this.lng);
 }

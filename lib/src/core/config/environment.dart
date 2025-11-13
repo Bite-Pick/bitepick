@@ -24,14 +24,14 @@ class Environment {
   bool get isReleaseMode => kReleaseMode;
 
   static String get appName => switch (instance._buildType) {
-        BuildType.dev => 'MagamBell Dev',
-        BuildType.prod => 'MagamBell',
-      };
+    BuildType.dev => 'MagamBell Dev',
+    BuildType.prod => 'MagamBell',
+  };
 
   static String get baseApiUrl => switch (instance._buildType) {
-        BuildType.dev => DEV_API_URL,
-        BuildType.prod => API_URL,
-      };
+    BuildType.dev => DEV_API_URL,
+    BuildType.prod => API_URL,
+  };
 
   // Naver Cloud Platform Geocoding
   static String get geocodingApiUrl => GEOCODING_API_URL;
@@ -40,6 +40,7 @@ class Environment {
 
   static String get kakaoNativeAppKey => KAKAO_NATIVE_APP_KEY;
   static String get kakaoJavascriptKey => KAKAO_JAVASCRIPT_KEY;
+  static String get kakaoRestApiKey => KAKAO_REST_API_KEY;
 
   Future<void> run() async {
     await main_app.runMagamBellApp();
