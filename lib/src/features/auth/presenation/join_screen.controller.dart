@@ -59,7 +59,7 @@ class JoinController extends _$JoinController {
 
   // 전화번호 포맷팅 (UI 표시용)
   String getFormattedPhone() {
-    return _MgReactivePhoneTextFieldState.formatPhoneNumber(state.phone);
+    return formatPhoneNumber(state.phone);
   }
 
   // 최종 회원가입 API 호출
