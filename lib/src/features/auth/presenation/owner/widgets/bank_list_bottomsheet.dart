@@ -31,11 +31,11 @@ class BankListBottomsheet extends StatelessWidget {
                     runSpacing: MgSizes.md,
                     children: financialInstitutions.entries.map((entry) {
                       final bank = entry.value;
-                      final isSelected = field.value == bank.code;
+                      final isSelected = field.value == bank.shortName;
 
                       return GestureDetector(
                         onTap: () {
-                          field.didChange(bank.name);
+                          field.didChange(bank.shortName);
                           context.pop();
                         },
                         child: Container(
@@ -63,8 +63,6 @@ class BankListBottomsheet extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // TODO: 은행 아이콘 추가 시 여기에 표시
-                              // Icon(Icons.account_balance, size: 32, color: MgColorScheme.gray1),
                               BaseSvgIcon(
                                 assetName: 'bank/${bank.icon}.svg',
                                 hasColorFilter: false,

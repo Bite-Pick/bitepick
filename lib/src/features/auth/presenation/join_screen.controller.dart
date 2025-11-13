@@ -3,6 +3,7 @@ import 'package:magambell/src/features/auth/data/repositories/auth_repository.da
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
+import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'join_screen.controller.freezed.dart';
@@ -51,7 +52,14 @@ class JoinController extends _$JoinController {
 
   // 3단계: 전화번호 입력
   void setPhone(String phone) {
-    state = state.copyWith(phone: phone);
+    // 숫자만 추출 (하이픈 등 제거)
+    final digitsOnly = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    state = state.copyWith(phone: digitsOnly);
+  }
+
+  // 전화번호 포맷팅 (UI 표시용)
+  String getFormattedPhone() {
+    return _MgReactivePhoneTextFieldState.formatPhoneNumber(state.phone);
   }
 
   // 최종 회원가입 API 호출

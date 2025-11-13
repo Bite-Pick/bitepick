@@ -12,7 +12,8 @@ final String GOOGLE_OAUTH = dotenv.env['GOOGLE_OAUTH']!;
 
 // Geocoding
 final String GEOCODING_API_URL = dotenv.env['GEOCODING_API_URL']!;
-final String REVERSE_GEOCODING_API_URL = dotenv.env['REVERSE_GEOCODING_API_URL']!;
+final String REVERSE_GEOCODING_API_URL =
+    dotenv.env['REVERSE_GEOCODING_API_URL']!;
 
 // Naver Cloud Platform
 final String X_NCP_APIGW_API_KEY_ID = dotenv.env['X_NCP_APIGW_API_KEY_ID']!;
@@ -32,3 +33,4 @@ final String PORTONE_CHANNEL_KEY = dotenv.env['PORTONE_CHANNEL_KEY']!;
 // kakao
 final String KAKAO_NATIVE_APP_KEY = dotenv.env['KAKAO_NATIVE_APP_KEY']!;
 final String KAKAO_JAVASCRIPT_KEY = dotenv.env['KAKAO_JAVASCRIPT_KEY']!;
+final String KAKAO_REST_API_KEY = dotenv.env['KAKAO_REST_API_KEY']!;

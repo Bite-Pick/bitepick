@@ -14,6 +14,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class JoinBasicInfoRoute extends GoRouteData {
   const JoinBasicInfoRoute();
@@ -62,12 +63,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
       // 에러 표시
       final error = ref.read(joinControllerProvider).error;
       if (error != null) {
-        context.showFlash(
-          duration: const Duration(milliseconds: 2000),
-          builder: (context, flashController) {
-            return FlashBar(controller: flashController, content: Text(error));
-          },
-        );
+        ToastPresentor.error(context, error);
       }
     }
   }

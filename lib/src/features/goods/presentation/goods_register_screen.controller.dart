@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:flash/flash.dart';
-import 'package:flash/flash_helper.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -51,18 +49,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       final minEnd = start.add(_minDuration);
 
       if (end == null || end.isBefore(minEnd)) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        if (context != null) {
-          context.showFlash(
-            duration: const Duration(milliseconds: 2000),
-            builder: (context, controller) {
-              return FlashBar(
-                controller: controller,
-                content: Text("종료시간은 시작시간보다 뒤여야합니다"),
-              );
-            },
-          );
-        }
         // emitEvent: false로 순환 이벤트/밸리데이션 폭주 방지
         endCtrl.updateValue(minEnd, emitEvent: false);
         // 필요하면 markAsDirty/markAsTouched로 UI 반영
@@ -80,18 +66,10 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       if (end.isBefore(minEnd)) {
         form.control('endTime').updateValue(minEnd, emitEvent: false);
         form.control('endTime').markAsDirty();
-        final context = GlobalVariable.navigatorKey.currentContext;
 
+        final context = GlobalVariable.navigatorKey.currentContext;
         if (context != null) {
-          context.showFlash(
-            duration: const Duration(milliseconds: 2000),
-            builder: (context, controller) {
-              return FlashBar(
-                controller: controller,
-                content: Text("종료시간은 시작시간보다 뒤여야합니다"),
-              );
-            },
-          );
+          ToastPresentor.error(context, "종료시간은 시작시간보다 뒤여야합니다");
         }
       }
     });
@@ -104,9 +82,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
   FormGroup _createForm() {
     return FormGroup({
-      'description': FormControl<String>(
-        validators: [Validators.required, Validators.minLength(10)],
-      ),
       // Step 2: 수량, 판매 시작,마감 시간
       'quantity': FormControl<int>(
         value: 0,
@@ -231,7 +206,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
           .createGoods(
-            description: formValue['description'] as String,
             originalPrice: formValue['originalPrice'] as int,
             discount: formValue['discount'] as int,
             salePrice: formValue['salePrice'] as int,
@@ -254,8 +228,10 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       //         state = state.copyWith(uploadProgress: overallProgress);
       //       },
       //     );
-
-      state = state.copyWith(isSubmitting: false, uploadProgress: 1.0);
+      state = state.copyWith(
+        isSubmitting: false,
+        error: presignedUrls == null ? "API 실패" : null,
+      );
 
       // 성공 처리
       talker.debug('Goods 등록 및 이미지 업로드 완료');

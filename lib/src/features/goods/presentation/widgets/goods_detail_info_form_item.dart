@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/image/utils/image_requester.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
-import 'package:magambell/src/widgets/mg_reactive_textfield.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
 
 /// 상품 상세 정보 아이템 (이미지 + 상품명 + 설명)

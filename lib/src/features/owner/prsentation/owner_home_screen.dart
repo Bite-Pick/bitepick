@@ -17,6 +17,7 @@ import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class OwnerHomeRoute extends GoRouteData {
@@ -119,12 +120,10 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         Gaps.w8,
         Switch(
           value: saleStatus,
-          onChanged: (value) async {
-            await ref
-                .read(goodsRepositoryProvider)
-                .setGoodsSaleStatus(id: id, saleStatus: value);
-            ref.invalidate(storeStateProvider);
-          },
+          onChanged: (value) async => showDialog(
+            context: context,
+            builder: (context) => _buildAlertDialog(id, value),
+          ),
           activeColor: MgColorScheme.white,
           activeTrackColor: MgColorScheme.subpointGreen, // 활성화(ON) 시 트랙 색상
           inactiveThumbColor: MgColorScheme.white, // 비활성화 원 색
@@ -132,6 +131,21 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
         ),
       ],
+    );
+  }
+
+  MgAlertDialog _buildAlertDialog(String id, bool saleStatus) {
+    return MgAlertDialog(
+      title: "영업을 종료하시겠어요?",
+      content: Text("다시 영업재개를 위해서는 영업중으로\n전환해주셔야해요!").center(),
+      onConfirm: () async {
+        await ref
+            .read(goodsRepositoryProvider)
+            .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
+        ref.invalidate(storeStateProvider);
+      },
+      confirmText: "확인",
+      hasCancel: false,
     );
   }
 

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,11 +12,11 @@ import 'package:magambell/src/features/auth/data/constant/financial_institution.
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
-import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
 import 'package:magambell/src/widgets/mg_reactive_textfield.dart';
 import 'package:magambell/src/widgets/mg_select.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -48,7 +49,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     'longitude': 127.0516,
     'parkingDescription': '건물 지하 주차장 2시간 무료',
     'representativeName': '홍길동',
-    'representativePhone': '010-1234-5678',
+    'representativePhone': '01012345678',
     'businessNumber': '1234567890',
     'bankName': '004', // KB국민은행
     'accountNumber': '111222333444',
@@ -56,6 +57,9 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // watch를 사용해서 state 변경 시 rebuild
+    ref.watch(ownerJoinInfoScreenControllerProvider);
+
     final controller = ref.read(ownerJoinInfoScreenControllerProvider.notifier);
     final form = controller.form;
 
@@ -63,11 +67,10 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
       formGroup: form,
       child: BaseScaffold(
         appBar: BaseAppBar(
-          // TODO: 삭제 필요
-          action: TextButton(
-            onPressed: () => controller.fillWithMockData(mockFormData),
-            child: const Text('임시완성'),
-          ),
+          // action: TextButton(
+          //   onPressed: () => controller.fillWithMockData(mockFormData),
+          //   child: const Text('임시완성'),
+          // ),
         ),
         backgroundColor: MgColorScheme.white,
         body: Column(
@@ -87,7 +90,9 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
             MgButton(
               onPressed: () async {
                 final result = await controller.submit();
-                if (result && mounted) OwnerHomeRoute().go(context);
+                if (result && context.mounted) {
+                  DefaultRoute().go(context);
+                }
               },
               content: const Text('확인'),
             ).primary().margin(
@@ -167,10 +172,9 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
           formControlName: 'representativeName',
           hintText: '대표자 성함 ',
         ),
-        MgReactiveTextField(
+        MgReactivePhoneTextField(
           formControlName: 'representativePhone',
-          hintText: '전화번호 (예: 01012345678)',
-          keyboardType: TextInputType.phone,
+          hintText: '전화번호',
         ),
 
         // 4. 사업자 등록 번호
@@ -188,7 +192,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
           hintText: '은행 선택',
           bottomSheetTitle: '은행 선택해주세요',
           options: financialInstitutions.values
-              .map((e) => MgSelectOption(value: e.name, label: e.name))
+              .map((e) => MgSelectOption(value: e.shortName, label: e.name))
               .toList(),
           customBottomSheet: _showBankBottomSheet,
         ),
@@ -222,41 +226,23 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
       context,
       MaterialPageRoute(
         builder: (_) => KpostalView(
-          useLocalServer: false,
-          // kakaoKey: Environment.kakaoJavascriptKey, // TODO: 활성화화면 callback 작동
+          //javascripKey: 활성화시 주소가 선택되지 않는 이슈로, 직접 kakao api 호출
           callback: (Kpostal result) async {
-            // TODO[auth]: 동작 확인필요(카카오 key 확인)
-            final latitude = result.kakaoLatitude;
-            final longitude = result.kakaoLongitude;
+            double? latitude;
+            double? longitude;
 
-            // // 위경도가 없는 경우 경고 표시
-            // if (latitude == null || longitude == null) {
-            //   ScaffoldMessenger.of(context).showSnackBar(
-            //     const SnackBar(
-            //       content: Text('위치 정보를 가져올 수 없습니다. 주소는 저장되었습니다.'),
-            //       duration: Duration(seconds: 3),
-            //     ),
-            //   );
+            final latLng = await controller.geocodeWithKakao(result.address);
+            latitude = latLng?.lat;
+            longitude = latLng?.lng;
 
-            // TODO: geocoding test필요
-            // } // 도로명 우선, 없으면 지번 주소 사용
-            //  final addr = (result.roadAddress?.trim()?.isNotEmpty ?? false)
-            // ? result.roadAddress!
-            // : result.address;
-            //            final locs = await locatiofnFromAddress(addr);
-            //            if (locs.isNotEmpty) {
-            //              latitude = locs.first.latitude;
-            //              longitude = locs.first.longitude;
-            //            } else {
-            //              ScaffoldMessenger.of(context).showSnackBar(
-            //                const SnackBar(content: Text('지오코딩 실패: 좌표를 찾지 못했어요. 주소만 저장합니다.')),
-            //              );
-            //            }
-            //          } catch (e) {
-            //            ScaffoldMessenger.of(context).showSnackBar(
-            //              SnackBar(content: Text('지오코딩 오류: $e')),
-            //            );
-            //        }
+            if ((latitude == null || longitude == null) && mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('위치 정보를 가져올 수 없습니다. 주소는 저장되었습니다.'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            }
 
             controller.updateAddress(
               postalCode: result.postCode,

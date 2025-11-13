@@ -86,17 +86,12 @@ class StoreRepository {
       },
     );
     final presignedImagesData =
-        res.data['data']['goodsPreSignedImages'] as List?;
+        res.data['data']['storePreSignedUrlImages'] as List?;
     if (res.data['status'] != 'OK' || presignedImagesData == null) return [];
 
     return presignedImagesData
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
         .toList();
-    // if (res.data['status'] != 'OK') return true;
-
-    // final data = res.data['data'];
-    // if (data != null) return true;
-    // return false;
   }
 
   Future<Store?> getOwnerStore() async {

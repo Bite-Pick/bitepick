@@ -59,7 +59,6 @@ class Step3PriceInfoView extends ConsumerWidget {
                     color: MgColorScheme.lightest,
                     borderRadius: BorderRadius.circular(MgRadius.md),
                   )
-                  // TODO: 하단 버튼위에 붙이도록
                   .margin(top: MgSizes.xxl),
           ],
         );

@@ -51,11 +51,10 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
       child: BaseScaffold(
         appBar: BaseAppBar(
           title: const Text('마감백 등록'),
-          // TODO: 삭제 예정
-          action: TextButton(
-            onPressed: () => controller.fillWithMockData(mockFormData),
-            child: const Text('임시완성'),
-          ),
+          // action: TextButton(
+          //   onPressed: () => controller.fillWithMockData(mockFormData),
+          //   child: const Text('임시완성'),
+          // ),
         ),
         body: Column(
           children: [

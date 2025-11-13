@@ -13,40 +13,46 @@ import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/main_app.dart';
 
 Future<void> runMagamBellApp() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   // Initialize Talker for logging FIRST (before runZonedGuarded)
   MgTalker.init();
 
-  await runZonedGuarded<Future<void>>(() async {
-    await dotenv.load(fileName: '.env');
+  await runZonedGuarded<Future<void>>(
+    () async {
+      // Move WidgetsFlutterBinding inside the zone to avoid zone mismatch
+      WidgetsFlutterBinding.ensureInitialized();
 
-    // Initialize Kakao SDK
-    KakaoSdk.init(nativeAppKey: Environment.kakaoNativeAppKey);
+      await dotenv.load(fileName: '.env');
 
-    // Initialize Naver Map SDK
-    await FlutterNaverMap().init(
-      clientId: dotenv.env['NAVER_CLIENT_ID'] ?? '',
-      onAuthFailed: (ex) {
-        log('Naver Map authentication failed: $ex');
-      },
-    );
+      // Initialize Kakao SDK
+      KakaoSdk.init(nativeAppKey: Environment.kakaoNativeAppKey);
 
-    // Shorebird 자동 업데이트 확인
-    ShorebirdManager.checkAndDownloadUpdate();
+      // Initialize Naver Map SDK
+      await FlutterNaverMap().init(
+        clientId: dotenv.env['NAVER_CLIENT_ID'] ?? '',
+        onAuthFailed: (ex) {
+          log('Naver Map authentication failed: $ex');
+        },
+      );
 
-    // Initialize GlobalErrorHandler and run app
-    await GlobalErrorHandler().initialize(
-      appRunner: () async {
-        runApp(const BaseProvider(child: MagambellApp()));
-      },
-    );
+      // Shorebird 자동 업데이트 확인
+      ShorebirdManager.checkAndDownloadUpdate();
 
-    // Flutter error handler
-    FlutterError.onError = (FlutterErrorDetails details) {
-      GlobalErrorHandler().onErrorDetails(details);
-    };
-  }, (error, stackTrace) async {
-    await GlobalErrorHandler().onError(error, stackTrace);
-  });
+      // Initialize GlobalErrorHandler and run app
+      await GlobalErrorHandler().initialize(
+        appRunner: () async {
+          runApp(const BaseProvider(child: MagambellApp()));
+        },
+      );
+
+      // Flutter error handler
+      FlutterError.onError = (FlutterErrorDetails details) {
+        GlobalErrorHandler().onErrorDetails(details);
+      };
+    },
+    (error, stackTrace) async {
+      await GlobalErrorHandler().onError(error, stackTrace);
+      debugPrint('🔴 UNCAUGHT ERROR: $error');
+      debugPrint('$stackTrace');
+    },
+  );
 }

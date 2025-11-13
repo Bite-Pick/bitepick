@@ -1,11 +1,8 @@
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
-import 'package:magambell/src/features/image/domain/entities/image_meta_data.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
-import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'goods_repository.g.dart';
@@ -20,8 +17,7 @@ class GoodsRepository {
 
   /// Goods 등록 API 호출 (이미지 메타데이터 포함)
   /// 응답에서 goodsPreSignedImages만 파싱하여 반환
-  Future<List<PresignedUrlImage>> createGoods({
-    required String description,
+  Future<List<PresignedUrlImage>?> createGoods({
     required int originalPrice,
     required int discount,
     required int salePrice,
@@ -32,7 +28,7 @@ class GoodsRepository {
     final res = await _dio.post(
       '/v1/goods',
       data: {
-        'description': description,
+        'description': "test추후 수정필요",
         'originalPrice': originalPrice,
         'discount': discount,
         'salePrice': salePrice,
@@ -53,13 +49,14 @@ class GoodsRepository {
     //     .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
     //     .toList();
     final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return [];
+    if (res.data['status'] != 'OK' || data == null) return null;
+
     return [];
   }
 
   // TODO: 백엔드 수정 필요
 
-  Future<List<PresignedUrlImage>> editGoods({
+  Future<List<PresignedUrlImage>?> editGoods({
     required String goodsId,
     String? name,
     required String description,
@@ -74,7 +71,7 @@ class GoodsRepository {
       '/v1/goods',
       data: {
         'goodsId': goodsId,
-        'name': name,
+        'name': name??"test", // TODO: 백엔드 수정 필요
         'description': description,
         'originalPrice': originalPrice,
         'discount': discount,
@@ -96,7 +93,7 @@ class GoodsRepository {
     //     .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
     //     .toList();
     final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return [];
+    if (res.data['status'] != 'OK' || data == null) return null;
     return [];
   }
 

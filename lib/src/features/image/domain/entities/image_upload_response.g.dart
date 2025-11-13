@@ -9,10 +9,10 @@ part of 'image_upload_response.dart';
 _$PresignedUrlImageImpl _$$PresignedUrlImageImplFromJson(
   Map<String, dynamic> json,
 ) => _$PresignedUrlImageImpl(
-  name: json['name'] as String,
+  id: (json['id'] as num).toInt(),
   url: json['url'] as String,
 );
 
 Map<String, dynamic> _$$PresignedUrlImageImplToJson(
   _$PresignedUrlImageImpl instance,
-) => <String, dynamic>{'name': instance.name, 'url': instance.url};
+) => <String, dynamic>{'id': instance.id, 'url': instance.url};

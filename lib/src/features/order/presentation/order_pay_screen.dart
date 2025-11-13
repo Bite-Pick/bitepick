@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -16,6 +17,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class OrderPayRoute extends GoRouteData {
   const OrderPayRoute();
@@ -88,15 +90,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           MgButton(
             onPressed: () async {
               if (!_allAgreed) {
-                context.showFlash(
-                  duration: const Duration(milliseconds: 2000),
-                  builder: (context, controller) {
-                    return FlashBar(
-                      controller: controller,
-                      content: Text("모든 약관에 동의해 주세요."),
-                    );
-                  },
-                );
+                ToastPresentor.error(context, "모든 약관에 동의해 주세요");
+               
                 return;
               }
               // TODO: 결제 로직 추가
