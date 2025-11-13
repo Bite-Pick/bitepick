@@ -56,21 +56,26 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
 
   // 로컬 이미지 추가
   void addLocalImages(List<File> files) {
+    talker.info('[Image] Adding ${files.length} images');
     final newImages = <LocalImage>[];
     var currentId = localImages.length;
 
     for (final file in files) {
       final fileName = file.path.split('/').last;
       newImages.add(LocalImage(id: currentId, key: fileName, file: file));
+      talker.debug('[Image] Added image #$currentId: $fileName');
       currentId++;
     }
 
     localImages = [...localImages, ...newImages];
+    talker.info('[Image] Total images: ${localImages.length}');
+
     // Form에 이미지 개수 업데이트
     form.control('images').value = localImages.length;
-    // Rebuild the UI by putting the controller in a loading state and then back to data
-    state = const AsyncLoading();
-    state = const AsyncData(null);
+
+    // IMPORTANT: state를 업데이트해야 UI가 rebuild됨
+    state = AsyncValue.data(null);
+    talker.debug('[Image] UI state updated');
   }
 
   void fillWithMockData(Map<String, Object> data) {
@@ -145,35 +150,28 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         return {'key': localImage.key, 'id': index + 1};
       }).toList();
 
-      // final result = await ref
-      //     .read(storeRepositoryProvider)
-      //     .createStore(
-      //       name: formValue['storeName'] as String,
-      //       address: fullAddress,
-      //       latitude: latitude ?? 0,
-      //       longitude: longitude ?? 0,
-      //       ownerName: formValue['representativeName'] as String,
-      //       ownerPhone: formValue['representativePhone'] as String,
-      //       businessNumber: formValue['businessNumber'] as String,
-      //       bankName: formValue['bankName'] as String,
-      //       bankAccount: formValue['accountNumber'] as String,
-      //       storeImagesRegisters: imageUploads,
-      //       // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
-      //     );
-      final result = [
-        PresignedUrlImage(
-          name:
-              "image_picker_41F170AA-95F4-41F8-8406-76701925B2E0-66107-000008377C733662.jpg",
-          url:
-              "https://magambell-dev-s3.s3.ap-northeast-2.amazonaws.com/STORE/OWNER/776169077802262953/1_image_picker_41F170AA-95F4-41F8-8406-76701925B2E0-66107-000008377C733662.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20251111T195759Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIA5PAVYLE7CKRXHU7G%2F20251111%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=4da8411638b84689fe77820e5d797a0311cbc42379781a22e7939b1e3ef36e0d",
-        ),
-        PresignedUrlImage(
-          name:
-              "image_picker_B6D29A25-2238-46D9-9148-4F2180660447-66107-000008377C45A6A8.jpg",
-          url:
-              "https://magambell-dev-s3.s3.ap-northeast-2.amazonaws.com/STORE/OWNER/776169077802262953/2_image_picker_B6D29A25-2238-46D9-9148-4F2180660447-66107-000008377C45A6A8.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20251111T195759Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIA5PAVYLE7CKRXHU7G%2F20251111%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=f181037ab5bd266cfccf89f1af2026b742b8f6fbb3143d1c254fc8b242cdb17c",
-        ),
-      ];
+      talker.info('[Store] Creating store with ${imageUploads.length} images');
+
+      final result = await ref
+          .read(storeRepositoryProvider)
+          .createStore(
+            name: formValue['storeName'] as String,
+            address: fullAddress,
+            latitude: latitude ?? 0,
+            longitude: longitude ?? 0,
+            ownerName: formValue['representativeName'] as String,
+            ownerPhone: formValue['representativePhone'] as String,
+            businessNumber: formValue['businessNumber'] as String,
+            bankName: formValue['bankName'] as String,
+            bankAccount: formValue['accountNumber'] as String,
+            storeImagesRegisters: imageUploads,
+            // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
+          );
+
+      talker.info('[S3] Starting upload for ${localImages.length} images');
+      talker.debug('[S3] Presigned URLs count: ${result.length}');
+
+      bool isSuccess = false;
       await ref
           .read(presignedImageRepositoryProvider)
           .uploadImagesToS3(
@@ -182,14 +180,18 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
             onProgress: (currentIndex, total, sent, totalBytes) {
               final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
               final overallProgress = (currentIndex + fileProgress) / total;
-              print("업로드 완료");
-              // state = state.copyWith(uploadProgress: overallProgress);
+              talker.info(
+                '[S3] Upload progress: ${(overallProgress * 100).toStringAsFixed(1)}% ($currentIndex/$total)',
+              );
+              isSuccess = true;
             },
           );
 
+      talker.info('[S3] Upload completed successfully');
+
       // 성공 시
       state = const AsyncValue.data(null);
-      return true;
+      return isSuccess;
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
       return false;
