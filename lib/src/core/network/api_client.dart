@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/network/app_interceptor.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 part 'api_client.g.dart';
 
@@ -29,6 +31,16 @@ Dio apiClient(Ref ref) {
   // 인터셉터 추가
   dio.interceptors.addAll([
     AppInterceptor(ref), // 인증, 에러 처리 (Ref 전달)
+    TalkerDioLogger(
+      talker: talker,
+      settings: const TalkerDioLoggerSettings(
+        printRequestHeaders: true,
+        printRequestData: true,
+        printResponseData: true,
+        printResponseHeaders: false,
+        printResponseMessage: true,
+      ),
+    ),
     if (!Environment.instance.isReleaseMode)
       PrettyDioLogger(
         requestHeader: true,
