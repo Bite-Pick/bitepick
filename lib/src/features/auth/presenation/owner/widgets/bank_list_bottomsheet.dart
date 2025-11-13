@@ -31,11 +31,11 @@ class BankListBottomsheet extends StatelessWidget {
                     runSpacing: MgSizes.md,
                     children: financialInstitutions.entries.map((entry) {
                       final bank = entry.value;
-                      final isSelected = field.value == bank.code;
+                      final isSelected = field.value == bank.shortName;
 
                       return GestureDetector(
                         onTap: () {
-                          field.didChange(bank.name);
+                          field.didChange(bank.shortName);
                           context.pop();
                         },
                         child: Container(
