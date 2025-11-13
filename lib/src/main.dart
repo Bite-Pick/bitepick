@@ -18,35 +18,40 @@ Future<void> runMagamBellApp() async {
   // Initialize Talker for logging FIRST (before runZonedGuarded)
   MgTalker.init();
 
-  await runZonedGuarded<Future<void>>(() async {
-    await dotenv.load(fileName: '.env');
+  await runZonedGuarded<Future<void>>(
+    () async {
+      await dotenv.load(fileName: '.env');
 
-    // Initialize Kakao SDK
-    KakaoSdk.init(nativeAppKey: Environment.kakaoNativeAppKey);
+      // Initialize Kakao SDK
+      KakaoSdk.init(nativeAppKey: Environment.kakaoNativeAppKey);
 
-    // Initialize Naver Map SDK
-    await FlutterNaverMap().init(
-      clientId: dotenv.env['NAVER_CLIENT_ID'] ?? '',
-      onAuthFailed: (ex) {
-        log('Naver Map authentication failed: $ex');
-      },
-    );
+      // Initialize Naver Map SDK
+      await FlutterNaverMap().init(
+        clientId: dotenv.env['NAVER_CLIENT_ID'] ?? '',
+        onAuthFailed: (ex) {
+          log('Naver Map authentication failed: $ex');
+        },
+      );
 
-    // Shorebird 자동 업데이트 확인
-    ShorebirdManager.checkAndDownloadUpdate();
+      // Shorebird 자동 업데이트 확인
+      ShorebirdManager.checkAndDownloadUpdate();
 
-    // Initialize GlobalErrorHandler and run app
-    await GlobalErrorHandler().initialize(
-      appRunner: () async {
-        runApp(const BaseProvider(child: MagambellApp()));
-      },
-    );
+      // Initialize GlobalErrorHandler and run app
+      await GlobalErrorHandler().initialize(
+        appRunner: () async {
+          runApp(const BaseProvider(child: MagambellApp()));
+        },
+      );
 
-    // Flutter error handler
-    FlutterError.onError = (FlutterErrorDetails details) {
-      GlobalErrorHandler().onErrorDetails(details);
-    };
-  }, (error, stackTrace) async {
-    await GlobalErrorHandler().onError(error, stackTrace);
-  });
+      // Flutter error handler
+      FlutterError.onError = (FlutterErrorDetails details) {
+        GlobalErrorHandler().onErrorDetails(details);
+      };
+    },
+    (error, stackTrace) async {
+      await GlobalErrorHandler().onError(error, stackTrace);
+      debugPrint('🔴 UNCAUGHT ERROR: $error');
+      debugPrint('$stackTrace');
+    },
+  );
 }
