@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:flash/flash.dart';
-import 'package:flash/flash_helper.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -51,18 +49,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       final minEnd = start.add(_minDuration);
 
       if (end == null || end.isBefore(minEnd)) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        if (context != null) {
-          context.showFlash(
-            duration: const Duration(milliseconds: 2000),
-            builder: (context, controller) {
-              return FlashBar(
-                controller: controller,
-                content: Text("종료시간은 시작시간보다 뒤여야합니다"),
-              );
-            },
-          );
-        }
         // emitEvent: false로 순환 이벤트/밸리데이션 폭주 방지
         endCtrl.updateValue(minEnd, emitEvent: false);
         // 필요하면 markAsDirty/markAsTouched로 UI 반영
@@ -80,18 +66,10 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       if (end.isBefore(minEnd)) {
         form.control('endTime').updateValue(minEnd, emitEvent: false);
         form.control('endTime').markAsDirty();
-        final context = GlobalVariable.navigatorKey.currentContext;
 
+        final context = GlobalVariable.navigatorKey.currentContext;
         if (context != null) {
-          context.showFlash(
-            duration: const Duration(milliseconds: 2000),
-            builder: (context, controller) {
-              return FlashBar(
-                controller: controller,
-                content: Text("종료시간은 시작시간보다 뒤여야합니다"),
-              );
-            },
-          );
+          ToastPresentor.error(context, "종료시간은 시작시간보다 뒤여야합니다");
         }
       }
     });

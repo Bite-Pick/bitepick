@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
-// TODO: AI GENERATE 검토 필요(네이밍, 로직)
+// NOTE: AI GENERATE 검토 필요(네이밍, 로직)
 class MapLauncher {
   static const String NAVER_MAP_IOS_STORE_URL =
       'https://apps.apple.com/kr/app/id311867728';

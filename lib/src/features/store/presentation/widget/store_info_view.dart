@@ -18,6 +18,7 @@ import 'package:magambell/src/features/map/presentation/widget/store_location_in
 import 'package:magambell/src/features/store/domain/entities/store_info_ui_data.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_favorite_icon.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class StoreInfoView extends ConsumerWidget {
   const StoreInfoView(this.storeInfo, {super.key, this.hasFavorite = true});
@@ -31,7 +32,7 @@ class StoreInfoView extends ConsumerWidget {
         _buildThumbnailImageView(),
         _buildStoreDescriptionSection(context, ref),
         Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
-        _buildStoreLocationInfoSection(),
+        _buildStoreLocationInfoSection(context),
         Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.md),
       ],
     );
@@ -118,7 +119,7 @@ class StoreInfoView extends ConsumerWidget {
     ).margin(all: MgSizes.md, bottom: 0);
   }
 
-  Widget _buildStoreLocationInfoSection() {
+  Widget _buildStoreLocationInfoSection(BuildContext context) {
     return Column(
       spacing: MgSizes.size8,
       children: [
@@ -135,7 +136,7 @@ class StoreInfoView extends ConsumerWidget {
           suffix: GestureDetector(
             onTap: () async {
               await Clipboard.setData(ClipboardData(text: storeInfo.address));
-              // TODO: Flash 메시지로 복사완료 알림
+              ToastPresentor.info(context, "복사완료!");
             },
             child: const Text("복사").textColor(Color(0xff0077FF)),
           ),

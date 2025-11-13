@@ -1,5 +1,3 @@
-import 'package:flash/flash.dart';
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,13 +12,12 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
-import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
-import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class SelectUserTypeRoute extends GoRouteData {
   const SelectUserTypeRoute();
@@ -82,15 +79,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
           MgButton(
             onPressed: () {
               if (selectedUserRole == null) {
-                context.showFlash(
-                  duration: const Duration(milliseconds: 2000),
-                  builder: (context, controller) {
-                    return FlashBar(
-                      controller: controller,
-                      content: Text("사용자 유형을 선택해 주세요."),
-                    );
-                  },
-                );
+                ToastPresentor.error(context, "사용자 유형을 선택해 주세요.");
                 return;
               }
               _showAgreementBottomSheet();
@@ -131,16 +120,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
           MgButton(
             onPressed: () {
               if (!_allAgreed) {
-                // TODO: 컴포넌트 분리
-                context.showFlash(
-                  duration: const Duration(milliseconds: 1000),
-                  builder: (context, controller) {
-                    return FlashBar(
-                      controller: controller,
-                      content: Text("모든 약관에 동의해 주세요."),
-                    );
-                  },
-                );
+                ToastPresentor.error(context, "모든 약관에 동의해 주세요.");
                 return;
               }
 

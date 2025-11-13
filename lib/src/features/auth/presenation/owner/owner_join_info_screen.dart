@@ -1,12 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -15,8 +12,6 @@ import 'package:magambell/src/features/auth/data/constant/financial_institution.
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
-import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
-import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';

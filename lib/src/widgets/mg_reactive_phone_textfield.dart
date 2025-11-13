@@ -132,7 +132,7 @@ class _PhoneNumberValueAccessor extends ControlValueAccessor<String, String> {
     }
 
     // UI 업데이트 (포맷팅 적용)
-    final formatted = _formatPhoneNumber(limitedDigits);
+    final formatted = formatPhoneNumber(limitedDigits);
     if (_textEditingController.text != formatted) {
       final cursorPosition = _textEditingController.selection.baseOffset;
       _textEditingController.value = _textEditingController.value.copyWith(
@@ -144,21 +144,9 @@ class _PhoneNumberValueAccessor extends ControlValueAccessor<String, String> {
     }
   }
 
-  String _formatPhoneNumber(String value) {
-    if (value.isEmpty) return '';
-
-    if (value.length <= 3) {
-      return value;
-    } else if (value.length <= 7) {
-      return '${value.substring(0, 3)}-${value.substring(3)}';
-    } else {
-      return '${value.substring(0, 3)}-${value.substring(3, 7)}-${value.substring(7)}';
-    }
-  }
-
   @override
   String? modelToViewValue(String? modelValue) {
-    return _formatPhoneNumber(modelValue ?? '');
+    return formatPhoneNumber(modelValue ?? '');
   }
 
   @override
@@ -173,5 +161,18 @@ class _PhoneNumberValueAccessor extends ControlValueAccessor<String, String> {
   void dispose() {
     _textEditingController.removeListener(_onTextChanged);
     super.dispose();
+  }
+}
+
+// TODO: 추후 utiil로 이동
+String formatPhoneNumber(String value) {
+  if (value.isEmpty) return '';
+
+  if (value.length <= 3) {
+    return value;
+  } else if (value.length <= 7) {
+    return '${value.substring(0, 3)}-${value.substring(3)}';
+  } else {
+    return '${value.substring(0, 3)}-${value.substring(3, 7)}-${value.substring(7)}';
   }
 }

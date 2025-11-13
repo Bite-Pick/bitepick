@@ -1,14 +1,11 @@
 // goods_edit_screen.controller.dart
-import 'package:flash/flash.dart';
-import 'package:flash/flash_helper.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'goods_edit_screen.dart'; // Goods 타입 참조
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 
 part 'goods_edit_screen.controller.freezed.dart';
@@ -46,18 +43,6 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       final minEnd = start.add(_minDuration);
 
       if (end == null || end.isBefore(minEnd)) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        if (context != null) {
-          context.showFlash(
-            duration: const Duration(milliseconds: 2000),
-            builder: (context, controller) {
-              return FlashBar(
-                controller: controller,
-                content: Text("종료시간은 시작시간보다 뒤여야합니다"),
-              );
-            },
-          );
-        }
         // emitEvent: false로 순환 이벤트/밸리데이션 폭주 방지
         endCtrl.updateValue(minEnd, emitEvent: false);
         // 필요하면 markAsDirty/markAsTouched로 UI 반영
@@ -75,6 +60,10 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       if (end.isBefore(minEnd)) {
         form.control('endTime').updateValue(minEnd, emitEvent: false);
         form.control('endTime').markAsDirty();
+        final context = GlobalVariable.navigatorKey.currentContext;
+        if (context != null) {
+          ToastPresentor.error(context, "종료시간은 시작시간보다 뒤여야합니다");
+        }
       }
     });
 
@@ -181,7 +170,10 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       //         state = state.copyWith(uploadProgress: overallProgress);
       //       },
       //     );
-      state = state.copyWith(isSubmitting: false,error:presignedUrls==null?"API 실패":null);
+      state = state.copyWith(
+        isSubmitting: false,
+        error: presignedUrls == null ? "API 실패" : null,
+      );
       return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: e.toString());

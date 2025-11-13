@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartx/dartx.dart';
@@ -7,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
-import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:reactive_forms/reactive_forms.dart';
