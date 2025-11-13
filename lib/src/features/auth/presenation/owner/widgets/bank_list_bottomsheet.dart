@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -34,8 +35,8 @@ class BankListBottomsheet extends StatelessWidget {
 
                       return GestureDetector(
                         onTap: () {
-                          field.didChange(bank.code);
-                          Navigator.of(context).pop();
+                          field.didChange(bank.name);
+                          context.pop();
                         },
                         child: Container(
                           width:

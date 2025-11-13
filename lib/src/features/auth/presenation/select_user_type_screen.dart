@@ -148,8 +148,9 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
                   .read(joinControllerProvider.notifier)
                   .setUserRole(selectedUserRole!);
 
-              Navigator.of(context).pop();
-              JoinSuccessRoute().push(context);
+              context.pop();
+
+              JoinBasicInfoRoute().push(context);
             },
             content: const Text("확인"),
           ).primary(),

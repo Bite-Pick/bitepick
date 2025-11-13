@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
 /// Shorebird 코드 푸시 관리 클래스
@@ -16,7 +17,7 @@ class ShorebirdManager {
       final patch = await _updater.readCurrentPatch();
       return patch?.number;
     } catch (e) {
-      print('🐦 [Shorebird] 패치 번호 조회 실패: $e');
+      talker.debug('🐦 [Shorebird] 패치 번호 조회 실패: $e');
       return null;
     }
   }
@@ -25,10 +26,10 @@ class ShorebirdManager {
   static Future<UpdateStatus?> checkForUpdate() async {
     try {
       final status = await _updater.checkForUpdate();
-      print('🐦 [Shorebird] 업데이트 상태: $status');
+      talker.debug('🐦 [Shorebird] 업데이트 상태: $status');
       return status;
     } catch (e) {
-      print('🐦 [Shorebird] 업데이트 상태 확인 실패: $e');
+      talker.debug('🐦 [Shorebird] 업데이트 상태 확인 실패: $e');
       return null;
     }
   }
@@ -36,12 +37,12 @@ class ShorebirdManager {
   /// 업데이트 다운로드 및 적용
   static Future<bool> downloadUpdate() async {
     try {
-      print('🐦 [Shorebird] 업데이트 다운로드 시작...');
+      talker.debug('🐦 [Shorebird] 업데이트 다운로드 시작...');
       await _updater.update();
-      print('🐦 [Shorebird] 업데이트 다운로드 완료');
+      talker.debug('🐦 [Shorebird] 업데이트 다운로드 완료');
       return true;
     } catch (e) {
-      print('🐦 [Shorebird] 업데이트 다운로드 실패: $e');
+      talker.debug('🐦 [Shorebird] 업데이트 다운로드 실패: $e');
       return false;
     }
   }
@@ -64,25 +65,25 @@ class ShorebirdManager {
   static Future<void> checkAndDownloadUpdate() async {
     try {
       if (!isAvailable) {
-        print('🐦 [Shorebird] Shorebird를 사용할 수 없습니다.');
+        talker.debug('🐦 [Shorebird] Shorebird를 사용할 수 없습니다.');
         return;
       }
 
       final status = await checkForUpdate();
 
       if (status == UpdateStatus.outdated) {
-        print('🐦 [Shorebird] 새로운 업데이트가 있습니다. 다운로드를 시작합니다...');
+        talker.debug('🐦 [Shorebird] 새로운 업데이트가 있습니다. 다운로드를 시작합니다...');
         final success = await downloadUpdate();
         if (success) {
-          print('🐦 [Shorebird] 업데이트가 준비되었습니다. 다음 앱 재시작 시 적용됩니다.');
+          talker.debug('🐦 [Shorebird] 업데이트가 준비되었습니다. 다음 앱 재시작 시 적용됩니다.');
         }
       } else if (status == UpdateStatus.upToDate) {
-        print('🐦 [Shorebird] 앱이 최신 상태입니다.');
+        talker.debug('🐦 [Shorebird] 앱이 최신 상태입니다.');
       } else if (status == UpdateStatus.restartRequired) {
-        print('🐦 [Shorebird] 업데이트가 다운로드되었습니다. 앱을 재시작해주세요.');
+        talker.debug('🐦 [Shorebird] 업데이트가 다운로드되었습니다. 앱을 재시작해주세요.');
       }
     } catch (e) {
-      print('🐦 [Shorebird] 자동 업데이트 확인 실패: $e');
+      talker.debug('🐦 [Shorebird] 자동 업데이트 확인 실패: $e');
     }
   }
 }

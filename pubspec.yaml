@@ -27,6 +27,11 @@ dependencies:
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
 
+  # Logging
+  talker_flutter: ^4.6.12
+  talker_dio_logger: ^4.6.12
+  talker_riverpod_logger: ^4.6.12
+
   # Device Info
   package_info_plus: ^8.1.2
   device_info_plus: ^11.2.0
@@ -49,10 +54,11 @@ dependencies:
   flutter_naver_login: ^2.1.1
   kakao_flutter_sdk: ^1.9.7+3
   sign_in_with_apple: ^7.0.1
-  kpostal: ^0.4.1
+  kpostal: ^1.1.0  
   image_picker: ^1.2.0
   dotted_border: ^3.1.0
   lottie: ^3.3.2
+  geocoding: ^2.2.2
 
 
 dev_dependencies:

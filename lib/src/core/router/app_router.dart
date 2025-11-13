@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/core/utils/talker_route_observer.dart';
+import 'package:magambell/src/core/utils/talker_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
+import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
@@ -47,6 +50,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     routes: $appRoutes,
     refreshListenable: notifier,
+    observers: [TalkerRouteObserver()],
   );
 });
 
@@ -77,6 +81,10 @@ final appRouter = GoRouter(
     TypedGoRoute<OwnerJoinInfoRoute>(
       name: 'OwnerJoinInfoRoute',
       path: 'owner/join/info',
+    ),
+    TypedGoRoute<SelectAddressRoute>(
+      name: 'SelectAddressRoute',
+      path: 'guest/adress/select',
     ),
   ],
 )
@@ -126,9 +134,13 @@ class LoginRoute extends GoRouteData {
       name: 'OwnerGoodsEmptyRoute',
       path: 'owner/goods/empty',
     ),
-     TypedGoRoute<GoodsEditRoute>(
+    TypedGoRoute<GoodsEditRoute>(
       name: 'GoodsEditRoute',
       path: 'owner/store/edit',
+    ),
+    TypedGoRoute<TalkerRoute>(
+      name: 'TalkerRoute',
+      path: 'talker',
     ),
   ],
 )

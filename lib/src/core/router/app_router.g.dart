@@ -38,6 +38,12 @@ RouteBase get $loginRoute => GoRouteData.$route(
 
       factory: $OwnerJoinInfoRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'guest/adress/select',
+      name: 'SelectAddressRoute',
+
+      factory: $SelectAddressRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -109,6 +115,22 @@ extension $OwnerJoinInfoRouteExtension on OwnerJoinInfoRoute {
       const OwnerJoinInfoRoute();
 
   String get location => GoRouteData.$location('/auth/owner/join/info');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $SelectAddressRouteExtension on SelectAddressRoute {
+  static SelectAddressRoute _fromState(GoRouterState state) =>
+      SelectAddressRoute();
+
+  String get location => GoRouteData.$location('/auth/guest/adress/select');
 
   void go(BuildContext context) => context.go(location);
 
@@ -205,6 +227,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       name: 'GoodsEditRoute',
 
       factory: $GoodsEditRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'talker',
+      name: 'TalkerRoute',
+
+      factory: $TalkerRouteExtension._fromState,
     ),
   ],
 );
@@ -435,4 +463,19 @@ extension $GoodsEditRouteExtension on GoodsEditRoute {
 
   void replace(BuildContext context) =>
       context.replace(location, extra: $extra);
+}
+
+extension $TalkerRouteExtension on TalkerRoute {
+  static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
+
+  String get location => GoRouteData.$location('/talker');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }

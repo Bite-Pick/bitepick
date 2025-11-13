@@ -169,7 +169,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         ),
         MgReactiveTextField(
           formControlName: 'representativePhone',
-          hintText: '전화번호  (예: 01012345678)',
+          hintText: '전화번호 (예: 01012345678)',
           keyboardType: TextInputType.phone,
         ),
 
@@ -224,7 +224,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         builder: (_) => KpostalView(
           useLocalServer: false,
           // kakaoKey: Environment.kakaoJavascriptKey, // TODO: 활성화화면 callback 작동
-          callback: (Kpostal result) {
+          callback: (Kpostal result) async {
             // TODO[auth]: 동작 확인필요(카카오 key 확인)
             final latitude = result.kakaoLatitude;
             final longitude = result.kakaoLongitude;
@@ -237,7 +237,26 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
             //       duration: Duration(seconds: 3),
             //     ),
             //   );
-            // }
+
+            // TODO: geocoding test필요
+            // } // 도로명 우선, 없으면 지번 주소 사용
+            //  final addr = (result.roadAddress?.trim()?.isNotEmpty ?? false)
+            // ? result.roadAddress!
+            // : result.address;
+            //            final locs = await locatiofnFromAddress(addr);
+            //            if (locs.isNotEmpty) {
+            //              latitude = locs.first.latitude;
+            //              longitude = locs.first.longitude;
+            //            } else {
+            //              ScaffoldMessenger.of(context).showSnackBar(
+            //                const SnackBar(content: Text('지오코딩 실패: 좌표를 찾지 못했어요. 주소만 저장합니다.')),
+            //              );
+            //            }
+            //          } catch (e) {
+            //            ScaffoldMessenger.of(context).showSnackBar(
+            //              SnackBar(content: Text('지오코딩 오류: $e')),
+            //            );
+            //        }
 
             controller.updateAddress(
               postalCode: result.postCode,

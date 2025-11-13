@@ -5,6 +5,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/goods_register_form_title.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step_view_wrapper.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
@@ -48,6 +49,22 @@ class Step2TimeInfoView extends ConsumerWidget {
               control: endTimeControl,
               placeholder: '판매 종료 시간',
             ),
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                if (form.hasError('timeRangeInvalid')) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: MgSizes.xs),
+                    child: Text(
+                      '판매 종료 시간은 시작 시간보다 늦어야 합니다.',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: MgColorScheme.subpointRed,
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
             Gaps.h32,
             GoodsRegisterFormTitle(
               title: "판매 개수",
@@ -59,7 +76,7 @@ class Step2TimeInfoView extends ConsumerWidget {
                   QuantityPicker(
                     count: quantity,
                     onCountChanged: (quantity) {
-                      form.updateValue({'quantity': quantity});
+                      form.patchValue({'quantity': quantity});
                     },
                     alignment: MainAxisAlignment.spaceAround,
                     backgroundColor: Colors.transparent,
@@ -98,7 +115,7 @@ class Step2TimeInfoView extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             // TODO: 최초 값 기입전에는 error로 인식하지않도록
-            color: control.hasErrors
+            color: control.hasErrors && control.touched
                 ? MgColorScheme.subpointRed
                 : MgColorScheme.gray8,
             width: 1,

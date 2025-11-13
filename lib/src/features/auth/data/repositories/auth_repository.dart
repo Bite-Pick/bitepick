@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/network/json_utils.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -41,7 +42,7 @@ class AuthRepository {
       final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
 
       if (res.statusCode != 200) {
-        print('Authentication failed: ${res.statusCode}');
+        talker.debug('Authentication failed: ${res.statusCode}');
         return null;
       }
 
@@ -50,7 +51,7 @@ class AuthRepository {
       final refreshToken = res.headers.value('refreshtoken');
 
       if (authorization == null || refreshToken == null) {
-        print('Tokens not found in response headers');
+        talker.debug('Tokens not found in response headers');
         return null;
       }
 
@@ -58,14 +59,14 @@ class AuthRepository {
       final accessToken = authorization.replaceFirst('Bearer ', '');
       final refresh = refreshToken.replaceFirst('RefreshToken ', '');
 
-      print(
+      talker.debug(
         'Authentication successful - Access Token: ${accessToken.substring(0, 10)}...',
       );
 
       return AuthTokens(accessToken: accessToken, refreshToken: refresh);
     } catch (e, stackTrace) {
-      print('Authentication error: $e');
-      print('Stack trace: $stackTrace');
+      talker.debug('Authentication error: $e');
+      talker.debug('Stack trace: $stackTrace');
       return null;
     }
   }

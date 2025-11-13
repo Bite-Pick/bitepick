@@ -5,6 +5,7 @@ import 'package:flutter_naver_login/interface/types/naver_login_status.dart';
 import 'package:flutter_naver_login/interface/types/naver_token.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,7 +44,7 @@ class SocialAuthRepository {
         name: account.nickname ?? account.name ?? '',
       );
     } catch (e) {
-      print('Naver login error: $e');
+      talker.debug('Naver login error: $e');
       return null;
     }
   }
@@ -53,7 +54,7 @@ class SocialAuthRepository {
     try {
       await FlutterNaverLogin.logOut();
     } catch (e) {
-      print('Naver logout error: $e');
+      talker.debug('Naver logout error: $e');
     }
   }
 
@@ -66,13 +67,15 @@ class SocialAuthRepository {
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
 
-      print('Kakao login success: ${token.accessToken.substring(0, 10)}...');
+      talker.debug(
+        'Kakao login success: ${token.accessToken.substring(0, 10)}...',
+      );
 
       // 2. 프로필 정보 가져오기
       final User user = await UserApi.instance.me();
 
       // if (user.kakaoAccount?.email == null) {
-      //   print('Kakao email is null');
+      //   talker.debug('Kakao email is null');
       //   return null;
       // }
 
@@ -84,8 +87,8 @@ class SocialAuthRepository {
         name: user.kakaoAccount?.profile?.nickname ?? '',
       );
     } catch (e, stackTrace) {
-      print('Kakao login error: $e');
-      print('Stack trace: $stackTrace');
+      talker.debug('Kakao login error: $e');
+      talker.debug('Stack trace: $stackTrace');
       return null;
     }
   }
@@ -95,7 +98,7 @@ class SocialAuthRepository {
     try {
       await UserApi.instance.logout();
     } catch (e) {
-      print('Kakao logout error: $e');
+      talker.debug('Kakao logout error: $e');
     }
   }
 
@@ -110,12 +113,12 @@ class SocialAuthRepository {
         ],
       );
 
-      print(
+      talker.debug(
         'Apple login success: ${credential.identityToken?.substring(0, 10)}...',
       );
 
       if (credential.identityToken == null) {
-        print('Apple identity token is null');
+        talker.debug('Apple identity token is null');
         return null;
       }
 
@@ -134,8 +137,8 @@ class SocialAuthRepository {
         name: name,
       );
     } catch (e, stackTrace) {
-      print('Apple login error: $e');
-      print('Stack trace: $stackTrace');
+      talker.debug('Apple login error: $e');
+      talker.debug('Stack trace: $stackTrace');
       return null;
     }
   }

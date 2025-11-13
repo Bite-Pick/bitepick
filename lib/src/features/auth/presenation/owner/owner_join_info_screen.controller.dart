@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartx/dartx.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
+import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -111,7 +114,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       // 각 필드의 에러 출력
       form.controls.forEach((key, control) {
         if (control.invalid) {
-          print('[$key] errors: ${control.errors}');
+          talker.debug('[$key] errors: ${control.errors}');
         }
       });
 
@@ -122,7 +125,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
 
     try {
       final formValue = form.value;
-      print(formValue);
+      talker.debug(formValue);
 
       final fullAddress =
           '${formValue['address']} ${formValue['addressDetail']}'.trim();
@@ -142,20 +145,46 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         return {'key': localImage.key, 'id': index + 1};
       }).toList();
 
-      final result = await ref
-          .read(storeRepositoryProvider)
-          .createStore(
-            name: formValue['storeName'] as String,
-            address: fullAddress,
-            latitude: latitude ?? 0,
-            longitude: longitude ?? 0,
-            ownerName: formValue['representativeName'] as String,
-            ownerPhone: formValue['representativePhone'] as String,
-            businessNumber: formValue['businessNumber'] as String,
-            bankName: formValue['bankName'] as String,
-            bankAccount: formValue['accountNumber'] as String,
-            storeImagesRegisters: imageUploads,
-            // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
+      // final result = await ref
+      //     .read(storeRepositoryProvider)
+      //     .createStore(
+      //       name: formValue['storeName'] as String,
+      //       address: fullAddress,
+      //       latitude: latitude ?? 0,
+      //       longitude: longitude ?? 0,
+      //       ownerName: formValue['representativeName'] as String,
+      //       ownerPhone: formValue['representativePhone'] as String,
+      //       businessNumber: formValue['businessNumber'] as String,
+      //       bankName: formValue['bankName'] as String,
+      //       bankAccount: formValue['accountNumber'] as String,
+      //       storeImagesRegisters: imageUploads,
+      //       // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
+      //     );
+      final result = [
+        PresignedUrlImage(
+          name:
+              "image_picker_41F170AA-95F4-41F8-8406-76701925B2E0-66107-000008377C733662.jpg",
+          url:
+              "https://magambell-dev-s3.s3.ap-northeast-2.amazonaws.com/STORE/OWNER/776169077802262953/1_image_picker_41F170AA-95F4-41F8-8406-76701925B2E0-66107-000008377C733662.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20251111T195759Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIA5PAVYLE7CKRXHU7G%2F20251111%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=4da8411638b84689fe77820e5d797a0311cbc42379781a22e7939b1e3ef36e0d",
+        ),
+        PresignedUrlImage(
+          name:
+              "image_picker_B6D29A25-2238-46D9-9148-4F2180660447-66107-000008377C45A6A8.jpg",
+          url:
+              "https://magambell-dev-s3.s3.ap-northeast-2.amazonaws.com/STORE/OWNER/776169077802262953/2_image_picker_B6D29A25-2238-46D9-9148-4F2180660447-66107-000008377C45A6A8.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20251111T195759Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIA5PAVYLE7CKRXHU7G%2F20251111%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=f181037ab5bd266cfccf89f1af2026b742b8f6fbb3143d1c254fc8b242cdb17c",
+        ),
+      ];
+      await ref
+          .read(presignedImageRepositoryProvider)
+          .uploadImagesToS3(
+            localImages: localImages,
+            presignedUrls: result,
+            onProgress: (currentIndex, total, sent, totalBytes) {
+              final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
+              final overallProgress = (currentIndex + fileProgress) / total;
+              print("업로드 완료");
+              // state = state.copyWith(uploadProgress: overallProgress);
+            },
           );
 
       // 성공 시
