@@ -104,9 +104,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
   FormGroup _createForm() {
     return FormGroup({
-      'description': FormControl<String>(
-        validators: [Validators.required, Validators.minLength(10)],
-      ),
       // Step 2: 수량, 판매 시작,마감 시간
       'quantity': FormControl<int>(
         value: 0,
@@ -231,7 +228,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
           .createGoods(
-            description: formValue['description'] as String,
             originalPrice: formValue['originalPrice'] as int,
             discount: formValue['discount'] as int,
             salePrice: formValue['salePrice'] as int,
@@ -254,7 +250,9 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       //         state = state.copyWith(uploadProgress: overallProgress);
       //       },
       //     );
-
+      if (presignedUrls == null) {
+        state = state.copyWith(isSubmitting: false, error: "등록 실패");
+      }
       state = state.copyWith(isSubmitting: false, uploadProgress: 1.0);
 
       // 성공 처리

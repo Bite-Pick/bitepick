@@ -63,11 +63,10 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
       formGroup: form,
       child: BaseScaffold(
         appBar: BaseAppBar(
-          // TODO: 삭제 필요
-          action: TextButton(
-            onPressed: () => controller.fillWithMockData(mockFormData),
-            child: const Text('임시완성'),
-          ),
+          // action: TextButton(
+          //   onPressed: () => controller.fillWithMockData(mockFormData),
+          //   child: const Text('임시완성'),
+          // ),
         ),
         backgroundColor: MgColorScheme.white,
         body: Column(

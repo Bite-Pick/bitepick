@@ -20,8 +20,7 @@ class GoodsRepository {
 
   /// Goods 등록 API 호출 (이미지 메타데이터 포함)
   /// 응답에서 goodsPreSignedImages만 파싱하여 반환
-  Future<List<PresignedUrlImage>> createGoods({
-    required String description,
+  Future<List<PresignedUrlImage>?> createGoods({
     required int originalPrice,
     required int discount,
     required int salePrice,
@@ -32,7 +31,7 @@ class GoodsRepository {
     final res = await _dio.post(
       '/v1/goods',
       data: {
-        'description': description,
+        'description': "test추후 수정필요",
         'originalPrice': originalPrice,
         'discount': discount,
         'salePrice': salePrice,
@@ -53,7 +52,8 @@ class GoodsRepository {
     //     .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
     //     .toList();
     final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return [];
+    if (res.data['status'] != 'OK' || data == null) return null;
+
     return [];
   }
 
