@@ -97,6 +97,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
             },
             content: const Text("다음"),
           ).primary(),
+          Gaps.h16,
         ],
       ).margin(horizontal: MgSizes.xl),
     );
