@@ -7,11 +7,16 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/providers/base_provider.dart';
+import 'package:magambell/src/core/utils/global_error_handler.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/main_app.dart';
 
 Future<void> runMagamBellApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Talker for logging FIRST (before runZonedGuarded)
+  MgTalker.init();
 
   await runZonedGuarded<Future<void>>(() async {
     await dotenv.load(fileName: '.env');
@@ -30,6 +35,18 @@ Future<void> runMagamBellApp() async {
     // Shorebird 자동 업데이트 확인
     ShorebirdManager.checkAndDownloadUpdate();
 
-    runApp(const BaseProvider(child: MagambellApp()));
-  }, (error, stackTrace) => log(error.toString()));
+    // Initialize GlobalErrorHandler and run app
+    await GlobalErrorHandler().initialize(
+      appRunner: () async {
+        runApp(const BaseProvider(child: MagambellApp()));
+      },
+    );
+
+    // Flutter error handler
+    FlutterError.onError = (FlutterErrorDetails details) {
+      GlobalErrorHandler().onErrorDetails(details);
+    };
+  }, (error, stackTrace) async {
+    await GlobalErrorHandler().onError(error, stackTrace);
+  });
 }

@@ -7,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferenceKey {
   /// 저장된 주소 목록
   static const storedAddresses = 'storedAddresses';
+
+  /// Visual Logger 표시 여부
+  static const showVisualLogger = 'showVisualLogger';
 }
 
 /// 실제 데이터 IO 하는부분
@@ -40,14 +43,16 @@ class SharedPreferenceStore {
   /// 저장된 주소 목록 가져오기
   Future<String?> getAddresses() async {
     try {
-      return (await _sharedPreferences).getString(SharedPreferenceKey.storedAddresses);
+      return (await _sharedPreferences).getString(
+        SharedPreferenceKey.storedAddresses,
+      );
     } catch (e) {
       log('Error loading addresses from storage: $e');
       return null;
     }
   }
 
-  /// 로그아웃시 토큰 삭제
+  /// 로그아웃시 토큰 삭제ㅌ
   Future<void> clearAddresses() async {
     try {
       await (await _sharedPreferences).remove(
@@ -64,6 +69,31 @@ class SharedPreferenceStore {
       await (await _sharedPreferences).clear();
     } catch (e) {
       log('Error clearing all data from storage: $e');
+    }
+  }
+
+  /// Visual Logger 표시 여부 저장
+  Future<void> setShowVisualLogger(bool value) async {
+    try {
+      await (await _sharedPreferences).setBool(
+        SharedPreferenceKey.showVisualLogger,
+        value,
+      );
+    } catch (e) {
+      log('Error saving visual logger visibility: $e');
+    }
+  }
+
+  /// Visual Logger 표시 여부 가져오기
+  Future<bool> getShowVisualLogger() async {
+    try {
+      return (await _sharedPreferences).getBool(
+            SharedPreferenceKey.showVisualLogger,
+          ) ??
+          true;
+    } catch (e) {
+      log('Error loading visual logger visibility: $e');
+      return false;
     }
   }
 }

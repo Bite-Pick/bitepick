@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
+import 'package:magambell/src/core/utils/visual_logger_provider.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -52,6 +55,11 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
       body: ListView(
         children: [
           _buildVersionSection(),
+          if (Environment.instance.isDev) ...[
+            Gaps.h16,
+            _buildDeveloperSection(),
+          ],
+          Gaps.h16,
           Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,6 +108,49 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [Text(label).md().textGray(), Text(value).md().bold()],
+    );
+  }
+
+  Widget _buildDeveloperSection() {
+    final showVisualLoggerAsync = ref.watch(visualLoggerVisibilityProvider);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: MgColorScheme.gray10,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text('개발자 옵션').lg().bold(),
+          Gaps.h12,
+          MgAsyncAnimatedSwitcher<bool>(
+            asyncValue: showVisualLoggerAsync,
+            loadingBuilder: () => const SizedBox.shrink(),
+            errorBuilder: (_, __) => const SizedBox.shrink(),
+            builder: (showVisualLogger) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Visual Logger').md(),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(showVisualLogger ? '보임' : '안보임').sm().textGray(),
+                    Gaps.w8,
+                    Switch(
+                      value: showVisualLogger,
+                      onChanged: (value) {
+                        ref
+                            .read(visualLoggerVisibilityProvider.notifier)
+                            .setVisible(value);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ).margin(all: MgSizes.md),
     );
   }
 }

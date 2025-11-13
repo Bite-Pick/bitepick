@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
+import 'package:magambell/src/core/utils/visual_logger_visible_builder.dart';
+import 'package:magambell/src/widgets/visual_logger.dart';
 
 class MagambellApp extends ConsumerWidget {
   const MagambellApp({super.key});
@@ -27,10 +29,37 @@ class MagambellApp extends ConsumerWidget {
           theme: MgTheme.getInstance().themeData,
           routerConfig: router,
           builder: (context, child) {
-            return child!;
+            return Stack(
+              children: [
+                child!,
+                const _VisualElements(),
+              ],
+            );
           },
         );
       },
+    );
+  }
+}
+
+class _VisualElements extends StatelessWidget {
+  const _VisualElements();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 100,
+      right: 16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          VisualLoggerVisibleBuilder(
+            builder: (context, visible) {
+              return visible ? const VisualLogger() : const SizedBox.shrink();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

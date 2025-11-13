@@ -27,6 +27,11 @@ dependencies:
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
 
+  # Logging
+  talker_flutter: ^4.6.12
+  talker_dio_logger: ^4.6.12
+  talker_riverpod_logger: ^4.6.12
+
   # Device Info
   package_info_plus: ^8.1.2
   device_info_plus: ^11.2.0
