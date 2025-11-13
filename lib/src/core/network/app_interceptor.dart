@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
@@ -135,25 +136,25 @@ class AppInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    debugPrint('🔒 Request failed with 401, checking refresh status...');
+    talker.debug('🔒 Request failed with 401, checking refresh status...');
 
     // 1. 이미 토큰 갱신 중이면 큐에 추가하고 대기
     if (_isRefreshing) {
-      debugPrint('⏳ Token refresh in progress, adding request to queue');
+      talker.debug('⏳ Token refresh in progress, adding request to queue');
       _requestQueue.add(_RequestQueueItem(err, handler));
       return;
     }
 
     // 2. 첫 번째 요청이 토큰 갱신 시작
     _isRefreshing = true;
-    debugPrint('🔄 Starting token refresh...');
+    talker.debug('🔄 Starting token refresh...');
 
     try {
       // 3. 새 Access Token 발급
       final newAccessToken = await _refreshAuthToken();
 
       if (newAccessToken == null) {
-        debugPrint('❌ Token refresh failed, navigate to login');
+        talker.debug('❌ Token refresh failed, navigate to login');
         _isRefreshing = false;
 
         // 큐에 있는 모든 요청 실패 처리
@@ -166,23 +167,23 @@ class AppInterceptor extends Interceptor {
         return handler.reject(err);
       }
 
-      debugPrint('✅ Token refreshed successfully');
+      talker.debug('✅ Token refreshed successfully');
 
       // 4. 현재 요청 재시도
       await _retryRequest(err, handler, newAccessToken);
 
       // 5. 큐에 있는 모든 요청들도 재시도
-      debugPrint('📦 Retrying ${_requestQueue.length} queued requests');
+      talker.debug('📦 Retrying ${_requestQueue.length} queued requests');
       for (final item in _requestQueue) {
         await _retryRequest(item.error, item.handler, newAccessToken);
       }
       _requestQueue.clear();
 
       _isRefreshing = false;
-      debugPrint('✅ All requests retried successfully');
+      talker.debug('✅ All requests retried successfully');
     } catch (e, stackTrace) {
-      debugPrint('❌ Token refresh and retry failed: $e');
-      debugPrint('Stack trace: $stackTrace');
+      talker.debug('❌ Token refresh and retry failed: $e');
+      talker.debug('Stack trace: $stackTrace');
 
       _isRefreshing = false;
 
@@ -229,7 +230,7 @@ class AppInterceptor extends Interceptor {
       // 3. 성공한 응답 반환
       handler.resolve(response);
     } catch (e) {
-      debugPrint('❌ Retry request failed: $e');
+      talker.debug('❌ Retry request failed: $e');
       handler.reject(err);
     }
   }
@@ -268,7 +269,7 @@ class AppInterceptor extends Interceptor {
 
       return _cachedUserAgent!;
     } catch (e) {
-      debugPrint('Failed to get user agent: $e');
+      talker.debug('Failed to get user agent: $e');
       return 'MagamBell/1.0.0';
     }
   }
@@ -288,11 +289,11 @@ class AppInterceptor extends Interceptor {
       final refreshToken = token?.refreshToken;
 
       if (refreshToken == null) {
-        debugPrint('⚠️ No refresh token available');
+        talker.debug('⚠️ No refresh token available');
         return null;
       }
 
-      debugPrint('🔄 Refreshing token...');
+      talker.debug('🔄 Refreshing token...');
 
       // 토큰 갱신 전용 Dio 인스턴스 생성 (인터셉터 없음)
       final refreshDio = Dio(
@@ -312,13 +313,13 @@ class AppInterceptor extends Interceptor {
             final statusCode = error.response?.statusCode;
             final code = error.response?.data?['code'];
 
-            debugPrint(
+            talker.debug(
               '❌ Token refresh error: statusCode=$statusCode, code=$code',
             );
 
             // Refresh Token 만료 또는 인증 오류
             if (statusCode == 401 || code == 401) {
-              debugPrint('🔐 Refresh token expired, navigate to login');
+              talker.debug('🔐 Refresh token expired, navigate to login');
               _navigateToLogin();
             }
 
@@ -334,7 +335,7 @@ class AppInterceptor extends Interceptor {
       );
 
       if (response.statusCode != 200) {
-        debugPrint('⚠️ Token refresh failed: ${response.statusCode}');
+        talker.debug('⚠️ Token refresh failed: ${response.statusCode}');
         return null;
       }
 
@@ -343,7 +344,7 @@ class AppInterceptor extends Interceptor {
       final newRefreshToken = response.headers.value('refreshtoken');
 
       if (authorization == null || newRefreshToken == null) {
-        debugPrint('⚠️ Tokens not found in response headers');
+        talker.debug('⚠️ Tokens not found in response headers');
         return null;
       }
 
@@ -358,11 +359,11 @@ class AppInterceptor extends Interceptor {
       );
       await ref.read(authTokenManagerProvider.notifier).saveTokens(newTokens);
 
-      debugPrint('✅ Token refreshed and saved');
+      talker.debug('✅ Token refreshed and saved');
       return accessToken;
     } catch (e, stackTrace) {
-      debugPrint('⚠️ Token refresh failed: $e');
-      debugPrint('Stack trace: $stackTrace');
+      talker.debug('⚠️ Token refresh failed: $e');
+      talker.debug('Stack trace: $stackTrace');
       return null;
     }
   }
@@ -374,7 +375,7 @@ class AppInterceptor extends Interceptor {
     // 예시: Fluttertoast 사용
     // Fluttertoast.showToast(msg: message);
 
-    debugPrint('❌ Error: $message');
+    talker.debug('❌ Error: $message');
   }
 
   /// 로그인 화면으로 이동
@@ -383,7 +384,7 @@ class AppInterceptor extends Interceptor {
 
     final context = GlobalVariable.navigatorKey.currentContext;
     if (context != null) context.go('/auth');
-    debugPrint('🔐 Navigate to login');
+    talker.debug('🔐 Navigate to login');
   }
 
   void _navigateToRegisterStore() {
@@ -391,7 +392,7 @@ class AppInterceptor extends Interceptor {
     // final context = GlobalVariable.navigatorKey.currentContext;
     // if (context != null)
     router.go(OwnerJoinInfoRoute().location);
-    debugPrint('🔐 Navigate to store register');
+    talker.debug('🔐 Navigate to store register');
   }
 
   /// 점검 화면으로 이동
@@ -402,7 +403,7 @@ class AppInterceptor extends Interceptor {
     //   context.go('/maintenance');
     // }
 
-    debugPrint('🔧 Navigate to maintenance');
+    talker.debug('🔧 Navigate to maintenance');
   }
 
   // ========================================

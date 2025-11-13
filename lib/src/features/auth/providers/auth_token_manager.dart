@@ -1,3 +1,4 @@
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
@@ -19,10 +20,7 @@ class AuthTokenManager extends _$AuthTokenManager {
       return null;
     }
 
-    return AuthTokens(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    );
+    return AuthTokens(accessToken: accessToken, refreshToken: refreshToken);
   }
 
   /// 토큰 저장
@@ -32,7 +30,7 @@ class AuthTokenManager extends _$AuthTokenManager {
     await prefs.setString(_refreshTokenKey, tokens.refreshToken);
 
     state = AsyncValue.data(tokens);
-    print('✅ Tokens saved');
+    talker.debug('✅ Tokens saved');
   }
 
   /// 토큰 삭제
@@ -42,7 +40,7 @@ class AuthTokenManager extends _$AuthTokenManager {
     await prefs.remove(_refreshTokenKey);
 
     state = const AsyncValue.data(null);
-    print('🗑️ Tokens deleted');
+    talker.debug('🗑️ Tokens deleted');
   }
 
   /// 현재 저장된 토큰 조회

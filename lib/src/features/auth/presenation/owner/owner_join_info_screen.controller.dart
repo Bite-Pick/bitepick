@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartx/dartx.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -111,7 +112,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       // 각 필드의 에러 출력
       form.controls.forEach((key, control) {
         if (control.invalid) {
-          print('[$key] errors: ${control.errors}');
+          talker.debug('[$key] errors: ${control.errors}');
         }
       });
 
@@ -122,7 +123,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
 
     try {
       final formValue = form.value;
-      print(formValue);
+      talker.debug(formValue);
 
       final fullAddress =
           '${formValue['address']} ${formValue['addressDetail']}'.trim();

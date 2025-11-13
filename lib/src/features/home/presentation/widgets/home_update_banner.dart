@@ -5,6 +5,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/app_restart.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
@@ -49,7 +50,7 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
         await AppRestart.restart();
       }
     } catch (e) {
-      print('업데이트 실패: $e');
+      talker.debug('업데이트 실패: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -76,11 +77,7 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.update,
-                color: MgColorScheme.primary,
-                size: 24,
-              ),
+              Icon(Icons.update, color: MgColorScheme.primary, size: 24),
               Gaps.w8,
               Expanded(
                 child: Column(
@@ -88,9 +85,7 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
                   children: [
                     Text('새로운 업데이트').md().bold(),
                     Gaps.h4,
-                    Text('더 나은 서비스를 위해 업데이트가 준비되었습니다.')
-                        .sm()
-                        .textGray(),
+                    Text('더 나은 서비스를 위해 업데이트가 준비되었습니다.').sm().textGray(),
                   ],
                 ),
               ),
@@ -107,8 +102,9 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       ),
                       Gaps.w8,

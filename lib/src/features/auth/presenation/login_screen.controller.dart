@@ -1,3 +1,4 @@
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/data/repositories/social_auth_repository.dart';
@@ -112,7 +113,7 @@ class LoginScreenController extends _$LoginScreenController {
       }
       return false;
     } catch (e) {
-      print('Login error: $e');
+      talker.debug('Login error: $e');
       return false;
     }
   }

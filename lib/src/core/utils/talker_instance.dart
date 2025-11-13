@@ -11,7 +11,7 @@ class MgTalker {
 
   static void init() {
     _instance = TalkerFlutter.init(
-      settings: const TalkerSettings(
+      settings: TalkerSettings(
         useConsoleLogs: false, // Console 로그는 중복이므로 비활성화
       ),
     );

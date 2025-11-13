@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
@@ -157,7 +158,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       // Iterate over the form controls and print errors for invalid ones.
       state.form.controls.forEach((key, control) {
         if (control.invalid) {
-          print('Invalid field: [$key], Errors: ${control.errors}');
+          talker.debug('Invalid field: [$key], Errors: ${control.errors}');
         }
       });
       return false;
@@ -203,7 +204,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       state = state.copyWith(isSubmitting: false, uploadProgress: 1.0);
 
       // 성공 처리
-      print('Goods 등록 및 이미지 업로드 완료');
+      talker.debug('Goods 등록 및 이미지 업로드 완료');
       return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: e.toString());
