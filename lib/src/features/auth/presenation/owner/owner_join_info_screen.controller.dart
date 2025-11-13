@@ -150,7 +150,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       final imageUploads = localImages.mapIndexed((index, localImage) {
         // This is where you would handle file upload and get back a key or URL
         // For now, we'll just use the local file name as a placeholder key.
-        return {'key': localImage.key, 'id': index + 1};
+        return {'key': localImage.key, 'id': "index + 1"}; // TODO: id 규칙 만들기
       }).toList();
       if (imageUploads.isEmpty) {
         talker.debug("이미지는 최소 1장이상 업로드해주세요");

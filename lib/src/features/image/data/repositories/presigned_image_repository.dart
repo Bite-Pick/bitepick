@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
@@ -30,46 +31,54 @@ class PreSignedImageRepository {
     required File file,
     void Function(int, int)? onProgress,
   }) async {
-    final fileSize = await file.length();
-    final bytes = await file.readAsBytes();
+    try {
+      final fileSize = await file.length();
+      final fileName = file.path.split('/').last;
 
-    final token = await ref.read(authTokenManagerProvider.future);
-    // presigned URL이 로그 복붙으로 개행/공백이 섞였을 수 있어 한 줄로 정리
-    final url = presignedUrl.replaceAll(RegExp(r'\s+'), '');
-    // +    // 서버가 presign 생성 시 Content-Type을 고정했다면 동일하게 맞춰야 함
-    // +    // 필요 시 mime 패키지 사용 가능: lookupMimeType(file.path) ?? 'application/octet-stream'
-    const contentType = 'image/jpeg';
-    // 바이트 로드
+      // presigned URL 정리 (개행/공백 제거)
+      final url = presignedUrl.replaceAll(RegExp(r'\s+'), '');
 
-    // Content-Type 결정: 서버가 ‘이 타입’으로 서명했으면 반드시 동일하게 넣어야 함.
-    // final contentType = lookupMimeType(file.path) ?? 'application/octet-stream';
-    final res = await _s3dio.put(
-      url, // pre-signed URL을 전체 경로로 사용
-      data: file.openRead(), // 파일을 스트림으로 전송하여 메모리 효율성 확보
-      options: Options(
-        headers: {
-          'Content-Type': contentType,
-          // 'Content-Length': fileSize,
-          'Authorization': 'Bearer ${token!.accessToken}',
-        },
-      ),
-      onSendProgress: onProgress,
-    );
-    if (res.statusCode == 200 || res.statusCode == 204) {
-      return true;
+      talker.info('[S3] Uploading $fileName (${fileSize} bytes)');
+      talker.debug('[S3] URL: ${url.substring(0, 100)}...');
+
+      // ⚠️ IMPORTANT: Presigned URL에는 Authorization 헤더를 보내면 안됨!
+      // URL 자체에 이미 인증 정보가 포함되어 있음
+      final res = await _s3dio.put(
+        url,
+        data: file.openRead(),
+        options: Options(
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Content-Length': fileSize,
+            // ❌ Authorization 헤더 제거 - Presigned URL은 이미 인증됨
+          },
+        ),
+        onSendProgress: onProgress,
+      );
+
+      if (res.statusCode == 200 || res.statusCode == 204) {
+        talker.info('[S3] ✅ Upload success: $fileName');
+        return true;
+      }
+
+      // ❌ 실패: XML에서 Code/Message 추출
+      final body = res.data?.toString() ?? '';
+      final codeMatch = RegExp(r'<Code>([^<]+)</Code>').firstMatch(body);
+      final msgMatch = RegExp(r'<Message>([^<]+)</Message>').firstMatch(body);
+      final code = codeMatch?.group(1) ?? 'UNKNOWN';
+      final message = msgMatch?.group(1) ?? body;
+
+      talker.error(
+        '[S3] ❌ Upload failed: $fileName\n'
+        'Status: ${res.statusCode}\n'
+        'Code: $code\n'
+        'Message: $message',
+      );
+      return false;
+    } catch (e, stackTrace) {
+      talker.error('[S3] Exception during upload', e, stackTrace);
+      return false;
     }
-
-    // ❌ 실패: XML에서 Code/Message 추출해서 로깅/처리
-    final body = res.data?.toString() ?? '';
-    final codeMatch = RegExp(r'<Code>([^<]+)</Code>').firstMatch(body);
-    final msgMatch = RegExp(r'<Message>([^<]+)</Message>').firstMatch(body);
-    final code = codeMatch?.group(1) ?? 'UNKNOWN';
-    final message = msgMatch?.group(1) ?? body;
-
-    print(
-      'S3 upload failed: status=${res.statusCode}, code=$code, msg=$message',
-    );
-    return false;
   }
 
   Future<void> uploadImagesToS3({
@@ -81,7 +90,8 @@ class PreSignedImageRepository {
     for (var i = 0; i < localImages.length; i++) {
       final localImage = localImages[i];
       final presignedUrl = presignedUrls.firstWhere(
-        (url) => url.name == localImage.key,
+        (url) =>
+            url.id == localImage.id + 1, // TODO[image]:저장할때부터 0번째 Index로 넣기
         orElse: () =>
             throw Exception('Presigned URL not found for ${localImage.key}'),
       );

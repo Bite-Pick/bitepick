@@ -16,6 +16,7 @@ import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_sc
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
+import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -93,7 +94,9 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
             MgButton(
               onPressed: () async {
                 final result = await controller.submit();
-                if (result && mounted) OwnerHomeRoute().go(context);
+                if (result && context.mounted) {
+                  DefaultRoute().go(context);
+                }
               },
               content: const Text('확인'),
             ).primary().margin(

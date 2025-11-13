@@ -21,7 +21,7 @@ PresignedUrlImage _$PresignedUrlImageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PresignedUrlImage {
-  String get name => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
 
   /// Serializes this PresignedUrlImage to a JSON map.
@@ -41,7 +41,7 @@ abstract class $PresignedUrlImageCopyWith<$Res> {
     $Res Function(PresignedUrlImage) then,
   ) = _$PresignedUrlImageCopyWithImpl<$Res, PresignedUrlImage>;
   @useResult
-  $Res call({String name, String url});
+  $Res call({int id, String url});
 }
 
 /// @nodoc
@@ -58,13 +58,13 @@ class _$PresignedUrlImageCopyWithImpl<$Res, $Val extends PresignedUrlImage>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? name = null, Object? url = null}) {
+  $Res call({Object? id = null, Object? url = null}) {
     return _then(
       _value.copyWith(
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
             url: null == url
                 ? _value.url
                 : url // ignore: cast_nullable_to_non_nullable
@@ -84,7 +84,7 @@ abstract class _$$PresignedUrlImageImplCopyWith<$Res>
   ) = __$$PresignedUrlImageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String url});
+  $Res call({int id, String url});
 }
 
 /// @nodoc
@@ -100,13 +100,13 @@ class __$$PresignedUrlImageImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? name = null, Object? url = null}) {
+  $Res call({Object? id = null, Object? url = null}) {
     return _then(
       _$PresignedUrlImageImpl(
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
         url: null == url
             ? _value.url
             : url // ignore: cast_nullable_to_non_nullable
@@ -119,19 +119,19 @@ class __$$PresignedUrlImageImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$PresignedUrlImageImpl implements _PresignedUrlImage {
-  const _$PresignedUrlImageImpl({required this.name, required this.url});
+  const _$PresignedUrlImageImpl({required this.id, required this.url});
 
   factory _$PresignedUrlImageImpl.fromJson(Map<String, dynamic> json) =>
       _$$PresignedUrlImageImplFromJson(json);
 
   @override
-  final String name;
+  final int id;
   @override
   final String url;
 
   @override
   String toString() {
-    return 'PresignedUrlImage(name: $name, url: $url)';
+    return 'PresignedUrlImage(id: $id, url: $url)';
   }
 
   @override
@@ -139,13 +139,13 @@ class _$PresignedUrlImageImpl implements _PresignedUrlImage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PresignedUrlImageImpl &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.url, url) || other.url == url));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, url);
+  int get hashCode => Object.hash(runtimeType, id, url);
 
   /// Create a copy of PresignedUrlImage
   /// with the given fields replaced by the non-null parameter values.
@@ -166,7 +166,7 @@ class _$PresignedUrlImageImpl implements _PresignedUrlImage {
 
 abstract class _PresignedUrlImage implements PresignedUrlImage {
   const factory _PresignedUrlImage({
-    required final String name,
+    required final int id,
     required final String url,
   }) = _$PresignedUrlImageImpl;
 
@@ -174,7 +174,7 @@ abstract class _PresignedUrlImage implements PresignedUrlImage {
       _$PresignedUrlImageImpl.fromJson;
 
   @override
-  String get name;
+  int get id;
   @override
   String get url;
 
