@@ -250,10 +250,10 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       //         state = state.copyWith(uploadProgress: overallProgress);
       //       },
       //     );
-      if (presignedUrls == null) {
-        state = state.copyWith(isSubmitting: false, error: "등록 실패");
-      }
-      state = state.copyWith(isSubmitting: false, uploadProgress: 1.0);
+      state = state.copyWith(
+        isSubmitting: false,
+        error: presignedUrls == null ? "API 실패" : null,
+      );
 
       // 성공 처리
       talker.debug('Goods 등록 및 이미지 업로드 완료');

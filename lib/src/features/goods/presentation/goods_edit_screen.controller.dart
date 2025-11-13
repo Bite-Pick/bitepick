@@ -85,7 +85,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     return GoodsEditState(form: form);
   }
 
-  Map<String, Object?> _initialFormValueFrom(Goods g) {
+  Map<String, Object?> _initialFormValueFrom(Goods goods) {
     DateTime? _tryParse(String s) {
       try {
         return DateTime.parse(s);
@@ -95,16 +95,16 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     }
 
     return {
-      'name': g.storeName,
-      'goodsId': g.goodsId,
-      'description': g.description,
+      'name': goods.storeName,
+      'goodsId': goods.goodsId,
+      'description': goods.description,
       // 이미지 개수는 수정화면에서 필수가 아닐 수 있음(이미 업로드된 상태)
-      'quantity': g.stockQuantity,
-      'startTime': _tryParse(g.startTime),
-      'endTime': _tryParse(g.endTime),
-      'originalPrice': g.originPrice,
-      'discount': g.discount,
-      'salePrice': g.salePrice,
+      'quantity': goods.stockQuantity,
+      'startTime': _tryParse(goods.startTime),
+      'endTime': _tryParse(goods.endTime),
+      'originalPrice': goods.originPrice,
+      'discount': goods.discount,
+      'salePrice': goods.salePrice,
     };
   }
 
@@ -181,8 +181,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       //         state = state.copyWith(uploadProgress: overallProgress);
       //       },
       //     );
-
-      state = state.copyWith(isSubmitting: false);
+      state = state.copyWith(isSubmitting: false,error:presignedUrls==null?"API 실패":null);
       return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: e.toString());

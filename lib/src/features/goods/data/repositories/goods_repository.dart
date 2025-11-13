@@ -59,7 +59,7 @@ class GoodsRepository {
 
   // TODO: 백엔드 수정 필요
 
-  Future<List<PresignedUrlImage>> editGoods({
+  Future<List<PresignedUrlImage>?> editGoods({
     required String goodsId,
     String? name,
     required String description,
@@ -74,7 +74,7 @@ class GoodsRepository {
       '/v1/goods',
       data: {
         'goodsId': goodsId,
-        'name': name,
+        'name': name??"test", // TODO: 백엔드 수정 필요
         'description': description,
         'originalPrice': originalPrice,
         'discount': discount,
@@ -96,7 +96,7 @@ class GoodsRepository {
     //     .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
     //     .toList();
     final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return [];
+    if (res.data['status'] != 'OK' || data == null) return null;
     return [];
   }
 

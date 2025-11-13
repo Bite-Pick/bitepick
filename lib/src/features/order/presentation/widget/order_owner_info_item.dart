@@ -172,7 +172,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
       context: context,
       builder: (context) => MgAlertDialog(
         title: '주문 취소',
-        content: '주문을 취소하시겠습니까?',
+        content: Text('주문을 취소하시겠습니까?'),
         onConfirm: () => ref
             .read(ownerOrderListControllerProvider.notifier)
             .cancelOrder(widget.order.orderId),
@@ -185,7 +185,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
       context: context,
       builder: (context) => MgAlertDialog(
         title: '준비 완료',
-        content: '준비 완료 처리하시겠습니까?',
+        content: Text('준비 완료 처리하시겠습니까?'),
         onConfirm: () => ref
             .read(ownerOrderListControllerProvider.notifier)
             .completeOrder(widget.order.orderId),
