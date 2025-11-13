@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
@@ -98,7 +99,7 @@ class AppInterceptor extends Interceptor {
       }
 
       switch (code) {
-        case 400: // Bad Request
+        case 400:
           _showErrorMessage(message);
           return handler.resolve(
             Response(
@@ -109,7 +110,7 @@ class AppInterceptor extends Interceptor {
           );
 
         case 401: // Unauthorized - 토큰 갱신 시도
-          await _refreshTokenAndRetry(err, handler);
+          await refreshTokenAndRetry(err, handler);
           return;
 
         default:
@@ -132,7 +133,7 @@ class AppInterceptor extends Interceptor {
   // 🔄 토큰 갱신 후 재요청 (Queue Lock 패턴)
   // ========================================
 
-  Future<void> _refreshTokenAndRetry(
+  Future<void> refreshTokenAndRetry(
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
@@ -298,7 +299,7 @@ class AppInterceptor extends Interceptor {
       // 토큰 갱신 전용 Dio 인스턴스 생성 (인터셉터 없음)
       final refreshDio = Dio(
         BaseOptions(
-          baseUrl: ref.read(apiClientProvider).options.baseUrl,
+          baseUrl: Environment.baseApiUrl,
           connectTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(seconds: 10),
           contentType: ContentType.json.mimeType,

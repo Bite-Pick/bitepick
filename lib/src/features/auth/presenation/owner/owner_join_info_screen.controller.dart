@@ -44,7 +44,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'representativePhone': FormControl<String>(
         validators: [
           Validators.required,
-          Validators.pattern(r'^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$'),
+          Validators.pattern(r'^01[0-9][0-9]{7,8}$'), // 숫자만 10-11자리
         ],
       ),
       'businessNumber': FormControl<String>(

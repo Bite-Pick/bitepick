@@ -21,6 +21,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
 import 'package:magambell/src/widgets/mg_reactive_textfield.dart';
 import 'package:magambell/src/widgets/mg_select.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -176,10 +177,9 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
           formControlName: 'representativeName',
           hintText: '대표자 성함 ',
         ),
-        MgReactiveTextField(
+        MgReactivePhoneTextField(
           formControlName: 'representativePhone',
-          hintText: '전화번호 (예: 01012345678)',
-          keyboardType: TextInputType.phone,
+          hintText: '전화번호',
         ),
 
         // 4. 사업자 등록 번호
