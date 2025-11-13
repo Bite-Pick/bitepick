@@ -13,13 +13,14 @@ import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/main_app.dart';
 
 Future<void> runMagamBellApp() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   // Initialize Talker for logging FIRST (before runZonedGuarded)
   MgTalker.init();
 
   await runZonedGuarded<Future<void>>(
     () async {
+      // Move WidgetsFlutterBinding inside the zone to avoid zone mismatch
+      WidgetsFlutterBinding.ensureInitialized();
+
       await dotenv.load(fileName: '.env');
 
       // Initialize Kakao SDK

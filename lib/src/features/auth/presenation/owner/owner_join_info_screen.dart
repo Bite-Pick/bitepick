@@ -194,7 +194,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
           hintText: '은행 선택',
           bottomSheetTitle: '은행 선택해주세요',
           options: financialInstitutions.values
-              .map((e) => MgSelectOption(value: e.name, label: e.name))
+              .map((e) => MgSelectOption(value: e.shortName, label: e.name))
               .toList(),
           customBottomSheet: _showBankBottomSheet,
         ),
