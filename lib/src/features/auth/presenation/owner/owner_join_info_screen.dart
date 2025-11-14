@@ -12,6 +12,7 @@ import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_sc
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
+import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -65,7 +66,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     return ReactiveForm(
       formGroup: form,
       child: BaseScaffold(
-        // appBar: BaseAppBar(
+        appBar: BaseAppBar(title: Text("매장등록")),
         //   action: TextButton(
         //     onPressed: () => controller.fillWithMockData(mockFormData),
         //     child: const Text('임시완성'),
@@ -182,7 +183,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         MgReactiveTextField(
           formControlName: 'businessNumber',
           hintText: '"-" 제외한 10자리 숫자 ',
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.phone,
         ),
 
         // 5. 계좌 등록
@@ -200,7 +201,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         MgReactiveTextField(
           formControlName: 'accountNumber',
           hintText: '"-" 제외한 계좌번호 ',
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.phone,
         ),
       ],
     );

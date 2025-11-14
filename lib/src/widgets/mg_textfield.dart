@@ -94,6 +94,25 @@ class _MgTextFieldState extends State<MgTextField> {
     return _isFocused ? 1.5 : 1.0;
   }
 
+  // 키보드 타입에 따른 TextInputAction 결정
+  TextInputAction get _effectiveTextInputAction {
+    if (widget.textInputAction != null) {
+      return widget.textInputAction!;
+    }
+
+    // 숫자 키보드일 때도 done 버튼 표시
+    if (widget.keyboardType == TextInputType.number ||
+        widget.keyboardType == TextInputType.phone ||
+        widget.keyboardType == const TextInputType.numberWithOptions(
+          signed: true,
+          decimal: true,
+        )) {
+      return TextInputAction.done;
+    }
+
+    return TextInputAction.done;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -118,7 +137,7 @@ class _MgTextFieldState extends State<MgTextField> {
               obscureText: widget.obscureText,
               enabled: widget.enabled,
               maxLines: widget.maxLines,
-              textInputAction: widget.textInputAction,
+              textInputAction: _effectiveTextInputAction,
               cursorColor: MgColorScheme.gray1, // TODO: 논의 필요
               style:
                   widget.inputStyle ??
