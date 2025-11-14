@@ -50,7 +50,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
       formGroup: state.form,
       child: BaseScaffold(
         appBar: BaseAppBar(
-          title: const Text('마감백 등록'),
+          title: const Text('바이트백 등록'),
           // action: TextButton(
           //   onPressed: () => controller.fillWithMockData(mockFormData),
           //   child: const Text('임시완성'),

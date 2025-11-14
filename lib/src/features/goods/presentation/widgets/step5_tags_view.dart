@@ -33,16 +33,16 @@ class Step5TagsView extends ConsumerWidget {
               Gaps.h24,
               Text('입력하신 내용을 확인해주세요').lg().bold(),
               Gaps.h8,
-              Text('등록하기 버튼을 누르면 마감백이 등록됩니다').sm().textGray(),
+              Text('등록하기 버튼을 누르면 바이트백이 등록됩니다').sm().textGray(),
             ],
           ),
         ),
 
         Gaps.h32,
 
-        // 마감백 정보 요약
+        // 바이트백 정보 요약
         _buildSummarySection(
-          title: '마감백 설명',
+          title: '바이트백 설명',
           content: '크로와상, 바게트, 식빵 세트', // TODO: 실제 데이터로 교체
         ),
 
