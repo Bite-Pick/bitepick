@@ -11,6 +11,7 @@ import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// 앱 공통 인터셉터
@@ -392,8 +393,9 @@ class AppInterceptor extends Interceptor {
 
   void _navigateToRegisterStore() {
     final router = ref.read(appRouterProvider);
-    // final context = GlobalVariable.navigatorKey.currentContext;
-    // if (context != null)
+    final context = GlobalVariable.navigatorKey.currentContext;
+    if (context != null) ToastPresentor.info(context, "가게등록을 진행합니다");
+
     router.go(OwnerJoinInfoRoute().location);
     talker.debug('🔐 Navigate to store register');
   }

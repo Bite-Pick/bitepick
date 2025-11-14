@@ -34,7 +34,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'latitude': FormControl<double>(),
       'longitude': FormControl<double>(),
       'images': FormControl<int>(value: 0),
-      'parkingDescription': FormControl<String>(),
+      'parkingDescription': FormControl<String>(), // TODO: 필수..?
 
       'representativeName': FormControl<String>(
         validators: [Validators.required, Validators.minLength(1)],

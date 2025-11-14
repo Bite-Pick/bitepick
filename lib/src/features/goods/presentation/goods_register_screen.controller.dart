@@ -184,12 +184,17 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   Future<bool> submit() async {
     if (!state.form.valid) {
       state.form.markAllAsTouched();
-      // Iterate over the form controls and print errors for invalid ones.
-      state.form.controls.forEach((key, control) {
-        if (control.invalid) {
-          talker.debug('Invalid field: [$key], Errors: ${control.errors}');
-        }
-      });
+
+      // 각 필드의 에러 출력
+      final invalidFields = state.form.controls.entries
+          .where((entry) => entry.value.invalid)
+          .map((entry) => entry.key)
+          .join(', ');
+
+      if (invalidFields.isNotEmpty) {
+        talker.debug('다음 항목을 확인해주세요 : $invalidFields');
+      }
+
       return false;
     }
 

@@ -19,6 +19,8 @@ class JoinState with _$JoinState {
     @Default('') String phone,
     @Default(false) bool isLoading,
     String? error,
+    String? nicknameError,
+    String? phoneError,
   }) = _JoinState;
 }
 
@@ -106,6 +108,42 @@ class JoinController extends _$JoinController {
   // 에러 상태 설정
   void setError({required bool isLoading, required String error}) {
     state = state.copyWith(isLoading: isLoading, error: error);
+  }
+
+  // 닉네임 에러 설정
+  void setNicknameError(String? error) {
+    state = state.copyWith(nicknameError: error);
+  }
+
+  // 전화번호 에러 설정
+  void setPhoneError(String? error) {
+    state = state.copyWith(phoneError: error);
+  }
+
+  // 입력값 검증
+  bool validateInputs() {
+    // 에러 초기화
+    state = state.copyWith(nicknameError: null, phoneError: null);
+
+    bool isValid = true;
+
+    // 닉네임 검증
+    if (state.nickname.trim().isEmpty) {
+      state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
+      isValid = false;
+    }
+
+    // 전화번호 검증
+    final phoneDigits = state.phone.replaceAll(RegExp(r'[^0-9]'), '');
+    if (phoneDigits.isEmpty) {
+      state = state.copyWith(phoneError: '전화번호를 입력해주세요');
+      isValid = false;
+    } else if (!RegExp(r'^01[0-9][0-9]{7,8}$').hasMatch(phoneDigits)) {
+      state = state.copyWith(phoneError: '올바른 전화번호 형식이 아닙니다');
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   // 상태 초기화

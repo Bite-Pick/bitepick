@@ -57,7 +57,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         },
         error: (error, stack) {
           return switch (error) {
-            DuplicateNicknameException(message: final msg) ||
+            DuplicateNicknameException(message: final msg) => _handleError(
+                msg,
+                isNicknameError: true,
+              ),
             AuthenticationException(message: final msg) => _handleError(msg),
 
             _ => _handleError('오류가 발생했습니다. 문의해주세요', rawError: error),
@@ -143,10 +146,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  void _handleError(String message, {Object? rawError}) {
-    ref
-        .read(joinControllerProvider.notifier)
-        .setError(isLoading: false, error: message);
+  void _handleError(
+    String message, {
+    Object? rawError,
+    bool isNicknameError = false,
+  }) {
+    final controller = ref.read(joinControllerProvider.notifier);
+
+    // 닉네임 중복 에러인 경우 필드 에러로 설정
+    if (isNicknameError) {
+      controller.setNicknameError(message);
+    } else {
+      controller.setError(isLoading: false, error: message);
+    }
 
     talker.error(rawError ?? message);
 
