@@ -118,11 +118,14 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       form.markAllAsTouched();
 
       // 각 필드의 에러 출력
-      form.controls.forEach((key, control) {
-        if (control.invalid) {
-          talker.debug('[$key] errors: ${control.errors}');
-        }
-      });
+      final invalidFields = form.controls.entries
+          .where((entry) => entry.value.invalid)
+          .map((entry) => entry.key)
+          .join(', ');
+
+      if (invalidFields.isNotEmpty) {
+        talker.debug('다음 항목을 확인해주세요 : $invalidFields');
+      }
 
       return false;
     }

@@ -9,6 +9,8 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
 import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.controller.dart';
@@ -16,12 +18,18 @@ import 'package:magambell/src/features/auth/presenation/select_user_type_screen.
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  @override
+  Widget build(BuildContext context) {
     // Controller state 감지
     ref.listen<AsyncValue<SocialAuthResult?>>(loginScreenControllerProvider, (
       previous,
@@ -31,6 +39,7 @@ class LoginScreen extends ConsumerWidget {
       if (previous == null) return;
 
       next.when(
+        loading: () {},
         data: (authResult) {
           if (authResult == null) {
             // 기존 회원 - 로그인 성공 → DefaultRoute의 redirect 로직을 타도록
@@ -48,10 +57,13 @@ class LoginScreen extends ConsumerWidget {
           }
         },
         error: (error, stack) {
-          // 에러 토스트 표시
-          context.showErrorBar(content: Text(error.toString()));
+          return switch (error) {
+            DuplicateNicknameException(message: final msg) ||
+            AuthenticationException(message: final msg) => _handleError(msg),
+
+            _ => _handleError('회원가입 중 오류가 발생했습니다.', rawError: error),
+          };
         },
-        loading: () {},
       );
     });
 
@@ -130,5 +142,19 @@ class LoginScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _handleError(String message, {Object? rawError}) {
+    ref.read(joinControllerProvider.notifier).setError(
+          isLoading: false,
+          error: message,
+        );
+
+    talker.error(rawError ?? message);
+
+    final context = GlobalVariable.navigatorKey.currentContext;
+    if (context != null && context.mounted) {
+      ToastPresentor.error(context, message);
+    }
   }
 }

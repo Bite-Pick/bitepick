@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'join_screen.controller.freezed.dart';
@@ -84,7 +88,7 @@ class JoinController extends _$JoinController {
       return false;
     }
 
-    try {
+  
       state = state.copyWith(isLoading: true, error: null);
 
       final tokens = await ref
@@ -96,19 +100,16 @@ class JoinController extends _$JoinController {
             nickName: state.nickname,
             phoneNumber: state.phone,
           );
+      if (tokens == null) return false;
+      await ref.read(authTokenManagerProvider.notifier).saveTokens(tokens);
+      state = state.copyWith(isLoading: false);
+      return true;
+    
+  }
 
-      if (tokens != null) {
-        await ref.read(authTokenManagerProvider.notifier).saveTokens(tokens);
-        state = state.copyWith(isLoading: false);
-        return true;
-      }
-
-      state = state.copyWith(isLoading: false, error: '토큰 발급에 실패했습니다');
-      return false;
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-      return false;
-    }
+  // 에러 상태 설정
+  void setError({required bool isLoading, required String error}) {
+    state = state.copyWith(isLoading: isLoading, error: error);
   }
 
   // 상태 초기화
