@@ -41,10 +41,7 @@ class AuthRepository {
 
       final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
 
-      if (res.statusCode != 200) {
-        talker.debug('Authentication failed: ${res.statusCode}');
-        return null;
-      }
+      if (res.statusCode != 200) return null;
 
       // Response Header에서 JWT 토큰 추출
       final authorization = res.headers.value('authorization');

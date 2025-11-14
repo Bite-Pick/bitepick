@@ -79,8 +79,12 @@ class AppInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    final statusCode = err.response?.statusCode;
-    final data = err.response?.data;
+    final res = err.response;
+    talker.debug(
+      "[${res?.data['path']}] ${res?.statusCode} \n ${res?.data['name']} ${res?.data['code']} ${res?.data['message']}",
+    );
+    final statusCode = res?.statusCode;
+    final data = res?.data;
 
     // 502: 서비스 점검
     if (statusCode == 502 || err.message?.contains('502') == true) {
