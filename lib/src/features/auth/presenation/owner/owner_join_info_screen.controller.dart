@@ -30,7 +30,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       ),
       'postalCode': FormControl<String>(validators: [Validators.required]),
       'address': FormControl<String>(validators: [Validators.required]),
-      'addressDetail': FormControl<String>(validators: [Validators.required]),
+      'addressDetail': FormControl<String>(),
       'latitude': FormControl<double>(),
       'longitude': FormControl<double>(),
       'images': FormControl<int>(value: 0),
@@ -134,7 +134,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       talker.debug(formValue);
 
       final fullAddress =
-          '${formValue['address']} ${formValue['addressDetail']}'.trim();
+          '${formValue['address']} ${formValue['addressDetail'] ?? ""}'.trim();
 
       // FormControl에 저장된 위도/경도 가져오기 (KpostalView에서 받은 값)
       final latitude = formValue['latitude'] as double?;
@@ -148,7 +148,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       final imageUploads = localImages.mapIndexed((index, localImage) {
         // This is where you would handle file upload and get back a key or URL
         // For now, we'll just use the local file name as a placeholder key.
-        return {'key': localImage.key, 'id': "index + 1"}; // TODO: id 규칙 만들기
+        return {'key': localImage.key, 'id': index + 1}; // TODO: id 규칙 만들기
       }).toList();
       if (imageUploads.isEmpty) {
         talker.debug("이미지는 최소 1장이상 업로드해주세요");
@@ -175,7 +175,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
 
       talker.info('[S3] Starting upload for ${localImages.length} images');
       talker.debug('[S3] Presigned URLs count: ${result.length}');
-
+      if (result.isEmpty) return false;
       bool isSuccess = false;
       await ref
           .read(presignedImageRepositoryProvider)

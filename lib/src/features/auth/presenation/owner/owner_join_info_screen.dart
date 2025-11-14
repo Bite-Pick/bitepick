@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +11,7 @@ import 'package:magambell/src/features/auth/data/constant/financial_institution.
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -66,12 +66,12 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     return ReactiveForm(
       formGroup: form,
       child: BaseScaffold(
-        appBar: BaseAppBar(
-          // action: TextButton(
-          //   onPressed: () => controller.fillWithMockData(mockFormData),
-          //   child: const Text('임시완성'),
-          // ),
-        ),
+        // appBar: BaseAppBar(
+        //   action: TextButton(
+        //     onPressed: () => controller.fillWithMockData(mockFormData),
+        //     child: const Text('임시완성'),
+        //   ),
+        // ),
         backgroundColor: MgColorScheme.white,
         body: Column(
           children: [
@@ -91,6 +91,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
               onPressed: () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
+                  ref.invalidate(userStateProvider);
                   DefaultRoute().go(context);
                 }
               },
