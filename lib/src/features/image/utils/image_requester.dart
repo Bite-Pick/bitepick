@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 
 class ImageRequester {
   factory ImageRequester() => _singleton;
@@ -30,15 +31,24 @@ class ImageRequester {
     double maxHeight = 1920,
   }) async {
     final picker = ImagePicker();
-    final pickedFiles = await picker.pickMultiImage(
-      maxWidth: maxWidth,
-      maxHeight: maxHeight,
-      imageQuality: quality,
-    );
 
-    if (pickedFiles.isEmpty) return [];
+    try {
+      final pickedFiles = await picker.pickMultiImage(
+        maxWidth: maxWidth,
+        maxHeight: maxHeight,
+        imageQuality: quality,
+        // iOS에서 HEIC를 자동으로 JPEG로 변환하도록 설정
+        requestFullMetadata: false,
+      );
 
-    return pickedFiles.map((xFile) => File(xFile.path)).toList();
+      if (pickedFiles.isEmpty) return [];
+
+      return pickedFiles.map((xFile) => File(xFile.path)).toList();
+    } catch (e) {
+      // NSItemProviderError 등의 에러가 발생해도 빈 리스트 반환
+      talker.error(e);
+      return [];
+    }
   }
 
   /// 이미지 선택 및 리사이즈
@@ -48,15 +58,22 @@ class ImageRequester {
     required double maxWidth,
     required double maxHeight,
   }) async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: source,
-      imageQuality: quality,
-      maxWidth: maxWidth,
-      maxHeight: maxHeight,
-    );
+    try {
+      final pickedFile = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: quality,
+        maxWidth: maxWidth,
+        maxHeight: maxHeight,
+        // iOS에서 HEIC를 자동으로 JPEG로 변환하도록 설정
+        requestFullMetadata: false,
+      );
 
-    if (pickedFile == null) return null;
+      if (pickedFile == null) return null;
 
-    return File(pickedFile.path);
+      return File(pickedFile.path);
+    } catch (e) {
+      // NSItemProviderError 등의 에러가 발생해도 null 반환
+      return null;
+    }
   }
 }
