@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/widgets/mg_button.dart';
 
 class ToastPresentor {
   static void info(

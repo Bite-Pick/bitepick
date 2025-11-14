@@ -8,7 +8,6 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/core/utils/inquiry_button.dart';
-import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
@@ -124,11 +123,11 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
             context: context,
             builder: (context) => _buildAlertDialog(id, value),
           ),
-          activeColor: MgColorScheme.white,
+          activeThumbColor: MgColorScheme.white,
           activeTrackColor: MgColorScheme.subpointGreen, // 활성화(ON) 시 트랙 색상
           inactiveThumbColor: MgColorScheme.white, // 비활성화 원 색
           inactiveTrackColor: MgColorScheme.gray, // 비활성화(OFF) 시 트랙 색상
-          trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
+          trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
         ),
       ],
     );

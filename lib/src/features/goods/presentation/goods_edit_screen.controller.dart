@@ -75,7 +75,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
   }
 
   Map<String, Object?> _initialFormValueFrom(Goods goods) {
-    DateTime? _tryParse(String s) {
+    DateTime? tryParse(String s) {
       try {
         return DateTime.parse(s);
       } catch (_) {
@@ -89,8 +89,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       'description': goods.description,
       // 이미지 개수는 수정화면에서 필수가 아닐 수 있음(이미 업로드된 상태)
       'quantity': goods.stockQuantity,
-      'startTime': _tryParse(goods.startTime),
-      'endTime': _tryParse(goods.endTime),
+      'startTime': tryParse(goods.startTime),
+      'endTime': tryParse(goods.endTime),
       'originalPrice': goods.originPrice,
       'discount': goods.discount,
       'salePrice': goods.salePrice,

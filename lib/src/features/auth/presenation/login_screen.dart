@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/assets.dart';
@@ -61,7 +60,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             DuplicateNicknameException(message: final msg) ||
             AuthenticationException(message: final msg) => _handleError(msg),
 
-            _ => _handleError('회원가입 중 오류가 발생했습니다.', rawError: error),
+            _ => _handleError('오류가 발생했습니다. 문의해주세요', rawError: error),
           };
         },
       );
@@ -145,10 +144,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _handleError(String message, {Object? rawError}) {
-    ref.read(joinControllerProvider.notifier).setError(
-          isLoading: false,
-          error: message,
-        );
+    ref
+        .read(joinControllerProvider.notifier)
+        .setError(isLoading: false, error: message);
 
     talker.error(rawError ?? message);
 

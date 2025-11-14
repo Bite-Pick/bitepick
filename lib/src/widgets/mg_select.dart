@@ -39,7 +39,7 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
            return GestureDetector(
              onTap: enabled && !readOnly
                  ? () => customBottomSheet != null
-                       ? customBottomSheet!(field.context, field, options)
+                       ? customBottomSheet(field.context, field, options)
                        : _showSelectBottomSheet(
                            field.context,
                            field,

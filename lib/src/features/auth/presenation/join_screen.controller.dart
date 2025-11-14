@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:magambell/src/core/router/app_router.dart';
-import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
-import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'join_screen.controller.freezed.dart';

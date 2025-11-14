@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
-import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 
 class OrderInfoItem extends StatelessWidget {

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
-import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

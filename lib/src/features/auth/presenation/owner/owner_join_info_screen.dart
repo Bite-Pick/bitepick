@@ -12,7 +12,6 @@ import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_sc
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
-import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';

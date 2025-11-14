@@ -6,7 +6,6 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:magambell/src/features/review/presentation/store_review_item.dart';
-import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class StoreReviewListView extends ConsumerStatefulWidget {
   const StoreReviewListView(this.storeId, {super.key});

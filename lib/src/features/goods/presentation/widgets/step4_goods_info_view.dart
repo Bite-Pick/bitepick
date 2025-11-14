@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/goods_detail_info_form_item.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/goods_register_form_title.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step_view_wrapper.dart';

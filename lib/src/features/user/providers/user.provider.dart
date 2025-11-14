@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:magambell/src/features/user/data/repositories/user_repository.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
