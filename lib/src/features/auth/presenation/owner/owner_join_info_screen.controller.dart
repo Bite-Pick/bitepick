@@ -30,11 +30,11 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       ),
       'postalCode': FormControl<String>(validators: [Validators.required]),
       'address': FormControl<String>(validators: [Validators.required]),
-      'addressDetail': FormControl<String>(validators: [Validators.required]),
+      'addressDetail': FormControl<String>(),
       'latitude': FormControl<double>(),
       'longitude': FormControl<double>(),
       'images': FormControl<int>(value: 0),
-      'parkingDescription': FormControl<String>(),
+      'parkingDescription': FormControl<String>(), // TODO: 필수..?
 
       'representativeName': FormControl<String>(
         validators: [Validators.required, Validators.minLength(1)],
@@ -118,11 +118,14 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       form.markAllAsTouched();
 
       // 각 필드의 에러 출력
-      form.controls.forEach((key, control) {
-        if (control.invalid) {
-          talker.debug('[$key] errors: ${control.errors}');
-        }
-      });
+      final invalidFields = form.controls.entries
+          .where((entry) => entry.value.invalid)
+          .map((entry) => entry.key)
+          .join(', ');
+
+      if (invalidFields.isNotEmpty) {
+        talker.debug('다음 항목을 확인해주세요 : $invalidFields');
+      }
 
       return false;
     }
@@ -134,7 +137,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       talker.debug(formValue);
 
       final fullAddress =
-          '${formValue['address']} ${formValue['addressDetail']}'.trim();
+          '${formValue['address']} ${formValue['addressDetail'] ?? ""}'.trim();
 
       // FormControl에 저장된 위도/경도 가져오기 (KpostalView에서 받은 값)
       final latitude = formValue['latitude'] as double?;
@@ -148,7 +151,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       final imageUploads = localImages.mapIndexed((index, localImage) {
         // This is where you would handle file upload and get back a key or URL
         // For now, we'll just use the local file name as a placeholder key.
-        return {'key': localImage.key, 'id': "index + 1"}; // TODO: id 규칙 만들기
+        return {'key': localImage.key, 'id': index + 1}; // TODO: id 규칙 만들기
       }).toList();
       if (imageUploads.isEmpty) {
         talker.debug("이미지는 최소 1장이상 업로드해주세요");
@@ -175,7 +178,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
 
       talker.info('[S3] Starting upload for ${localImages.length} images');
       talker.debug('[S3] Presigned URLs count: ${result.length}');
-
+      if (result.isEmpty) return false;
       bool isSuccess = false;
       await ref
           .read(presignedImageRepositoryProvider)

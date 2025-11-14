@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' hide NavigatorState;
 import 'package:go_router/go_router.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';

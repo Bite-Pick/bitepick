@@ -3,7 +3,6 @@ part of 'mg_tooltip.dart';
 class _MgTooltipItem extends StatelessWidget {
   const _MgTooltipItem(
     this.content, {
-    super.key,
     this.alignment,
     Color? backgroundColor,
     bool? showArrow,

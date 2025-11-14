@@ -45,6 +45,5 @@ class OwnerGoodsEmptyScreen extends ConsumerWidget {
         ),
       ),
     );
-    ;
   }
 }

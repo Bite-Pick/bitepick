@@ -42,8 +42,14 @@ class AuthRepository {
       final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
 
       if (res.statusCode != 200) {
-        talker.debug('Authentication failed: ${res.statusCode}');
-        return null;
+        final errorName = res.data?['name'];
+        final errorMessage = res.data?['message'] ?? '인증에 실패했습니다.';
+
+        if (errorName == 'DUPLICATE_NICKNAME') {
+          throw DuplicateNicknameException();
+        } else {
+          throw AuthenticationException(errorMessage, errorCode: errorName);
+        }
       }
 
       // Response Header에서 JWT 토큰 추출
@@ -88,4 +94,25 @@ class AuthRepository {
 @riverpod
 AuthRepository authRepository(Ref ref) {
   return AuthRepository(ref);
+}
+
+// TODO: 추후 Exception만 모은 파일 분리
+/// 중복 닉네임 예외
+class DuplicateNicknameException implements Exception {
+  final String message;
+  DuplicateNicknameException([this.message = '이미 사용 중인 닉네임입니다.']);
+
+  @override
+  String toString() => message;
+}
+
+/// 인증 실패 예외
+class AuthenticationException implements Exception {
+  final String message;
+  final String? errorCode;
+
+  AuthenticationException(this.message, {this.errorCode});
+
+  @override
+  String toString() => message;
 }

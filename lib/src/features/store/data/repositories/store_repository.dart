@@ -85,11 +85,13 @@ class StoreRepository {
         'storeImagesRegisters': storeImagesRegisters,
       },
     );
+    if (res.data['status'] != 'OK') return [];
+
     final presignedImagesData =
         res.data['data']['storePreSignedUrlImages'] as List?;
-    if (res.data['status'] != 'OK' || presignedImagesData == null) return [];
+    if ((presignedImagesData ?? []).isEmpty) return [];
 
-    return presignedImagesData
+    return presignedImagesData!
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
         .toList();
   }

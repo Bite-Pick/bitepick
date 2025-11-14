@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

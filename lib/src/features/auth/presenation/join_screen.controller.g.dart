@@ -6,7 +6,7 @@ part of 'join_screen.controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$joinControllerHash() => r'92a8abdca4bb3600fc4417b2bf862c23eed299c7';
+String _$joinControllerHash() => r'2150778defe801cbbfc328eb43fbaa14a6ae355c';
 
 /// See also [JoinController].
 @ProviderFor(JoinController)

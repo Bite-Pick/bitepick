@@ -37,8 +37,8 @@ class QuantityPicker extends StatelessWidget {
           mainAxisAlignment: alignment,
           children: [
             GestureDetector(
-              child: BaseSvgIcon.minus(),
               onTap: count > 0 ? () => onCountChanged(count - 1) : null,
+              child: BaseSvgIcon.minus(),
             ),
             Text('$count').md().margin(
               horizontal: MgSizes.xxl,

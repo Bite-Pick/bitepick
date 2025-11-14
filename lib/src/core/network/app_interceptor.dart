@@ -3,16 +3,15 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/config/environment.dart';
-import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// 앱 공통 인터셉터
@@ -79,8 +78,12 @@ class AppInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    final statusCode = err.response?.statusCode;
-    final data = err.response?.data;
+    final res = err.response;
+    talker.debug(
+      "[${res?.data['path']}] ${res?.statusCode} \n ${res?.data['name']} ${res?.data['code']} ${res?.data['message']}",
+    );
+    final statusCode = res?.statusCode;
+    final data = res?.data;
 
     // 502: 서비스 점검
     if (statusCode == 502 || err.message?.contains('502') == true) {
@@ -390,8 +393,9 @@ class AppInterceptor extends Interceptor {
 
   void _navigateToRegisterStore() {
     final router = ref.read(appRouterProvider);
-    // final context = GlobalVariable.navigatorKey.currentContext;
-    // if (context != null)
+    final context = GlobalVariable.navigatorKey.currentContext;
+    if (context != null) ToastPresentor.info(context, "가게등록을 진행합니다");
+
     router.go(OwnerJoinInfoRoute().location);
     talker.debug('🔐 Navigate to store register');
   }

@@ -433,7 +433,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
   const ls = 0.0;
   const h = 1.5;
 
-  final textColor = colorScheme.onBackground;
+  final textColor = colorScheme.onSurface;
 
   return TextTheme(
     // Heading (bold)

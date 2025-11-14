@@ -24,6 +24,8 @@ mixin _$JoinState {
   String get phone => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  String? get nicknameError => throw _privateConstructorUsedError;
+  String? get phoneError => throw _privateConstructorUsedError;
 
   /// Create a copy of JoinState
   /// with the given fields replaced by the non-null parameter values.
@@ -45,6 +47,8 @@ abstract class $JoinStateCopyWith<$Res> {
     String phone,
     bool isLoading,
     String? error,
+    String? nicknameError,
+    String? phoneError,
   });
 }
 
@@ -70,6 +74,8 @@ class _$JoinStateCopyWithImpl<$Res, $Val extends JoinState>
     Object? phone = null,
     Object? isLoading = null,
     Object? error = freezed,
+    Object? nicknameError = freezed,
+    Object? phoneError = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -101,6 +107,14 @@ class _$JoinStateCopyWithImpl<$Res, $Val extends JoinState>
                 ? _value.error
                 : error // ignore: cast_nullable_to_non_nullable
                       as String?,
+            nicknameError: freezed == nicknameError
+                ? _value.nicknameError
+                : nicknameError // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phoneError: freezed == phoneError
+                ? _value.phoneError
+                : phoneError // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -124,6 +138,8 @@ abstract class _$$JoinStateImplCopyWith<$Res>
     String phone,
     bool isLoading,
     String? error,
+    String? nicknameError,
+    String? phoneError,
   });
 }
 
@@ -148,6 +164,8 @@ class __$$JoinStateImplCopyWithImpl<$Res>
     Object? phone = null,
     Object? isLoading = null,
     Object? error = freezed,
+    Object? nicknameError = freezed,
+    Object? phoneError = freezed,
   }) {
     return _then(
       _$JoinStateImpl(
@@ -179,6 +197,14 @@ class __$$JoinStateImplCopyWithImpl<$Res>
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
                   as String?,
+        nicknameError: freezed == nicknameError
+            ? _value.nicknameError
+            : nicknameError // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phoneError: freezed == phoneError
+            ? _value.phoneError
+            : phoneError // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -195,6 +221,8 @@ class _$JoinStateImpl implements _JoinState {
     this.phone = '',
     this.isLoading = false,
     this.error,
+    this.nicknameError,
+    this.phoneError,
   });
 
   @override
@@ -217,10 +245,14 @@ class _$JoinStateImpl implements _JoinState {
   final bool isLoading;
   @override
   final String? error;
+  @override
+  final String? nicknameError;
+  @override
+  final String? phoneError;
 
   @override
   String toString() {
-    return 'JoinState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, error: $error)';
+    return 'JoinState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, error: $error, nicknameError: $nicknameError, phoneError: $phoneError)';
   }
 
   @override
@@ -239,7 +271,11 @@ class _$JoinStateImpl implements _JoinState {
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
-            (identical(other.error, error) || other.error == error));
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.nicknameError, nicknameError) ||
+                other.nicknameError == nicknameError) &&
+            (identical(other.phoneError, phoneError) ||
+                other.phoneError == phoneError));
   }
 
   @override
@@ -252,6 +288,8 @@ class _$JoinStateImpl implements _JoinState {
     phone,
     isLoading,
     error,
+    nicknameError,
+    phoneError,
   );
 
   /// Create a copy of JoinState
@@ -272,6 +310,8 @@ abstract class _JoinState implements JoinState {
     final String phone,
     final bool isLoading,
     final String? error,
+    final String? nicknameError,
+    final String? phoneError,
   }) = _$JoinStateImpl;
 
   @override
@@ -288,6 +328,10 @@ abstract class _JoinState implements JoinState {
   bool get isLoading;
   @override
   String? get error;
+  @override
+  String? get nicknameError;
+  @override
+  String? get phoneError;
 
   /// Create a copy of JoinState
   /// with the given fields replaced by the non-null parameter values.

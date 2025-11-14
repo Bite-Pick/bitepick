@@ -39,7 +39,7 @@ class GoodsEditScreen extends ConsumerWidget {
     return ReactiveForm(
       formGroup: state.form,
       child: BaseScaffold(
-        appBar: BaseAppBar(title: const Text('마감백 수정')),
+        appBar: BaseAppBar(title: const Text('바이트백 수정')),
         body: Column(
           children: [
             Expanded(child: _buildContent()),

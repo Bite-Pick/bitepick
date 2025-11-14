@@ -4,7 +4,6 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
-import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';

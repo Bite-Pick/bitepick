@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
-import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -38,7 +36,7 @@ class PreSignedImageRepository {
       // presigned URL 정리 (개행/공백 제거)
       final url = presignedUrl.replaceAll(RegExp(r'\s+'), '');
 
-      talker.info('[S3] Uploading $fileName (${fileSize} bytes)');
+      talker.info('[S3] Uploading $fileName ($fileSize bytes)');
       talker.debug('[S3] URL: ${url.substring(0, 100)}...');
 
       // ⚠️ IMPORTANT: Presigned URL에는 Authorization 헤더를 보내면 안됨!

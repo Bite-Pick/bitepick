@@ -4,8 +4,6 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
-import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_owner_info_item.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.controller.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/order_status_tabs.dart';

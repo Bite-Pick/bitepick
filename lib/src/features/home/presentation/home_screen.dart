@@ -194,7 +194,6 @@ class _HomeAppBarContent extends ConsumerStatefulWidget {
   const _HomeAppBarContent({
     required this.addresses,
     required this.defaultAddress,
-    super.key,
   });
 
   final List<Address> addresses;

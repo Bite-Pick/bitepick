@@ -38,9 +38,7 @@ class JoinSuccessScreen extends ConsumerWidget {
           Spacer(),
           // 성공 아이콘 또는 이미지
           Lottie.asset(R.ASSETS_LOTTIE_SUCCESS_JSON, repeat: false),
-          Text("회원가입 완료").xl().bold(),
-          Gaps.h16,
-          Text("이제 바이트픽의 모든 서비스를 이용하실 수 있어요").md(),
+          Text("회원가입이 완료되었어요!\n이제 매장등록을 시작할게요").xl().bold(),
           Spacer(),
           MgButton(
             onPressed: () {

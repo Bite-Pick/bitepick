@@ -1,6 +1,7 @@
 // goods_edit_screen.controller.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -75,7 +76,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
   }
 
   Map<String, Object?> _initialFormValueFrom(Goods goods) {
-    DateTime? _tryParse(String s) {
+    DateTime? tryParse(String s) {
       try {
         return DateTime.parse(s);
       } catch (_) {
@@ -89,8 +90,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       'description': goods.description,
       // 이미지 개수는 수정화면에서 필수가 아닐 수 있음(이미 업로드된 상태)
       'quantity': goods.stockQuantity,
-      'startTime': _tryParse(goods.startTime),
-      'endTime': _tryParse(goods.endTime),
+      'startTime': tryParse(goods.startTime),
+      'endTime': tryParse(goods.endTime),
       'originalPrice': goods.originPrice,
       'discount': goods.discount,
       'salePrice': goods.salePrice,
@@ -135,6 +136,17 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     final form = state.form;
     if (!form.valid) {
       form.markAllAsTouched();
+
+      // 각 필드의 에러 출력
+      final invalidFields = form.controls.entries
+          .where((entry) => entry.value.invalid)
+          .map((entry) => entry.key)
+          .join(', ');
+
+      if (invalidFields.isNotEmpty) {
+        talker.debug('다음 항목을 확인해주세요 : $invalidFields');
+      }
+
       return false;
     }
 
