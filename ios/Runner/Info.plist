@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
+		<true />
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -44,7 +44,7 @@
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>ITSAppUsesNonExemptEncryption</key>
-		<false/>
+		<false />
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>naversearchapp</string>
@@ -54,7 +54,7 @@
 			<string>kakaotalk</string>
 		</array>
 		<key>LSRequiresIPhoneOS</key>
-		<true/>
+		<true />
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>주소를 검색하기 위해 현재 위치 정보가 필요합니다</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
@@ -68,7 +68,7 @@
 		<key>NidUrlScheme</key>
 		<string>${NAVER_SERVICE_URL_SCHEME}</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
+		<true />
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
@@ -89,11 +89,7 @@
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
-			<true/>
+			<true />
 		</dict>
-		<key>UIStatusBarHidden</key>
-		<true/>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
 	</dict>
 </plist>

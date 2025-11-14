@@ -59,7 +59,6 @@ dependencies:
   dotted_border: ^3.1.0
   lottie: ^3.3.2
   geocoding: ^3.0.0
-  flutter_native_splash: ^2.4.7
 
 
 dev_dependencies:
@@ -88,7 +87,6 @@ flutter:
     - assets/icons/svg/bank/
     - assets/lottie/
     - shorebird.yaml
-    - flutter_native_splash.yaml
 
   fonts:
     - family: Pretendard
