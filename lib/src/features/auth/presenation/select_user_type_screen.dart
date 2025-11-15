@@ -43,6 +43,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
+      canSwipeBack: false,
       appBar: BaseAppBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +86,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
               _showAgreementBottomSheet();
             },
             content: const Text("다음"),
+            disabled: selectedUserRole == null,
           ).primary(),
           Gaps.h16,
         ],

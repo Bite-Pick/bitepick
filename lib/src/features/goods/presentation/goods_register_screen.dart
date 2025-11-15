@@ -68,6 +68,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
                 }
               },
               content: Text('등록하기'),
+              disabled: state.form.invalid,
             ).primary().margin(horizontal: MgSizes.md, top: MgSizes.md),
           ],
         ),
