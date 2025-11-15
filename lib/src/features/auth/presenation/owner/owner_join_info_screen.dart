@@ -19,6 +19,7 @@ import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
 import 'package:magambell/src/widgets/mg_reactive_textfield.dart';
 import 'package:magambell/src/widgets/mg_select.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class OwnerJoinInfoRoute extends GoRouteData {
@@ -91,6 +92,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
               onPressed: () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
+                  ToastPresentor.success(context, "가게 등록이 완료되었습니다");
                   ref.invalidate(userStateProvider);
                   DefaultRoute().go(context);
                 }

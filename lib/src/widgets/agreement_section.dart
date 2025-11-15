@@ -93,11 +93,12 @@ class _AgreementSectionState extends State<AgreementSection> {
                 value: _allAgreed,
                 onChanged: (value) => _toggleAllAgreements(value ?? false),
                 activeColor: MgColorScheme.primary,
+                checkColor: MgColorScheme.white,
               ),
               Expanded(child: Text(widget.allAgreeText).md().bold()),
             ],
           ),
-        ).decorated(
+        ).margin().decorated(
           color: MgColorScheme.gray9,
           borderRadius: BorderRadius.circular(MgRadius.md),
         ),
@@ -151,6 +152,148 @@ class _AgreementSectionState extends State<AgreementSection> {
           ),
         ],
       ).margin(vertical: MgSizes.xs),
+    );
+  }
+}
+
+class JoinAgreementSection extends StatefulWidget {
+  const JoinAgreementSection({
+    super.key,
+    required this.items,
+    required this.onAllAgreedChanged,
+    this.allAgreeText = '약관 전체 동의',
+  });
+
+  final List<AgreementItem> items;
+  final ValueChanged<bool> onAllAgreedChanged;
+  final String allAgreeText;
+
+  @override
+  State<JoinAgreementSection> createState() => _JoinAgreementSectionState();
+}
+
+class _JoinAgreementSectionState extends State<JoinAgreementSection> {
+  bool _allAgreed = false;
+  late List<bool> _agreements;
+
+  @override
+  void initState() {
+    super.initState();
+    // 항목 개수만큼 동의 상태 초기화
+    _agreements = List.filled(widget.items.length, false);
+  }
+
+  void _toggleAllAgreements(bool value) {
+    setState(() {
+      _allAgreed = value;
+      // 모든 항목을 동일한 값으로 설정
+      _agreements = List.filled(widget.items.length, value);
+    });
+    widget.onAllAgreedChanged(value);
+  }
+
+  void _checkAllAgreements() {
+    // 모든 항목이 동의되었는지 확인
+    final allAgreed = _agreements.every((agreed) => agreed);
+    setState(() {
+      _allAgreed = allAgreed;
+    });
+    widget.onAllAgreedChanged(allAgreed);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 전체 동의
+        GestureDetector(
+              onTap: () => _toggleAllAgreements(!_allAgreed),
+              child: Row(
+                children: [
+                  _buildCheckBox(_allAgreed),
+                  Gaps.w8,
+                  Expanded(child: Text(widget.allAgreeText).md().bold()),
+                ],
+              ),
+            )
+            .margin(vertical: MgSizes.sm, left: MgSizes.md)
+            .decorated(
+              color: MgColorScheme.gray9,
+              borderRadius: BorderRadius.circular(MgRadius.md),
+            ),
+        Gaps.h16,
+        // 동적으로 생성된 약관 항목들
+        ...List.generate(
+          widget.items.length,
+          (index) => _buildAgreementItem(
+            widget.items[index].text,
+            widget.items[index].link,
+            _agreements[index],
+            (value) {
+              setState(() => _agreements[index] = value);
+              _checkAllAgreements();
+            },
+          ).margin(vertical: MgSizes.xss, left: MgSizes.md),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCheckBox(bool isCheck) {
+    return Checkbox(
+      value: isCheck,
+      onChanged: (value) => _toggleAllAgreements(value ?? false),
+      // 체크됐을 때 안쪽 배경색
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        states.contains(WidgetState.selected)
+            ? MgColorScheme.primary
+            : MgColorScheme.white; // 미체크 시 흰색
+      }),
+      // 체크 아이콘 색
+      checkColor: MgColorScheme.white,
+      // 테두리 색/두께
+      side: BorderSide(
+        color: isCheck ? MgColorScheme.primary : MgColorScheme.gray5,
+        width: 1.5,
+      ),
+      // 모서리 둥글게 (살짝 둥근 사각형)
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      // 체크박스 크기 조금 컴팩트하게
+      visualDensity: VisualDensity.compact,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+
+  Widget _buildAgreementItem(
+    String text,
+    String link,
+    bool value,
+    ValueChanged<bool> onChanged,
+  ) {
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: Row(
+        children: [
+          _buildCheckBox(value),
+          Gaps.w8,
+          Expanded(child: Text(text).sm().textGray()),
+          GestureDetector(
+            onTap: () async {
+              if (link.isNotEmpty) {
+                await launchUrl(
+                  Uri.parse(link),
+                  mode: LaunchMode.externalApplication,
+                );
+              }
+            },
+            child: BaseSvgIcon.right(
+              color: MgColorScheme.gray6,
+              size: MgSizes.xl,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

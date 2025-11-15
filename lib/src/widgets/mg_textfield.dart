@@ -84,7 +84,7 @@ class _MgTextFieldState extends State<MgTextField> {
       return MgColorScheme.subpointRed;
     }
     // TODO: focus 되었을 때 색상 논의(_isFocused ? MgColorScheme.primary :)
-    return _isFocused ? MgColorScheme.primary : MgColorScheme.gray7;
+    return _isFocused ? MgColorScheme.gray4 : MgColorScheme.gray7;
   }
 
   double get _borderWidth {
@@ -103,10 +103,11 @@ class _MgTextFieldState extends State<MgTextField> {
     // 숫자 키보드일 때도 done 버튼 표시
     if (widget.keyboardType == TextInputType.number ||
         widget.keyboardType == TextInputType.phone ||
-        widget.keyboardType == const TextInputType.numberWithOptions(
-          signed: true,
-          decimal: true,
-        )) {
+        widget.keyboardType ==
+            const TextInputType.numberWithOptions(
+              signed: true,
+              decimal: true,
+            )) {
       return TextInputAction.done;
     }
 
