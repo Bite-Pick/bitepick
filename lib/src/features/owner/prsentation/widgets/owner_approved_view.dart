@@ -56,6 +56,7 @@ class OwnerApprovedView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseScaffold(
+      canSwipeBack: false,
       appBar: BaseAppBar(leading: SizedBox.shrink()),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

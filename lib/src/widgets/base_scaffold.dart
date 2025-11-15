@@ -19,6 +19,7 @@ class BaseScaffold extends StatelessWidget {
     this.resizeToAvoidBottomInset,
     this.onTap,
     this.onBack,
+    this.canSwipeBack = true,
   });
   final PreferredSizeWidget? appBar;
   final Widget body;
@@ -33,6 +34,7 @@ class BaseScaffold extends StatelessWidget {
   final bool? resizeToAvoidBottomInset;
   final VoidCallback? onTap;
   final Future<bool> Function()? onBack;
+  final bool canSwipeBack;
 
   static BaseScaffold of(BuildContext context) {
     final widget = context.findAncestorWidgetOfExactType<BaseScaffold>();
@@ -52,7 +54,7 @@ class BaseScaffold extends StatelessWidget {
     final double bottomNotchPadding = getBottomMargin(context);
 
     return PopScope(
-      canPop: true,
+      canPop: canSwipeBack,
       onPopInvokedWithResult: (didPop, _) async {
         if (onBack != null) {
           await onBack!.call();
@@ -91,9 +93,10 @@ class BaseScaffold extends StatelessWidget {
                     if (hasBottomMargin)
                       Container(
                         height: bottomNotchPadding,
-                        color: Theme.of(context)
-                                .bottomNavigationBarTheme
-                                .backgroundColor ??
+                        color:
+                            Theme.of(
+                              context,
+                            ).bottomNavigationBarTheme.backgroundColor ??
                             Theme.of(context).colorScheme.surface,
                       ),
                   ],
