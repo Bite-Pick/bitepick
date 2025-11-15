@@ -80,12 +80,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             BaseSvgIcon.homeLogo(size: MgSizes.xxxxl),
             Gaps.h24,
             if (isLoading) ...[const CircularProgressIndicator(), Gaps.h24],
-            MgButton(
-              content: Text("dd"),
-              onPressed: () {
-                SelectUserTypeRoute().go(context);
-              },
-            ).gray(),
+            // MgButton(
+            //   content: Text("dd"),
+            //   onPressed: () {
+            //     SelectUserTypeRoute().go(context);
+            //   },
+            // ).gray(),
             Column(
               spacing: MgSizes.sm,
               children: [
