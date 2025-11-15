@@ -63,6 +63,8 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
               onPressed: () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
+                  FocusScope.of(context).unfocus();
+
                   ref.invalidate(userStateProvider);
                   DefaultRoute().go(context);
                 }

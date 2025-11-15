@@ -106,6 +106,8 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
 
     if (success) {
       if (!mounted) return;
+      FocusScope.of(context).unfocus();
+
       JoinSuccessRoute().go(context);
     } else {
       // 에러 표시

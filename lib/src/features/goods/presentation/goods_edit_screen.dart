@@ -48,6 +48,8 @@ class GoodsEditScreen extends ConsumerWidget {
                   ? null
                   : () async {
                       final result = await controller.submit();
+                      FocusScope.of(context).unfocus();
+
                       if (!context.mounted) return;
                       if (result) context.pop(true); // 수정 성공 후 복귀
                     },
