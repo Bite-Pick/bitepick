@@ -97,8 +97,8 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("이용 약관").md().bold().margin(vertical: MgSizes.md),
-          AgreementSection(
+          Text("이용 약관").md().bold().margin(bottom: MgSizes.md),
+          JoinAgreementSection(
             allAgreeText: '전체 동의',
             items: [
               AgreementItem(text: '개인정보 수집 및 이용 동의 (필수)', link: PRIAVCY_POLICY),
