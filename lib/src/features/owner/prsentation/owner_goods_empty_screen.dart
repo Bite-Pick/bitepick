@@ -25,6 +25,7 @@ class OwnerGoodsEmptyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseScaffold(
+      canSwipeBack: false,
       appBar: BaseAppBar(leading: SizedBox.shrink()),
       body: Center(
         child: Column(

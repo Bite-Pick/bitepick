@@ -12,7 +12,7 @@ class WithdrawController extends _$WithdrawController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> withdraw({required BuildContext context}) async {
+  Future<bool> withdraw({required BuildContext context}) async {
     // 확인 다이얼로그
     final ok = await showDialog<bool>(
       context: context,
@@ -31,7 +31,7 @@ class WithdrawController extends _$WithdrawController {
         ],
       ),
     );
-    if (ok != true) return;
+    if (ok != true) return false;
 
     state = const AsyncLoading();
 
@@ -40,7 +40,7 @@ class WithdrawController extends _$WithdrawController {
       final user = await ref.read(userStateProvider.future);
       if (user == null) {
         state = AsyncError('로그인 상태가 아닙니다', StackTrace.empty);
-        return;
+        return false;
       }
       final providerType = user.providerType;
       final repository = ref.read(socialAuthRepositoryProvider);
@@ -65,7 +65,7 @@ class WithdrawController extends _$WithdrawController {
       if (authCode == null || authCode.isEmpty) {
         state = const AsyncError('소셜 인증에 실패했습니다.', StackTrace.empty);
         _showSnack(context, '소셜 인증 실패', isError: true);
-        return;
+        return false;
       }
 
       // ✅ 2) 도메인 레벨 AuthRepository 호출로 변경
@@ -76,11 +76,13 @@ class WithdrawController extends _$WithdrawController {
       if (!success) {
         state = const AsyncError('탈퇴 요청에 실패했습니다.', StackTrace.empty);
         _showSnack(context, '탈퇴 요청에 실패했습니다.', isError: true);
-        return;
+        return false;
       }
+      return true;
     } catch (e, st) {
       state = AsyncError(e, st);
       _showSnack(context, '알 수 없는 오류가 발생했습니다.', isError: true);
+      return false;
     }
   }
 

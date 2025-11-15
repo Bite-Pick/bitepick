@@ -58,7 +58,9 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   }
 
   void _onNicknameChanged() {
-    ref.read(joinControllerProvider.notifier).setNickname(_nicknameController.text);
+    ref
+        .read(joinControllerProvider.notifier)
+        .setNickname(_nicknameController.text);
   }
 
   void _onPhoneChanged() {
@@ -104,6 +106,8 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
 
     if (success) {
       if (!mounted) return;
+      FocusScope.of(context).unfocus();
+
       JoinSuccessRoute().go(context);
     } else {
       // 에러 표시
@@ -146,6 +150,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
           MgButton(
             onPressed: joinState.isLoading ? null : _handleSubmit,
             content: Text(joinState.isLoading ? "처리중..." : "완료"),
+            disabled: joinState.error != null,
           ).primary(),
         ],
       ).margin(horizontal: MgSizes.xl),

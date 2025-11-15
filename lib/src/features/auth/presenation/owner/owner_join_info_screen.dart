@@ -92,12 +92,15 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
               onPressed: () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
+                  FocusScope.of(context).unfocus();
+
                   ToastPresentor.success(context, "가게 등록이 완료되었습니다");
                   ref.invalidate(userStateProvider);
                   DefaultRoute().go(context);
                 }
               },
               content: const Text('확인'),
+              disabled: form.invalid,
             ).primary().margin(
               horizontal: MgSizes.md,
               bottom: MgSizes.xxl,

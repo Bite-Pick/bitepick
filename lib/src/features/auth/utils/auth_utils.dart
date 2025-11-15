@@ -12,8 +12,8 @@ Future<void> logout(WidgetRef ref, BuildContext context) async {
 }
 
 Future<void> withDraw(WidgetRef ref, BuildContext context) async {
-  await ref
+  final res = await ref
       .read(withdrawControllerProvider.notifier)
       .withdraw(context: context);
-  await logout(ref, context);
+  if (res) await logout(ref, context);
 }

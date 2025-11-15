@@ -119,10 +119,14 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         Gaps.w8,
         Switch(
           value: saleStatus,
-          onChanged: (value) async => showDialog(
-            context: context,
-            builder: (context) => _buildAlertDialog(id, value),
-          ),
+          onChanged: (value) async {
+            !value
+                ? showDialog(
+                    context: context,
+                    builder: (context) => _buildAlertDialog(id, value),
+                  )
+                : changeSaleStatus(id, saleStatus);
+          },
           activeThumbColor: MgColorScheme.white,
           activeTrackColor: MgColorScheme.subpointGreen, // 활성화(ON) 시 트랙 색상
           inactiveThumbColor: MgColorScheme.white, // 비활성화 원 색
@@ -137,15 +141,17 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     return MgAlertDialog(
       title: "영업을 종료하시겠어요?",
       content: Text("다시 영업재개를 위해서는 영업중으로\n전환해주셔야해요!").center(),
-      onConfirm: () async {
-        await ref
-            .read(goodsRepositoryProvider)
-            .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
-        ref.invalidate(storeStateProvider);
-      },
+      onConfirm: () async => changeSaleStatus(id, saleStatus),
       confirmText: "확인",
       hasCancel: false,
     );
+  }
+
+  Future<void> changeSaleStatus(String id, bool saleStatus) async {
+    await ref
+        .read(goodsRepositoryProvider)
+        .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
+    ref.invalidate(storeStateProvider);
   }
 
   Widget _buildMoreButton(String storeId) {

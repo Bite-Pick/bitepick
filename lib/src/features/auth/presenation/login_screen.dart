@@ -58,9 +58,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         error: (error, stack) {
           return switch (error) {
             DuplicateNicknameException(message: final msg) => _handleError(
-                msg,
-                isNicknameError: true,
-              ),
+              msg,
+              isNicknameError: true,
+            ),
             AuthenticationException(message: final msg) => _handleError(msg),
 
             _ => _handleError('오류가 발생했습니다. 문의해주세요', rawError: error),
@@ -80,6 +80,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             BaseSvgIcon.homeLogo(size: MgSizes.xxxxl),
             Gaps.h24,
             if (isLoading) ...[const CircularProgressIndicator(), Gaps.h24],
+            // MgButton(
+            //   content: Text("dd"),
+            //   onPressed: () {
+            //     SelectUserTypeRoute().go(context);
+            //   },
+            // ).gray(),
             Column(
               spacing: MgSizes.sm,
               children: [

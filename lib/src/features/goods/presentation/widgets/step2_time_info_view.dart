@@ -106,39 +106,35 @@ class Step2TimeInfoView extends ConsumerWidget {
           },
         );
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: MgSizes.md,
-          vertical: MgSizes.sm,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            // TODO: 최초 값 기입전에는 error로 인식하지않도록
-            color: control.hasErrors && control.touched
-                ? MgColorScheme.subpointRed
-                : MgColorScheme.gray8,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child:
-                  Text(
-                    control.value != null
-                        ? _formatTime(control.value)
-                        : placeholder,
-                  ).md().textColor(
-                    control.value != null
-                        ? MgColorScheme.text
-                        : MgColorScheme.gray5,
+      child:
+          Row(
+                children: [
+                  Expanded(
+                    child:
+                        Text(
+                          control.value != null
+                              ? _formatTime(control.value)
+                              : placeholder,
+                        ).md().textColor(
+                          control.value != null
+                              ? MgColorScheme.text
+                              : MgColorScheme.gray5,
+                        ),
                   ),
-            ),
-            Icon(Icons.access_time, color: MgColorScheme.gray5, size: 20),
-          ],
-        ),
-      ),
+                  Icon(Icons.access_time, color: MgColorScheme.gray5, size: 20),
+                ],
+              )
+              .margin(horizontal: MgSizes.md, vertical: MgSizes.sm)
+              .decorated(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  // TODO: 최초 값 기입전에는 error로 인식하지않도록
+                  color: control.hasErrors && control.touched
+                      ? MgColorScheme.subpointRed
+                      : MgColorScheme.gray8,
+                  width: 1,
+                ),
+              ),
     );
   }
 }

@@ -93,16 +93,16 @@ class MgButton extends StatelessWidget {
 
     // disabled 상태일 때 자동으로 스타일 적용
     final effectiveBackgroundColor = isDisabled
-        ? (backgroundColor ?? const Color(0xFFFFDF9F))
+        ? MgColorScheme.gray8
         : backgroundColor;
     final effectiveTextColor = isDisabled
-        ? (textColor ?? MgColorScheme.text)
+        ? MgColorScheme.gray4
         : (textColor ?? MgColorScheme.text);
 
     final child = Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: isDisabled ? null : onPressed,
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(borderRadius),
         child: Container(
           padding:

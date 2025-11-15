@@ -112,6 +112,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Free up system disk space
+        run: |
+          echo "=== Disk usage before cleanup ==="
+          df -h
+
+          # CodeQL 삭제 (보안 스캐닝 미사용시)
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+
+          # Haskell/GHC 삭제
+          sudo rm -rf /usr/local/.ghcup || true
+          sudo rm -rf /opt/ghc || true
+
+          # .NET SDK 삭제
+          sudo rm -rf /usr/share/dotnet || true
+
+          # Docker 이미지/컨테이너 정리
+          docker system prune -af || true
+
+          # 불필요한 패키지 제거
+          sudo apt-get remove -y '^ghc-8.*' || true
+          sudo apt-get remove -y 'php.*' || true
+          sudo apt-get autoremove -y || true
+          sudo apt-get clean
+
+          echo "=== Disk usage after cleanup ==="
+          df -h
+
       - name: Decrypt secrets
         env:
           CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
@@ -142,20 +169,6 @@ jobs:
           java-version: "17.x"
           distribution: "zulu"
           cache: gradle
-
-      - name: Check disk usage before build
-        run: df -h
-
-      - name: Clean Gradle and build caches
-        run: |
-          rm -rf ~/.gradle/caches/
-          rm -rf ~/.gradle/daemon/
-          rm -rf android/.gradle/
-          rm -rf build/
-          rm -rf android/app/build/
-
-      - name: Check disk usage after cleanup
-        run: df -h
 
       - name: Deploy Android
         env:
@@ -290,6 +303,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Free up system disk space
+        run: |
+          echo "=== Disk usage before cleanup ==="
+          df -h
+
+          # CodeQL 삭제 (보안 스캐닝 미사용시)
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+
+          # Haskell/GHC 삭제
+          sudo rm -rf /usr/local/.ghcup || true
+          sudo rm -rf /opt/ghc || true
+
+          # .NET SDK 삭제
+          sudo rm -rf /usr/share/dotnet || true
+
+          # Docker 이미지/컨테이너 정리
+          docker system prune -af || true
+
+          # 불필요한 패키지 제거
+          sudo apt-get remove -y '^ghc-8.*' || true
+          sudo apt-get remove -y 'php.*' || true
+          sudo apt-get autoremove -y || true
+          sudo apt-get clean
+
+          echo "=== Disk usage after cleanup ==="
+          df -h
+
       - name: Decrypt secrets
         env:
           CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
@@ -320,20 +360,6 @@ jobs:
           java-version: "17.x"
           distribution: "zulu"
           cache: gradle
-
-      - name: Check disk usage before build
-        run: df -h
-
-      - name: Clean Gradle and build caches
-        run: |
-          rm -rf ~/.gradle/caches/
-          rm -rf ~/.gradle/daemon/
-          rm -rf android/.gradle/
-          rm -rf build/
-          rm -rf android/app/build/
-
-      - name: Check disk usage after cleanup
-        run: df -h
 
       - name: Deploy Android
         env:
