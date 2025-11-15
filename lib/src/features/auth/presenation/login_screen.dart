@@ -11,7 +11,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
-import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -46,7 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           } else {
             // 신규 회원 - 회원가입 화면으로 이동
             ref
-                .read(joinControllerProvider.notifier)
+                .read(joinBasicInfoScreenControllerProvider.notifier)
                 .setSocialLoginInfo(
                   providerType: authResult.providerType,
                   socialToken: authResult.authCode,
@@ -157,7 +157,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     Object? rawError,
     bool isNicknameError = false,
   }) {
-    final controller = ref.read(joinControllerProvider.notifier);
+    final controller = ref.read(joinBasicInfoScreenControllerProvider.notifier);
 
     // 닉네임 중복 에러인 경우 필드 에러로 설정
     if (isNicknameError) {

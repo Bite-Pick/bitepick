@@ -9,7 +9,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
-import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -28,7 +28,7 @@ class JoinSuccessScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final joinState = ref.watch(joinControllerProvider);
+    final joinState = ref.watch(joinBasicInfoScreenControllerProvider);
     final userRole = joinState.userRole;
 
     return BaseScaffold(
