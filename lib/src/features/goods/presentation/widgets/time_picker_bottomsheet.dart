@@ -48,7 +48,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
   final List<String> _periods = ['오전', '오후'];
   final List<int> _hours = List.generate(12, (index) => index + 1); // 1-12
-  final List<int> _minutes = List.generate(60, (index) => index); // 0-59
+  final List<int> _minutes = List.generate(6, (index) => index * 10); // 0, 10, 20, 30, 40, 50
 
   @override
   void initState() {
@@ -62,11 +62,13 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     _selectedHour = hour24 == 0
         ? 12
         : (hour24 > 12 ? hour24 - 12 : hour24);
-    _selectedMinute = now.minute;
+    // 분을 가장 가까운 10분 단위로 반올림
+    _selectedMinute = (now.minute / 10).round() * 10;
+    if (_selectedMinute >= 60) _selectedMinute = 50;
 
     _periodController = FixedExtentScrollController(initialItem: _selectedPeriod);
     _hourController = FixedExtentScrollController(initialItem: _selectedHour - 1);
-    _minuteController = FixedExtentScrollController(initialItem: _selectedMinute);
+    _minuteController = FixedExtentScrollController(initialItem: _selectedMinute ~/ 10);
   }
 
   @override

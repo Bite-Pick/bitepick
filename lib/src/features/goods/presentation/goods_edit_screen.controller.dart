@@ -21,7 +21,7 @@ class GoodsEditState with _$GoodsEditState {
   }) = _GoodsEditState;
 }
 
-const _minDuration = Duration(minutes: 1);
+const _minDuration = Duration(minutes: 10);
 
 @riverpod
 class GoodsEditScreenController extends _$GoodsEditScreenController {
