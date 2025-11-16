@@ -50,8 +50,8 @@ shorebird.yaml
 docs/SHOREBIRD_DEPLOY_GUIDE.md
 
 # google-services files
-android/app/src/dev/res/google-services.json
-android/app/src/prod/res/google-services.json
+android/app/dev/res/google-services.json
+android/app/prod/res/google-services.json
 ios/Runner/GoogleService-Info-Dev.plist
 ios/Runner/GoogleService-Info-Prod.plist
 

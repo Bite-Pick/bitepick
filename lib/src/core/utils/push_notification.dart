@@ -17,6 +17,7 @@ class PushNotification {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
+    // TODO: 알림 dialog 뜨는 위치 점검 필요
     await _requestPermission();
     await _initNotification();
     await _initLocalNotifications();
@@ -34,7 +35,8 @@ class PushNotification {
       provisional: false,
     );
 
-    final enabled = settings.authorizationStatus == AuthorizationStatus.authorized ||
+    final enabled =
+        settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional;
 
     talker.info('[FCM] Permission granted: $enabled');
@@ -61,10 +63,10 @@ class PushNotification {
 
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
@@ -99,17 +101,22 @@ class PushNotification {
 
     // 백그라운드에서 알림 클릭
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      talker.info('[FCM] Notification opened (background): ${message.notification?.title}');
+      talker.info(
+        '[FCM] Notification opened (background): ${message.notification?.title}',
+      );
       _handleNotificationNavigation(message);
     });
   }
 
   /// 앱 종료 상태에서 알림으로 실행되었는지 확인
   static Future<void> checkInitialMessage() async {
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
 
     if (initialMessage != null) {
-      talker.info('[FCM] App opened from notification: ${initialMessage.notification?.title}');
+      talker.info(
+        '[FCM] App opened from notification: ${initialMessage.notification?.title}',
+      );
       _handleNotificationNavigation(initialMessage);
     }
   }
@@ -130,12 +137,12 @@ class PushNotification {
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-      'high_importance_channel',
-      '앱 알림',
-      channelDescription: '바이트픽 푸시 알림',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
+          'high_importance_channel',
+          '앱 알림',
+          channelDescription: '바이트픽 푸시 알림',
+          importance: Importance.high,
+          priority: Priority.high,
+        );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,

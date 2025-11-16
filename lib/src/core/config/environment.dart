@@ -38,9 +38,31 @@ class Environment {
   static String get ncpApiKeyId => X_NCP_APIGW_API_KEY_ID;
   static String get ncpApiKey => X_NCP_APIGW_API_KEY;
 
+  // Kakao
   static String get kakaoNativeAppKey => KAKAO_NATIVE_APP_KEY;
   static String get kakaoJavascriptKey => KAKAO_JAVASCRIPT_KEY;
   static String get kakaoRestApiKey => KAKAO_REST_API_KEY;
+
+  // Firebase (Android용 - iOS는 GoogleService-Info.plist 사용)
+  static String get firebaseAppId => switch (instance._buildType) {
+    BuildType.dev => FIREBASE_APP_ID_ANDROID_DEV,
+    BuildType.prod => FIREBASE_APP_ID_ANDROID_PROD,
+  };
+
+  static String get firebaseApiKey => switch (instance._buildType) {
+    BuildType.dev => FIREBASE_API_KEY_ANDROID_DEV,
+    BuildType.prod => FIREBASE_API_KEY_ANDROID_PROD,
+  };
+
+  static String get firebaseMessagingSenderId => switch (instance._buildType) {
+    BuildType.dev => FIREBASE_MESSAGING_SENDER_ID_ANDROID_DEV,
+    BuildType.prod => FIREBASE_MESSAGING_SENDER_ID_ANDROID_PROD,
+  };
+
+  static String get firebaseProjectId => switch (instance._buildType) {
+    BuildType.dev => FIREBASE_PROJECT_ID_ANDROID_DEV,
+    BuildType.prod => FIREBASE_PROJECT_ID_ANDROID_PROD,
+  };
 
   Future<void> run() async {
     await main_app.runMagamBellApp();
