@@ -8,10 +8,12 @@ import 'package:magambell/src/features/goods/presentation/goods_register_screen.
 import 'package:magambell/src/features/goods/presentation/widgets/step3_price_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step4_goods_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step2_time_info_view.dart';
+import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class GoodsRegisterRoute extends GoRouteData {
@@ -63,10 +65,13 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
               onPressed: () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
-                  FocusScope.of(context).unfocus();
+                  ToastPresentor.success(
+                    context,
+                    "바이트백 등록 완료! 심사가 완료되면 알려드릴께요",
+                  );
 
-                  ref.invalidate(userStateProvider);
-                  DefaultRoute().go(context);
+                  FocusScope.of(context).unfocus();
+                  OwnerStoreApprovedRoute().go(context);
                 }
               },
               content: Text('등록하기'),
