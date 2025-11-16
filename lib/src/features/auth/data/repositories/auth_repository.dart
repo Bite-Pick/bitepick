@@ -28,53 +28,44 @@ class AuthRepository {
     String? phoneNumber,
     String? userRole, // "CUSTOMER" or "OWNER"
   }) async {
-    try {
-      // null 또는 빈 값 제거
-      final requestData = JsonUtils.removeEmpty({
-        "providerType": providerType.name,
-        "authCode": authCode,
-        "name": name,
-        "nickName": nickName,
-        "phoneNumber": phoneNumber,
-        "userRole": userRole,
-      });
+    final requestData = JsonUtils.removeEmpty({
+      "providerType": providerType.name,
+      "authCode": authCode,
+      "name": name,
+      "nickName": nickName,
+      "phoneNumber": phoneNumber,
+      "userRole": userRole,
+    });
 
-      final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
+    final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
 
-      if (res.statusCode != 200) {
-        final errorName = res.data?['name'];
-        final errorMessage = res.data?['message'] ?? '인증에 실패했습니다.';
+    if (res.statusCode != 200) {
+      final errorCode = res.data?['code'];
+      final errorMessage = res.data?['message'] ?? '인증에 실패했습니다.';
 
-        if (errorName == 'DUPLICATE_NICKNAME') {
-          throw DuplicateNicknameException();
-        } else {
-          throw AuthenticationException(errorMessage, errorCode: errorName);
-        }
-      }
+      errorCode == "DUPLICATE_NICKNAME"
+          ? throw DuplicateNicknameException()
+          : throw AuthenticationException(errorMessage, errorCode: errorCode);
+    }
 
-      // Response Header에서 JWT 토큰 추출
-      final authorization = res.headers.value('authorization');
-      final refreshToken = res.headers.value('refreshtoken');
+    // Response Header에서 JWT 토큰 추출
+    final authorization = res.headers.value('authorization');
+    final refreshToken = res.headers.value('refreshtoken');
 
-      if (authorization == null || refreshToken == null) {
-        talker.debug('Tokens not found in response headers');
-        return null;
-      }
-
-      // "Bearer " 및 "RefreshToken " 접두사 제거
-      final accessToken = authorization.replaceFirst('Bearer ', '');
-      final refresh = refreshToken.replaceFirst('RefreshToken ', '');
-
-      talker.debug(
-        'Authentication successful - Access Token: ${accessToken.substring(0, 10)}...',
-      );
-
-      return AuthTokens(accessToken: accessToken, refreshToken: refresh);
-    } catch (e, stackTrace) {
-      talker.debug('Authentication error: $e');
-      talker.debug('Stack trace: $stackTrace');
+    if (authorization == null || refreshToken == null) {
+      talker.debug('Tokens not found in response headers');
       return null;
     }
+
+    // "Bearer " 및 "RefreshToken " 접두사 제거
+    final accessToken = authorization.replaceFirst('Bearer ', '');
+    final refresh = refreshToken.replaceFirst('RefreshToken ', '');
+
+    talker.debug(
+      'Authentication successful - Access Token: ${accessToken.substring(0, 10)}...',
+    );
+
+    return AuthTokens(accessToken: accessToken, refreshToken: refresh);
   }
 
   Future<bool> withdraw({

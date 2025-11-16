@@ -89,6 +89,9 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
           MgButton(
             onPressed: joinState.isLoading ? null : _handleSubmit,
             content: Text(joinState.isLoading ? "처리중..." : "완료"),
+            disabled:
+                _nicknameController.text.isEmpty ||
+                _phoneController.text.isEmpty,
           ).primary(),
         ],
       ).margin(horizontal: MgSizes.xl),

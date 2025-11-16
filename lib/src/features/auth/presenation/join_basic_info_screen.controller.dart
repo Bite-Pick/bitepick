@@ -1,9 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'join_basic_info_screen.controller.freezed.dart';
@@ -118,22 +120,15 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
       state = state.copyWith(isLoading: false);
       return true;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: '회원가입 중 오류가 발생했습니다');
+      final errorMessage = switch (e) {
+        DuplicateNicknameException() => '이미 사용 중인 닉네임입니다.',
+        _ => '회원가입 중 오류가 발생했습니다',
+      };
+
+      state = state.copyWith(isLoading: false, error: errorMessage);
       return false;
     }
   }
-
-  // 에러 상태 설정
-  void setError({required bool isLoading, required String error}) {
-    state = state.copyWith(isLoading: isLoading, error: error);
-  }
-
-  // 닉네임 에러 설정
-  void setNicknameError(String? error) =>
-      state = state.copyWith(nicknameError: error);
-  // 전화번호 에러 설정
-  void setPhoneError(String? error) =>
-      state = state.copyWith(phoneError: error);
 
   // 입력값 검증
   bool validateInputs() {

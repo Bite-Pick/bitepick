@@ -7,7 +7,7 @@ part of 'join_basic_info_screen.controller.dart';
 // **************************************************************************
 
 String _$joinBasicInfoScreenControllerHash() =>
-    r'143dab59d2ec108250ee3f236926d531c0ca99ba';
+    r'592df455529d6beb033ae87642b5fbe5f3bbedb7';
 
 /// See also [JoinBasicInfoScreenController].
 @ProviderFor(JoinBasicInfoScreenController)
