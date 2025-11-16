@@ -29,7 +29,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>${NAVER_SERVICE_URL_SCHEME}</string>
+					<string>bitepick</string>
 				</array>
 			</dict>
 			<dict>
@@ -37,7 +37,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>${KAKAO_URL_SCHEME}</string>
+					<string>kakao95dd8f8b5095efb51722bccdfb11640b</string>
 				</array>
 			</dict>
 		</array>
@@ -64,13 +64,13 @@
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>사진을 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다</string>
 		<key>NidAppName</key>
-		<string>${NAVER_APP_NAME}</string>
+		<string>바이트픽</string>
 		<key>NidClientID</key>
-		<string>${NAVER_CONSUMER_ID}</string>
+		<string>BVHH2fcyVFbjZQFCNMY7</string>
 		<key>NidClientSecret</key>
-		<string>${NAVER_CONSUMER_SECRET}</string>
+		<string>Lhpj63W9LZ</string>
 		<key>NidUrlScheme</key>
-		<string>${NAVER_SERVICE_URL_SCHEME}</string>
+		<string>bitepick</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>UILaunchStoryboardName</key>
