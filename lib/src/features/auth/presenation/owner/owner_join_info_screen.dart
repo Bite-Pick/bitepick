@@ -67,12 +67,13 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     return ReactiveForm(
       formGroup: form,
       child: BaseScaffold(
-        appBar: BaseAppBar(title: Text("매장등록")),
-        //   action: TextButton(
-        //     onPressed: () => controller.fillWithMockData(mockFormData),
-        //     child: const Text('임시완성'),
-        //   ),
-        // ),
+        appBar: BaseAppBar(
+          title: Text("매장등록"),
+          // action: TextButton(
+          //   onPressed: () => controller.fillWithMockData(mockFormData),
+          //   child: const Text('임시완성'),
+          // ),
+        ),
         backgroundColor: MgColorScheme.white,
         body: Column(
           children: [

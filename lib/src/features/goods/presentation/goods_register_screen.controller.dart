@@ -34,6 +34,11 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   GoodsRegisterState build() {
     final form = _createForm();
 
+    // form 상태 변경을 감지하여 UI 업데이트
+    form.statusChanged.listen((_) {
+      state = state.copyWith();
+    });
+
     // 가격 계산 로직
     form.control('originalPrice').valueChanges.listen((_) {
       _calculateSalePrice();
@@ -180,19 +185,32 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
     }
   }
 
+  // 필드명 한글 매핑
+  static const Map<String, String> _fieldNameMap = {
+    'quantity': '수량',
+    'startTime': '판매 시작 시간',
+    'endTime': '판매 마감 시간',
+    'originalPrice': '정가',
+    'discount': '할인율',
+    'salePrice': '판매가',
+  };
+
   // 최종 제출
   Future<bool> submit() async {
     if (!state.form.valid) {
       state.form.markAllAsTouched();
 
-      // 각 필드의 에러 출력
-      final invalidFields = state.form.controls.entries
+      // 각 필드의 에러를 한글로 출력
+      final invalidFieldNames = state.form.controls.entries
           .where((entry) => entry.value.invalid)
-          .map((entry) => entry.key)
+          .map((entry) => _fieldNameMap[entry.key] ?? entry.key)
           .join(', ');
 
-      if (invalidFields.isNotEmpty) {
-        talker.debug('다음 항목을 확인해주세요 : $invalidFields');
+      if (invalidFieldNames.isNotEmpty) {
+        final context = GlobalVariable.navigatorKey.currentContext;
+        if (context != null) {
+          ToastPresentor.error(context, '다음 항목을 확인해주세요 : $invalidFieldNames');
+        }
       }
 
       return false;

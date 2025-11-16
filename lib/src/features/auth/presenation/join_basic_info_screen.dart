@@ -6,7 +6,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -57,70 +57,9 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     super.dispose();
   }
 
-  void _onNicknameChanged() {
-    ref
-        .read(joinControllerProvider.notifier)
-        .setNickname(_nicknameController.text);
-  }
-
-  void _onPhoneChanged() {
-    ref.read(joinControllerProvider.notifier).setPhone(_phoneController.text);
-  }
-
-  void _formatPhoneNumber() {
-    final text = _phoneController.text;
-    final digitsOnly = text.replaceAll(RegExp(r'[^0-9]'), '');
-
-    // 최대 11자리로 제한
-    if (digitsOnly.length > 11) {
-      final limited = digitsOnly.substring(0, 11);
-      final formatted = formatPhoneNumber(limited);
-      _phoneController.value = TextEditingValue(
-        text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.length),
-      );
-      return;
-    }
-
-    final formatted = formatPhoneNumber(digitsOnly);
-    if (formatted != text) {
-      _phoneController.value = TextEditingValue(
-        text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.length),
-      );
-    }
-  }
-
-  Future<void> _handleSubmit() async {
-    final controller = ref.read(joinControllerProvider.notifier);
-
-    // 입력값 검증 (controller에서)
-    if (!controller.validateInputs()) {
-      return;
-    }
-
-    // 회원가입 API 호출
-    final success = await controller.completeSignup();
-
-    if (!mounted) return;
-
-    if (success) {
-      if (!mounted) return;
-      FocusScope.of(context).unfocus();
-
-      JoinSuccessRoute().go(context);
-    } else {
-      // 에러 표시
-      final error = ref.read(joinControllerProvider).error;
-      if (error != null) {
-        ToastPresentor.error(context, error);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final joinState = ref.watch(joinControllerProvider);
+    final joinState = ref.watch(joinBasicInfoScreenControllerProvider);
 
     return BaseScaffold(
       appBar: BaseAppBar(),
@@ -150,10 +89,63 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
           MgButton(
             onPressed: joinState.isLoading ? null : _handleSubmit,
             content: Text(joinState.isLoading ? "처리중..." : "완료"),
-            disabled: joinState.error != null,
+            disabled:
+                _nicknameController.text.isEmpty ||
+                _phoneController.text.isEmpty,
           ).primary(),
         ],
       ).margin(horizontal: MgSizes.xl),
     );
+  }
+
+  void _onNicknameChanged() => ref
+      .read(joinBasicInfoScreenControllerProvider.notifier)
+      .setNickname(_nicknameController.text);
+
+  void _onPhoneChanged() => ref
+      .read(joinBasicInfoScreenControllerProvider.notifier)
+      .setPhone(_phoneController.text);
+
+  void _formatPhoneNumber() {
+    final text = _phoneController.text;
+    final controller = ref.read(joinBasicInfoScreenControllerProvider.notifier);
+
+    // Controller에서 포맷팅 및 상태 업데이트 처리
+    final formatted = controller.formatAndUpdatePhone(text);
+
+    if (formatted != text) {
+      _phoneController.value = TextEditingValue(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.length),
+      );
+    }
+  }
+
+  Future<void> _handleSubmit() async {
+    final controller = ref.read(joinBasicInfoScreenControllerProvider.notifier);
+
+    if (!controller.validateInputs()) {
+      final state = ref.read(joinBasicInfoScreenControllerProvider);
+      if (state.nicknameError != null || state.phoneError != null) {
+        ToastPresentor.error(context, state.nicknameError ?? state.phoneError!);
+      }
+      return;
+    }
+
+    // 회원가입 API 호출
+    final success = await controller.completeSignup();
+
+    if (!mounted) return;
+
+    if (success) {
+      if (!mounted) return;
+      FocusScope.of(context).unfocus();
+
+      JoinSuccessRoute().go(context);
+    } else {
+      // 에러 표시
+      final error = ref.read(joinBasicInfoScreenControllerProvider).error;
+      if (error != null) ToastPresentor.error(context, error);
+    }
   }
 }

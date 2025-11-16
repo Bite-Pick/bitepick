@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:dartx/dartx.dart';
 import 'package:dio/dio.dart';
 import 'package:magambell/src/core/config/environment.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,6 +54,11 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'accountNumber': FormControl<String>(
         validators: [Validators.required, Validators.pattern(r'^\d+$')],
       ),
+    });
+
+    // form 상태 변경을 감지하여 UI 업데이트
+    form.statusChanged.listen((_) {
+      state = AsyncValue.data(null);
     });
   }
 
@@ -113,18 +120,35 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
     }
   }
 
+  // 필드명 한글 매핑
+  static const Map<String, String> _fieldNameMap = {
+    'storeName': '매장 이름',
+    'postalCode': '우편번호',
+    'address': '주소',
+    'addressDetail': '상세주소',
+    'parkingDescription': '주차안내',
+    'representativeName': '대표자 성함',
+    'representativePhone': '전화번호',
+    'businessNumber': '사업자 등록 번호',
+    'bankName': '은행',
+    'accountNumber': '계좌번호',
+  };
+
   Future<bool> submit() async {
     if (!form.valid) {
       form.markAllAsTouched();
 
-      // 각 필드의 에러 출력
-      final invalidFields = form.controls.entries
+      // 각 필드의 에러를 한글로 출력
+      final invalidFieldNames = form.controls.entries
           .where((entry) => entry.value.invalid)
-          .map((entry) => entry.key)
+          .map((entry) => _fieldNameMap[entry.key] ?? entry.key)
           .join(', ');
 
-      if (invalidFields.isNotEmpty) {
-        talker.debug('다음 항목을 확인해주세요 : $invalidFields');
+      if (invalidFieldNames.isNotEmpty) {
+        final context = GlobalVariable.navigatorKey.currentContext;
+        if (context != null) {
+          ToastPresentor.error(context, '다음 항목을 확인해주세요 : $invalidFieldNames');
+        }
       }
 
       return false;
@@ -154,7 +178,10 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         return {'key': localImage.key, 'id': index + 1}; // TODO: id 규칙 만들기
       }).toList();
       if (imageUploads.isEmpty) {
-        talker.debug("이미지는 최소 1장이상 업로드해주세요");
+        final context = GlobalVariable.navigatorKey.currentContext;
+        context != null
+            ? ToastPresentor.error(context, "이미지는 최소 1장이상 업로드해주세요")
+            : talker.error("이미지는 최소 1장이상 업로드해주세요");
         return false;
       }
 

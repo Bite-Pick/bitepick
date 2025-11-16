@@ -11,7 +11,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
-import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -128,7 +128,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
 
               // UserRole 저장
               ref
-                  .read(joinControllerProvider.notifier)
+                  .read(joinBasicInfoScreenControllerProvider.notifier)
                   .setUserRole(selectedUserRole!);
 
               context.pop();

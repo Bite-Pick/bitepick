@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'join_screen.controller.dart';
+part of 'join_basic_info_screen.controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 );
 
 /// @nodoc
-mixin _$JoinState {
+mixin _$JoinBasicInfoState {
   UserRole? get userRole => throw _privateConstructorUsedError;
   AuthProviderType? get providerType => throw _privateConstructorUsedError;
   String? get socialToken => throw _privateConstructorUsedError;
@@ -27,17 +27,19 @@ mixin _$JoinState {
   String? get nicknameError => throw _privateConstructorUsedError;
   String? get phoneError => throw _privateConstructorUsedError;
 
-  /// Create a copy of JoinState
+  /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $JoinStateCopyWith<JoinState> get copyWith =>
+  $JoinBasicInfoStateCopyWith<JoinBasicInfoState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $JoinStateCopyWith<$Res> {
-  factory $JoinStateCopyWith(JoinState value, $Res Function(JoinState) then) =
-      _$JoinStateCopyWithImpl<$Res, JoinState>;
+abstract class $JoinBasicInfoStateCopyWith<$Res> {
+  factory $JoinBasicInfoStateCopyWith(
+    JoinBasicInfoState value,
+    $Res Function(JoinBasicInfoState) then,
+  ) = _$JoinBasicInfoStateCopyWithImpl<$Res, JoinBasicInfoState>;
   @useResult
   $Res call({
     UserRole? userRole,
@@ -53,16 +55,16 @@ abstract class $JoinStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$JoinStateCopyWithImpl<$Res, $Val extends JoinState>
-    implements $JoinStateCopyWith<$Res> {
-  _$JoinStateCopyWithImpl(this._value, this._then);
+class _$JoinBasicInfoStateCopyWithImpl<$Res, $Val extends JoinBasicInfoState>
+    implements $JoinBasicInfoStateCopyWith<$Res> {
+  _$JoinBasicInfoStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of JoinState
+  /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -122,12 +124,12 @@ class _$JoinStateCopyWithImpl<$Res, $Val extends JoinState>
 }
 
 /// @nodoc
-abstract class _$$JoinStateImplCopyWith<$Res>
-    implements $JoinStateCopyWith<$Res> {
-  factory _$$JoinStateImplCopyWith(
-    _$JoinStateImpl value,
-    $Res Function(_$JoinStateImpl) then,
-  ) = __$$JoinStateImplCopyWithImpl<$Res>;
+abstract class _$$JoinBasicInfoStateImplCopyWith<$Res>
+    implements $JoinBasicInfoStateCopyWith<$Res> {
+  factory _$$JoinBasicInfoStateImplCopyWith(
+    _$JoinBasicInfoStateImpl value,
+    $Res Function(_$JoinBasicInfoStateImpl) then,
+  ) = __$$JoinBasicInfoStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -144,15 +146,15 @@ abstract class _$$JoinStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$JoinStateImplCopyWithImpl<$Res>
-    extends _$JoinStateCopyWithImpl<$Res, _$JoinStateImpl>
-    implements _$$JoinStateImplCopyWith<$Res> {
-  __$$JoinStateImplCopyWithImpl(
-    _$JoinStateImpl _value,
-    $Res Function(_$JoinStateImpl) _then,
+class __$$JoinBasicInfoStateImplCopyWithImpl<$Res>
+    extends _$JoinBasicInfoStateCopyWithImpl<$Res, _$JoinBasicInfoStateImpl>
+    implements _$$JoinBasicInfoStateImplCopyWith<$Res> {
+  __$$JoinBasicInfoStateImplCopyWithImpl(
+    _$JoinBasicInfoStateImpl _value,
+    $Res Function(_$JoinBasicInfoStateImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of JoinState
+  /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -168,7 +170,7 @@ class __$$JoinStateImplCopyWithImpl<$Res>
     Object? phoneError = freezed,
   }) {
     return _then(
-      _$JoinStateImpl(
+      _$JoinBasicInfoStateImpl(
         userRole: freezed == userRole
             ? _value.userRole
             : userRole // ignore: cast_nullable_to_non_nullable
@@ -212,8 +214,8 @@ class __$$JoinStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$JoinStateImpl implements _JoinState {
-  const _$JoinStateImpl({
+class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
+  const _$JoinBasicInfoStateImpl({
     this.userRole = null,
     this.providerType = null,
     this.socialToken = null,
@@ -252,14 +254,14 @@ class _$JoinStateImpl implements _JoinState {
 
   @override
   String toString() {
-    return 'JoinState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, error: $error, nicknameError: $nicknameError, phoneError: $phoneError)';
+    return 'JoinBasicInfoState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, error: $error, nicknameError: $nicknameError, phoneError: $phoneError)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$JoinStateImpl &&
+            other is _$JoinBasicInfoStateImpl &&
             (identical(other.userRole, userRole) ||
                 other.userRole == userRole) &&
             (identical(other.providerType, providerType) ||
@@ -292,17 +294,20 @@ class _$JoinStateImpl implements _JoinState {
     phoneError,
   );
 
-  /// Create a copy of JoinState
+  /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$JoinStateImplCopyWith<_$JoinStateImpl> get copyWith =>
-      __$$JoinStateImplCopyWithImpl<_$JoinStateImpl>(this, _$identity);
+  _$$JoinBasicInfoStateImplCopyWith<_$JoinBasicInfoStateImpl> get copyWith =>
+      __$$JoinBasicInfoStateImplCopyWithImpl<_$JoinBasicInfoStateImpl>(
+        this,
+        _$identity,
+      );
 }
 
-abstract class _JoinState implements JoinState {
-  const factory _JoinState({
+abstract class _JoinBasicInfoState implements JoinBasicInfoState {
+  const factory _JoinBasicInfoState({
     final UserRole? userRole,
     final AuthProviderType? providerType,
     final String? socialToken,
@@ -312,7 +317,7 @@ abstract class _JoinState implements JoinState {
     final String? error,
     final String? nicknameError,
     final String? phoneError,
-  }) = _$JoinStateImpl;
+  }) = _$JoinBasicInfoStateImpl;
 
   @override
   UserRole? get userRole;
@@ -333,10 +338,10 @@ abstract class _JoinState implements JoinState {
   @override
   String? get phoneError;
 
-  /// Create a copy of JoinState
+  /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JoinStateImplCopyWith<_$JoinStateImpl> get copyWith =>
+  _$$JoinBasicInfoStateImplCopyWith<_$JoinBasicInfoStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -11,7 +11,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
-import 'package:magambell/src/features/auth/presenation/join_screen.controller.dart';
+import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -46,7 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           } else {
             // 신규 회원 - 회원가입 화면으로 이동
             ref
-                .read(joinControllerProvider.notifier)
+                .read(joinBasicInfoScreenControllerProvider.notifier)
                 .setSocialLoginInfo(
                   providerType: authResult.providerType,
                   socialToken: authResult.authCode,
@@ -56,15 +56,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           }
         },
         error: (error, stack) {
-          return switch (error) {
-            DuplicateNicknameException(message: final msg) => _handleError(
-              msg,
-              isNicknameError: true,
-            ),
-            AuthenticationException(message: final msg) => _handleError(msg),
-
-            _ => _handleError('오류가 발생했습니다. 문의해주세요', rawError: error),
+          // TODO: 로직 필요없는지 다시 확인하고 지우기
+          final message = switch (error) {
+            DuplicateNicknameException(message: final msg) => msg,
+            AuthenticationException(message: final msg) => msg,
+            _ => '오류가 발생했습니다. 문의해주세요',
           };
+
+          _handleError(message, rawError: error);
         },
       );
     });
@@ -152,20 +151,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  void _handleError(
-    String message, {
-    Object? rawError,
-    bool isNicknameError = false,
-  }) {
-    final controller = ref.read(joinControllerProvider.notifier);
-
-    // 닉네임 중복 에러인 경우 필드 에러로 설정
-    if (isNicknameError) {
-      controller.setNicknameError(message);
-    } else {
-      controller.setError(isLoading: false, error: message);
-    }
-
+  void _handleError(String message, {Object? rawError}) {
     talker.error(rawError ?? message);
 
     final context = GlobalVariable.navigatorKey.currentContext;

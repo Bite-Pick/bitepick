@@ -19,11 +19,11 @@ class SocialAuthRepository {
     try {
       // 1. 네이버 SDK로 로그인 실행
       final NaverLoginResult result = await FlutterNaverLogin.logIn();
-
-      // 로그인 실패 처리
-      if (result.status != NaverLoginStatus.loggedIn) {
-        return null;
+      if (result.errorMessage != null) {
+        talker.error('[NAVER] ${result.errorMessage}');
       }
+      // 로그인 실패 처리
+      if (result.status != NaverLoginStatus.loggedIn) return null;
 
       // 2. Access Token 가져오기
       final NaverToken token = await FlutterNaverLogin.getCurrentAccessToken();
@@ -32,9 +32,7 @@ class SocialAuthRepository {
       final NaverAccountResult account =
           await FlutterNaverLogin.getCurrentAccount();
 
-      if (account.id == null || account.email == null) {
-        return null;
-      }
+      if (account.id == null || account.email == null) return null;
 
       // 4. 결과 반환
       return SocialAuthResult(

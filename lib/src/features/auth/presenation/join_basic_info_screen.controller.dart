@@ -1,17 +1,19 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'join_screen.controller.freezed.dart';
-part 'join_screen.controller.g.dart';
+part 'join_basic_info_screen.controller.freezed.dart';
+part 'join_basic_info_screen.controller.g.dart';
 
 @freezed
-class JoinState with _$JoinState {
-  const factory JoinState({
+class JoinBasicInfoState with _$JoinBasicInfoState {
+  const factory JoinBasicInfoState({
     @Default(null) UserRole? userRole,
     @Default(null) AuthProviderType? providerType,
     @Default(null) String? socialToken,
@@ -21,20 +23,17 @@ class JoinState with _$JoinState {
     String? error,
     String? nicknameError,
     String? phoneError,
-  }) = _JoinState;
+  }) = _JoinBasicInfoState;
 }
 
 @Riverpod(keepAlive: true)
-class JoinController extends _$JoinController {
+class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
   @override
-  JoinState build() {
-    return const JoinState();
-  }
+  JoinBasicInfoState build() => const JoinBasicInfoState();
 
   // 1단계: UserRole 선택
-  void setUserRole(UserRole userRole) {
-    state = state.copyWith(userRole: userRole);
-  }
+  void setUserRole(UserRole userRole) =>
+      state = state.copyWith(userRole: userRole);
 
   // 소셜 로그인 정보 저장
   void setSocialLoginInfo({
@@ -48,9 +47,8 @@ class JoinController extends _$JoinController {
   }
 
   // 2단계: 닉네임 입력
-  void setNickname(String nickname) {
-    state = state.copyWith(nickname: nickname);
-  }
+  void setNickname(String nickname) =>
+      state = state.copyWith(nickname: nickname);
 
   // 3단계: 전화번호 입력
   void setPhone(String phone) {
@@ -60,35 +58,49 @@ class JoinController extends _$JoinController {
   }
 
   // 전화번호 포맷팅 (UI 표시용)
-  String getFormattedPhone() {
-    return formatPhoneNumber(state.phone);
+  String getFormattedPhone() => formatPhoneNumber(state.phone);
+
+  // 전화번호 포맷팅 및 업데이트 (TextEditingController용)
+  String formatAndUpdatePhone(String text) {
+    final digitsOnly = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // 최대 11자리로 제한
+    final limited = digitsOnly.length > 11
+        ? digitsOnly.substring(0, 11)
+        : digitsOnly;
+
+    // 상태 업데이트
+    state = state.copyWith(phone: limited);
+
+    // 포맷팅된 문자열 반환
+    return formatPhoneNumber(limited);
   }
 
   // 최종 회원가입 API 호출
   Future<bool> completeSignup() async {
     if (state.userRole == null) {
-      state = state.copyWith(error: '사용자 유형을 선택해주세요');
+      state = state.copyWith(error: '사용자 유형을 선택해주세요', isLoading: false);
       return false;
     }
 
     if (state.providerType == null || state.socialToken == null) {
-      state = state.copyWith(error: '소셜 로그인 정보가 없습니다');
+      state = state.copyWith(error: '소셜 로그인 정보가 없습니다', isLoading: false);
       return false;
     }
 
     if (state.nickname.trim().isEmpty) {
-      state = state.copyWith(error: '닉네임을 입력해주세요');
+      state = state.copyWith(error: '닉네임을 입력해주세요', isLoading: false);
       return false;
     }
 
     if (state.phone.trim().isEmpty) {
-      state = state.copyWith(error: '전화번호를 입력해주세요');
+      state = state.copyWith(error: '전화번호를 입력해주세요', isLoading: false);
       return false;
     }
 
-  
-      state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, error: null);
 
+    try {
       final tokens = await ref
           .read(authRepositoryProvider)
           .authenticateWithSocial(
@@ -98,26 +110,24 @@ class JoinController extends _$JoinController {
             nickName: state.nickname,
             phoneNumber: state.phone,
           );
-      if (tokens == null) return false;
+
+      if (tokens == null) {
+        state = state.copyWith(isLoading: false, error: '회원가입에 실패했습니다');
+        return false;
+      }
+
       await ref.read(authTokenManagerProvider.notifier).saveTokens(tokens);
       state = state.copyWith(isLoading: false);
       return true;
-    
-  }
+    } catch (e) {
+      final errorMessage = switch (e) {
+        DuplicateNicknameException() => '이미 사용 중인 닉네임입니다.',
+        _ => '회원가입 중 오류가 발생했습니다',
+      };
 
-  // 에러 상태 설정
-  void setError({required bool isLoading, required String error}) {
-    state = state.copyWith(isLoading: isLoading, error: error);
-  }
-
-  // 닉네임 에러 설정
-  void setNicknameError(String? error) {
-    state = state.copyWith(nicknameError: error);
-  }
-
-  // 전화번호 에러 설정
-  void setPhoneError(String? error) {
-    state = state.copyWith(phoneError: error);
+      state = state.copyWith(isLoading: false, error: errorMessage);
+      return false;
+    }
   }
 
   // 입력값 검증
@@ -147,7 +157,5 @@ class JoinController extends _$JoinController {
   }
 
   // 상태 초기화
-  void reset() {
-    state = const JoinState();
-  }
+  void reset() => state = const JoinBasicInfoState();
 }

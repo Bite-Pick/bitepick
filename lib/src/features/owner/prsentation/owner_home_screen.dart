@@ -125,7 +125,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                     context: context,
                     builder: (context) => _buildAlertDialog(id, value),
                   )
-                : changeSaleStatus(id, saleStatus);
+                : changeSaleStatus(id, value);
           },
           activeThumbColor: MgColorScheme.white,
           activeTrackColor: MgColorScheme.subpointGreen, // 활성화(ON) 시 트랙 색상
