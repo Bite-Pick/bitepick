@@ -35,7 +35,7 @@ class GoodsRegisterScreen extends ConsumerStatefulWidget {
 
 class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
   final mockFormData = {
-    'description': '갓 구운 크로와상, 바게트, 식빵 세트입니다. 당일 생산, 당일 판매 원칙을 지킵니다.',
+    'description': '갓 구운 크로와상, 바게트, 식빵 세트입니다. 당일 생산, 당일 픽업 원칙을 지킵니다.',
     'originalPrice': 15000,
     'discount': 30,
     'quantity': 5,
