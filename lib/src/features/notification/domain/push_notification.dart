@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -179,7 +181,27 @@ class PushNotification {
   /// FCM 토큰 가져오기
   Future<String?> getToken() async {
     try {
-      final token = await FirebaseMessaging.instance.getToken();
+      final messaging = FirebaseMessaging.instance;
+
+      // iOS의 경우 APNS 토큰을 먼저 가져와야 함
+      if (Platform.isIOS) {
+        final apnsToken = await messaging.getAPNSToken();
+        if (apnsToken == null) {
+          talker.warning('[FCM] APNS token not available yet, retrying...');
+          // APNS 토큰이 없으면 잠시 대기 후 재시도
+          await Future.delayed(const Duration(seconds: 2));
+          final retryApnsToken = await messaging.getAPNSToken();
+          if (retryApnsToken == null) {
+            talker.error('[FCM] APNS token still not available after retry');
+            return null;
+          }
+          talker.debug('[FCM] APNS token retrieved on retry');
+        } else {
+          talker.debug('[FCM] APNS token: ${apnsToken.substring(0, 20)}...');
+        }
+      }
+
+      final token = await messaging.getToken();
       talker.info('[FCM] Token retrieved: ${token?.substring(0, 20)}...');
       return token;
     } catch (e, stackTrace) {

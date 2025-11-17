@@ -47,6 +47,7 @@
 		6CD3B08D2EBB9CDE00DFC054 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		6CD3B08E2ECA179A00DFC054 /* GoogleService-Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info-prod.plist"; path = "Runner/GoogleService-Info-prod.plist"; sourceTree = "<group>"; };
 		6CD3B08F2ECA179A00DFC054 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info-dev.plist"; path = "Runner/GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
+		6CD3B0922ECAF07B00DFC054 /* RunnerDebug-dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RunnerDebug-dev.entitlements"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -143,6 +144,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				6CD3B0922ECAF07B00DFC054 /* RunnerDebug-dev.entitlements */,
 				6CD3B08D2EBB9CDE00DFC054 /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -250,9 +252,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -274,6 +280,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+		};
+		4631CF7329484377B3A3C83B /* Copy GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy GoogleService-Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PLIST_DEV=${PROJECT_DIR}/Runner/GoogleService-Info-dev.plist\nPLIST_PROD=${PROJECT_DIR}/Runner/GoogleService-Info-prod.plist\n\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\n\ncase \"${CONFIGURATION}\" in\n\n   \"Release-dev\" | \"Debug-dev\" | \"Profile-dev\" )\n        echo \"${PLIST_DEV} to ${PLIST_DESTINATION}\"\n        cp -r \"${PLIST_DEV}\" \"${PLIST_DESTINATION}\" ;;\n\n   \"Release-prod\" | \"Debug-prod\" | \"Profile-prod\" | \"Release\" | \"Debug\" | \"Profile\" )\n        echo \"${PLIST_PROD} to ${PLIST_DESTINATION}\"\n        cp -r \"${PLIST_PROD}\" \"${PLIST_DESTINATION}\" ;;\n\n    *)\n        ;;\nesac\n";
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -298,9 +318,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -328,20 +352,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		4631CF7329484377B3A3C83B /* Copy GoogleService-Info.plist */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy GoogleService-Info.plist";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "PLIST_DEV=${PROJECT_DIR}/Runner/GoogleService-Info-dev.plist\nPLIST_PROD=${PROJECT_DIR}/Runner/GoogleService-Info-prod.plist\n\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\n\ncase \"${CONFIGURATION}\" in\n\n   \"Release-dev\" | \"Debug-dev\" | \"Profile-dev\" )\n        echo \"${PLIST_DEV} to ${PLIST_DESTINATION}\"\n        cp -r \"${PLIST_DEV}\" \"${PLIST_DESTINATION}\" ;;\n\n   \"Release-prod\" | \"Debug-prod\" | \"Profile-prod\" | \"Release\" | \"Debug\" | \"Profile\" )\n        echo \"${PLIST_PROD} to ${PLIST_DESTINATION}\"\n        cp -r \"${PLIST_PROD}\" \"${PLIST_DESTINATION}\" ;;\n\n    *)\n        ;;\nesac\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -698,7 +708,7 @@
 			baseConfigurationReference = 6C2CFFF82E91917700C8E420 /* Dev.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Runner/RunnerDebug-dev.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
