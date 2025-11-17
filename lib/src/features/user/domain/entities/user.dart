@@ -1,17 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
+import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
 
-enum UserRole {
-  @JsonValue('CUSTOMER')
-  customer,
-  @JsonValue('OWNER')
-  owner,
-  @JsonValue('ADMIN')
-  admin,
-}
 
 enum ApprovedStatus {
   @JsonValue('APPROVED')

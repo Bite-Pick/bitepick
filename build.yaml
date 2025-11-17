@@ -20,3 +20,4 @@ targets:
           - lib/src/features/*/providers/*.dart
           - lib/src/core/network/api_client.dart
           - lib/src/core/utils/visual_logger_provider.dart
+          - lib/src/features/notification/domain/push_notification.dart

@@ -87,7 +87,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
   FormGroup _createForm() {
     return FormGroup({
-      // Step 2: 수량, 판매 시작,마감 시간
+      // Step 2: 수량, 픽업 시작,마감 시간
       'quantity': FormControl<int>(
         value: 0,
         validators: [Validators.required, Validators.min(1)],
@@ -188,8 +188,8 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   // 필드명 한글 매핑
   static const Map<String, String> _fieldNameMap = {
     'quantity': '수량',
-    'startTime': '판매 시작 시간',
-    'endTime': '판매 마감 시간',
+    'startTime': '픽업 시작 시간',
+    'endTime': '픽업 마감 시간',
     'originalPrice': '정가',
     'discount': '할인율',
     'salePrice': '판매가',

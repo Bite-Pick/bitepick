@@ -1,7 +1,6 @@
 // goods_edit_screen.controller.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
-import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -141,8 +140,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
   static const Map<String, String> _fieldNameMap = {
     'description': '상품 설명',
     'quantity': '수량',
-    'startTime': '판매 시작 시간',
-    'endTime': '판매 마감 시간',
+    'startTime': '픽업 시작 시간',
+    'endTime': '픽업 마감 시간',
     'originalPrice': '정가',
     'discount': '할인율',
     'salePrice': '판매가',

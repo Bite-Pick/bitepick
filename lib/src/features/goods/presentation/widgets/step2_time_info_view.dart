@@ -13,7 +13,7 @@ import 'package:magambell/src/widgets/mg_form_item.dart';
 import 'package:magambell/src/widgets/quantity_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-// TODO: 판매시작 시간 이후로 종료시간을 설정할 수 있도록 수정
+// TODO: 픽업시작 시간 이후로 종료시간을 설정할 수 있도록 수정
 class Step2TimeInfoView extends ConsumerWidget {
   const Step2TimeInfoView({super.key});
 
@@ -36,18 +36,18 @@ class Step2TimeInfoView extends ConsumerWidget {
 
         return StoreRegisterViewWrapper(
           children: [
-            GoodsRegisterFormTitle(title: "판매 시작시간"),
+            GoodsRegisterFormTitle(title: "픽업 시작시간"),
             _buildTimeSelector(
               context: context,
               control: startTimeControl,
-              placeholder: '판매 시작 시간',
+              placeholder: '픽업 시작 시간',
             ),
             Gaps.h32,
-            GoodsRegisterFormTitle(title: "판매 종료시간"),
+            GoodsRegisterFormTitle(title: "픽업 종료시간"),
             _buildTimeSelector(
               context: context,
               control: endTimeControl,
-              placeholder: '판매 종료 시간',
+              placeholder: '픽업 종료 시간',
             ),
             ReactiveFormConsumer(
               builder: (context, form, child) {
@@ -55,7 +55,7 @@ class Step2TimeInfoView extends ConsumerWidget {
                   return Padding(
                     padding: const EdgeInsets.only(top: MgSizes.xs),
                     child: Text(
-                      '판매 종료 시간은 시작 시간보다 늦어야 합니다.',
+                      '픽업 종료 시간은 시작 시간보다 늦어야 합니다.',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: MgColorScheme.subpointRed,
                       ),
