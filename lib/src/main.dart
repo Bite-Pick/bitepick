@@ -62,7 +62,7 @@ Future<void> runMagamBellApp() async {
       );
 
       // Push Notification 초기화
-      await PushNotification.initialize();
+      await PushNotification.idinitialize();
 
       // 앱 종료 상태에서 알림으로 실행되었는지 확인
       await PushNotification.checkInitialMessage();

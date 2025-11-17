@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/features/order/domain/entities/order_form.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:magambell/src/features/order/domain/entities/order_reject_reason.dart';
+import 'package:magambell/src/features/order/data/dtos/order_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_repository.g.dart';
@@ -70,6 +72,44 @@ class OrderRepository {
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
+  }
+
+  /// 주문 생성 (결제 전)
+  Future<OrderResponse> createOrder(OrderForm orderForm) async {
+    final res = await _dio.post(
+      '/v1/order',
+      data: orderForm.toJson(),
+    );
+
+    final data = res.data['data'] as Map<String, dynamic>?;
+    if (res.data['status'] != 'OK' || data == null) {
+      throw Exception('Failed to create order');
+    }
+
+    return OrderResponse.fromJson(data);
+  }
+
+  /// 결제 완료 처리
+  Future<PaymentCompleteResponse> completePayment({
+    required String impUid,
+    required String merchantUid,
+  }) async {
+    final request = PaymentCompleteRequest(
+      impUid: impUid,
+      merchantUid: merchantUid,
+    );
+
+    final res = await _dio.post(
+      '/v1/payment/complete',
+      data: request.toJson(),
+    );
+
+    final data = res.data['data'] as Map<String, dynamic>?;
+    if (res.data['status'] != 'OK' || data == null) {
+      throw Exception('Failed to complete payment');
+    }
+
+    return PaymentCompleteResponse.fromJson(data);
   }
 }
 
