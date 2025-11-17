@@ -66,8 +66,8 @@ dependencies:
   geocoding: ^3.0.0
 
   # PortOne Payment
-  iamport_flutter: ^0.10.1
   webview_flutter: ^4.10.0
+  portone_flutter: ^0.12.1
 
 
 dev_dependencies:
