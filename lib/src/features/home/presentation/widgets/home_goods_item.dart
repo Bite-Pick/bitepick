@@ -7,7 +7,7 @@ import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/goods/data/dtos/store_list_response.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
@@ -15,7 +15,7 @@ import 'package:magambell/src/core/theme/mg_theme.dart';
 class HomeGoodsItem extends StatefulWidget {
   const HomeGoodsItem({super.key, required this.goods});
 
-  final StoreListResponse goods;
+  final StoreListDTO goods;
 
   @override
   State<HomeGoodsItem> createState() => _HomeGoodsItemState();

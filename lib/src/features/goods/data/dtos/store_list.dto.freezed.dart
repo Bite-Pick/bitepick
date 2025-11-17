@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'store_list_response.dart';
+part of 'store_list.dto.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,12 +15,12 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-StoreListResponse _$StoreListResponseFromJson(Map<String, dynamic> json) {
-  return _StoreListResponse.fromJson(json);
+StoreListDTO _$StoreListDTOFromJson(Map<String, dynamic> json) {
+  return _StoreListDTO.fromJson(json);
 }
 
 /// @nodoc
-mixin _$StoreListResponse {
+mixin _$StoreListDTO {
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   @JsonKey(name: 'ImageUrl')
@@ -38,22 +38,22 @@ mixin _$StoreListResponse {
   double get distance => throw _privateConstructorUsedError;
   String get saleStatus => throw _privateConstructorUsedError;
 
-  /// Serializes this StoreListResponse to a JSON map.
+  /// Serializes this StoreListDTO to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of StoreListResponse
+  /// Create a copy of StoreListDTO
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $StoreListResponseCopyWith<StoreListResponse> get copyWith =>
+  $StoreListDTOCopyWith<StoreListDTO> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $StoreListResponseCopyWith<$Res> {
-  factory $StoreListResponseCopyWith(
-    StoreListResponse value,
-    $Res Function(StoreListResponse) then,
-  ) = _$StoreListResponseCopyWithImpl<$Res, StoreListResponse>;
+abstract class $StoreListDTOCopyWith<$Res> {
+  factory $StoreListDTOCopyWith(
+    StoreListDTO value,
+    $Res Function(StoreListDTO) then,
+  ) = _$StoreListDTOCopyWithImpl<$Res, StoreListDTO>;
   @useResult
   $Res call({
     String storeId,
@@ -75,16 +75,16 @@ abstract class $StoreListResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$StoreListResponseCopyWithImpl<$Res, $Val extends StoreListResponse>
-    implements $StoreListResponseCopyWith<$Res> {
-  _$StoreListResponseCopyWithImpl(this._value, this._then);
+class _$StoreListDTOCopyWithImpl<$Res, $Val extends StoreListDTO>
+    implements $StoreListDTOCopyWith<$Res> {
+  _$StoreListDTOCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StoreListResponse
+  /// Create a copy of StoreListDTO
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -174,12 +174,12 @@ class _$StoreListResponseCopyWithImpl<$Res, $Val extends StoreListResponse>
 }
 
 /// @nodoc
-abstract class _$$StoreListResponseImplCopyWith<$Res>
-    implements $StoreListResponseCopyWith<$Res> {
-  factory _$$StoreListResponseImplCopyWith(
-    _$StoreListResponseImpl value,
-    $Res Function(_$StoreListResponseImpl) then,
-  ) = __$$StoreListResponseImplCopyWithImpl<$Res>;
+abstract class _$$StoreListDTOImplCopyWith<$Res>
+    implements $StoreListDTOCopyWith<$Res> {
+  factory _$$StoreListDTOImplCopyWith(
+    _$StoreListDTOImpl value,
+    $Res Function(_$StoreListDTOImpl) then,
+  ) = __$$StoreListDTOImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -202,15 +202,15 @@ abstract class _$$StoreListResponseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$StoreListResponseImplCopyWithImpl<$Res>
-    extends _$StoreListResponseCopyWithImpl<$Res, _$StoreListResponseImpl>
-    implements _$$StoreListResponseImplCopyWith<$Res> {
-  __$$StoreListResponseImplCopyWithImpl(
-    _$StoreListResponseImpl _value,
-    $Res Function(_$StoreListResponseImpl) _then,
+class __$$StoreListDTOImplCopyWithImpl<$Res>
+    extends _$StoreListDTOCopyWithImpl<$Res, _$StoreListDTOImpl>
+    implements _$$StoreListDTOImplCopyWith<$Res> {
+  __$$StoreListDTOImplCopyWithImpl(
+    _$StoreListDTOImpl _value,
+    $Res Function(_$StoreListDTOImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of StoreListResponse
+  /// Create a copy of StoreListDTO
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -232,7 +232,7 @@ class __$$StoreListResponseImplCopyWithImpl<$Res>
     Object? saleStatus = null,
   }) {
     return _then(
-      _$StoreListResponseImpl(
+      _$StoreListDTOImpl(
         storeId: null == storeId
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
@@ -300,8 +300,8 @@ class __$$StoreListResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$StoreListResponseImpl extends _StoreListResponse {
-  const _$StoreListResponseImpl({
+class _$StoreListDTOImpl extends _StoreListDTO {
+  const _$StoreListDTOImpl({
     required this.storeId,
     required this.storeName,
     @JsonKey(name: 'ImageUrl') required final List<String> imageUrl,
@@ -320,8 +320,8 @@ class _$StoreListResponseImpl extends _StoreListResponse {
   }) : _imageUrl = imageUrl,
        super._();
 
-  factory _$StoreListResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$StoreListResponseImplFromJson(json);
+  factory _$StoreListDTOImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StoreListDTOImplFromJson(json);
 
   @override
   final String storeId;
@@ -363,14 +363,14 @@ class _$StoreListResponseImpl extends _StoreListResponse {
 
   @override
   String toString() {
-    return 'StoreListResponse(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
+    return 'StoreListDTO(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, latitude: $latitude, longitude: $longitude, address: $address, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StoreListResponseImpl &&
+            other is _$StoreListDTOImpl &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
@@ -420,25 +420,22 @@ class _$StoreListResponseImpl extends _StoreListResponse {
     saleStatus,
   );
 
-  /// Create a copy of StoreListResponse
+  /// Create a copy of StoreListDTO
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$StoreListResponseImplCopyWith<_$StoreListResponseImpl> get copyWith =>
-      __$$StoreListResponseImplCopyWithImpl<_$StoreListResponseImpl>(
-        this,
-        _$identity,
-      );
+  _$$StoreListDTOImplCopyWith<_$StoreListDTOImpl> get copyWith =>
+      __$$StoreListDTOImplCopyWithImpl<_$StoreListDTOImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StoreListResponseImplToJson(this);
+    return _$$StoreListDTOImplToJson(this);
   }
 }
 
-abstract class _StoreListResponse extends StoreListResponse {
-  const factory _StoreListResponse({
+abstract class _StoreListDTO extends StoreListDTO {
+  const factory _StoreListDTO({
     required final String storeId,
     required final String storeName,
     @JsonKey(name: 'ImageUrl') required final List<String> imageUrl,
@@ -454,11 +451,11 @@ abstract class _StoreListResponse extends StoreListResponse {
     required final int quantity,
     required final double distance,
     required final String saleStatus,
-  }) = _$StoreListResponseImpl;
-  const _StoreListResponse._() : super._();
+  }) = _$StoreListDTOImpl;
+  const _StoreListDTO._() : super._();
 
-  factory _StoreListResponse.fromJson(Map<String, dynamic> json) =
-      _$StoreListResponseImpl.fromJson;
+  factory _StoreListDTO.fromJson(Map<String, dynamic> json) =
+      _$StoreListDTOImpl.fromJson;
 
   @override
   String get storeId;
@@ -492,10 +489,10 @@ abstract class _StoreListResponse extends StoreListResponse {
   @override
   String get saleStatus;
 
-  /// Create a copy of StoreListResponse
+  /// Create a copy of StoreListDTO
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$StoreListResponseImplCopyWith<_$StoreListResponseImpl> get copyWith =>
+  _$$StoreListDTOImplCopyWith<_$StoreListDTOImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

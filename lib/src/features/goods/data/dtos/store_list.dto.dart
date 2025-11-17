@@ -1,13 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 
-part 'store_list_response.freezed.dart';
-part 'store_list_response.g.dart';
+part 'store_list.dto.freezed.dart';
+part 'store_list.dto.g.dart';
 
 /// 매장 리스트 응답 DTO
 @freezed
-class StoreListResponse with _$StoreListResponse {
-  const factory StoreListResponse({
+class StoreListDTO with _$StoreListDTO {
+  const factory StoreListDTO({
     required String storeId,
     required String storeName,
     @JsonKey(name: 'ImageUrl') required List<String> imageUrl,
@@ -23,12 +23,12 @@ class StoreListResponse with _$StoreListResponse {
     required int quantity,
     required double distance,
     required String saleStatus,
-  }) = _StoreListResponse;
+  }) = _StoreListDTO;
 
-  const StoreListResponse._();
+  const StoreListDTO._();
 
-  factory StoreListResponse.fromJson(Map<String, dynamic> json) =>
-      _$StoreListResponseFromJson(json);
+  factory StoreListDTO.fromJson(Map<String, dynamic> json) =>
+      _$StoreListDTOFromJson(json);
 
   /// DTO를 Goods 엔티티로 변환
   Goods toGoods() {
