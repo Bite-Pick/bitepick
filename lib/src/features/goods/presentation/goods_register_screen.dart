@@ -9,7 +9,6 @@ import 'package:magambell/src/features/goods/presentation/widgets/step3_price_in
 import 'package:magambell/src/features/goods/presentation/widgets/step4_goods_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step2_time_info_view.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
-import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';

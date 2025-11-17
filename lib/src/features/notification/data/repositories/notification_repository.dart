@@ -1,18 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_repository.g.dart';
-
-/// 알림 관련 도메인 에러
-class DuplicateNotificationStoreException implements Exception {
-  final String message;
-  DuplicateNotificationStoreException([this.message = '이미 알림을 신청했어요.']);
-
-  @override
-  String toString() => 'DuplicateNotificationStoreException: $message';
-}
 
 class NotificationRepository {
   final Ref ref;
@@ -110,7 +102,7 @@ class NotificationRepository {
 
 /// Repository Provider
 @riverpod
-NotificationRepository notificationRepository(NotificationRepositoryRef ref) {
+NotificationRepository notificationRepository(Ref ref) {
   return NotificationRepository(ref);
 }
 

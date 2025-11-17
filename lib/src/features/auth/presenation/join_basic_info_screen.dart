@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
@@ -11,7 +10,6 @@ import 'package:magambell/src/features/auth/presenation/join_success_screen.dart
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 

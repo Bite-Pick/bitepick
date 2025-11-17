@@ -5,6 +5,7 @@ import 'package:magambell/src/core/utils/talker_route_observer.dart';
 import 'package:magambell/src/core/utils/talker_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
+import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';

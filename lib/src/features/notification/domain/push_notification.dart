@@ -1,8 +1,12 @@
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/notification/data/repositories/notification_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'push_notification.g.dart';
 
 /// 백그라운드 메시지 핸들러 (톱레벨 함수)
 @pragma('vm:entry-point')
@@ -13,19 +17,38 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class PushNotification {
+  PushNotification(this.ref);
+
+  final Ref ref;
   static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
     // TODO: 알림 dialog 뜨는 위치 점검 필요
-    await _requestPermission();
-    await _initNotification();
-    await _initLocalNotifications();
-    _setupMessageListeners();
+    await requestPermission();
+    await initNotification();
+    await initLocalNotifications();
+    setupMessageListeners();
+
+    // 토큰 갱신 시 서버에 등록 (로그인되어 있으면)
+    // listenToTokenRefresh(registerTokenToServer);
+  }
+
+  /// 앱 종료 상태에서 알림으로 실행되었는지 확인
+  static Future<void> checkInitialMessage() async {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
+
+    if (initialMessage != null) {
+      talker.info(
+        '[FCM] App opened from notification: ${initialMessage.notification?.title}',
+      );
+      handleNotificationNavigation(initialMessage);
+    }
   }
 
   /// 알림 권한 요청
-  static Future<bool> _requestPermission() async {
+  static Future<bool> requestPermission() async {
     final messaging = FirebaseMessaging.instance;
 
     NotificationSettings settings = await messaging.requestPermission(
@@ -43,7 +66,7 @@ class PushNotification {
     return enabled;
   }
 
-  static Future<void> _initNotification() async {
+  static Future<void> initNotification() async {
     final messaging = FirebaseMessaging.instance;
 
     // iOS foreground notification 옵션 설정
@@ -57,7 +80,7 @@ class PushNotification {
   }
 
   /// 로컬 알림 초기화
-  static Future<void> _initLocalNotifications() async {
+  static Future<void> initLocalNotifications() async {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -75,27 +98,27 @@ class PushNotification {
 
     await _localNotifications.initialize(
       initSettings,
-      onDidReceiveNotificationResponse: _onNotificationTapped,
+      onDidReceiveNotificationResponse: onNotificationTapped,
     );
 
     talker.info('[FCM] Local notifications initialized');
   }
 
   /// 알림 클릭 처리
-  static void _onNotificationTapped(NotificationResponse response) {
+  static void onNotificationTapped(NotificationResponse response) {
     talker.info('[FCM] Notification tapped: ${response.payload}');
     // TODO: 알림 클릭 시 화면 이동 처리
     // 예: Navigator.push(...) 또는 GoRouter.go(...)
   }
 
   /// 메시지 리스너 설정
-  static void _setupMessageListeners() {
+  static void setupMessageListeners() {
     // Foreground 메시지 리스너
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       talker.info('[FCM] Foreground message: ${message.notification?.title}');
 
       if (message.notification != null) {
-        _showLocalNotification(message);
+        showLocalNotification(message);
       }
     });
 
@@ -104,25 +127,12 @@ class PushNotification {
       talker.info(
         '[FCM] Notification opened (background): ${message.notification?.title}',
       );
-      _handleNotificationNavigation(message);
+      handleNotificationNavigation(message);
     });
   }
 
-  /// 앱 종료 상태에서 알림으로 실행되었는지 확인
-  static Future<void> checkInitialMessage() async {
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance
-        .getInitialMessage();
-
-    if (initialMessage != null) {
-      talker.info(
-        '[FCM] App opened from notification: ${initialMessage.notification?.title}',
-      );
-      _handleNotificationNavigation(initialMessage);
-    }
-  }
-
   /// 알림 네비게이션 처리
-  static void _handleNotificationNavigation(RemoteMessage message) {
+  static void handleNotificationNavigation(RemoteMessage message) {
     // TODO: 알림 데이터에 따라 화면 이동
     final data = message.data;
     talker.debug('[FCM] Navigation data: $data');
@@ -134,7 +144,7 @@ class PushNotification {
   }
 
   /// 로컬 알림 표시 (Foreground용)
-  static Future<void> _showLocalNotification(RemoteMessage message) async {
+  static Future<void> showLocalNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
           'high_importance_channel',
@@ -167,7 +177,7 @@ class PushNotification {
   }
 
   /// FCM 토큰 가져오기
-  static Future<String?> getToken() async {
+  Future<String?> getToken() async {
     try {
       final token = await FirebaseMessaging.instance.getToken();
       talker.info('[FCM] Token retrieved: ${token?.substring(0, 20)}...');
@@ -179,15 +189,36 @@ class PushNotification {
   }
 
   /// 토큰 갱신 리스너 등록
-  static void listenToTokenRefresh(Function(String) onTokenRefresh) {
+  void listenToTokenRefresh(Function onTokenRefresh) {
     FirebaseMessaging.instance.onTokenRefresh.listen((token) {
       talker.info('[FCM] Token refreshed: ${token.substring(0, 20)}...');
-      onTokenRefresh(token);
+      onTokenRefresh();
     });
   }
 
-  /// 알림 권한 요청 (수동 호출용)
-  static Future<bool> requestPermission() async {
-    return await _requestPermission();
+  /// FCM 토큰을 서버에 등록 (로그인 후 호출)
+  Future<void> registerTokenToServer() async {
+    try {
+      final token = await getToken();
+      if (token == null) {
+        talker.warning('[FCM] Token is null, cannot register to server');
+        return;
+      }
+
+      final success = await ref
+          .read(notificationRepositoryProvider)
+          .saveNotificationToken(token);
+
+      success
+          ? talker.info('[FCM] Token registered to server successfully')
+          : talker.error('[FCM] Failed to register token to server');
+    } catch (e, stackTrace) {
+      talker.error('[FCM] Error registering token to server', e, stackTrace);
+    }
   }
+}
+
+@riverpod
+PushNotification pushNotification(Ref ref) {
+  return PushNotification(ref);
 }

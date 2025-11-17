@@ -11,7 +11,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/providers/base_provider.dart';
 import 'package:magambell/src/core/utils/global_error_handler.dart';
-import 'package:magambell/src/core/utils/push_notification.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/main_app.dart';

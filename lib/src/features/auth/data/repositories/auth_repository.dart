@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/core/network/json_utils.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
@@ -65,6 +67,11 @@ class AuthRepository {
       'Authentication successful - Access Token: ${accessToken.substring(0, 10)}...',
     );
 
+    // 로그인 성공 후 FCM 토큰을 서버에 등록
+    ref.read(pushNotificationProvider).registerTokenToServer().catchError((e) {
+      talker.error('[AUTH] Failed to register FCM token after login', e);
+    });
+
     return AuthTokens(accessToken: accessToken, refreshToken: refresh);
   }
 
@@ -85,25 +92,4 @@ class AuthRepository {
 @riverpod
 AuthRepository authRepository(Ref ref) {
   return AuthRepository(ref);
-}
-
-// TODO: 추후 Exception만 모은 파일 분리
-/// 중복 닉네임 예외
-class DuplicateNicknameException implements Exception {
-  final String message;
-  DuplicateNicknameException([this.message = '이미 사용 중인 닉네임입니다.']);
-
-  @override
-  String toString() => message;
-}
-
-/// 인증 실패 예외
-class AuthenticationException implements Exception {
-  final String message;
-  final String? errorCode;
-
-  AuthenticationException(this.message, {this.errorCode});
-
-  @override
-  String toString() => message;
 }
