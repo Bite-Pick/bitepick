@@ -9,9 +9,11 @@ targets:
           - lib/src/features/**/*.controller.dart
           - lib/src/features/*/domain/entities/*.dart
           - lib/src/core/navigator/default_navigator.controller.dart
+          - lib/src/features/*/data/dtos/*.dart
       json_serializable:
         generate_for:
           - lib/src/features/*/domain/entities/*.dart
+          - lib/src/features/*/data/dtos/*.dart
       riverpod_generator:
         generate_for:
           - lib/src/features/**/*.controller.dart

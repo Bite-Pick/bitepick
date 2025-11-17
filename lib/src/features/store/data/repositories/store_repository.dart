@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list_response.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';
@@ -17,7 +18,7 @@ class StoreRepository {
     _dio = ref.read(apiClientProvider);
   }
 
-  Future<List<Goods>> getStoreGoodsList({
+  Future<List<StoreListResponse>> getStoreGoodsList({
     required double latitude,
     required double longitude,
     String? keyword,
@@ -45,7 +46,7 @@ class StoreRepository {
     final list = data['storeListDTOResponses'] as List? ?? [];
 
     return list
-        .map((json) => Goods.fromJson(json as Map<String, dynamic>))
+        .map((json) => StoreListResponse.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
@@ -114,7 +115,7 @@ StoreRepository storeRepository(Ref ref) {
 }
 
 @riverpod
-Future<List<Goods>> storeGoodsList(
+Future<List<StoreListResponse>> storeGoodsList(
   Ref ref, {
   required double latitude,
   required double longitude,

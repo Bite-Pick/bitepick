@@ -7,7 +7,7 @@ part of 'goods.dart';
 // **************************************************************************
 
 _$GoodsImpl _$$GoodsImplFromJson(Map<String, dynamic> json) => _$GoodsImpl(
-  goodsId: json['goodsId'] as String,
+  goodsId: json['goodsId'] as String?,
   storeId: json['storeId'] as String?,
   storeName: json['storeName'] as String?,
   goodsName: json['goodsName'] as String?,

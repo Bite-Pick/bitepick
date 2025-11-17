@@ -23,7 +23,7 @@ final storeRepositoryProvider = AutoDisposeProvider<StoreRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef StoreRepositoryRef = AutoDisposeProviderRef<StoreRepository>;
-String _$storeGoodsListHash() => r'8ab0b5549e4f03ed16d2256b1434d1590a1de8c3';
+String _$storeGoodsListHash() => r'78157a09b4141ecce8f496bdec110b34ff9217f0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -51,7 +51,7 @@ class _SystemHash {
 const storeGoodsListProvider = StoreGoodsListFamily();
 
 /// See also [storeGoodsList].
-class StoreGoodsListFamily extends Family<AsyncValue<List<Goods>>> {
+class StoreGoodsListFamily extends Family<AsyncValue<List<StoreListResponse>>> {
   /// See also [storeGoodsList].
   const StoreGoodsListFamily();
 
@@ -107,7 +107,8 @@ class StoreGoodsListFamily extends Family<AsyncValue<List<Goods>>> {
 }
 
 /// See also [storeGoodsList].
-class StoreGoodsListProvider extends AutoDisposeFutureProvider<List<Goods>> {
+class StoreGoodsListProvider
+    extends AutoDisposeFutureProvider<List<StoreListResponse>> {
   /// See also [storeGoodsList].
   StoreGoodsListProvider({
     required double latitude,
@@ -171,7 +172,8 @@ class StoreGoodsListProvider extends AutoDisposeFutureProvider<List<Goods>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<Goods>> Function(StoreGoodsListRef provider) create,
+    FutureOr<List<StoreListResponse>> Function(StoreGoodsListRef provider)
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -194,7 +196,7 @@ class StoreGoodsListProvider extends AutoDisposeFutureProvider<List<Goods>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Goods>> createElement() {
+  AutoDisposeFutureProviderElement<List<StoreListResponse>> createElement() {
     return _StoreGoodsListProviderElement(this);
   }
 
@@ -227,7 +229,8 @@ class StoreGoodsListProvider extends AutoDisposeFutureProvider<List<Goods>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin StoreGoodsListRef on AutoDisposeFutureProviderRef<List<Goods>> {
+mixin StoreGoodsListRef
+    on AutoDisposeFutureProviderRef<List<StoreListResponse>> {
   /// The parameter `latitude` of this provider.
   double get latitude;
 
@@ -251,7 +254,7 @@ mixin StoreGoodsListRef on AutoDisposeFutureProviderRef<List<Goods>> {
 }
 
 class _StoreGoodsListProviderElement
-    extends AutoDisposeFutureProviderElement<List<Goods>>
+    extends AutoDisposeFutureProviderElement<List<StoreListResponse>>
     with StoreGoodsListRef {
   _StoreGoodsListProviderElement(super.provider);
 

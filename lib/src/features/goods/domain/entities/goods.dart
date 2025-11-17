@@ -7,7 +7,7 @@ part 'goods.g.dart';
 @freezed
 class Goods with _$Goods {
   const factory Goods({
-    required String goodsId,
+    String? goodsId,
     String? storeId,
     String? storeName,
     String? goodsName,

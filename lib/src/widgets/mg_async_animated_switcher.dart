@@ -1,6 +1,7 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 
 class MgAsyncAnimatedSwitcher<T> extends ConsumerWidget {
   const MgAsyncAnimatedSwitcher({
@@ -41,20 +42,17 @@ class MgAsyncAnimatedSwitcher<T> extends ConsumerWidget {
             if (emptyBuilder != null) {
               return emptyBuilder!();
             }
-            return const Center(
-              child: Text('데이터가 없습니다'),
-            );
+            return const Center(child: Text('데이터가 없습니다'));
           }
           return builder(data);
         },
         error: (error, stackTrace) {
           if (errorBuilder != null) {
+            talker.error(error);
             return errorBuilder!(error, stackTrace);
           }
 
-          return Center(
-            child: Text('Error: ${error.toString()}'),
-          );
+          return Center(child: Text('Error: ${error.toString()}'));
         },
         loading: () {
           if (loadingBuilder != null) {

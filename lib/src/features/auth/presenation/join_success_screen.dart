@@ -38,7 +38,10 @@ class JoinSuccessScreen extends ConsumerWidget {
           Spacer(),
           // 성공 아이콘 또는 이미지
           Lottie.asset(R.ASSETS_LOTTIE_SUCCESS_JSON, repeat: false),
-          Text("회원가입이 완료되었어요!\n이제 매장등록을 시작할게요").xl().bold(),
+          Text("회원가입이 완료되었어요!").xl().bold(),
+          userRole == UserRole.owner
+              ? Text("이제 매장등록을 시작할게요").xl().bold()
+              : Text("지역 설정이후에 서비스를 이용할 수 있어요"),
           Spacer(),
           MgButton(
             onPressed: () {

@@ -10,6 +10,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list_response.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -66,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
               HomeUpdateBanner(),
-              MgAsyncAnimatedSwitcher<List<Goods>>(
+              MgAsyncAnimatedSwitcher<List<StoreListResponse>>(
                 asyncValue: storeGoodsAsync,
                 builder: (goods) => Column(
                   children: [
