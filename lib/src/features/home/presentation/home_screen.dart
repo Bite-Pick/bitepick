@@ -208,7 +208,11 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [_buildAddress(), _buildSearch()],
+      children: [
+        _buildAddress(),
+        // TODO: 런칭 이후 추가
+        //  _buildSearch(),
+      ],
     ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
   }
 
