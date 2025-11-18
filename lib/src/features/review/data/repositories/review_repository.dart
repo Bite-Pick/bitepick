@@ -20,14 +20,27 @@ class ReviewRepository {
     int page = 1,
     int size = 10,
   }) async {
-    final res = await _dio.post(
+    final res = await _dio.get(
       '/v1/review',
-      data: {
+      queryParameters: {
         'goodsId': goodsId,
         'imageCheck': imageCheck,
         'page': page,
         'size': size,
       },
+    );
+    final data = res.data['data'] as Map<String, dynamic>?;
+    if (res.data['status'] != 'OK' || data == null) return [];
+    final list = data['reviewListDTOList'] as List? ?? [];
+    return list
+        .map((json) => Review.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<Review>> getMyReviews({int page = 1, int size = 10}) async {
+    final res = await _dio.get(
+      '/v1/review/me',
+      queryParameters: {'page': page, 'size': size},
     );
     final data = res.data['data'] as Map<String, dynamic>?;
     if (res.data['status'] != 'OK' || data == null) return [];
@@ -42,6 +55,7 @@ class ReviewRepository {
 ReviewRepository reviewRepository(Ref ref) {
   return ReviewRepository(ref);
 }
+
 @riverpod
 Future<List<Review>> reviews(
   Ref ref, {
@@ -50,10 +64,19 @@ Future<List<Review>> reviews(
   int page = 1,
   int size = 10,
 }) async {
-  return ref.read(reviewRepositoryProvider).getReviews(
+  return ref
+      .read(reviewRepositoryProvider)
+      .getReviews(
         goodsId: goodsId,
         imageCheck: imageCheck,
         page: page,
         size: size,
       );
+}
+
+@riverpod
+Future<List<Review>> myReviews(Ref ref, {int page = 1, int size = 10}) async {
+  return ref
+      .read(reviewRepositoryProvider)
+      .getMyReviews(page: page, size: size);
 }

@@ -5,20 +5,35 @@ import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
+import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
-class StoreReviewItem extends ConsumerStatefulWidget {
-  const StoreReviewItem(this.review, {super.key});
+enum ReviewItemButtonType { report, delete, none }
+
+class ReviewItem extends ConsumerStatefulWidget {
+  const ReviewItem(
+    this.review, {
+    this.buttonType = ReviewItemButtonType.none,
+    super.key,
+  });
 
   final Review review;
+  final ReviewItemButtonType buttonType;
+
+  factory ReviewItem.userReview(Review review) {
+    return ReviewItem(review, buttonType: ReviewItemButtonType.report);
+  }
+
+  factory ReviewItem.myReview(Review review) {
+    return ReviewItem(review, buttonType: ReviewItemButtonType.delete);
+  }
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _StoreReviewItemState();
+  ConsumerState<ReviewItem> createState() => _ReviewItemState();
 }
 
-class _StoreReviewItemState extends ConsumerState<StoreReviewItem> {
+class _ReviewItemState extends ConsumerState<ReviewItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,28 +48,14 @@ class _StoreReviewItemState extends ConsumerState<StoreReviewItem> {
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
-              ClipOval(
-                // child: Image.network(""), // TODO: 이미지 확정 필요..
-                child: Container(width: 50, height: 50, color: Colors.red),
-              ),
+              UserProfileItem(size: 40),
               Gaps.w12,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Rating label + Satisfaction reasons tags
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: [
-                        MgTag(child: Text(widget.review.ratingLabel)),
-                        ...widget.review.satisfactionReasons.map((reason) {
-                          return MgTag(child: Text(reason.label));
-                        }),
-                      ],
-                    ),
+                    MgTag(child: Text(widget.review.ratingLabel)),
                     Gaps.h4,
                     Row(
                       children: [
@@ -66,13 +67,7 @@ class _StoreReviewItemState extends ConsumerState<StoreReviewItem> {
                   ],
                 ),
               ),
-              MgButton(
-                onPressed: () {
-                  // TODO[report]: 신고하기 API
-                },
-                content: Text("신고하기").sm(),
-                padding: Gutter.wsm,
-              ),
+              _buildActionButton(),
             ],
           ),
           Gaps.h12,
@@ -80,5 +75,25 @@ class _StoreReviewItemState extends ConsumerState<StoreReviewItem> {
         ],
       ),
     );
+  }
+
+  Widget _buildActionButton() {
+    return switch (widget.buttonType) {
+      ReviewItemButtonType.report => MgButton(
+        onPressed: () {
+          // TODO[report]: 신고하기 API
+        },
+        content: Text("신고하기").sm(),
+        padding: EdgeInsets.symmetric(horizontal: MgSizes.sm),
+      ),
+      ReviewItemButtonType.delete => MgButton(
+        onPressed: () {
+          // TODO[delete]: 삭제하기 API
+        },
+        content: Text("삭제").sm().textGray(),
+        padding: EdgeInsets.symmetric(horizontal: MgSizes.sm),
+      ),
+      ReviewItemButtonType.none => const SizedBox.shrink(),
+    };
   }
 }

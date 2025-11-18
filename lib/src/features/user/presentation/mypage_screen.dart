@@ -16,6 +16,7 @@ import 'package:magambell/src/core/utils/visual_logger_provider.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
+import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -85,13 +86,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     final userState = ref.read(userStateProvider).asData!.value;
     return Row(
       children: [
-        ClipOval(
-          child: Image.asset(
-            R.ASSETS_LOGO_LOGO_PNG,
-            width: 40.w,
-            fit: BoxFit.cover,
-          ),
-        ),
+        UserProfileItem(),
         Gaps.w16,
         Column(
           children: [
