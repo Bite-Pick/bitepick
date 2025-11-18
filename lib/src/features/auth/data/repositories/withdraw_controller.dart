@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
+import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'social_auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
@@ -14,24 +15,16 @@ class WithdrawController extends _$WithdrawController {
 
   Future<bool> withdraw({required BuildContext context}) async {
     // 확인 다이얼로그
-    final ok = await showDialog<bool>(
+    bool ok = false;
+    await showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('회원탈퇴'),
-        content: const Text('탈퇴 후 복구할 수 없습니다. 진행할까요?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('탈퇴'),
-          ),
-        ],
+      builder: (context) => MgAlertDialog(
+        title: "정말로 탈퇴하시겠어요?",
+        content: Text("다음에 또 만날 수 있으면 좋겠어요!"),
+        onConfirm: () => ok = true,
       ),
     );
-    if (ok != true) return false;
+    if (!ok) return false;
 
     state = const AsyncLoading();
 

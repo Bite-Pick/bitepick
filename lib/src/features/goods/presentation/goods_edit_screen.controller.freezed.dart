@@ -20,6 +20,7 @@ mixin _$GoodsEditState {
   FormGroup get form => throw _privateConstructorUsedError;
   List<GoodsDetailItem> get goodsDetails => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
+  double get uploadProgress => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
   /// Create a copy of GoodsEditState
@@ -40,6 +41,7 @@ abstract class $GoodsEditStateCopyWith<$Res> {
     FormGroup form,
     List<GoodsDetailItem> goodsDetails,
     bool isSubmitting,
+    double uploadProgress,
     String? error,
   });
 }
@@ -62,6 +64,7 @@ class _$GoodsEditStateCopyWithImpl<$Res, $Val extends GoodsEditState>
     Object? form = null,
     Object? goodsDetails = null,
     Object? isSubmitting = null,
+    Object? uploadProgress = null,
     Object? error = freezed,
   }) {
     return _then(
@@ -78,6 +81,10 @@ class _$GoodsEditStateCopyWithImpl<$Res, $Val extends GoodsEditState>
                 ? _value.isSubmitting
                 : isSubmitting // ignore: cast_nullable_to_non_nullable
                       as bool,
+            uploadProgress: null == uploadProgress
+                ? _value.uploadProgress
+                : uploadProgress // ignore: cast_nullable_to_non_nullable
+                      as double,
             error: freezed == error
                 ? _value.error
                 : error // ignore: cast_nullable_to_non_nullable
@@ -101,6 +108,7 @@ abstract class _$$GoodsEditStateImplCopyWith<$Res>
     FormGroup form,
     List<GoodsDetailItem> goodsDetails,
     bool isSubmitting,
+    double uploadProgress,
     String? error,
   });
 }
@@ -122,6 +130,7 @@ class __$$GoodsEditStateImplCopyWithImpl<$Res>
     Object? form = null,
     Object? goodsDetails = null,
     Object? isSubmitting = null,
+    Object? uploadProgress = null,
     Object? error = freezed,
   }) {
     return _then(
@@ -138,6 +147,10 @@ class __$$GoodsEditStateImplCopyWithImpl<$Res>
             ? _value.isSubmitting
             : isSubmitting // ignore: cast_nullable_to_non_nullable
                   as bool,
+        uploadProgress: null == uploadProgress
+            ? _value.uploadProgress
+            : uploadProgress // ignore: cast_nullable_to_non_nullable
+                  as double,
         error: freezed == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
@@ -154,6 +167,7 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
     required this.form,
     final List<GoodsDetailItem> goodsDetails = const [],
     this.isSubmitting = false,
+    this.uploadProgress = 0.0,
     this.error,
   }) : _goodsDetails = goodsDetails;
 
@@ -172,11 +186,14 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
   @JsonKey()
   final bool isSubmitting;
   @override
+  @JsonKey()
+  final double uploadProgress;
+  @override
   final String? error;
 
   @override
   String toString() {
-    return 'GoodsEditState(form: $form, goodsDetails: $goodsDetails, isSubmitting: $isSubmitting, error: $error)';
+    return 'GoodsEditState(form: $form, goodsDetails: $goodsDetails, isSubmitting: $isSubmitting, uploadProgress: $uploadProgress, error: $error)';
   }
 
   @override
@@ -191,6 +208,8 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
             ) &&
             (identical(other.isSubmitting, isSubmitting) ||
                 other.isSubmitting == isSubmitting) &&
+            (identical(other.uploadProgress, uploadProgress) ||
+                other.uploadProgress == uploadProgress) &&
             (identical(other.error, error) || other.error == error));
   }
 
@@ -200,6 +219,7 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
     form,
     const DeepCollectionEquality().hash(_goodsDetails),
     isSubmitting,
+    uploadProgress,
     error,
   );
 
@@ -220,6 +240,7 @@ abstract class _GoodsEditState implements GoodsEditState {
     required final FormGroup form,
     final List<GoodsDetailItem> goodsDetails,
     final bool isSubmitting,
+    final double uploadProgress,
     final String? error,
   }) = _$GoodsEditStateImpl;
 
@@ -229,6 +250,8 @@ abstract class _GoodsEditState implements GoodsEditState {
   List<GoodsDetailItem> get goodsDetails;
   @override
   bool get isSubmitting;
+  @override
+  double get uploadProgress;
   @override
   String? get error;
 

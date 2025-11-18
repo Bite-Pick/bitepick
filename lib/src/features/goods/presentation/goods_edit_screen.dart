@@ -11,6 +11,7 @@ import 'package:magambell/src/features/goods/presentation/widgets/step4_goods_in
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class GoodsEditRoute extends GoRouteData {
@@ -58,7 +59,10 @@ class _GoodsEditScreenState extends ConsumerState<GoodsEditScreen> {
                       FocusScope.of(context).unfocus();
 
                       if (!context.mounted) return;
-                      if (result) context.pop(true); // 수정 성공 후 복귀
+                      if (result) {
+                        ToastPresentor.success(context, "상품을 성공적으로 수정했습니다");
+                        context.pop(true); // 수정 성공 후 복귀
+                      }
                     },
               content: Text(state.isSubmitting ? '수정 중...' : '수정하기'),
               disabled: state.form.invalid,

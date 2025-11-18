@@ -8,6 +8,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
+import 'package:magambell/src/features/home/domain/entities/home_goods_item_data.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
@@ -15,7 +16,7 @@ import 'package:magambell/src/core/theme/mg_theme.dart';
 class HomeGoodsItem extends StatefulWidget {
   const HomeGoodsItem({super.key, required this.goods});
 
-  final StoreListDTO goods;
+  final HomeGoodsItemData goods;
 
   @override
   State<HomeGoodsItem> createState() => _HomeGoodsItemState();
@@ -55,7 +56,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
                       "픽업시간 : ${goods.startTime.convertTime() ?? ''} ~ ${goods.endTime.convertTime() ?? ''}",
                     ),
                     Gaps.w12,
-                    Text("거리 : ${goods.distance}"),
+                    if (goods.distance != 0) Text("거리 : ${goods.distance}"),
                   ],
                 ),
               ],

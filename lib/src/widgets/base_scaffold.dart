@@ -90,15 +90,15 @@ class BaseScaffold extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     bottomNavigationBar!,
-                    if (hasBottomMargin)
-                      Container(
-                        height: bottomNotchPadding,
-                        color:
-                            Theme.of(
-                              context,
-                            ).bottomNavigationBarTheme.backgroundColor ??
-                            Theme.of(context).colorScheme.surface,
-                      ),
+                    // if (hasBottomMargin)
+                    //   Container(
+                    //     height: bottomNotchPadding,
+                    //     color:
+                    //         Theme.of(
+                    //           context,
+                    //         ).bottomNavigationBarTheme.backgroundColor ??
+                    //         Theme.of(context).colorScheme.surface,
+                    //   ),
                   ],
                 ),
         ),

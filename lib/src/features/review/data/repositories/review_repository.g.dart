@@ -220,5 +220,134 @@ class _ReviewsProviderElement
   int get size => (origin as ReviewsProvider).size;
 }
 
+String _$myReviewsHash() => r'7ff727078c1015f4473cfc6ffca44dcc11c9affb';
+
+/// See also [myReviews].
+@ProviderFor(myReviews)
+const myReviewsProvider = MyReviewsFamily();
+
+/// See also [myReviews].
+class MyReviewsFamily extends Family<AsyncValue<List<Review>>> {
+  /// See also [myReviews].
+  const MyReviewsFamily();
+
+  /// See also [myReviews].
+  MyReviewsProvider call({int page = 1, int size = 10}) {
+    return MyReviewsProvider(page: page, size: size);
+  }
+
+  @override
+  MyReviewsProvider getProviderOverride(covariant MyReviewsProvider provider) {
+    return call(page: provider.page, size: provider.size);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'myReviewsProvider';
+}
+
+/// See also [myReviews].
+class MyReviewsProvider extends AutoDisposeFutureProvider<List<Review>> {
+  /// See also [myReviews].
+  MyReviewsProvider({int page = 1, int size = 10})
+    : this._internal(
+        (ref) => myReviews(ref as MyReviewsRef, page: page, size: size),
+        from: myReviewsProvider,
+        name: r'myReviewsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$myReviewsHash,
+        dependencies: MyReviewsFamily._dependencies,
+        allTransitiveDependencies: MyReviewsFamily._allTransitiveDependencies,
+        page: page,
+        size: size,
+      );
+
+  MyReviewsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.page,
+    required this.size,
+  }) : super.internal();
+
+  final int page;
+  final int size;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Review>> Function(MyReviewsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: MyReviewsProvider._internal(
+        (ref) => create(ref as MyReviewsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        page: page,
+        size: size,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Review>> createElement() {
+    return _MyReviewsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MyReviewsProvider &&
+        other.page == page &&
+        other.size == size;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, page.hashCode);
+    hash = _SystemHash.combine(hash, size.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin MyReviewsRef on AutoDisposeFutureProviderRef<List<Review>> {
+  /// The parameter `page` of this provider.
+  int get page;
+
+  /// The parameter `size` of this provider.
+  int get size;
+}
+
+class _MyReviewsProviderElement
+    extends AutoDisposeFutureProviderElement<List<Review>>
+    with MyReviewsRef {
+  _MyReviewsProviderElement(super.provider);
+
+  @override
+  int get page => (origin as MyReviewsProvider).page;
+  @override
+  int get size => (origin as MyReviewsProvider).size;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

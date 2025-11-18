@@ -77,10 +77,26 @@ class StoreLocationInfoView extends StatelessWidget {
   }
 
   Widget _buildFindRouteBottomSheet(BuildContext context) {
-    return MgBottomsheet(
-      Column(
+    return SafeArea(
+      child: Wrap(
+        alignment: WrapAlignment.center,
         children: [
           Text("길찾기").md().bold().margin(vertical: MgSizes.md),
+          // TODO: ios만..
+          _buildBottomSheetItem(
+            context,
+            "애플 지도",
+            R.ASSETS_IMAGES_APPLE_PNG,
+            () async {
+              await MapLauncher.openAppleMapRoute(
+                latitude: latitude,
+                longitude: longitude,
+                destinationName: storeName,
+              );
+              if (context.mounted) Navigator.of(context).pop();
+            },
+          ),
+          Divider(),
           _buildBottomSheetItem(
             context,
             "네이버지도",

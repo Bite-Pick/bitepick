@@ -90,10 +90,10 @@ class StoreInfoView extends ConsumerWidget {
         ),
         Gaps.h12,
         Text(storeInfo.storeName).md().bold(),
-        Text(storeInfo.description).regular().textGray().margin(
-          top: MgSizes.size4,
-          bottom: MgSizes.size8,
-        ), //description
+        // Text(storeInfo.description).regular().textGray().margin(
+        //   top: MgSizes.size4,
+        //   bottom: MgSizes.size8,
+        // ), //description
         DefaultTextStyle(
           style: context.textTheme.titleLarge!,
           child: Row(

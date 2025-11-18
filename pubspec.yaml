@@ -91,6 +91,7 @@ flutter:
     - assets/icons/svg/filled/
     - assets/icons/svg/bank/
     - assets/lottie/
+    - assets/logo/
     - shorebird.yaml
 
   fonts:

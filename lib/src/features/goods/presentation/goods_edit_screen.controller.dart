@@ -1,13 +1,17 @@
 // goods_edit_screen.controller.dart
+import 'dart:io';
+
+import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
+import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'dart:io';
 
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 
@@ -20,6 +24,7 @@ class GoodsEditState with _$GoodsEditState {
     required FormGroup form,
     @Default([]) List<GoodsDetailItem> goodsDetails,
     @Default(false) bool isSubmitting,
+    @Default(0.0) double uploadProgress,
     String? error,
   }) = _GoodsEditState;
 }
@@ -110,9 +115,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     return FormGroup({
       'name': FormControl<String>(),
       'goodsId': FormControl<String>(),
-      'description': FormControl<String>(
-        validators: [Validators.required, Validators.minLength(10)],
-      ),
+      'description': FormControl<String>(),
       'images': FormControl<int>(value: 0),
       'quantity': FormControl<int>(
         validators: [Validators.required, Validators.min(1)],
@@ -218,41 +221,78 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     }
 
     try {
-      state = state.copyWith(isSubmitting: true, error: null);
+      state = state.copyWith(
+        isSubmitting: true,
+        uploadProgress: 0.0,
+        error: null,
+      );
 
       final formValue = form.value;
+
+      // 상품 상세 정보를 imageUploads 형식으로 변환
+      final imageUploads = state.goodsDetails.mapIndexed((index, goodsDetail) {
+        return {
+          'key': goodsDetail.localImage.key,
+          'id': index + 1,
+          'goodsName': goodsDetail.name,
+        };
+      }).toList();
+
+      // TODO: 추가해야함
+      // if (imageUploads.isEmpty) {
+      //   final context = GlobalVariable.navigatorKey.currentContext;
+      //   context != null
+      //       ? ToastPresentor.error(context, "상세설명은 1개이상 추가해주세요")
+      //       : talker.error("상세설명은 1개이상 추가해주세요");
+      //   state = state.copyWith(isSubmitting: false);
+      //   return false;
+      // }
 
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
           .editGoods(
-            name: formValue['name'] as String?,
+            // name: formValue['name'] as String?,
             goodsId: formValue['goodsId'] as String,
-            description: formValue['description'] as String,
+            // description: formValue['description'] as String?,
             originalPrice: formValue['originalPrice'] as int,
             discount: formValue['discount'] as int,
             salePrice: formValue['salePrice'] as int,
             quantity: formValue['quantity'] as int,
             startTime: formValue['startTime'] as DateTime,
             endTime: formValue['endTime'] as DateTime,
+            goodsImagesRegisters: imageUploads,
           );
 
+      if (presignedUrls == null) {
+        talker.error('바이트백 수정 실패');
+        state = state.copyWith(isSubmitting: false);
+        return false;
+      } else {
+        talker.info('바이트백 수정 성공, 이미지 업로드 준비');
+      }
+      // 임시처리
+      if (presignedUrls.isEmpty) {
+        state = state.copyWith(isSubmitting: false);
+        return true;
+      }
+
       // Presigned URL로 S3에 이미지 업로드
-      // TODO: 상세설명 API 수정 이후 연결
-      // await ref
-      //     .read(presignedImageRepositoryProvider)
-      //     .uploadImagesToS3(
-      //       localImages: state.localImages,
-      //       presignedUrls: presignedUrls,
-      //       onProgress: (currentIndex, total, sent, totalBytes) {
-      //         final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
-      //         final overallProgress = (currentIndex + fileProgress) / total;
-      //         state = state.copyWith(uploadProgress: overallProgress);
-      //       },
-      //     );
-      state = state.copyWith(
-        isSubmitting: false,
-        error: presignedUrls == null ? "API 실패" : null,
-      );
+      await ref
+          .read(presignedImageRepositoryProvider)
+          .uploadImagesToS3(
+            localImages: state.goodsDetails
+                .map((goodsDetail) => goodsDetail.localImage)
+                .toList(),
+            presignedUrls: presignedUrls,
+            onProgress: (currentIndex, total, sent, totalBytes) {
+              final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
+              final overallProgress = (currentIndex + fileProgress) / total;
+              state = state.copyWith(uploadProgress: overallProgress);
+            },
+          );
+
+      state = state.copyWith(isSubmitting: false);
+      talker.debug('바이트백 수정 및 이미지 업로드 완료');
       return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: e.toString());

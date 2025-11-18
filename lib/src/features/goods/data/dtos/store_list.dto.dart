@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/features/home/domain/entities/home_goods_item_data.dart';
 
 part 'store_list.dto.freezed.dart';
 part 'store_list.dto.g.dart';
@@ -47,6 +48,21 @@ class StoreListDTO with _$StoreListDTO {
       salePrice: salePrice,
       stockQuantity: quantity,
       distance: distance,
+      saleStatus: saleStatus,
+    );
+  }
+
+  HomeGoodsItemData toHomeGoodsItem() {
+    return HomeGoodsItemData(
+      storeId: storeId,
+      storeName: storeName,
+      imageUrl: imageUrl,
+      discount: discount,
+      salePrice: salePrice,
+      startTime: startTime,
+      endTime: endTime,
+      distance: distance,
+      quantity: quantity,
       saleStatus: saleStatus,
     );
   }

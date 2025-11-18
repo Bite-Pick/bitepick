@@ -43,6 +43,25 @@ class MapLauncher {
     );
   }
 
+  /// Apple 지도로 길찾기
+  static Future<void> openAppleMapRoute({
+    required double latitude,
+    required double longitude,
+    String? destinationName,
+  }) async {
+    // Apple Maps URL Scheme
+    // daddr: destination address (lat,lng)
+    // saddr: source address (현재 위치는 비워두면 자동)
+    final nameParam = destinationName != null ? '&q=$destinationName' : '';
+    final url = "http://maps.apple.com/?daddr=$latitude,$longitude$nameParam";
+
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+    // Apple 지도는 iOS 기본 앱이므로 설치 유도 불필요
+  }
+
   /// URL 실행 시도, 실패시 스토어로 이동
   static Future<void> _tryLaunchUrl(
     String url, {
