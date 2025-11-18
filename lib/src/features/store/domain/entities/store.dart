@@ -11,6 +11,7 @@ class Store with _$Store {
     required String storeId,
     required String storeName,
     required String address,
+    String? parkingDescription, // TODO: parkingDescription 확인필요
     required List<String> storeImageUrls,
     required List<Goods> goodsList,
   }) = _Store;

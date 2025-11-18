@@ -25,6 +25,7 @@ _$GoodsDetailDtoImpl _$$GoodsDetailDtoImplFromJson(Map<String, dynamic> json) =>
       saleStatus: json['saleStatus'] as String,
       reviewCount: (json['reviewCount'] as num).toInt(),
       averageRating: (json['averageRating'] as num).toDouble(),
+      parkingDescription: json['parkingDescription'] as String?,
     );
 
 Map<String, dynamic> _$$GoodsDetailDtoImplToJson(
@@ -45,4 +46,5 @@ Map<String, dynamic> _$$GoodsDetailDtoImplToJson(
   'saleStatus': instance.saleStatus,
   'reviewCount': instance.reviewCount,
   'averageRating': instance.averageRating,
+  'parkingDescription': instance.parkingDescription,
 };

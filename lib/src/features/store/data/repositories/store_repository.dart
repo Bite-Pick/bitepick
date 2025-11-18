@@ -70,6 +70,7 @@ class StoreRepository {
     required String businessNumber,
     required String bankName,
     required String bankAccount,
+    required String parkingDescription,
     required List<Map<String, dynamic>> storeImagesRegisters,
   }) async {
     final res = await _dio.post(
@@ -85,6 +86,7 @@ class StoreRepository {
         'bankName': bankName,
         'bankAccount': bankAccount,
         'storeImagesRegisters': storeImagesRegisters,
+        'parkingDescription': parkingDescription,
       },
     );
     if (res.data['status'] != 'OK') return [];

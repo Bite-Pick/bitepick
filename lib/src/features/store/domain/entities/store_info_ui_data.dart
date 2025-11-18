@@ -17,6 +17,7 @@ class StoreInfoUiData with _$StoreInfoUiData {
     required String startTime,
     required String endTime,
     required String description,
+    String? parkingDescription, // TODO: parkingDescription 확인필요
     double? latitude,
     double? longitude,
   }) = _StoreInfoUiData;

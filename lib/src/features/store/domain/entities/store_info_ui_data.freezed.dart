@@ -29,6 +29,8 @@ mixin _$StoreInfoUiData {
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  String? get parkingDescription =>
+      throw _privateConstructorUsedError; // TODO: parkingDescription 확인필요
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
 
@@ -59,6 +61,7 @@ abstract class $StoreInfoUiDataCopyWith<$Res> {
     String startTime,
     String endTime,
     String description,
+    String? parkingDescription,
     double? latitude,
     double? longitude,
   });
@@ -91,6 +94,7 @@ class _$StoreInfoUiDataCopyWithImpl<$Res, $Val extends StoreInfoUiData>
     Object? startTime = null,
     Object? endTime = null,
     Object? description = null,
+    Object? parkingDescription = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
   }) {
@@ -144,6 +148,10 @@ class _$StoreInfoUiDataCopyWithImpl<$Res, $Val extends StoreInfoUiData>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String,
+            parkingDescription: freezed == parkingDescription
+                ? _value.parkingDescription
+                : parkingDescription // ignore: cast_nullable_to_non_nullable
+                      as String?,
             latitude: freezed == latitude
                 ? _value.latitude
                 : latitude // ignore: cast_nullable_to_non_nullable
@@ -180,6 +188,7 @@ abstract class _$$StoreInfoUiDataImplCopyWith<$Res>
     String startTime,
     String endTime,
     String description,
+    String? parkingDescription,
     double? latitude,
     double? longitude,
   });
@@ -211,6 +220,7 @@ class __$$StoreInfoUiDataImplCopyWithImpl<$Res>
     Object? startTime = null,
     Object? endTime = null,
     Object? description = null,
+    Object? parkingDescription = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
   }) {
@@ -264,6 +274,10 @@ class __$$StoreInfoUiDataImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String,
+        parkingDescription: freezed == parkingDescription
+            ? _value.parkingDescription
+            : parkingDescription // ignore: cast_nullable_to_non_nullable
+                  as String?,
         latitude: freezed == latitude
             ? _value.latitude
             : latitude // ignore: cast_nullable_to_non_nullable
@@ -293,6 +307,7 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
     required this.startTime,
     required this.endTime,
     required this.description,
+    this.parkingDescription,
     this.latitude,
     this.longitude,
   }) : _imageUrls = imageUrls;
@@ -328,13 +343,16 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
   @override
   final String description;
   @override
+  final String? parkingDescription;
+  // TODO: parkingDescription 확인필요
+  @override
   final double? latitude;
   @override
   final double? longitude;
 
   @override
   String toString() {
-    return 'StoreInfoUiData(storeId: $storeId, storeName: $storeName, address: $address, imageUrls: $imageUrls, stockQuantity: $stockQuantity, saleStatus: $saleStatus, discount: $discount, salePrice: $salePrice, originPrice: $originPrice, startTime: $startTime, endTime: $endTime, description: $description, latitude: $latitude, longitude: $longitude)';
+    return 'StoreInfoUiData(storeId: $storeId, storeName: $storeName, address: $address, imageUrls: $imageUrls, stockQuantity: $stockQuantity, saleStatus: $saleStatus, discount: $discount, salePrice: $salePrice, originPrice: $originPrice, startTime: $startTime, endTime: $endTime, description: $description, parkingDescription: $parkingDescription, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -365,6 +383,8 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.parkingDescription, parkingDescription) ||
+                other.parkingDescription == parkingDescription) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -386,6 +406,7 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
     startTime,
     endTime,
     description,
+    parkingDescription,
     latitude,
     longitude,
   );
@@ -416,6 +437,7 @@ abstract class _StoreInfoUiData implements StoreInfoUiData {
     required final String startTime,
     required final String endTime,
     required final String description,
+    final String? parkingDescription,
     final double? latitude,
     final double? longitude,
   }) = _$StoreInfoUiDataImpl;
@@ -444,6 +466,8 @@ abstract class _StoreInfoUiData implements StoreInfoUiData {
   String get endTime;
   @override
   String get description;
+  @override
+  String? get parkingDescription; // TODO: parkingDescription 확인필요
   @override
   double? get latitude;
   @override
