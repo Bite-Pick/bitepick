@@ -513,6 +513,11 @@ jobs:
         working-directory: ios
         run: bundle install
 
+      - name: Update CocoaPods
+        run: |
+          sudo gem install cocoapods -v 1.16.2
+          pod --version
+
       - name: 🐦 Setup Shorebird
         uses: shorebirdtech/setup-shorebird@v1
 
@@ -745,6 +750,11 @@ jobs:
       - name: Install dependencies
         working-directory: ios
         run: bundle install
+
+      - name: Update CocoaPods
+        run: |
+          sudo gem install cocoapods -v 1.16.2
+          pod --version
 
       - name: 🐦 Setup Shorebird
         uses: shorebirdtech/setup-shorebird@v1
