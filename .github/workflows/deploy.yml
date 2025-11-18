@@ -377,6 +377,23 @@ jobs:
           distribution: "zulu"
           cache: gradle
 
+      # Keystore 복원
+      - name: Decode keystore
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/magambell-release.keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      # key.properties 생성
+      - name: Create key.properties
+        run: |
+          cat <<EOF > android/key.properties
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=app/magambell-release.keystore
+          EOF
+
       - name: Deploy Android
         env:
           FLUTTER_VERSION: ${{ env.FLUTTER_VERSION }}

@@ -58,18 +58,38 @@ android {
         }
     }
 
-   signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
-            storePassword = keystoreProperties["storePassword"] as String
+    val hasKeystore = keystorePropertiesFile.exists()
+
+    signingConfigs {
+        if (hasKeystore) {
+            create("release") {
+                val alias = keystoreProperties.getProperty("keyAlias")
+                val keyPwd = keystoreProperties.getProperty("keyPassword")
+                val storePwd = keystoreProperties.getProperty("storePassword")
+                val storeFilePath = keystoreProperties.getProperty("storeFile")
+
+                if (!alias.isNullOrBlank()) {
+                    keyAlias = alias
+                }
+                if (!keyPwd.isNullOrBlank()) {
+                    keyPassword = keyPwd
+                }
+                if (!storePwd.isNullOrBlank()) {
+                    storePassword = storePwd
+                }
+                if (!storeFilePath.isNullOrBlank()) {
+                    storeFile = file(storeFilePath)
+                }
+            }
         }
     }
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            if (hasKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            // else: keystore 없으면 기본 signing 설정 사용
         }
     }
 }
