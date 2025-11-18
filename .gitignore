@@ -59,3 +59,7 @@ ios/Runner/GoogleService-Info-Prod.plist
 # local playground
 lib/src/playground.dart
 Makefile
+
+#android playstore
+android/app/magambell-release.keystore
+android/fastlane/google-play-service-account.json

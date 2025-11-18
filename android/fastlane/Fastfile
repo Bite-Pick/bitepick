@@ -1,6 +1,48 @@
 default_platform(:android)
 
 platform :android do
+  desc "Build AAB and upload to Play Store internal track"
+  lane :internal do
+    mode = ENV["MODE"] || "dev"
+    package_name = ENV["PACKAGE_NAME"] || "com.trendflow.bread"
+
+    # Flavor에 따른 entry point 설정
+    entry_point = case mode
+    when "dev"
+      "lib/src/main_dev.dart"
+    when "prod"
+      "lib/src/main_prod.dart"
+    else
+      "lib/src/main_dev.dart"
+    end
+
+    # Flutter AAB 빌드
+    puts "🔨 Building AAB for #{mode} flavor..."
+    sh "cd ../.. && flutter build appbundle --release --flavor #{mode} -t #{entry_point}"
+
+    # AAB 경로 확인
+    aab_path = "../../build/app/outputs/bundle/#{mode}Release/app-#{mode}-release.aab"
+    unless File.exist?(aab_path)
+      raise "❌ AAB file not found at #{aab_path}"
+    end
+
+    puts "✅ AAB built successfully: #{aab_path}"
+    puts "📤 Uploading to Play Store internal track..."
+
+    # Play Store 업로드
+    upload_to_play_store(
+      track: 'internal',
+      aab: aab_path,
+      package_name: package_name,
+      skip_upload_changelogs: true,
+      skip_upload_screenshots: true,
+      skip_upload_images: true,
+      skip_upload_metadata: true
+    )
+
+    puts "✅ Successfully uploaded to Play Store internal track!"
+  end
+
   desc "Build and release Android app with Shorebird"
   lane :release do
     # Flavor에 따른 entry point 설정
