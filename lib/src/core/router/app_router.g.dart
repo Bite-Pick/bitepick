@@ -234,6 +234,18 @@ RouteBase get $defaultRoute => GoRouteData.$route(
 
       factory: $TalkerRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'favorite',
+      name: 'FavoriteRoute',
+
+      factory: $FavoriteRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'my-reviews',
+      name: 'MyReviewListRoute',
+
+      factory: $MyReviewListRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -469,6 +481,37 @@ extension $TalkerRouteExtension on TalkerRoute {
   static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
 
   String get location => GoRouteData.$location('/talker');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $FavoriteRouteExtension on FavoriteRoute {
+  static FavoriteRoute _fromState(GoRouterState state) => const FavoriteRoute();
+
+  String get location => GoRouteData.$location('/favorite');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $MyReviewListRouteExtension on MyReviewListRoute {
+  static MyReviewListRoute _fromState(GoRouterState state) =>
+      const MyReviewListRoute();
+
+  String get location => GoRouteData.$location('/my-reviews');
 
   void go(BuildContext context) => context.go(location);
 

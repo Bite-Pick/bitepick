@@ -11,6 +11,7 @@ import 'package:magambell/src/features/auth/presenation/join_success_screen.dart
 import 'package:magambell/src/features/auth/presenation/login_screen.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/select_user_type_screen.dart';
+import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
@@ -20,6 +21,7 @@ import 'package:magambell/src/features/order/presentation/order_pay_screen.dart'
 import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
+import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
@@ -142,6 +144,14 @@ class LoginRoute extends GoRouteData {
     TypedGoRoute<TalkerRoute>(
       name: 'TalkerRoute',
       path: 'talker',
+    ),
+    TypedGoRoute<FavoriteRoute>(
+      name: 'FavoriteRoute',
+      path: 'favorite',
+    ),
+    TypedGoRoute<MyReviewListRoute>(
+      name: 'MyReviewListRoute',
+      path: 'my-reviews',
     ),
   ],
 )

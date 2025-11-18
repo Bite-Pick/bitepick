@@ -14,14 +14,17 @@ class OrderListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final orders = mockOrders;
     return BaseScaffold(
-      appBar: BaseAppBar(title: const Text('주문 내역')),
+      canSwipeBack: false,
+      appBar: BaseAppBar(
+        title: const Text('주문 내역'),
+        leading: const SizedBox.shrink(),
+      ),
       body: ListView.builder(
         itemCount: orders.length,
         itemBuilder: (context, index) {
           final order = orders[index];
           return Column(
             children: [
-              if (index == 0) DebugText("백엔드 개발필요"),
               OrderListItem(order),
               if (index != orders.length - 1)
                 Divider(thickness: 6).margin(vertical: MgSizes.lg),

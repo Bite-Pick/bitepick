@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 
-class FavoriteScreen extends StatefulWidget {
+class FavoriteRoute extends GoRouteData {
+  const FavoriteRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const FavoriteScreen();
+  }
+}
+
+class FavoriteScreen extends ConsumerStatefulWidget {
   const FavoriteScreen({super.key});
 
   @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
+  ConsumerState<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen>
+class _FavoriteScreenState extends ConsumerState<FavoriteScreen>
     with TickerProviderStateMixin {
   TabController? _tabController;
   @override
@@ -26,7 +37,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
         children: [
           TabBar(
             controller: _tabController,
-            tabs: [
+            tabs: const [
               Tab(text: "찜한 매장"),
               Tab(text: "최근 본 매장"),
             ],
