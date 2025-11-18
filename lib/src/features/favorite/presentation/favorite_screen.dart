@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/features/favorite/data/repositories/favorite_repository.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class FavoriteRoute extends GoRouteData {
   const FavoriteRoute();
@@ -22,36 +27,32 @@ class FavoriteScreen extends ConsumerStatefulWidget {
 
 class _FavoriteScreenState extends ConsumerState<FavoriteScreen>
     with TickerProviderStateMixin {
-  TabController? _tabController;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
+    final favoritesAsync = ref.watch(myFavoriteProvider);
     return BaseScaffold(
-      appBar: BaseAppBar(title: const Text('즐겨찾기')),
-      body: Column(
-        children: [
-          TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: "찜한 매장"),
-              Tab(text: "최근 본 매장"),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                Container(color: Colors.red),
-                Container(color: Colors.blue),
-              ],
-            ),
-          ),
-        ],
+      appBar: BaseAppBar(title: const Text('관심 목록')),
+      body: MgAsyncAnimatedSwitcher(
+        asyncValue: favoritesAsync,
+        emptyBuilder: () => Center(child: Text("관심 목록이 없습니다")),
+
+        builder: (favorites) {
+          return ListView.separated(
+            itemCount: favorites.length,
+            itemBuilder: (context, index) {
+              final favorite = favorites[index];
+              return HomeGoodsItem(
+                goods: favorite.toHomeGoodsItem(),
+              ).margin(horizontal: MgSizes.md);
+            },
+            separatorBuilder: (context, index) => Gaps.h16,
+          ).margin(top: MgSizes.md);
+        },
       ),
     );
   }

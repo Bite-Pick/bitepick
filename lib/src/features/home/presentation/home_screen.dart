@@ -77,7 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       itemCount: goods.length,
                       itemBuilder: (context, index) {
                         final item = goods[index];
-                        return HomeGoodsItem(goods: item)
+                        return HomeGoodsItem(goods: item.toHomeGoodsItem())
                             .margin(bottom: MgSizes.xs)
                             .margin(horizontal: MgSizes.md);
                       },

@@ -109,12 +109,12 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
         _buildMenuListItem(
           title: "관심목록",
           leading: BaseSvgIcon.heart(),
-          onTap: () => FavoriteRoute().go(context),
+          onTap: () async => FavoriteRoute().push(context),
         ),
         _buildMenuListItem(
           title: "리뷰관리",
           leading: BaseSvgIcon.messageCircle(),
-          onTap: () => MyReviewListRoute().go(context),
+          onTap: () => MyReviewListRoute().push(context),
         ),
         _buildMenuListItem(
           title: "1:1 문의하기",
@@ -130,15 +130,18 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     required Widget leading,
     required VoidCallback onTap,
   }) {
-    return Row(
-      children: [
-        leading,
-        Gaps.w12,
-        Text(title).md().regular(),
-        const Spacer(),
-        BaseSvgIcon.right(color: MgColorScheme.gray6),
-      ],
-    ).padding(vertical: MgSizes.md, horizontal: MgSizes.sm);
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          leading,
+          Gaps.w12,
+          Text(title).md().regular(),
+          const Spacer(),
+          BaseSvgIcon.right(color: MgColorScheme.gray6),
+        ],
+      ).margin(vertical: MgSizes.md, horizontal: MgSizes.sm),
+    );
   }
 
   Widget _buildAuthSection() {
