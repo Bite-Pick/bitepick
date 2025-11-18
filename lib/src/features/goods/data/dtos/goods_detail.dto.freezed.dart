@@ -36,7 +36,10 @@ mixin _$GoodsDetailDto {
   String get saleStatus => throw _privateConstructorUsedError;
   int get reviewCount => throw _privateConstructorUsedError;
   double get averageRating => throw _privateConstructorUsedError;
-  String? get parkingDescription => throw _privateConstructorUsedError;
+  String? get parkingDescription =>
+      throw _privateConstructorUsedError; // TODO: parkingDescription 확인필요
+  List<GoodsImagesList>? get goodsImageList =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this GoodsDetailDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -72,6 +75,7 @@ abstract class $GoodsDetailDtoCopyWith<$Res> {
     int reviewCount,
     double averageRating,
     String? parkingDescription,
+    List<GoodsImagesList>? goodsImageList,
   });
 }
 
@@ -106,6 +110,7 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
     Object? reviewCount = null,
     Object? averageRating = null,
     Object? parkingDescription = freezed,
+    Object? goodsImageList = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -173,6 +178,10 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
                 ? _value.parkingDescription
                 : parkingDescription // ignore: cast_nullable_to_non_nullable
                       as String?,
+            goodsImageList: freezed == goodsImageList
+                ? _value.goodsImageList
+                : goodsImageList // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsImagesList>?,
           )
           as $Val,
     );
@@ -205,6 +214,7 @@ abstract class _$$GoodsDetailDtoImplCopyWith<$Res>
     int reviewCount,
     double averageRating,
     String? parkingDescription,
+    List<GoodsImagesList>? goodsImageList,
   });
 }
 
@@ -238,6 +248,7 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
     Object? reviewCount = null,
     Object? averageRating = null,
     Object? parkingDescription = freezed,
+    Object? goodsImageList = freezed,
   }) {
     return _then(
       _$GoodsDetailDtoImpl(
@@ -305,6 +316,10 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
             ? _value.parkingDescription
             : parkingDescription // ignore: cast_nullable_to_non_nullable
                   as String?,
+        goodsImageList: freezed == goodsImageList
+            ? _value._goodsImageList
+            : goodsImageList // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsImagesList>?,
       ),
     );
   }
@@ -330,7 +345,9 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
     required this.reviewCount,
     required this.averageRating,
     this.parkingDescription,
+    final List<GoodsImagesList>? goodsImageList,
   }) : _images = images,
+       _goodsImageList = goodsImageList,
        super._();
 
   factory _$GoodsDetailDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -374,10 +391,21 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
   final double averageRating;
   @override
   final String? parkingDescription;
+  // TODO: parkingDescription 확인필요
+  final List<GoodsImagesList>? _goodsImageList;
+  // TODO: parkingDescription 확인필요
+  @override
+  List<GoodsImagesList>? get goodsImageList {
+    final value = _goodsImageList;
+    if (value == null) return null;
+    if (_goodsImageList is EqualUnmodifiableListView) return _goodsImageList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'GoodsDetailDto(storeId: $storeId, goodsId: $goodsId, storeName: $storeName, address: $address, images: $images, startTime: $startTime, endTime: $endTime, originalPrice: $originalPrice, salePrice: $salePrice, discount: $discount, description: $description, quantity: $quantity, saleStatus: $saleStatus, reviewCount: $reviewCount, averageRating: $averageRating, parkingDescription: $parkingDescription)';
+    return 'GoodsDetailDto(storeId: $storeId, goodsId: $goodsId, storeName: $storeName, address: $address, images: $images, startTime: $startTime, endTime: $endTime, originalPrice: $originalPrice, salePrice: $salePrice, discount: $discount, description: $description, quantity: $quantity, saleStatus: $saleStatus, reviewCount: $reviewCount, averageRating: $averageRating, parkingDescription: $parkingDescription, goodsImageList: $goodsImageList)';
   }
 
   @override
@@ -411,7 +439,11 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
             (identical(other.averageRating, averageRating) ||
                 other.averageRating == averageRating) &&
             (identical(other.parkingDescription, parkingDescription) ||
-                other.parkingDescription == parkingDescription));
+                other.parkingDescription == parkingDescription) &&
+            const DeepCollectionEquality().equals(
+              other._goodsImageList,
+              _goodsImageList,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -434,6 +466,7 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
     reviewCount,
     averageRating,
     parkingDescription,
+    const DeepCollectionEquality().hash(_goodsImageList),
   );
 
   /// Create a copy of GoodsDetailDto
@@ -471,6 +504,7 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
     required final int reviewCount,
     required final double averageRating,
     final String? parkingDescription,
+    final List<GoodsImagesList>? goodsImageList,
   }) = _$GoodsDetailDtoImpl;
   const _GoodsDetailDto._() : super._();
 
@@ -508,7 +542,9 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
   @override
   double get averageRating;
   @override
-  String? get parkingDescription;
+  String? get parkingDescription; // TODO: parkingDescription 확인필요
+  @override
+  List<GoodsImagesList>? get goodsImageList;
 
   /// Create a copy of GoodsDetailDto
   /// with the given fields replaced by the non-null parameter values.

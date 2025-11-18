@@ -97,7 +97,10 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             ],
             body: TabBarView(
               controller: _tabController,
-              children: [StoreBiteBagView(), StoreReviewListView(widget.id)],
+              children: [
+                StoreBiteBagView(store.goodsImageList ?? []),
+                StoreReviewListView(widget.id),
+              ],
             ),
           ),
           bottomNavigationBar: _buildBottomButton(store),

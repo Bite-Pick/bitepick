@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/store/domain/entities/store_info_ui_data.dart';
 
 part 'goods_detail.dto.freezed.dart';
@@ -23,7 +24,7 @@ class GoodsDetailDto with _$GoodsDetailDto {
     required int reviewCount,
     required double averageRating,
     String? parkingDescription, // TODO: parkingDescription 확인필요
-    // TODO: bitebag 정보 [GoodsImagesList] 추가 필요
+    List<GoodsImagesList>? goodsImageList, // TODO: goodsImageList 확인필요
   }) = _GoodsDetailDto;
 
   factory GoodsDetailDto.fromJson(Map<String, dynamic> json) =>

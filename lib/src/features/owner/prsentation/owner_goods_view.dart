@@ -18,7 +18,6 @@ class OwnerGoodsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: API 연동시 아래 주석 해제
     final ownerStoreAsync = ref.watch(ownerStoreProvider);
     return MgAsyncAnimatedSwitcher(
       asyncValue: ownerStoreAsync,
@@ -31,7 +30,7 @@ class OwnerGoodsView extends ConsumerWidget {
                 child: Column(
                   children: [
                     StoreInfoView(store.toStoreInfoData(), hasFavorite: false),
-                    StoreBiteBagView(),
+                    StoreBiteBagView(store.goodsImageList ?? []),
                   ],
                 ),
               ),

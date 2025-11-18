@@ -1,45 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
-// TODO[bitebag]: 백엔드 개발 이후 개발예정
-// bitebag == goods 라서 용어 통일필요
-// 바이트백(가제) 구성
+// NOTE[bitebag]: bitebag == goods 라서 용어 통일필요
 class StoreBiteBagView extends StatelessWidget {
-  StoreBiteBagView({super.key});
-  final images = [
-    BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
-    ),
-    BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
-    ),
-    BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
-    ),
-    BiteBag(
-      "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-      "name",
-    ),
-  ];
+  StoreBiteBagView(this.goodsImages, {super.key});
+  final List<GoodsImagesList> goodsImages;
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(child: Text("백엔드 개발필요")), // TODO[bitebag]: 삭제
         _buildNoticeItem(),
-        _buildImages(images),
+        _buildImages(goodsImages),
         Gaps.h16,
-        _buildTags(["dd", "dd", "dd"]),
+        // _buildTags(["dd", "dd", "dd"]), // NOTE: tag는 런칭이후 개발예정
       ],
     ).margin(horizontal: MgSizes.md);
   }
@@ -49,7 +31,7 @@ class StoreBiteBagView extends StatelessWidget {
           children: [
             BaseSvgIcon.speakerFilled(color: MgColorScheme.alertRed),
             Gaps.w8,
-            Text("아래의 상품 중 랜덤으로 구성됩니다!"), // TODO[bitebag]: mock data
+            Text("아래의 상품 중 랜덤으로 구성됩니다!"),
           ],
         )
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md)
@@ -60,17 +42,27 @@ class StoreBiteBagView extends StatelessWidget {
         .margin(vertical: MgSizes.md);
   }
 
-  Widget _buildImages(List<BiteBag> bitebags) {
+  Widget _buildImages(List<GoodsImagesList> goodsImages) {
+    if (goodsImages.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(R.ASSETS_IMAGES_CHARACTER_1_PNG, width: 160.w),
+          Gaps.h12,
+          Text("앗! 아직 등록된 메뉴소개가 없어요.").bold(),
+        ],
+      );
+    }
     return Center(
       child: Wrap(
         runSpacing: MgSizes.md,
         spacing: MgSizes.md,
-        children: bitebags
+        children: goodsImages
             .map(
-              (bitebag) => Column(
+              (goodsImage) => Column(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: bitebag.imageUrl,
+                    imageUrl: goodsImage.imageUrl,
                     imageBuilder: (context, imageProvider) {
                       return Container(
                         height: 100.w,
@@ -86,7 +78,7 @@ class StoreBiteBagView extends StatelessWidget {
                     },
                   ),
                   Gaps.h4,
-                  Text(bitebag.name),
+                  Text(goodsImage.goodsName),
                 ],
               ),
             )
@@ -95,18 +87,12 @@ class StoreBiteBagView extends StatelessWidget {
     );
   }
 
-  Widget _buildTags(List<String> tags) {
-    return Wrap(
-      spacing: MgSizes.xs,
-      children: tags
-          .map((tag) => MgTag(child: Text("#$tag")).gray(light: true))
-          .toList(),
-    );
-  }
-}
-
-class BiteBag {
-  final String imageUrl;
-  final String name;
-  const BiteBag(this.imageUrl, this.name);
+  // Widget _buildTags(List<String> tags) {
+  //   return Wrap(
+  //     spacing: MgSizes.xs,
+  //     children: tags
+  //         .map((tag) => MgTag(child: Text("#$tag")).gray(light: true))
+  //         .toList(),
+  //   );
+  // }
 }
