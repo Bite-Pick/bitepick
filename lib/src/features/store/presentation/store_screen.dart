@@ -119,6 +119,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Expanded(
                 child: MgButton(
                   onPressed: () async {
+                    // TODO: 픽업시간 설정 bottomSheet 추가
                     // 주문 정보 저장
                     ref
                         .read(orderPayScreenControllerProvider.notifier)
