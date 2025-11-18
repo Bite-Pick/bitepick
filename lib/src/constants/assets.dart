@@ -120,6 +120,9 @@ class R {
 
   static const String ASSETS_ICONS_SVG_FILE_SVG = 'assets/icons/svg/file.svg';
 
+  static const String ASSETS_ICONS_SVG_FILLED_APPLE_SVG =
+      'assets/icons/svg/filled/apple.svg';
+
   static const String ASSETS_ICONS_SVG_FILLED_HEART_SVG =
       'assets/icons/svg/filled/heart.svg';
 
@@ -231,6 +234,8 @@ class R {
 
   static const String ASSETS_ICONS_SVG_UPLOAD_SVG =
       'assets/icons/svg/upload.svg';
+
+  static const String ASSETS_IMAGES_APPLE_PNG = 'assets/images/apple.png';
 
   static const String ASSETS_IMAGES_APPLE_LOGIN_PNG =
       'assets/images/apple_login.png';
