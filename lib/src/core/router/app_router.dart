@@ -22,6 +22,7 @@ import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_scree
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
+import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
@@ -141,17 +142,15 @@ class LoginRoute extends GoRouteData {
       name: 'GoodsEditRoute',
       path: 'owner/store/edit',
     ),
-    TypedGoRoute<TalkerRoute>(
-      name: 'TalkerRoute',
-      path: 'talker',
-    ),
-    TypedGoRoute<FavoriteRoute>(
-      name: 'FavoriteRoute',
-      path: 'favorite',
-    ),
+    TypedGoRoute<TalkerRoute>(name: 'TalkerRoute', path: 'talker'),
+    TypedGoRoute<FavoriteRoute>(name: 'FavoriteRoute', path: 'favorite'),
     TypedGoRoute<MyReviewListRoute>(
       name: 'MyReviewListRoute',
       path: 'my-reviews',
+    ),
+    TypedGoRoute<ReviewRegisterRoute>(
+      path: '/review/register/:orderGoodsId',
+      name: 'ReviewRegisterRoute',
     ),
   ],
 )

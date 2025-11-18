@@ -7,6 +7,12 @@ class R {
   static const String ASSETS_ICONS_SVG_ALIGN_JUSTIFY_SVG =
       'assets/icons/svg/align-justify.svg';
 
+  static const String ASSETS_ICONS_SVG_BAD_SELECT_SVG =
+      'assets/icons/svg/bad_select.svg';
+
+  static const String ASSETS_ICONS_SVG_BAD_UNSELECT_SVG =
+      'assets/icons/svg/bad_unselect.svg';
+
   static const String ASSETS_ICONS_SVG_BANK_BUSANBANK_SVG =
       'assets/icons/svg/bank/BusanBank.svg';
 
@@ -168,6 +174,12 @@ class R {
   static const String ASSETS_ICONS_SVG_FOLDER_SVG =
       'assets/icons/svg/folder.svg';
 
+  static const String ASSETS_ICONS_SVG_GOOD_SELECT_SVG =
+      'assets/icons/svg/good_select.svg';
+
+  static const String ASSETS_ICONS_SVG_GOOD_UNSELECT_SVG =
+      'assets/icons/svg/good_unselect.svg';
+
   static const String ASSETS_ICONS_SVG_HEART_SVG = 'assets/icons/svg/heart.svg';
 
   static const String ASSETS_ICONS_SVG_HELP_CIRCLE_SVG =
@@ -200,6 +212,12 @@ class R {
 
   static const String ASSETS_ICONS_SVG_MORE_VERTICAL_SVG =
       'assets/icons/svg/more-vertical.svg';
+
+  static const String ASSETS_ICONS_SVG_NOTBAD_SELECT_SVG =
+      'assets/icons/svg/notbad_select.svg';
+
+  static const String ASSETS_ICONS_SVG_NOTBAD_UNSELECT_SVG =
+      'assets/icons/svg/notbad_unselect.svg';
 
   static const String ASSETS_ICONS_SVG_PAPERCLIP_SVG =
       'assets/icons/svg/paperclip.svg';
