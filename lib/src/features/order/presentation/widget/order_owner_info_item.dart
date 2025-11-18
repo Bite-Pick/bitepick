@@ -36,7 +36,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
               widget.order.orderStatus.label,
             ).sm().textColor(widget.order.orderStatus.color).bold(),
             Text(
-              '${widget.order.goodsName} ${widget.order.quantity}개',
+              '바이트백 ${widget.order.quantity}개',
             ).md().bold().margin(top: MgSizes.xs, bottom: MgSizes.size2),
             Text(
               '${_getPaymentStatusText()} ${widget.order.totalPrice.toPrice()}',
@@ -79,7 +79,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
 
   Widget? _buildActionButtons() {
     return switch (widget.order.orderStatus) {
-      OrderOwnerStatus.paid => Row(
+      OrderOwnerStatus.PAID => Row(
         children: [
           Expanded(
             child: MgButton(
@@ -96,7 +96,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
           ),
         ],
       ),
-      OrderOwnerStatus.accepted => Row(
+      OrderOwnerStatus.ACCEPTED => Row(
         children: [
           Expanded(
             child: MgButton(
@@ -120,15 +120,23 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
   Widget _buildPickupTimeSection() {
     return DefaultTextStyle(
       style: MgTheme.getInstance().textTheme.titleMedium!,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BaseSvgIcon.filledTime(size: MgSizes.md).margin(all: MgSizes.size4),
-          const Text("픽업시간"),
-          const Spacer(),
-          Text(widget.order.pickupTime.format("HH:mm")), //TODO: AM,PM?
-        ],
-      ).margin(all: MgSizes.xs).decorated(color: MgColorScheme.lightest),
+      child:
+          Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseSvgIcon.filledTime(
+                    size: MgSizes.md,
+                  ).margin(all: MgSizes.size4),
+                  const Text("픽업시간"),
+                  const Spacer(),
+                  Text(widget.order.pickupTime.format("HH:mm")), //TODO: AM,PM?
+                ],
+              )
+              .margin(all: MgSizes.xs)
+              .decorated(
+                color: MgColorScheme.lightest,
+                borderRadius: BorderRadius.circular(MgRadius.sm),
+              ),
     );
   }
 
@@ -146,6 +154,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
   }
 
   void _showAcceptDialog() {
+    // TODO: 주문수락 누르자마자 바로 요청하도록 수정
     showDialog(
       context: context,
       builder: (context) => OrderAcceptDialog(

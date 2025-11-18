@@ -29,7 +29,7 @@ mixin _$OrderOwner {
   int get quantity => throw _privateConstructorUsedError;
   int get totalPrice => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
-  String get goodsName => throw _privateConstructorUsedError;
+  String? get goodsName => throw _privateConstructorUsedError;
 
   /// Serializes this OrderOwner to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -57,7 +57,7 @@ abstract class $OrderOwnerCopyWith<$Res> {
     int quantity,
     int totalPrice,
     String phoneNumber,
-    String goodsName,
+    String? goodsName,
   });
 }
 
@@ -84,7 +84,7 @@ class _$OrderOwnerCopyWithImpl<$Res, $Val extends OrderOwner>
     Object? quantity = null,
     Object? totalPrice = null,
     Object? phoneNumber = null,
-    Object? goodsName = null,
+    Object? goodsName = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -120,10 +120,10 @@ class _$OrderOwnerCopyWithImpl<$Res, $Val extends OrderOwner>
                 ? _value.phoneNumber
                 : phoneNumber // ignore: cast_nullable_to_non_nullable
                       as String,
-            goodsName: null == goodsName
+            goodsName: freezed == goodsName
                 ? _value.goodsName
                 : goodsName // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
           )
           as $Val,
     );
@@ -148,7 +148,7 @@ abstract class _$$OrderOwnerImplCopyWith<$Res>
     int quantity,
     int totalPrice,
     String phoneNumber,
-    String goodsName,
+    String? goodsName,
   });
 }
 
@@ -174,7 +174,7 @@ class __$$OrderOwnerImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? totalPrice = null,
     Object? phoneNumber = null,
-    Object? goodsName = null,
+    Object? goodsName = freezed,
   }) {
     return _then(
       _$OrderOwnerImpl(
@@ -210,10 +210,10 @@ class __$$OrderOwnerImplCopyWithImpl<$Res>
             ? _value.phoneNumber
             : phoneNumber // ignore: cast_nullable_to_non_nullable
                   as String,
-        goodsName: null == goodsName
+        goodsName: freezed == goodsName
             ? _value.goodsName
             : goodsName // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
       ),
     );
   }
@@ -231,7 +231,7 @@ class _$OrderOwnerImpl implements _OrderOwner {
     required this.quantity,
     required this.totalPrice,
     required this.phoneNumber,
-    required this.goodsName,
+    this.goodsName,
   });
 
   factory _$OrderOwnerImpl.fromJson(Map<String, dynamic> json) =>
@@ -254,7 +254,7 @@ class _$OrderOwnerImpl implements _OrderOwner {
   @override
   final String phoneNumber;
   @override
-  final String goodsName;
+  final String? goodsName;
 
   @override
   String toString() {
@@ -323,7 +323,7 @@ abstract class _OrderOwner implements OrderOwner {
     required final int quantity,
     required final int totalPrice,
     required final String phoneNumber,
-    required final String goodsName,
+    final String? goodsName,
   }) = _$OrderOwnerImpl;
 
   factory _OrderOwner.fromJson(Map<String, dynamic> json) =
@@ -346,7 +346,7 @@ abstract class _OrderOwner implements OrderOwner {
   @override
   String get phoneNumber;
   @override
-  String get goodsName;
+  String? get goodsName;
 
   /// Create a copy of OrderOwner
   /// with the given fields replaced by the non-null parameter values.
