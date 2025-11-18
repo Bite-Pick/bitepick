@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
@@ -13,12 +15,14 @@ import 'package:magambell/src/core/utils/visual_logger_provider.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
+import 'package:magambell/src/features/user/data/repositories/user_repository.dart';
 import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/mg_text_rich.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class MypageScreen extends ConsumerStatefulWidget {
@@ -52,16 +56,24 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final myPageAsync = ref.watch(mypageProvider);
     return BaseScaffold(
       body: SafeArea(
         child: Column(
           children: [
             Gaps.h16,
             _buildProfileSection(),
-            Gaps.h32,
-            // TODO[mypage]: 탄소 절감량
+            Gaps.h16,
+            MgAsyncAnimatedSwitcher(
+              asyncValue: myPageAsync,
+              builder: (myPage) {
+                if (myPage == null) return SizedBox.shrink();
+                return _buildKgSection(
+                  myPage.savedKg,
+                ).margin(bottom: MgSizes.md);
+              },
+            ),
             _buildMenuList(),
-            Spacer(),
             _buildAuthSection(),
             _buildVersionSection(),
             // _buildVersionSection(),
@@ -74,6 +86,62 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
         ).margin(horizontal: MgSizes.md),
       ),
     );
+  }
+
+  Widget _buildKgSection(int savedKg) {
+    final maxWidth = MediaQuery.sizeOf(context).width - MgSizes.md * 2;
+    int maxKg = 30;
+    return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text("탄소절감량").bold().md(),
+                Gaps.w4,
+                BaseSvgIcon.helpCircle(
+                  color: MgColorScheme.gray4,
+                  size: MgSizes.lg,
+                ),
+              ],
+            ),
+            Stack(
+              children: [
+                Container(
+                  height: MgSizes.size6,
+                  width: maxWidth * (savedKg / maxKg),
+                  decoration: BoxDecoration(
+                    color: MgColorScheme.subpointGreen,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(MgRadius.md),
+                      bottomLeft: Radius.circular(MgRadius.md),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: MgSizes.size6,
+                  width: maxWidth,
+                  decoration: BoxDecoration(
+                    color: MgColorScheme.gray7,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ],
+            ).margin(vertical: MgSizes.xs),
+            MgTextRich(
+              textAlign: TextAlign.start,
+              children: [
+                TextSpan(text: "지금까지 ").textGray(),
+                TextSpan(text: "${savedKg}kg").subpointGreen().bold(),
+                TextSpan(text: "의 탄소가 절감되었습니다").textGray(),
+              ],
+            ),
+          ],
+        )
+        .margin(vertical: MgSizes.lg, horizontal: MgSizes.md)
+        .decorated(
+          color: MgColorScheme.gray10,
+          borderRadius: BorderRadius.circular(MgRadius.sm),
+        );
   }
 
   Widget _buildProfileSection() {
