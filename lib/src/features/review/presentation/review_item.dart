@@ -4,8 +4,10 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
+import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
@@ -80,20 +82,43 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
   Widget _buildActionButton() {
     return switch (widget.buttonType) {
       ReviewItemButtonType.report => MgButton(
-        onPressed: () {
-          // TODO[report]: 신고하기 API
-        },
+        onPressed: () async => _showReportDialog(),
         content: Text("신고하기").sm(),
         padding: EdgeInsets.symmetric(horizontal: MgSizes.sm),
       ),
       ReviewItemButtonType.delete => MgButton(
-        onPressed: () {
-          // TODO[delete]: 삭제하기 API
-        },
+        onPressed: () async => _showDeleteDialog(),
         content: Text("삭제").sm().textGray(),
         padding: EdgeInsets.symmetric(horizontal: MgSizes.sm),
       ),
       ReviewItemButtonType.none => const SizedBox.shrink(),
     };
+  }
+
+  // TODO[review]: 테스트 필요
+  Future<void> _showReportDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => MgAlertDialog(
+        title: '이 리뷰를 신고할까요?',
+        content: Text('신고하면 리뷰가 보이지 않아요.'),
+        onConfirm: () async => ref
+            .read(reviewRepositoryProvider)
+            .reportReview(widget.review.reviewId),
+      ),
+    );
+  }
+
+  Future<void> _showDeleteDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => MgAlertDialog(
+        title: '리뷰 삭제',
+        content: Text('리뷰를 삭제하시겠습니까?'),
+        onConfirm: () async => ref
+            .read(reviewRepositoryProvider)
+            .deleteReview(widget.review.reviewId),
+      ),
+    );
   }
 }

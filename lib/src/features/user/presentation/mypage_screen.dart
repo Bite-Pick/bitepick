@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
@@ -18,7 +15,6 @@ import 'package:magambell/src/features/favorite/presentation/favorite_screen.dar
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
-import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -34,7 +30,6 @@ class MypageScreen extends ConsumerStatefulWidget {
 
 class _MypageScreenState extends ConsumerState<MypageScreen> {
   String _version = '';
-  String _buildNumber = '';
   int? _patchNumber;
 
   @override
@@ -50,7 +45,6 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     if (mounted) {
       setState(() {
         _version = packageInfo.version;
-        _buildNumber = packageInfo.buildNumber;
         _patchNumber = patchNumber;
       });
     }
