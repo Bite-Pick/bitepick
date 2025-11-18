@@ -7,15 +7,15 @@ import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
-import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 
 class HomeGoodsItem extends StatefulWidget {
   const HomeGoodsItem({super.key, required this.goods});
 
-  final Goods goods;
+  final StoreListDTO goods;
 
   @override
   State<HomeGoodsItem> createState() => _HomeGoodsItemState();
@@ -29,7 +29,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
       onTap: () => StoreRoute(id: goods.storeId!).push(context),
       child: Column(
         children: [
-          _buildImageListView(goods.ImageUrl ?? []),
+          _buildImageListView(goods.imageUrl ?? []),
           Gaps.h8,
           DefaultTextStyle(
             style: context.textTheme.titleLarge!,
@@ -63,7 +63,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
           ).margin(left: MgSizes.size4),
           Gaps.h4,
           StoreTags(
-            quantity: goods.stockQuantity,
+            quantity: goods.quantity,
             saleStatus: goods.saleStatus,
           ).margin(left: MgSizes.size4),
         ],

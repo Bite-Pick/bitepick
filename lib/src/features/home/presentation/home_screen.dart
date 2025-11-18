@@ -7,16 +7,16 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/utils/debug_text.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
-import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
-import 'package:magambell/src/features/search/presentation/search_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             delegate: SliverChildListDelegate([
               // HomeBannersView(),
               HomeUpdateBanner(),
-              MgAsyncAnimatedSwitcher<List<Goods>>(
+              MgAsyncAnimatedSwitcher<List<StoreListDTO>>(
                 asyncValue: storeGoodsAsync,
                 builder: (goods) => Column(
                   children: [
@@ -208,7 +208,11 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [_buildAddress(), _buildSearch()],
+      children: [
+        _buildAddress(),
+        // TODO: 런칭 이후 추가
+        //  _buildSearch(),
+      ],
     ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md);
   }
 
@@ -250,7 +254,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
               SearchAddressRoute().push(context);
             },
           ).transparent(),
-          Text("현재 데이터가 많지않아 주소를 바꿔도 데이터변동은 없도록 임시처리해뒀습니다!"),
+          DebugText("현재 데이터가 많지않아 주소를 바꿔도 데이터변동은 없도록 임시처리해뒀습니다!"),
         ],
       ).margin(all: MgSizes.md),
     );
@@ -288,10 +292,10 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     );
   }
 
-  Widget _buildSearch() {
-    return GestureDetector(
-      onTap: () async => SearchRoute().push(context),
-      child: BaseSvgIcon.search(size: 24),
-    );
-  }
+  // Widget _buildSearch() {
+  //   return GestureDetector(
+  //     onTap: () async => SearchRoute().push(context),
+  //     child: BaseSvgIcon.search(size: 24),
+  //   );
+  // }
 }

@@ -36,8 +36,9 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'latitude': FormControl<double>(),
       'longitude': FormControl<double>(),
       'images': FormControl<int>(value: 0),
-      'parkingDescription': FormControl<String>(), // TODO: 필수..?
-
+      'parkingDescription': FormControl<String>(
+        // validators: [Validators.required],
+      ),
       'representativeName': FormControl<String>(
         validators: [Validators.required, Validators.minLength(1)],
       ),
@@ -200,7 +201,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
             bankName: formValue['bankName'] as String,
             bankAccount: formValue['accountNumber'] as String,
             storeImagesRegisters: imageUploads,
-            // parkingDescription:formValue['parkingDescription'] as String // TODO: 추가 예정
+            parkingDescription: formValue['parkingDescription'] as String,
           );
 
       talker.info('[S3] Starting upload for ${localImages.length} images');

@@ -18,6 +18,7 @@ import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -137,6 +138,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     required Color textColor,
     required bool isLoading,
   }) {
+    // return MgTooltip(
+    //   disabled: true, // TODO: 최근 로그인 툴팁 활성화
+    //   item: Text("최근에 로그인했어요").xs().white(),
+    //   offset: Offset(100.w, 0),
+    //   defaultVisible: true,
+    //   child:
+    // );
     return MgButton(
       onPressed: isLoading ? null : onPressed,
       backgroundColor: backgroundColor,
@@ -158,5 +166,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (context != null && context.mounted) {
       ToastPresentor.error(context, message);
     }
+  }
+
+  // TODO: 최근 로그인 툴팁 활성화
+  Future<String> getLastLoginProvider() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('lastLoginProvider') ?? '';
   }
 }

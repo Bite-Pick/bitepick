@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_reject_reason.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_repository.g.dart';
@@ -15,7 +16,6 @@ class OrderRepository {
     _dio = ref.read(apiClientProvider);
   }
 
-  ///
   Future<List<OrderOwner>> getStoreOrders({
     int page = 1,
     int size = 10,
@@ -30,20 +30,21 @@ class OrderRepository {
       },
     );
 
-    final data = res.data['data'] as Map<String, dynamic>?;
-    if (res.data['status'] != 'OK' || data == null) return [];
-
-    final list = data['content'] as List? ?? [];
+    final list = res.data['data']['orderStoreList'] as List<dynamic>?;
+    if (res.data['status'] != 'OK' || list == null) return [];
 
     return list
         .map((json) => OrderOwner.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
-  Future<bool> rejectOrder(String orderId, {String? rejectReason}) async {
-    final res = await _dio.post(
+  Future<bool> rejectOrder(
+    String orderId, {
+    OrderRejectReason? rejectReason,
+  }) async {
+    final res = await _dio.patch(
       '/v1/order/reject/$orderId',
-      data: rejectReason != null ? {'rejectReason': rejectReason} : null,
+      data: rejectReason != null ? {'rejectReason': rejectReason.code} : null,
     );
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
@@ -51,21 +52,21 @@ class OrderRepository {
   }
 
   Future<bool> approveOrder(String orderId) async {
-    final res = await _dio.post('/v1/order/approve/$orderId');
+    final res = await _dio.patch('/v1/order/approve/$orderId');
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
   }
 
   Future<bool> completeOrder(String orderId) async {
-    final res = await _dio.post('/v1/order/completed/$orderId');
+    final res = await _dio.patch('/v1/order/completed/$orderId');
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
   }
 
   Future<bool> cancelOrder(String orderId) async {
-    final res = await _dio.post('/v1/order/cancel/$orderId');
+    final res = await _dio.patch('/v1/order/cancel/$orderId');
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
@@ -76,6 +77,7 @@ class OrderRepository {
 OrderRepository orderRepository(Ref ref) {
   return OrderRepository(ref);
 }
+
 @riverpod
 Future<List<OrderOwner>> storeOrders(
   Ref ref, {

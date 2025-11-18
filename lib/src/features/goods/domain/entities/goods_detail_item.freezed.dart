@@ -17,12 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GoodsDetailItem {
-  int get id => throw _privateConstructorUsedError;
-  String get key =>
-      throw _privateConstructorUsedError; // 이미지 파일명 (presigned URL 요청용)
-  String get name => throw _privateConstructorUsedError; // 상품명
-  File get file => throw _privateConstructorUsedError; // 로컬 이미지 파일
-  String? get uploadedUrl => throw _privateConstructorUsedError;
+  LocalImage get localImage => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
 
   /// Create a copy of GoodsDetailItem
   /// with the given fields replaced by the non-null parameter values.
@@ -38,7 +34,9 @@ abstract class $GoodsDetailItemCopyWith<$Res> {
     $Res Function(GoodsDetailItem) then,
   ) = _$GoodsDetailItemCopyWithImpl<$Res, GoodsDetailItem>;
   @useResult
-  $Res call({int id, String key, String name, File file, String? uploadedUrl});
+  $Res call({LocalImage localImage, String name});
+
+  $LocalImageCopyWith<$Res> get localImage;
 }
 
 /// @nodoc
@@ -55,38 +53,30 @@ class _$GoodsDetailItemCopyWithImpl<$Res, $Val extends GoodsDetailItem>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? key = null,
-    Object? name = null,
-    Object? file = null,
-    Object? uploadedUrl = freezed,
-  }) {
+  $Res call({Object? localImage = null, Object? name = null}) {
     return _then(
       _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            key: null == key
-                ? _value.key
-                : key // ignore: cast_nullable_to_non_nullable
-                      as String,
+            localImage: null == localImage
+                ? _value.localImage
+                : localImage // ignore: cast_nullable_to_non_nullable
+                      as LocalImage,
             name: null == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
                       as String,
-            file: null == file
-                ? _value.file
-                : file // ignore: cast_nullable_to_non_nullable
-                      as File,
-            uploadedUrl: freezed == uploadedUrl
-                ? _value.uploadedUrl
-                : uploadedUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of GoodsDetailItem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $LocalImageCopyWith<$Res> get localImage {
+    return $LocalImageCopyWith<$Res>(_value.localImage, (value) {
+      return _then(_value.copyWith(localImage: value) as $Val);
+    });
   }
 }
 
@@ -99,7 +89,10 @@ abstract class _$$GoodsDetailItemImplCopyWith<$Res>
   ) = __$$GoodsDetailItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String key, String name, File file, String? uploadedUrl});
+  $Res call({LocalImage localImage, String name});
+
+  @override
+  $LocalImageCopyWith<$Res> get localImage;
 }
 
 /// @nodoc
@@ -115,35 +108,17 @@ class __$$GoodsDetailItemImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? key = null,
-    Object? name = null,
-    Object? file = null,
-    Object? uploadedUrl = freezed,
-  }) {
+  $Res call({Object? localImage = null, Object? name = null}) {
     return _then(
       _$GoodsDetailItemImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        key: null == key
-            ? _value.key
-            : key // ignore: cast_nullable_to_non_nullable
-                  as String,
+        localImage: null == localImage
+            ? _value.localImage
+            : localImage // ignore: cast_nullable_to_non_nullable
+                  as LocalImage,
         name: null == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
                   as String,
-        file: null == file
-            ? _value.file
-            : file // ignore: cast_nullable_to_non_nullable
-                  as File,
-        uploadedUrl: freezed == uploadedUrl
-            ? _value.uploadedUrl
-            : uploadedUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
       ),
     );
   }
@@ -152,31 +127,16 @@ class __$$GoodsDetailItemImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GoodsDetailItemImpl implements _GoodsDetailItem {
-  const _$GoodsDetailItemImpl({
-    required this.id,
-    required this.key,
-    required this.name,
-    required this.file,
-    this.uploadedUrl,
-  });
+  const _$GoodsDetailItemImpl({required this.localImage, required this.name});
 
   @override
-  final int id;
-  @override
-  final String key;
-  // 이미지 파일명 (presigned URL 요청용)
+  final LocalImage localImage;
   @override
   final String name;
-  // 상품명
-  @override
-  final File file;
-  // 로컬 이미지 파일
-  @override
-  final String? uploadedUrl;
 
   @override
   String toString() {
-    return 'GoodsDetailItem(id: $id, key: $key, name: $name, file: $file, uploadedUrl: $uploadedUrl)';
+    return 'GoodsDetailItem(localImage: $localImage, name: $name)';
   }
 
   @override
@@ -184,17 +144,13 @@ class _$GoodsDetailItemImpl implements _GoodsDetailItem {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GoodsDetailItemImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.key, key) || other.key == key) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.file, file) || other.file == file) &&
-            (identical(other.uploadedUrl, uploadedUrl) ||
-                other.uploadedUrl == uploadedUrl));
+            (identical(other.localImage, localImage) ||
+                other.localImage == localImage) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, key, name, file, uploadedUrl);
+  int get hashCode => Object.hash(runtimeType, localImage, name);
 
   /// Create a copy of GoodsDetailItem
   /// with the given fields replaced by the non-null parameter values.
@@ -210,23 +166,14 @@ class _$GoodsDetailItemImpl implements _GoodsDetailItem {
 
 abstract class _GoodsDetailItem implements GoodsDetailItem {
   const factory _GoodsDetailItem({
-    required final int id,
-    required final String key,
+    required final LocalImage localImage,
     required final String name,
-    required final File file,
-    final String? uploadedUrl,
   }) = _$GoodsDetailItemImpl;
 
   @override
-  int get id;
+  LocalImage get localImage;
   @override
-  String get key; // 이미지 파일명 (presigned URL 요청용)
-  @override
-  String get name; // 상품명
-  @override
-  File get file; // 로컬 이미지 파일
-  @override
-  String? get uploadedUrl;
+  String get name;
 
   /// Create a copy of GoodsDetailItem
   /// with the given fields replaced by the non-null parameter values.

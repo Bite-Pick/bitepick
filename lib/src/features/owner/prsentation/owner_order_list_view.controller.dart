@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_reject_reason.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'owner_order_list_view.controller.freezed.dart';
@@ -24,7 +25,7 @@ class OwnerOrderListController extends _$OwnerOrderListController {
   Future<OwnerOrderListState> build() async {
     final orders = await ref.read(orderRepositoryProvider).getStoreOrders();
 
-    final counts = _calculateStatusCounts();
+    final counts = _calculateStatusCounts(orders);
 
     return OwnerOrderListState(
       orders: orders,
@@ -51,18 +52,17 @@ class OwnerOrderListController extends _$OwnerOrderListController {
     });
   }
 
-  Map<OrderOwnerStatus?, int> _calculateStatusCounts() {
-    final orders = state.value?.orders ?? [];
+  Map<OrderOwnerStatus?, int> _calculateStatusCounts(List<OrderOwner> orders) {
     return {
       null: orders.length,
-      OrderOwnerStatus.paid: orders
-          .where((order) => order.orderStatus == OrderOwnerStatus.paid)
+      OrderOwnerStatus.PAID: orders
+          .where((order) => order.orderStatus == OrderOwnerStatus.PAID)
           .length,
-      OrderOwnerStatus.accepted: orders
-          .where((order) => order.orderStatus == OrderOwnerStatus.accepted)
+      OrderOwnerStatus.ACCEPTED: orders
+          .where((order) => order.orderStatus == OrderOwnerStatus.ACCEPTED)
           .length,
-      OrderOwnerStatus.completed: orders
-          .where((order) => order.orderStatus == OrderOwnerStatus.completed)
+      OrderOwnerStatus.COMPLETED: orders
+          .where((order) => order.orderStatus == OrderOwnerStatus.COMPLETED)
           .length,
     };
   }
@@ -80,11 +80,14 @@ class OwnerOrderListController extends _$OwnerOrderListController {
   Future<void> refresh() async {
     await _loadOrders();
     final currentState = state.requireValue;
-    final counts = _calculateStatusCounts();
+    final counts = _calculateStatusCounts(currentState.orders);
     state = AsyncValue.data(currentState.copyWith(statusCounts: counts));
   }
 
-  Future<void> rejectOrder(String orderId, {String? rejectReason}) async {
+  Future<void> rejectOrder(
+    String orderId, {
+    OrderRejectReason? rejectReason,
+  }) async {
     try {
       await ref
           .read(orderRepositoryProvider)

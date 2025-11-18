@@ -21,7 +21,7 @@ Goods _$GoodsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Goods {
-  String get goodsId => throw _privateConstructorUsedError;
+  String? get goodsId => throw _privateConstructorUsedError;
   String? get storeId => throw _privateConstructorUsedError;
   String? get storeName => throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
@@ -54,7 +54,7 @@ abstract class $GoodsCopyWith<$Res> {
       _$GoodsCopyWithImpl<$Res, Goods>;
   @useResult
   $Res call({
-    String goodsId,
+    String? goodsId,
     String? storeId,
     String? storeName,
     String? goodsName,
@@ -89,7 +89,7 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? goodsId = null,
+    Object? goodsId = freezed,
     Object? storeId = freezed,
     Object? storeName = freezed,
     Object? goodsName = freezed,
@@ -109,10 +109,10 @@ class _$GoodsCopyWithImpl<$Res, $Val extends Goods>
   }) {
     return _then(
       _value.copyWith(
-            goodsId: null == goodsId
+            goodsId: freezed == goodsId
                 ? _value.goodsId
                 : goodsId // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             storeId: freezed == storeId
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
@@ -192,7 +192,7 @@ abstract class _$$GoodsImplCopyWith<$Res> implements $GoodsCopyWith<$Res> {
   @override
   @useResult
   $Res call({
-    String goodsId,
+    String? goodsId,
     String? storeId,
     String? storeName,
     String? goodsName,
@@ -226,7 +226,7 @@ class __$$GoodsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? goodsId = null,
+    Object? goodsId = freezed,
     Object? storeId = freezed,
     Object? storeName = freezed,
     Object? goodsName = freezed,
@@ -246,10 +246,10 @@ class __$$GoodsImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$GoodsImpl(
-        goodsId: null == goodsId
+        goodsId: freezed == goodsId
             ? _value.goodsId
             : goodsId // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         storeId: freezed == storeId
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
@@ -323,7 +323,7 @@ class __$$GoodsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GoodsImpl extends _Goods {
   const _$GoodsImpl({
-    required this.goodsId,
+    this.goodsId,
     this.storeId,
     this.storeName,
     this.goodsName,
@@ -347,7 +347,7 @@ class _$GoodsImpl extends _Goods {
       _$$GoodsImplFromJson(json);
 
   @override
-  final String goodsId;
+  final String? goodsId;
   @override
   final String? storeId;
   @override
@@ -469,7 +469,7 @@ class _$GoodsImpl extends _Goods {
 
 abstract class _Goods extends Goods {
   const factory _Goods({
-    required final String goodsId,
+    final String? goodsId,
     final String? storeId,
     final String? storeName,
     final String? goodsName,
@@ -492,7 +492,7 @@ abstract class _Goods extends Goods {
   factory _Goods.fromJson(Map<String, dynamic> json) = _$GoodsImpl.fromJson;
 
   @override
-  String get goodsId;
+  String? get goodsId;
   @override
   String? get storeId;
   @override
@@ -531,5 +531,208 @@ abstract class _Goods extends Goods {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GoodsImplCopyWith<_$GoodsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+GoodsImagesList _$GoodsImagesListFromJson(Map<String, dynamic> json) {
+  return _GoodsImagesList.fromJson(json);
+}
+
+/// @nodoc
+mixin _$GoodsImagesList {
+  int get goodsImageId => throw _privateConstructorUsedError;
+  String get goodsName => throw _privateConstructorUsedError;
+  String get imageUrl => throw _privateConstructorUsedError;
+
+  /// Serializes this GoodsImagesList to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $GoodsImagesListCopyWith<GoodsImagesList> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GoodsImagesListCopyWith<$Res> {
+  factory $GoodsImagesListCopyWith(
+    GoodsImagesList value,
+    $Res Function(GoodsImagesList) then,
+  ) = _$GoodsImagesListCopyWithImpl<$Res, GoodsImagesList>;
+  @useResult
+  $Res call({int goodsImageId, String goodsName, String imageUrl});
+}
+
+/// @nodoc
+class _$GoodsImagesListCopyWithImpl<$Res, $Val extends GoodsImagesList>
+    implements $GoodsImagesListCopyWith<$Res> {
+  _$GoodsImagesListCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? goodsImageId = null,
+    Object? goodsName = null,
+    Object? imageUrl = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            goodsImageId: null == goodsImageId
+                ? _value.goodsImageId
+                : goodsImageId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            goodsName: null == goodsName
+                ? _value.goodsName
+                : goodsName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            imageUrl: null == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$GoodsImagesListImplCopyWith<$Res>
+    implements $GoodsImagesListCopyWith<$Res> {
+  factory _$$GoodsImagesListImplCopyWith(
+    _$GoodsImagesListImpl value,
+    $Res Function(_$GoodsImagesListImpl) then,
+  ) = __$$GoodsImagesListImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int goodsImageId, String goodsName, String imageUrl});
+}
+
+/// @nodoc
+class __$$GoodsImagesListImplCopyWithImpl<$Res>
+    extends _$GoodsImagesListCopyWithImpl<$Res, _$GoodsImagesListImpl>
+    implements _$$GoodsImagesListImplCopyWith<$Res> {
+  __$$GoodsImagesListImplCopyWithImpl(
+    _$GoodsImagesListImpl _value,
+    $Res Function(_$GoodsImagesListImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? goodsImageId = null,
+    Object? goodsName = null,
+    Object? imageUrl = null,
+  }) {
+    return _then(
+      _$GoodsImagesListImpl(
+        goodsImageId: null == goodsImageId
+            ? _value.goodsImageId
+            : goodsImageId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        goodsName: null == goodsName
+            ? _value.goodsName
+            : goodsName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        imageUrl: null == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$GoodsImagesListImpl extends _GoodsImagesList {
+  const _$GoodsImagesListImpl({
+    required this.goodsImageId,
+    required this.goodsName,
+    required this.imageUrl,
+  }) : super._();
+
+  factory _$GoodsImagesListImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GoodsImagesListImplFromJson(json);
+
+  @override
+  final int goodsImageId;
+  @override
+  final String goodsName;
+  @override
+  final String imageUrl;
+
+  @override
+  String toString() {
+    return 'GoodsImagesList(goodsImageId: $goodsImageId, goodsName: $goodsName, imageUrl: $imageUrl)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GoodsImagesListImpl &&
+            (identical(other.goodsImageId, goodsImageId) ||
+                other.goodsImageId == goodsImageId) &&
+            (identical(other.goodsName, goodsName) ||
+                other.goodsName == goodsName) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, goodsImageId, goodsName, imageUrl);
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GoodsImagesListImplCopyWith<_$GoodsImagesListImpl> get copyWith =>
+      __$$GoodsImagesListImplCopyWithImpl<_$GoodsImagesListImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$GoodsImagesListImplToJson(this);
+  }
+}
+
+abstract class _GoodsImagesList extends GoodsImagesList {
+  const factory _GoodsImagesList({
+    required final int goodsImageId,
+    required final String goodsName,
+    required final String imageUrl,
+  }) = _$GoodsImagesListImpl;
+  const _GoodsImagesList._() : super._();
+
+  factory _GoodsImagesList.fromJson(Map<String, dynamic> json) =
+      _$GoodsImagesListImpl.fromJson;
+
+  @override
+  int get goodsImageId;
+  @override
+  String get goodsName;
+  @override
+  String get imageUrl;
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GoodsImagesListImplCopyWith<_$GoodsImagesListImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

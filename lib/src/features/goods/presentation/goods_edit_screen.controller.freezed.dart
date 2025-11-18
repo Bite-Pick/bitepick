@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GoodsEditState {
   FormGroup get form => throw _privateConstructorUsedError;
+  List<GoodsDetailItem> get goodsDetails => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
@@ -35,7 +36,12 @@ abstract class $GoodsEditStateCopyWith<$Res> {
     $Res Function(GoodsEditState) then,
   ) = _$GoodsEditStateCopyWithImpl<$Res, GoodsEditState>;
   @useResult
-  $Res call({FormGroup form, bool isSubmitting, String? error});
+  $Res call({
+    FormGroup form,
+    List<GoodsDetailItem> goodsDetails,
+    bool isSubmitting,
+    String? error,
+  });
 }
 
 /// @nodoc
@@ -54,6 +60,7 @@ class _$GoodsEditStateCopyWithImpl<$Res, $Val extends GoodsEditState>
   @override
   $Res call({
     Object? form = null,
+    Object? goodsDetails = null,
     Object? isSubmitting = null,
     Object? error = freezed,
   }) {
@@ -63,6 +70,10 @@ class _$GoodsEditStateCopyWithImpl<$Res, $Val extends GoodsEditState>
                 ? _value.form
                 : form // ignore: cast_nullable_to_non_nullable
                       as FormGroup,
+            goodsDetails: null == goodsDetails
+                ? _value.goodsDetails
+                : goodsDetails // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsDetailItem>,
             isSubmitting: null == isSubmitting
                 ? _value.isSubmitting
                 : isSubmitting // ignore: cast_nullable_to_non_nullable
@@ -86,7 +97,12 @@ abstract class _$$GoodsEditStateImplCopyWith<$Res>
   ) = __$$GoodsEditStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({FormGroup form, bool isSubmitting, String? error});
+  $Res call({
+    FormGroup form,
+    List<GoodsDetailItem> goodsDetails,
+    bool isSubmitting,
+    String? error,
+  });
 }
 
 /// @nodoc
@@ -104,6 +120,7 @@ class __$$GoodsEditStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? form = null,
+    Object? goodsDetails = null,
     Object? isSubmitting = null,
     Object? error = freezed,
   }) {
@@ -113,6 +130,10 @@ class __$$GoodsEditStateImplCopyWithImpl<$Res>
             ? _value.form
             : form // ignore: cast_nullable_to_non_nullable
                   as FormGroup,
+        goodsDetails: null == goodsDetails
+            ? _value._goodsDetails
+            : goodsDetails // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsDetailItem>,
         isSubmitting: null == isSubmitting
             ? _value.isSubmitting
             : isSubmitting // ignore: cast_nullable_to_non_nullable
@@ -131,12 +152,22 @@ class __$$GoodsEditStateImplCopyWithImpl<$Res>
 class _$GoodsEditStateImpl implements _GoodsEditState {
   const _$GoodsEditStateImpl({
     required this.form,
+    final List<GoodsDetailItem> goodsDetails = const [],
     this.isSubmitting = false,
     this.error,
-  });
+  }) : _goodsDetails = goodsDetails;
 
   @override
   final FormGroup form;
+  final List<GoodsDetailItem> _goodsDetails;
+  @override
+  @JsonKey()
+  List<GoodsDetailItem> get goodsDetails {
+    if (_goodsDetails is EqualUnmodifiableListView) return _goodsDetails;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_goodsDetails);
+  }
+
   @override
   @JsonKey()
   final bool isSubmitting;
@@ -145,7 +176,7 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
 
   @override
   String toString() {
-    return 'GoodsEditState(form: $form, isSubmitting: $isSubmitting, error: $error)';
+    return 'GoodsEditState(form: $form, goodsDetails: $goodsDetails, isSubmitting: $isSubmitting, error: $error)';
   }
 
   @override
@@ -154,13 +185,23 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
         (other.runtimeType == runtimeType &&
             other is _$GoodsEditStateImpl &&
             (identical(other.form, form) || other.form == form) &&
+            const DeepCollectionEquality().equals(
+              other._goodsDetails,
+              _goodsDetails,
+            ) &&
             (identical(other.isSubmitting, isSubmitting) ||
                 other.isSubmitting == isSubmitting) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, form, isSubmitting, error);
+  int get hashCode => Object.hash(
+    runtimeType,
+    form,
+    const DeepCollectionEquality().hash(_goodsDetails),
+    isSubmitting,
+    error,
+  );
 
   /// Create a copy of GoodsEditState
   /// with the given fields replaced by the non-null parameter values.
@@ -177,12 +218,15 @@ class _$GoodsEditStateImpl implements _GoodsEditState {
 abstract class _GoodsEditState implements GoodsEditState {
   const factory _GoodsEditState({
     required final FormGroup form,
+    final List<GoodsDetailItem> goodsDetails,
     final bool isSubmitting,
     final String? error,
   }) = _$GoodsEditStateImpl;
 
   @override
   FormGroup get form;
+  @override
+  List<GoodsDetailItem> get goodsDetails;
   @override
   bool get isSubmitting;
   @override

@@ -5,17 +5,18 @@ import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/order/domain/entities/order_reject_reason.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class OrderRejectDialog extends StatelessWidget {
-  final Function(String reason) onConfirm;
+  final Function(OrderRejectReason reason) onConfirm;
 
   const OrderRejectDialog({super.key, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
-    String? selectedReason;
-    final reasons = ['고객 요청', '조리 지연', '재료 소진', '가게 사정'];
+    OrderRejectReason? selectedReason;
+    final reasons = OrderRejectReason.values;
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -72,9 +73,10 @@ class OrderRejectDialog extends StatelessWidget {
 
   Widget _buildReasonOption(
     BuildContext context,
-    String reason,
-    String? selectedReason,
-    Function(String) onSelect,
+    OrderRejectReason reason, // Changed type to RejectReason
+    OrderRejectReason? selectedReason, // Changed type to RejectReason?
+    Function(OrderRejectReason)
+    onSelect, // Changed type to Function(RejectReason)
   ) {
     final isSelected = selectedReason == reason;
 
@@ -94,11 +96,14 @@ class OrderRejectDialog extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Text(reason)
-            .sm()
-            .bold()
-            .textColor(isSelected ? MgColorScheme.gray1 : MgColorScheme.gray4)
-            .center(),
+        child:
+            Text(reason.description) // Display the description
+                .sm()
+                .bold()
+                .textColor(
+                  isSelected ? MgColorScheme.gray1 : MgColorScheme.gray4,
+                )
+                .center(),
       ),
     );
   }

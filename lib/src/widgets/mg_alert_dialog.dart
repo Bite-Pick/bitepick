@@ -44,6 +44,7 @@ class MgAlertDialog extends StatelessWidget {
                     content: Text(cancelText!).textColor(MgColorScheme.gray4),
                   ).gray(),
                 ),
+              Gaps.w8,
               Expanded(
                 child: MgButton(
                   onPressed: () {

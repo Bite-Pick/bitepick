@@ -7,7 +7,7 @@ part of 'owner_order_list_view.controller.dart';
 // **************************************************************************
 
 String _$ownerOrderListControllerHash() =>
-    r'0a3f9ecb7bf0e69411a704096048fb97c803ea63';
+    r'fda34c126ffccbd2ebfedb2f4d8dfa9b846f96c9';
 
 /// See also [OwnerOrderListController].
 @ProviderFor(OwnerOrderListController)

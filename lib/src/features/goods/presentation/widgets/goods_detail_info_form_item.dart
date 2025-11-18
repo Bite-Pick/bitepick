@@ -41,6 +41,9 @@ class _GoodsDetailInfoFormItemState extends State<GoodsDetailInfoFormItem> {
     super.initState();
     _selectedImage = widget.initialImage;
     _nameController = TextEditingController(text: widget.initialName);
+    _nameController.addListener(() {
+      widget.onNameChanged(_nameController.text);
+    });
   }
 
   @override

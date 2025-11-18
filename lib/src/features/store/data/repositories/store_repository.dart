@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';
@@ -17,7 +19,7 @@ class StoreRepository {
     _dio = ref.read(apiClientProvider);
   }
 
-  Future<List<Goods>> getStoreGoodsList({
+  Future<List<StoreListDTO>> getStoreGoodsList({
     required double latitude,
     required double longitude,
     String? keyword,
@@ -45,17 +47,17 @@ class StoreRepository {
     final list = data['storeListDTOResponses'] as List? ?? [];
 
     return list
-        .map((json) => Goods.fromJson(json as Map<String, dynamic>))
+        .map((json) => StoreListDTO.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
-  Future<Goods?> getStoreGoodsDetail(String id) async {
-    final res = await _dio.get('/v1/store/$id');
+  Future<GoodsDetailDto?> getStoreGoodsDetail(String storeId) async {
+    final res = await _dio.get('/v1/store/$storeId');
 
     if (res.data['status'] != 'OK') return null;
 
     final data = res.data['data'];
-    return Goods.fromJson(data as Map<String, dynamic>);
+    return GoodsDetailDto.fromJson(data as Map<String, dynamic>);
   }
 
   Future<List<PresignedUrlImage>> createStore({
@@ -68,6 +70,7 @@ class StoreRepository {
     required String businessNumber,
     required String bankName,
     required String bankAccount,
+    required String parkingDescription,
     required List<Map<String, dynamic>> storeImagesRegisters,
   }) async {
     final res = await _dio.post(
@@ -83,6 +86,7 @@ class StoreRepository {
         'bankName': bankName,
         'bankAccount': bankAccount,
         'storeImagesRegisters': storeImagesRegisters,
+        'parkingDescription': parkingDescription,
       },
     );
     if (res.data['status'] != 'OK') return [];
@@ -114,7 +118,7 @@ StoreRepository storeRepository(Ref ref) {
 }
 
 @riverpod
-Future<List<Goods>> storeGoodsList(
+Future<List<StoreListDTO>> storeGoodsList(
   Ref ref, {
   required double latitude,
   required double longitude,
@@ -138,7 +142,7 @@ Future<List<Goods>> storeGoodsList(
 }
 
 @riverpod
-Future<Goods?> storeGoodsDetail(Ref ref, String id) async {
+Future<GoodsDetailDto?> storeGoodsDetail(Ref ref, String id) async {
   return ref.read(storeRepositoryProvider).getStoreGoodsDetail(id);
 }
 

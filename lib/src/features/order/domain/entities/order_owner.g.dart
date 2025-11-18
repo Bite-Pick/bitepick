@@ -16,7 +16,7 @@ _$OrderOwnerImpl _$$OrderOwnerImplFromJson(Map<String, dynamic> json) =>
       quantity: (json['quantity'] as num).toInt(),
       totalPrice: (json['totalPrice'] as num).toInt(),
       phoneNumber: json['phoneNumber'] as String,
-      goodsName: json['goodsName'] as String,
+      goodsName: json['goodsName'] as String?,
     );
 
 Map<String, dynamic> _$$OrderOwnerImplToJson(_$OrderOwnerImpl instance) =>
@@ -33,7 +33,7 @@ Map<String, dynamic> _$$OrderOwnerImplToJson(_$OrderOwnerImpl instance) =>
     };
 
 const _$OrderOwnerStatusEnumMap = {
-  OrderOwnerStatus.paid: 'paid',
-  OrderOwnerStatus.accepted: 'accepted',
-  OrderOwnerStatus.completed: 'completed',
+  OrderOwnerStatus.PAID: 'PAID',
+  OrderOwnerStatus.ACCEPTED: 'ACCEPTED',
+  OrderOwnerStatus.COMPLETED: 'COMPLETED',
 };

@@ -8,6 +8,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
+import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -26,7 +27,7 @@ class OwnerGoodsEmptyScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseScaffold(
       canSwipeBack: false,
-      appBar: BaseAppBar(leading: SizedBox.shrink()),
+      appBar: BaseAppBar(leading: SizedBox.shrink(), action: OwnerMoreButton()),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

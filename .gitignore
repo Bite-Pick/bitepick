@@ -58,3 +58,4 @@ ios/Runner/GoogleService-Info-Prod.plist
 
 # local playground
 lib/src/playground.dart
+Makefile

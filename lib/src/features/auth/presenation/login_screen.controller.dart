@@ -82,6 +82,7 @@ class LoginScreenController extends _$LoginScreenController {
       // 기존 회원인 경우: 로그인 처리
       final loginSuccess = await _loginUser(authResult);
       if (loginSuccess) {
+        _saveLastLoginProvider(providerName);
         // 로그인 성공: null 반환 (메인 화면으로 이동)
         ref.invalidate(userStateProvider);
         state = const AsyncValue.data(null);
@@ -119,7 +120,7 @@ class LoginScreenController extends _$LoginScreenController {
   }
 
   /// 최근 로그인 Provider 저장
-  // TODO: 적용 시점 고민 필요(로그인 완료 vs 버튼만 눌러도)
+  // NOTE: 적용 시점 고민 필요(로그인 완료 vs 버튼만 눌러도)
   Future<void> _saveLastLoginProvider(String provider) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('lastLoginProvider', provider);

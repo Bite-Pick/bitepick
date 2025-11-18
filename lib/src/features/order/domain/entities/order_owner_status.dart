@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 
-enum OrderOwnerStatus { paid, accepted, completed }
+enum OrderOwnerStatus { PAID, ACCEPTED, COMPLETED }
 
 extension OrderOwnerStatusExt on OrderOwnerStatus {
   String get tabName {
     switch (this) {
-      case OrderOwnerStatus.paid:
+      case OrderOwnerStatus.PAID:
         return '대기';
-      case OrderOwnerStatus.accepted:
+      case OrderOwnerStatus.ACCEPTED:
         return '진행';
-      case OrderOwnerStatus.completed:
+      case OrderOwnerStatus.COMPLETED:
         return '완료';
     }
   }
 
   String get label {
     switch (this) {
-      case OrderOwnerStatus.paid:
-        return '대기';
-      case OrderOwnerStatus.accepted:
-        return '진행';
-      case OrderOwnerStatus.completed:
+      case OrderOwnerStatus.PAID:
+        return '접수 대기';
+      case OrderOwnerStatus.ACCEPTED:
+        return '진행중';
+      case OrderOwnerStatus.COMPLETED:
         return '완료';
     }
   }
 
   Color get color {
     switch (this) {
-      case OrderOwnerStatus.paid:
-        return MgColorScheme.primary;
-      case OrderOwnerStatus.accepted:
-        return MgColorScheme.secondary;
-      case OrderOwnerStatus.completed:
-        return MgColorScheme.gray5;
+      case OrderOwnerStatus.PAID:
+        return Color(0xffEF444D);
+      case OrderOwnerStatus.ACCEPTED:
+        return Color(0xff4887D9);
+      case OrderOwnerStatus.COMPLETED:
+        return Color(0xff4CAF50);
     }
   }
 }

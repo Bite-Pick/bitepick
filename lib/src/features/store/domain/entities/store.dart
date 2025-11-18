@@ -13,6 +13,8 @@ class Store with _$Store {
     required String address,
     required List<String> storeImageUrls,
     required List<Goods> goodsList,
+    String? parkingDescription, // TODO: parkingDescription 확인필요
+    List<GoodsImagesList>? goodsImageList, // TODO: goodsImageList 확인필요
   }) = _Store;
   const Store._();
 

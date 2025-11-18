@@ -21,9 +21,9 @@ class OrderStatusTabs extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statusMenus = [
-      OrderOwnerStatus.paid,
-      OrderOwnerStatus.accepted,
-      OrderOwnerStatus.completed,
+      OrderOwnerStatus.PAID,
+      OrderOwnerStatus.ACCEPTED,
+      OrderOwnerStatus.COMPLETED,
     ];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

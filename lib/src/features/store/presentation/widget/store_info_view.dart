@@ -127,7 +127,11 @@ class StoreInfoView extends ConsumerWidget {
             '픽업시간',
             "${storeInfo.startTime.convertTime()} ~ ${storeInfo.endTime.convertTime()}",
           ),
-        _buildStoreInfoItem('주차안내', "TODO"), // TODO: 주차안내 field 추가 이후 테스트
+        if (storeInfo.parkingDescription != null)
+          _buildStoreInfoItem(
+            '주차안내',
+            storeInfo.parkingDescription!,
+          ), // TODO: 주차안내 field 추가 이후 테스트
         _buildStoreInfoItem(
           '가게 주소',
           storeInfo.address,

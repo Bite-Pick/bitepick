@@ -105,7 +105,7 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
           .authenticateWithSocial(
             providerType: state.providerType!,
             authCode: state.socialToken!,
-            userRole: state.userRole!.name,
+            userRole: state.userRole!.value,
             nickName: state.nickname,
             phoneNumber: state.phone,
           );

@@ -2,9 +2,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
+import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'dart:io';
 
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 
@@ -15,6 +18,7 @@ part 'goods_edit_screen.controller.g.dart';
 class GoodsEditState with _$GoodsEditState {
   const factory GoodsEditState({
     required FormGroup form,
+    @Default([]) List<GoodsDetailItem> goodsDetails,
     @Default(false) bool isSubmitting,
     String? error,
   }) = _GoodsEditState;
@@ -134,6 +138,51 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     final discount = form.control('discount').value as int? ?? 0;
     final salePrice = originalPrice - (originalPrice * discount ~/ 100);
     form.control('salePrice').value = salePrice;
+  }
+
+  // 상품 상세 정보 추가
+  void addGoodsDetail(File file, String name) {
+    final fileName = file.path.split('/').last;
+    final newDetail = GoodsDetailItem(
+      localImage: LocalImage(
+        id: state.goodsDetails.length,
+        key: fileName,
+        file: file,
+      ),
+      name: name,
+    );
+
+    final updatedDetails = [...state.goodsDetails, newDetail];
+    state = state.copyWith(goodsDetails: updatedDetails);
+  }
+
+  // 상품 상세 정보 업데이트
+  void updateGoodsDetail(int index, File? file, String? name) {
+    if (index >= 0 && index < state.goodsDetails.length) {
+      final detail = state.goodsDetails[index];
+      final updatedDetail = GoodsDetailItem(
+        localImage: LocalImage(
+          id: detail.localImage.id,
+          key: file != null ? file.path.split('/').last : detail.localImage.key,
+          file: file ?? detail.localImage.file,
+          uploadedUrl: detail.localImage.uploadedUrl,
+        ),
+        name: name ?? detail.name,
+      );
+
+      final updatedDetails = List<GoodsDetailItem>.from(state.goodsDetails);
+      updatedDetails[index] = updatedDetail;
+      state = state.copyWith(goodsDetails: updatedDetails);
+    }
+  }
+
+  // 상품 상세 정보 제거
+  void removeGoodsDetail(int index) {
+    if (index >= 0 && index < state.goodsDetails.length) {
+      final updatedDetails = List<GoodsDetailItem>.from(state.goodsDetails)
+        ..removeAt(index);
+      state = state.copyWith(goodsDetails: updatedDetails);
+    }
   }
 
   // 필드명 한글 매핑
