@@ -3,6 +3,7 @@ import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
@@ -90,7 +91,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
             onPressed: () async {
               if (!_allAgreed) {
                 ToastPresentor.error(context, "모든 약관에 동의해 주세요");
-               
+
                 return;
               }
               // TODO: 결제 로직 추가
@@ -194,11 +195,27 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
 
   Widget _buildPaySection() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 결제 수단 섹션
         _buildSectionTitle('결제 수단'),
         Gaps.h12,
-        // TODO: 결제 수단 선택 UI 추가
+        // TODO: 버튼이 아니라 선택되어있는 것처럼 보여야할 듯
+        MgButton(
+          onPressed: () {},
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                R.ASSETS_IMAGES_TOSS_PAYMENTS_PNG,
+                height: MgSizes.lg,
+              ),
+              Gaps.w8,
+              Text("토스페이").bold().md(),
+            ],
+          ),
+          borderColor: MgColorScheme.gray8,
+        ),
       ],
     );
   }
@@ -233,15 +250,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     return AgreementSection(
       items: const [
         AgreementItem(text: '개인정보 수집 및 이용 동의 (필수)', link: PRIAVCY_POLICY),
-        AgreementItem(
-          text: '개인정보 제3자 정보 제공 동의 (필수)',
-          link: 'https://example.com/third-party', // TODO[asset]:  제3자 정보 제공
-        ),
-        AgreementItem(
-          text: '결제대행 서비스 이용약관 동의 (필수)',
-          link:
-              'https://example.com/payment-terms', // TODO[asset]:  결제대행 서비스 이용약관
-        ),
+        AgreementItem(text: '개인정보 제3자 정보 제공 동의 (필수)', link: GUEST_SERVICE_TERM),
       ],
       allAgreeText: '주문내용 확인 및 결제 동의',
       onAllAgreedChanged: (allAgreed) {
