@@ -26,14 +26,21 @@ class GoodsEditRoute extends GoRouteData {
   }
 }
 
-class GoodsEditScreen extends ConsumerWidget {
-  const GoodsEditScreen(this.goods, {super.key});
+class GoodsEditScreen extends ConsumerStatefulWidget {
   final Goods goods;
+  const GoodsEditScreen(this.goods, {super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(goodsEditScreenControllerProvider(goods));
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GoodsEditScreenState();
+}
+
+class _GoodsEditScreenState extends ConsumerState<GoodsEditScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(goodsEditScreenControllerProvider(widget.goods));
     final controller = ref.read(
-      goodsEditScreenControllerProvider(goods).notifier,
+      goodsEditScreenControllerProvider(widget.goods).notifier,
     );
 
     return ReactiveForm(
@@ -63,14 +70,24 @@ class GoodsEditScreen extends ConsumerWidget {
   }
 
   Widget _buildContent() {
+    final controller = ref.read(
+      goodsEditScreenControllerProvider(widget.goods).notifier,
+    );
     return SingleChildScrollView(
       child: Column(
         children: [
-          Step2TimeInfoView(), // startTime / endTime / quantity 공용
+          Step2TimeInfoView(),
           Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.xxl),
-          Step3PriceInfoView(), // originalPrice / discount / salePrice 공용
+          Step3PriceInfoView(),
           Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.xxl),
-          Step4GoodsInfoView(), // description 등 공용
+          Step4GoodsInfoView(
+            goodsDetails: ref
+                .read(goodsEditScreenControllerProvider(widget.goods))
+                .goodsDetails,
+            onAddGoodsDetail: controller.addGoodsDetail,
+            onUpdateGoodsDetail: controller.updateGoodsDetail,
+            onRemoveGoodsDetail: controller.removeGoodsDetail,
+          ), // description 등 공용
         ],
       ).margin(vertical: MgSizes.md),
     );

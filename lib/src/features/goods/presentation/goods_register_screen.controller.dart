@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
+import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -18,7 +20,6 @@ class GoodsRegisterState with _$GoodsRegisterState {
   const factory GoodsRegisterState({
     required int currentStep,
     required FormGroup form,
-    @Default([]) List<LocalImage> localImages, // Step1: 대표 이미지 파일들
     @Default([]) List<GoodsDetailItem> goodsDetails, // Step4: 상품 상세 정보 리스트
     @Default(false) bool isSubmitting,
     @Default(0.0) double uploadProgress,
@@ -61,7 +62,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       }
     });
 
-    // 사용자가 endTime을 과거로 선택해도 즉시 보정
     form.control('endTime').valueChanges.listen((end) {
       if (end is! DateTime) return;
       final start = form.control('startTime').value as DateTime?;
@@ -87,9 +87,8 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
   FormGroup _createForm() {
     return FormGroup({
-      // Step 2: 수량, 픽업 시작,마감 시간
       'quantity': FormControl<int>(
-        value: 0,
+        value: 1,
         validators: [Validators.required, Validators.min(1)],
       ),
 
@@ -140,18 +139,19 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   //   }
   // }
 
-  void fillWithMockData(Map<String, Object> data) {
-    state.form.patchValue(data);
-  }
+  void fillWithMockData(Map<String, Object> data) =>
+      state.form.patchValue(data);
 
   // 상품 상세 정보 추가
-  void addGoodsDetail({required File file, required String name}) {
+  void addGoodsDetail(File file, String name) {
     final fileName = file.path.split('/').last;
     final newDetail = GoodsDetailItem(
-      id: state.goodsDetails.length,
-      key: fileName,
+      localImage: LocalImage(
+        id: state.goodsDetails.length,
+        key: fileName,
+        file: file,
+      ),
       name: name,
-      file: file,
     );
 
     final updatedDetails = [...state.goodsDetails, newDetail];
@@ -159,15 +159,17 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   }
 
   // 상품 상세 정보 업데이트
-  void updateGoodsDetail({required int index, File? file, String? name}) {
+  void updateGoodsDetail(int index, File? file, String? name) {
     if (index >= 0 && index < state.goodsDetails.length) {
       final detail = state.goodsDetails[index];
       final updatedDetail = GoodsDetailItem(
-        id: detail.id,
-        key: file != null ? file.path.split('/').last : detail.key,
+        localImage: LocalImage(
+          id: detail.localImage.id,
+          key: file != null ? file.path.split('/').last : detail.localImage.key,
+          file: file ?? detail.localImage.file,
+          uploadedUrl: detail.localImage.uploadedUrl,
+        ),
         name: name ?? detail.name,
-        file: file ?? detail.file,
-        uploadedUrl: detail.uploadedUrl,
       );
 
       final updatedDetails = List<GoodsDetailItem>.from(state.goodsDetails);
@@ -225,6 +227,22 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
       final formValue = state.form.value;
 
+      final imageUploads = state.goodsDetails.mapIndexed((index, goodsDetail) {
+        return {
+          'key': goodsDetail.localImage.key,
+          'id': index + 1,
+          'goodsName': goodsDetail.name,
+        };
+      }).toList();
+
+      if (imageUploads.isEmpty) {
+        final context = GlobalVariable.navigatorKey.currentContext;
+        context != null
+            ? ToastPresentor.error(context, "상세설명은 1개이상 추가해주세요")
+            : talker.error("상세설명은 1개이상 추가해주세요");
+        return false;
+      }
+
       // 2. Goods 등록 API 호출 (presigned URL 받기)
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
@@ -235,29 +253,31 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
             quantity: formValue['quantity'] as int,
             startTime: formValue['startTime'] as DateTime,
             endTime: formValue['endTime'] as DateTime,
-            // TODO: 상세 설명추가
+            goodsImagesRegisters: imageUploads,
           );
+      if (presignedUrls == null) {
+        talker.error('바이트백 등록 실패');
+        return false;
+      } else {
+        talker.info('바이트백 등록 성공,이미지 업로드준비');
+      }
 
       // 3. Presigned URL로 S3에 이미지 업로드
-      // TODO: 상세설명 API 수정 이후 연결
-      // await ref
-      //     .read(presignedImageRepositoryProvider)
-      //     .uploadImagesToS3(
-      //       localImages: state.localImages,
-      //       presignedUrls: presignedUrls,
-      //       onProgress: (currentIndex, total, sent, totalBytes) {
-      //         final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
-      //         final overallProgress = (currentIndex + fileProgress) / total;
-      //         state = state.copyWith(uploadProgress: overallProgress);
-      //       },
-      //     );
-      state = state.copyWith(
-        isSubmitting: false,
-        error: presignedUrls == null ? "API 실패" : null,
-      );
-
-      // 성공 처리
-      talker.debug('Goods 등록 및 이미지 업로드 완료');
+      await ref
+          .read(presignedImageRepositoryProvider)
+          .uploadImagesToS3(
+            localImages: state.goodsDetails
+                .map((goodsDetail) => goodsDetail.localImage)
+                .toList(),
+            presignedUrls: presignedUrls,
+            onProgress: (currentIndex, total, sent, totalBytes) {
+              final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
+              final overallProgress = (currentIndex + fileProgress) / total;
+              state = state.copyWith(uploadProgress: overallProgress);
+            },
+          );
+      state = state.copyWith(isSubmitting: false);
+      talker.debug('바이트백 등록 및 이미지 업로드 완료');
       return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: e.toString());

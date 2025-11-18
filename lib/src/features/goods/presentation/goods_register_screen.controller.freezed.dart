@@ -19,8 +19,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$GoodsRegisterState {
   int get currentStep => throw _privateConstructorUsedError;
   FormGroup get form => throw _privateConstructorUsedError;
-  List<LocalImage> get localImages =>
-      throw _privateConstructorUsedError; // Step1: 대표 이미지 파일들
   List<GoodsDetailItem> get goodsDetails =>
       throw _privateConstructorUsedError; // Step4: 상품 상세 정보 리스트
   bool get isSubmitting => throw _privateConstructorUsedError;
@@ -44,7 +42,6 @@ abstract class $GoodsRegisterStateCopyWith<$Res> {
   $Res call({
     int currentStep,
     FormGroup form,
-    List<LocalImage> localImages,
     List<GoodsDetailItem> goodsDetails,
     bool isSubmitting,
     double uploadProgress,
@@ -69,7 +66,6 @@ class _$GoodsRegisterStateCopyWithImpl<$Res, $Val extends GoodsRegisterState>
   $Res call({
     Object? currentStep = null,
     Object? form = null,
-    Object? localImages = null,
     Object? goodsDetails = null,
     Object? isSubmitting = null,
     Object? uploadProgress = null,
@@ -85,10 +81,6 @@ class _$GoodsRegisterStateCopyWithImpl<$Res, $Val extends GoodsRegisterState>
                 ? _value.form
                 : form // ignore: cast_nullable_to_non_nullable
                       as FormGroup,
-            localImages: null == localImages
-                ? _value.localImages
-                : localImages // ignore: cast_nullable_to_non_nullable
-                      as List<LocalImage>,
             goodsDetails: null == goodsDetails
                 ? _value.goodsDetails
                 : goodsDetails // ignore: cast_nullable_to_non_nullable
@@ -123,7 +115,6 @@ abstract class _$$GoodsRegisterStateImplCopyWith<$Res>
   $Res call({
     int currentStep,
     FormGroup form,
-    List<LocalImage> localImages,
     List<GoodsDetailItem> goodsDetails,
     bool isSubmitting,
     double uploadProgress,
@@ -147,7 +138,6 @@ class __$$GoodsRegisterStateImplCopyWithImpl<$Res>
   $Res call({
     Object? currentStep = null,
     Object? form = null,
-    Object? localImages = null,
     Object? goodsDetails = null,
     Object? isSubmitting = null,
     Object? uploadProgress = null,
@@ -163,10 +153,6 @@ class __$$GoodsRegisterStateImplCopyWithImpl<$Res>
             ? _value.form
             : form // ignore: cast_nullable_to_non_nullable
                   as FormGroup,
-        localImages: null == localImages
-            ? _value._localImages
-            : localImages // ignore: cast_nullable_to_non_nullable
-                  as List<LocalImage>,
         goodsDetails: null == goodsDetails
             ? _value._goodsDetails
             : goodsDetails // ignore: cast_nullable_to_non_nullable
@@ -194,30 +180,17 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
   const _$GoodsRegisterStateImpl({
     required this.currentStep,
     required this.form,
-    final List<LocalImage> localImages = const [],
     final List<GoodsDetailItem> goodsDetails = const [],
     this.isSubmitting = false,
     this.uploadProgress = 0.0,
     this.error,
-  }) : _localImages = localImages,
-       _goodsDetails = goodsDetails;
+  }) : _goodsDetails = goodsDetails;
 
   @override
   final int currentStep;
   @override
   final FormGroup form;
-  final List<LocalImage> _localImages;
-  @override
-  @JsonKey()
-  List<LocalImage> get localImages {
-    if (_localImages is EqualUnmodifiableListView) return _localImages;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_localImages);
-  }
-
-  // Step1: 대표 이미지 파일들
   final List<GoodsDetailItem> _goodsDetails;
-  // Step1: 대표 이미지 파일들
   @override
   @JsonKey()
   List<GoodsDetailItem> get goodsDetails {
@@ -238,7 +211,7 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
 
   @override
   String toString() {
-    return 'GoodsRegisterState(currentStep: $currentStep, form: $form, localImages: $localImages, goodsDetails: $goodsDetails, isSubmitting: $isSubmitting, uploadProgress: $uploadProgress, error: $error)';
+    return 'GoodsRegisterState(currentStep: $currentStep, form: $form, goodsDetails: $goodsDetails, isSubmitting: $isSubmitting, uploadProgress: $uploadProgress, error: $error)';
   }
 
   @override
@@ -249,10 +222,6 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
             (identical(other.currentStep, currentStep) ||
                 other.currentStep == currentStep) &&
             (identical(other.form, form) || other.form == form) &&
-            const DeepCollectionEquality().equals(
-              other._localImages,
-              _localImages,
-            ) &&
             const DeepCollectionEquality().equals(
               other._goodsDetails,
               _goodsDetails,
@@ -269,7 +238,6 @@ class _$GoodsRegisterStateImpl implements _GoodsRegisterState {
     runtimeType,
     currentStep,
     form,
-    const DeepCollectionEquality().hash(_localImages),
     const DeepCollectionEquality().hash(_goodsDetails),
     isSubmitting,
     uploadProgress,
@@ -292,7 +260,6 @@ abstract class _GoodsRegisterState implements GoodsRegisterState {
   const factory _GoodsRegisterState({
     required final int currentStep,
     required final FormGroup form,
-    final List<LocalImage> localImages,
     final List<GoodsDetailItem> goodsDetails,
     final bool isSubmitting,
     final double uploadProgress,
@@ -303,8 +270,6 @@ abstract class _GoodsRegisterState implements GoodsRegisterState {
   int get currentStep;
   @override
   FormGroup get form;
-  @override
-  List<LocalImage> get localImages; // Step1: 대표 이미지 파일들
   @override
   List<GoodsDetailItem> get goodsDetails; // Step4: 상품 상세 정보 리스트
   @override

@@ -83,6 +83,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
   }
 
   Widget _buildContent() {
+    final controller = ref.read(goodsRegisterScreenControllerProvider.notifier);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -90,7 +91,14 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
           Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.xxl),
           Step3PriceInfoView(),
           Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.xxl),
-          Step4GoodsInfoView(),
+          Step4GoodsInfoView(
+            goodsDetails: ref
+                .read(goodsRegisterScreenControllerProvider)
+                .goodsDetails,
+            onAddGoodsDetail: controller.addGoodsDetail,
+            onUpdateGoodsDetail: controller.updateGoodsDetail,
+            onRemoveGoodsDetail: controller.removeGoodsDetail,
+          ),
         ],
       ).margin(vertical: MgSizes.md),
     );
