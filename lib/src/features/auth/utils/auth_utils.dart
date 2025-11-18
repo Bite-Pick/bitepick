@@ -4,9 +4,20 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/auth/data/repositories/withdraw_controller.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
+import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 Future<void> logout(WidgetRef ref, BuildContext context) async {
+  bool ok = false;
+  await showDialog(
+    context: context,
+    builder: (context) => MgAlertDialog(
+      title: "로그아웃 하시겠어요?",
+      content: Text("다음에 또 만나요!"),
+      onConfirm: () => ok = true,
+    ),
+  );
+  if (!ok) return;
   await ref.read(authTokenManagerProvider.notifier).deleteTokens();
   ref.invalidate(userStateProvider);
   if (context.mounted) DefaultRoute().go(context);
