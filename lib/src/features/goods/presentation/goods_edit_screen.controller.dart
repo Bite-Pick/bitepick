@@ -115,9 +115,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     return FormGroup({
       'name': FormControl<String>(),
       'goodsId': FormControl<String>(),
-      'description': FormControl<String>(
-        validators: [Validators.required, Validators.minLength(10)],
-      ),
+      'description': FormControl<String>(),
       'images': FormControl<int>(value: 0),
       'quantity': FormControl<int>(
         validators: [Validators.required, Validators.min(1)],
@@ -240,21 +238,22 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
         };
       }).toList();
 
-      if (imageUploads.isEmpty) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        context != null
-            ? ToastPresentor.error(context, "상세설명은 1개이상 추가해주세요")
-            : talker.error("상세설명은 1개이상 추가해주세요");
-        state = state.copyWith(isSubmitting: false);
-        return false;
-      }
+      // TODO: 추가해야함
+      // if (imageUploads.isEmpty) {
+      //   final context = GlobalVariable.navigatorKey.currentContext;
+      //   context != null
+      //       ? ToastPresentor.error(context, "상세설명은 1개이상 추가해주세요")
+      //       : talker.error("상세설명은 1개이상 추가해주세요");
+      //   state = state.copyWith(isSubmitting: false);
+      //   return false;
+      // }
 
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
           .editGoods(
-            name: formValue['name'] as String?,
+            // name: formValue['name'] as String?,
             goodsId: formValue['goodsId'] as String,
-            description: formValue['description'] as String,
+            // description: formValue['description'] as String?,
             originalPrice: formValue['originalPrice'] as int,
             discount: formValue['discount'] as int,
             salePrice: formValue['salePrice'] as int,
@@ -270,6 +269,11 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
         return false;
       } else {
         talker.info('바이트백 수정 성공, 이미지 업로드 준비');
+      }
+      // 임시처리
+      if (presignedUrls.isEmpty) {
+        state = state.copyWith(isSubmitting: false);
+        return true;
       }
 
       // Presigned URL로 S3에 이미지 업로드

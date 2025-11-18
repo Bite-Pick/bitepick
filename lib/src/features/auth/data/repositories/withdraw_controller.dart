@@ -16,7 +16,7 @@ class WithdrawController extends _$WithdrawController {
   Future<bool> withdraw({required BuildContext context}) async {
     // 확인 다이얼로그
     bool ok = false;
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) => MgAlertDialog(
         title: "정말로 탈퇴하시겠어요?",
@@ -24,7 +24,7 @@ class WithdrawController extends _$WithdrawController {
         onConfirm: () => ok = true,
       ),
     );
-    if (ok != true) return false;
+    if (!ok) return false;
 
     state = const AsyncLoading();
 

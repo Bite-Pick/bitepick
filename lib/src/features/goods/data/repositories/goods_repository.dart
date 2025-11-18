@@ -28,7 +28,7 @@ class GoodsRepository {
     final res = await _dio.post(
       '/v1/goods',
       data: {
-        'description': "test추후 수정필요",
+        'description': 'test..;;', //TODO ASAP수정필요.......
         'originalPrice': originalPrice,
         'discount': discount,
         'salePrice': salePrice,
@@ -38,9 +38,13 @@ class GoodsRepository {
         'goodsImagesRegisters': goodsImagesRegisters,
       },
     );
+    if (res.data['status'] != "OK") return null;
+    final data = res.data;
+    if (data == "success") return [];
 
     final presignedImagesData =
-        res.data['data']['goodsPreSignedImages'] as List;
+        res.data['data']['goodsPreSignedImages'] as List?;
+    if (presignedImagesData == null) return []; // 임시 처리
     return presignedImagesData
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
         .toList();
@@ -48,8 +52,8 @@ class GoodsRepository {
 
   Future<List<PresignedUrlImage>?> editGoods({
     required String goodsId,
-    String? name,
-    required String description,
+    // String? name,
+    // required String description,
     required int originalPrice,
     required int discount,
     required int salePrice,
@@ -61,9 +65,10 @@ class GoodsRepository {
     final res = await _dio.patch(
       '/v1/goods',
       data: {
+        'description': 'test..;;', //TODO ASAP수정필요.......
         'goodsId': goodsId,
-        'name': name ?? "test", // TODO: 백엔드 수정 필요
-        'description': description,
+        'name': "test", // TODO: 백엔드 수정 필요
+        // 'description': '',
         'originalPrice': originalPrice,
         'discount': discount,
         'salePrice': salePrice,
@@ -75,8 +80,11 @@ class GoodsRepository {
     );
     if (res.data['status'] != "OK") return null;
 
-    final presignedImagesData =
-        res.data['data']['goodsPreSignedImages'] as List;
+    final data = res.data['data'];
+    if (data == null) return [];
+
+    final presignedImagesData = data['goodsPreSignedImages'] as List?;
+    if (presignedImagesData == null) return []; // 임시 처리
     return presignedImagesData
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
         .toList();

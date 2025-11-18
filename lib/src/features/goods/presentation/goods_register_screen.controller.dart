@@ -235,13 +235,14 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
         };
       }).toList();
 
-      if (imageUploads.isEmpty) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        context != null
-            ? ToastPresentor.error(context, "상세설명은 1개이상 추가해주세요")
-            : talker.error("상세설명은 1개이상 추가해주세요");
-        return false;
-      }
+      // TODO: 추가해야함
+      // if (imageUploads.isEmpty) {
+      //   final context = GlobalVariable.navigatorKey.currentContext;
+      //   context != null
+      //       ? ToastPresentor.error(context, "상세설명은 1개이상 추가해주세요")
+      //       : talker.error("상세설명은 1개이상 추가해주세요");
+      //   return false;
+      // }
 
       // 2. Goods 등록 API 호출 (presigned URL 받기)
       final presignedUrls = await ref
@@ -259,9 +260,13 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
         talker.error('바이트백 등록 실패');
         return false;
       } else {
-        talker.info('바이트백 등록 성공,이미지 업로드준비');
+        talker.info('바이트백 등록 성공');
       }
-
+      // 임시처리
+      if (presignedUrls.isEmpty) {
+        state = state.copyWith(isSubmitting: false);
+        return true;
+      }
       // 3. Presigned URL로 S3에 이미지 업로드
       await ref
           .read(presignedImageRepositoryProvider)
