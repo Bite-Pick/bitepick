@@ -18,10 +18,10 @@ platform :android do
 
     # Flutter AAB 빌드
     puts "🔨 Building AAB for #{mode} flavor..."
-    sh "cd ../.. && flutter build appbundle --release --flavor #{mode} -t #{entry_point}"
+    sh "cd .. && flutter build appbundle --release --flavor #{mode} -t #{entry_point} --build-name=#{ENV['VERSION']} --build-number=#{ENV['BUILD_NUMBER']}"
 
     # AAB 경로 확인
-    aab_path = "../../build/app/outputs/bundle/#{mode}Release/app-#{mode}-release.aab"
+    aab_path = "../build/app/outputs/bundle/#{mode}Release/app-#{mode}-release.aab"
     unless File.exist?(aab_path)
       raise "❌ AAB file not found at #{aab_path}"
     end

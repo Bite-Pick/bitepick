@@ -546,6 +546,24 @@ jobs:
           echo "=== Disk usage after cleanup ==="
           df -h
 
+      - name: Decrypt secrets
+        env:
+          CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
+        run: |
+          chmod +x .github/scripts/decrypt-secrets.sh
+          .github/scripts/decrypt-secrets.sh
+
+      - name: Check .env file
+        run: |
+          ls -la
+          if [ -f .env ]; then
+            echo "✅ .env file exists"
+            echo "File size: $(wc -c < .env) bytes"
+          else
+            echo "❌ .env file is missing!"
+            exit 1
+          fi
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -598,6 +616,8 @@ jobs:
         env:
           MODE: prod
           PACKAGE_NAME: com.trendflow.bread
+          VERSION: ${{ env.VERSION }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
 
   ios-dev:
     timeout-minutes: 60
