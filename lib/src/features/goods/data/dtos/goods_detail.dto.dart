@@ -23,6 +23,7 @@ class GoodsDetailDto with _$GoodsDetailDto {
     required int reviewCount,
     required double averageRating,
     String? parkingDescription, // TODO: parkingDescription 확인필요
+    // TODO: bitebag 정보 [GoodsImagesList] 추가 필요
   }) = _GoodsDetailDto;
 
   factory GoodsDetailDto.fromJson(Map<String, dynamic> json) =>

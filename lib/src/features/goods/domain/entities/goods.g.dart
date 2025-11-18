@@ -48,3 +48,19 @@ Map<String, dynamic> _$$GoodsImplToJson(_$GoodsImpl instance) =>
       'stockQuantity': instance.stockQuantity,
       'saleStatus': instance.saleStatus,
     };
+
+_$GoodsImagesListImpl _$$GoodsImagesListImplFromJson(
+  Map<String, dynamic> json,
+) => _$GoodsImagesListImpl(
+  goodsImageId: (json['goodsImageId'] as num).toInt(),
+  goodsName: json['goodsName'] as String,
+  imageUrl: json['imageUrl'] as String,
+);
+
+Map<String, dynamic> _$$GoodsImagesListImplToJson(
+  _$GoodsImagesListImpl instance,
+) => <String, dynamic>{
+  'goodsImageId': instance.goodsImageId,
+  'goodsName': instance.goodsName,
+  'imageUrl': instance.imageUrl,
+};

@@ -24,10 +24,12 @@ mixin _$Store {
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
-  String? get parkingDescription =>
-      throw _privateConstructorUsedError; // TODO: parkingDescription 확인필요
   List<String> get storeImageUrls => throw _privateConstructorUsedError;
   List<Goods> get goodsList => throw _privateConstructorUsedError;
+  String? get parkingDescription =>
+      throw _privateConstructorUsedError; // TODO: parkingDescription 확인필요
+  List<GoodsImagesList>? get goodsImageList =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this Store to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,9 +49,10 @@ abstract class $StoreCopyWith<$Res> {
     String storeId,
     String storeName,
     String address,
-    String? parkingDescription,
     List<String> storeImageUrls,
     List<Goods> goodsList,
+    String? parkingDescription,
+    List<GoodsImagesList>? goodsImageList,
   });
 }
 
@@ -71,9 +74,10 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     Object? storeId = null,
     Object? storeName = null,
     Object? address = null,
-    Object? parkingDescription = freezed,
     Object? storeImageUrls = null,
     Object? goodsList = null,
+    Object? parkingDescription = freezed,
+    Object? goodsImageList = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -89,10 +93,6 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
                 ? _value.address
                 : address // ignore: cast_nullable_to_non_nullable
                       as String,
-            parkingDescription: freezed == parkingDescription
-                ? _value.parkingDescription
-                : parkingDescription // ignore: cast_nullable_to_non_nullable
-                      as String?,
             storeImageUrls: null == storeImageUrls
                 ? _value.storeImageUrls
                 : storeImageUrls // ignore: cast_nullable_to_non_nullable
@@ -101,6 +101,14 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
                 ? _value.goodsList
                 : goodsList // ignore: cast_nullable_to_non_nullable
                       as List<Goods>,
+            parkingDescription: freezed == parkingDescription
+                ? _value.parkingDescription
+                : parkingDescription // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            goodsImageList: freezed == goodsImageList
+                ? _value.goodsImageList
+                : goodsImageList // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsImagesList>?,
           )
           as $Val,
     );
@@ -119,9 +127,10 @@ abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
     String storeId,
     String storeName,
     String address,
-    String? parkingDescription,
     List<String> storeImageUrls,
     List<Goods> goodsList,
+    String? parkingDescription,
+    List<GoodsImagesList>? goodsImageList,
   });
 }
 
@@ -142,9 +151,10 @@ class __$$StoreImplCopyWithImpl<$Res>
     Object? storeId = null,
     Object? storeName = null,
     Object? address = null,
-    Object? parkingDescription = freezed,
     Object? storeImageUrls = null,
     Object? goodsList = null,
+    Object? parkingDescription = freezed,
+    Object? goodsImageList = freezed,
   }) {
     return _then(
       _$StoreImpl(
@@ -160,10 +170,6 @@ class __$$StoreImplCopyWithImpl<$Res>
             ? _value.address
             : address // ignore: cast_nullable_to_non_nullable
                   as String,
-        parkingDescription: freezed == parkingDescription
-            ? _value.parkingDescription
-            : parkingDescription // ignore: cast_nullable_to_non_nullable
-                  as String?,
         storeImageUrls: null == storeImageUrls
             ? _value._storeImageUrls
             : storeImageUrls // ignore: cast_nullable_to_non_nullable
@@ -172,6 +178,14 @@ class __$$StoreImplCopyWithImpl<$Res>
             ? _value._goodsList
             : goodsList // ignore: cast_nullable_to_non_nullable
                   as List<Goods>,
+        parkingDescription: freezed == parkingDescription
+            ? _value.parkingDescription
+            : parkingDescription // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        goodsImageList: freezed == goodsImageList
+            ? _value._goodsImageList
+            : goodsImageList // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsImagesList>?,
       ),
     );
   }
@@ -184,11 +198,13 @@ class _$StoreImpl extends _Store {
     required this.storeId,
     required this.storeName,
     required this.address,
-    this.parkingDescription,
     required final List<String> storeImageUrls,
     required final List<Goods> goodsList,
+    this.parkingDescription,
+    final List<GoodsImagesList>? goodsImageList,
   }) : _storeImageUrls = storeImageUrls,
        _goodsList = goodsList,
+       _goodsImageList = goodsImageList,
        super._();
 
   factory _$StoreImpl.fromJson(Map<String, dynamic> json) =>
@@ -200,11 +216,7 @@ class _$StoreImpl extends _Store {
   final String storeName;
   @override
   final String address;
-  @override
-  final String? parkingDescription;
-  // TODO: parkingDescription 확인필요
   final List<String> _storeImageUrls;
-  // TODO: parkingDescription 확인필요
   @override
   List<String> get storeImageUrls {
     if (_storeImageUrls is EqualUnmodifiableListView) return _storeImageUrls;
@@ -221,8 +233,22 @@ class _$StoreImpl extends _Store {
   }
 
   @override
+  final String? parkingDescription;
+  // TODO: parkingDescription 확인필요
+  final List<GoodsImagesList>? _goodsImageList;
+  // TODO: parkingDescription 확인필요
+  @override
+  List<GoodsImagesList>? get goodsImageList {
+    final value = _goodsImageList;
+    if (value == null) return null;
+    if (_goodsImageList is EqualUnmodifiableListView) return _goodsImageList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
   String toString() {
-    return 'Store(storeId: $storeId, storeName: $storeName, address: $address, parkingDescription: $parkingDescription, storeImageUrls: $storeImageUrls, goodsList: $goodsList)';
+    return 'Store(storeId: $storeId, storeName: $storeName, address: $address, storeImageUrls: $storeImageUrls, goodsList: $goodsList, parkingDescription: $parkingDescription, goodsImageList: $goodsImageList)';
   }
 
   @override
@@ -234,8 +260,6 @@ class _$StoreImpl extends _Store {
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.parkingDescription, parkingDescription) ||
-                other.parkingDescription == parkingDescription) &&
             const DeepCollectionEquality().equals(
               other._storeImageUrls,
               _storeImageUrls,
@@ -243,6 +267,12 @@ class _$StoreImpl extends _Store {
             const DeepCollectionEquality().equals(
               other._goodsList,
               _goodsList,
+            ) &&
+            (identical(other.parkingDescription, parkingDescription) ||
+                other.parkingDescription == parkingDescription) &&
+            const DeepCollectionEquality().equals(
+              other._goodsImageList,
+              _goodsImageList,
             ));
   }
 
@@ -253,9 +283,10 @@ class _$StoreImpl extends _Store {
     storeId,
     storeName,
     address,
-    parkingDescription,
     const DeepCollectionEquality().hash(_storeImageUrls),
     const DeepCollectionEquality().hash(_goodsList),
+    parkingDescription,
+    const DeepCollectionEquality().hash(_goodsImageList),
   );
 
   /// Create a copy of Store
@@ -277,9 +308,10 @@ abstract class _Store extends Store {
     required final String storeId,
     required final String storeName,
     required final String address,
-    final String? parkingDescription,
     required final List<String> storeImageUrls,
     required final List<Goods> goodsList,
+    final String? parkingDescription,
+    final List<GoodsImagesList>? goodsImageList,
   }) = _$StoreImpl;
   const _Store._() : super._();
 
@@ -292,11 +324,13 @@ abstract class _Store extends Store {
   @override
   String get address;
   @override
-  String? get parkingDescription; // TODO: parkingDescription 확인필요
-  @override
   List<String> get storeImageUrls;
   @override
   List<Goods> get goodsList;
+  @override
+  String? get parkingDescription; // TODO: parkingDescription 확인필요
+  @override
+  List<GoodsImagesList>? get goodsImageList;
 
   /// Create a copy of Store
   /// with the given fields replaced by the non-null parameter values.

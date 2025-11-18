@@ -28,3 +28,18 @@ class Goods with _$Goods {
 
   factory Goods.fromJson(Map<String, dynamic> json) => _$GoodsFromJson(json);
 }
+
+
+// TODO: GoodsImagesList 파일 분리 필요
+@freezed
+class GoodsImagesList with _$GoodsImagesList {
+  const factory GoodsImagesList({
+    required int goodsImageId,
+    required String goodsName,
+    required String imageUrl,
+  }) = _GoodsImagesList;
+  const GoodsImagesList._();
+
+  factory GoodsImagesList.fromJson(Map<String, dynamic> json) =>
+      _$GoodsImagesListFromJson(json);
+}

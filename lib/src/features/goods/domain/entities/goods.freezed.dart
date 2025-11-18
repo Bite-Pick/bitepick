@@ -533,3 +533,206 @@ abstract class _Goods extends Goods {
   _$$GoodsImplCopyWith<_$GoodsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+GoodsImagesList _$GoodsImagesListFromJson(Map<String, dynamic> json) {
+  return _GoodsImagesList.fromJson(json);
+}
+
+/// @nodoc
+mixin _$GoodsImagesList {
+  int get goodsImageId => throw _privateConstructorUsedError;
+  String get goodsName => throw _privateConstructorUsedError;
+  String get imageUrl => throw _privateConstructorUsedError;
+
+  /// Serializes this GoodsImagesList to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $GoodsImagesListCopyWith<GoodsImagesList> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GoodsImagesListCopyWith<$Res> {
+  factory $GoodsImagesListCopyWith(
+    GoodsImagesList value,
+    $Res Function(GoodsImagesList) then,
+  ) = _$GoodsImagesListCopyWithImpl<$Res, GoodsImagesList>;
+  @useResult
+  $Res call({int goodsImageId, String goodsName, String imageUrl});
+}
+
+/// @nodoc
+class _$GoodsImagesListCopyWithImpl<$Res, $Val extends GoodsImagesList>
+    implements $GoodsImagesListCopyWith<$Res> {
+  _$GoodsImagesListCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? goodsImageId = null,
+    Object? goodsName = null,
+    Object? imageUrl = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            goodsImageId: null == goodsImageId
+                ? _value.goodsImageId
+                : goodsImageId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            goodsName: null == goodsName
+                ? _value.goodsName
+                : goodsName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            imageUrl: null == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$GoodsImagesListImplCopyWith<$Res>
+    implements $GoodsImagesListCopyWith<$Res> {
+  factory _$$GoodsImagesListImplCopyWith(
+    _$GoodsImagesListImpl value,
+    $Res Function(_$GoodsImagesListImpl) then,
+  ) = __$$GoodsImagesListImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int goodsImageId, String goodsName, String imageUrl});
+}
+
+/// @nodoc
+class __$$GoodsImagesListImplCopyWithImpl<$Res>
+    extends _$GoodsImagesListCopyWithImpl<$Res, _$GoodsImagesListImpl>
+    implements _$$GoodsImagesListImplCopyWith<$Res> {
+  __$$GoodsImagesListImplCopyWithImpl(
+    _$GoodsImagesListImpl _value,
+    $Res Function(_$GoodsImagesListImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? goodsImageId = null,
+    Object? goodsName = null,
+    Object? imageUrl = null,
+  }) {
+    return _then(
+      _$GoodsImagesListImpl(
+        goodsImageId: null == goodsImageId
+            ? _value.goodsImageId
+            : goodsImageId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        goodsName: null == goodsName
+            ? _value.goodsName
+            : goodsName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        imageUrl: null == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$GoodsImagesListImpl extends _GoodsImagesList {
+  const _$GoodsImagesListImpl({
+    required this.goodsImageId,
+    required this.goodsName,
+    required this.imageUrl,
+  }) : super._();
+
+  factory _$GoodsImagesListImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GoodsImagesListImplFromJson(json);
+
+  @override
+  final int goodsImageId;
+  @override
+  final String goodsName;
+  @override
+  final String imageUrl;
+
+  @override
+  String toString() {
+    return 'GoodsImagesList(goodsImageId: $goodsImageId, goodsName: $goodsName, imageUrl: $imageUrl)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GoodsImagesListImpl &&
+            (identical(other.goodsImageId, goodsImageId) ||
+                other.goodsImageId == goodsImageId) &&
+            (identical(other.goodsName, goodsName) ||
+                other.goodsName == goodsName) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, goodsImageId, goodsName, imageUrl);
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GoodsImagesListImplCopyWith<_$GoodsImagesListImpl> get copyWith =>
+      __$$GoodsImagesListImplCopyWithImpl<_$GoodsImagesListImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$GoodsImagesListImplToJson(this);
+  }
+}
+
+abstract class _GoodsImagesList extends GoodsImagesList {
+  const factory _GoodsImagesList({
+    required final int goodsImageId,
+    required final String goodsName,
+    required final String imageUrl,
+  }) = _$GoodsImagesListImpl;
+  const _GoodsImagesList._() : super._();
+
+  factory _GoodsImagesList.fromJson(Map<String, dynamic> json) =
+      _$GoodsImagesListImpl.fromJson;
+
+  @override
+  int get goodsImageId;
+  @override
+  String get goodsName;
+  @override
+  String get imageUrl;
+
+  /// Create a copy of GoodsImagesList
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GoodsImagesListImplCopyWith<_$GoodsImagesListImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

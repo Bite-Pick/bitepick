@@ -51,8 +51,8 @@ class StoreRepository {
         .toList();
   }
 
-  Future<GoodsDetailDto?> getStoreGoodsDetail(String id) async {
-    final res = await _dio.get('/v1/store/$id');
+  Future<GoodsDetailDto?> getStoreGoodsDetail(String storeId) async {
+    final res = await _dio.get('/v1/store/$storeId');
 
     if (res.data['status'] != 'OK') return null;
 
