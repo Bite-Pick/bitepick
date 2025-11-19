@@ -353,6 +353,33 @@ jobs:
           chmod +x .github/scripts/decrypt-secrets.sh
           .github/scripts/decrypt-secrets.sh
 
+      # Keystore 복원
+      - name: Decode keystore
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/magambell-release.keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      # key.properties 생성
+      - name: Create key.properties
+        run: |
+          cat <<EOF > android/key.properties
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=magambell-release.keystore
+          EOF
+
+      # 서명 파일 확인
+      - name: Check signing files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "List android/app:"
+          ls -la android/app | grep -E 'keystore|total'
+          echo "Check key.properties:"
+          cat android/key.properties
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -376,23 +403,6 @@ jobs:
           java-version: "17.x"
           distribution: "zulu"
           cache: gradle
-
-      # Keystore 복원
-      - name: Decode keystore
-        run: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/magambell-release.keystore
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-
-      # key.properties 생성
-      - name: Create key.properties
-        run: |
-          cat <<EOF > android/key.properties
-          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
-          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          storeFile=app/magambell-release.keystore
-          EOF
 
       - name: Deploy Android
         env:
@@ -425,59 +435,24 @@ jobs:
             echo "Android release completed at $(date)"
           fi
 
-      - name: Distribute to Firebase App Distribution
+      # Play Store 서비스 계정 JSON 생성
+      - name: Create google-play service account JSON
         if: needs.set_env.outputs.IS_PATCH == 'false'
+        run: |
+          echo "$PLAY_JSON" > android/fastlane/google-play-service-account.json
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+
+      # AAB 빌드 및 Play Store 업로드
+      - name: Build AAB and Upload to Play Store
+        if: needs.set_env.outputs.IS_PATCH == 'false'
+        working-directory: android
+        run: bundle exec fastlane internal
         env:
           MODE: prod
-          FIREBASE_APP_ID_ANDROID_DEV: ${{ secrets.FIREBASE_APP_ID_ANDROID_DEV }}
-          FIREBASE_APP_ID_ANDROID: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
-          GOOGLE_APPLICATION_CREDENTIALS_CONTENT: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        working-directory: android
-        run: |
-          # Setup Google Application Credentials
-          echo "$GOOGLE_APPLICATION_CREDENTIALS_CONTENT" > google-services-key.json
-          export GOOGLE_APPLICATION_CREDENTIALS="$PWD/google-services-key.json"
-
-          # Check required environment variables
-          if [ -z "$FIREBASE_APP_ID_ANDROID" ]; then
-            echo "❌ ERROR: FIREBASE_APP_ID_ANDROID is not set"
-            echo "Firebase App Distribution 배포를 위해 FIREBASE_APP_ID_ANDROID 시크릿이 필요합니다."
-            exit 1
-          fi
-
-          if [ -z "$GOOGLE_APPLICATION_CREDENTIALS_CONTENT" ]; then
-            echo "❌ ERROR: GOOGLE_APPLICATION_CREDENTIALS is not set"
-            echo "Firebase App Distribution 배포를 위해 GOOGLE_APPLICATION_CREDENTIALS 시크릿이 필요합니다."
-            exit 1
-          fi
-
-          # Check if APK exists
-          if [ -f "../build/app/outputs/flutter-apk/app-${{ env.FLAVOR }}-release.apk" ]; then
-            echo "✅ APK found at flutter-apk path"
-          elif [ -f "../build/app/outputs/apk/${{ env.FLAVOR }}/release/app-${{ env.FLAVOR }}-release.apk" ]; then
-            echo "✅ APK found at apk/release path, copying to flutter-apk path"
-            mkdir -p "../build/app/outputs/flutter-apk"
-            cp "../build/app/outputs/apk/${{ env.FLAVOR }}/release/app-${{ env.FLAVOR }}-release.apk" "../build/app/outputs/flutter-apk/app-${{ env.FLAVOR }}-release.apk"
-          else
-            echo "❌ APK file not found in expected locations"
-            echo "Checked paths:"
-            echo "  - ../build/app/outputs/flutter-apk/app-${{ env.FLAVOR }}-release.apk"
-            echo "  - ../build/app/outputs/apk/${{ env.FLAVOR }}/release/app-${{ env.FLAVOR }}-release.apk"
-            ls -la ../build/app/outputs/ || echo "outputs directory not found"
-            echo "Shorebird release 빌드가 실패했거나 APK가 생성되지 않았습니다."
-            exit 1
-          fi
-
-          echo "🚀 Starting Firebase App Distribution"
-
-          # Firebase App Distribution 실행 및 결과 확인
-          if bundle exec fastlane distribute --verbose 2>&1 | tee ../logs/fastlane_distribute_$(date +"%Y%m%d_%H%M%S").txt; then
-            echo "✅ Firebase App Distribution completed successfully at $(date)"
-          else
-            echo "❌ Firebase App Distribution failed at $(date)"
-            echo "배포 실패로 인해 android-build job을 실패 처리합니다."
-            exit 1
-          fi
+          PACKAGE_NAME: com.trendflow.bread
+          VERSION: ${{ env.VERSION }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
 
       - name: Generate log summary
         if: always()
@@ -513,111 +488,6 @@ jobs:
             logs/*.txt
             logs/*.md
           retention-days: 30
-
-  android-prod-playstore:
-    timeout-minutes: 60
-    needs: set_env
-    if: |
-      (needs.set_env.outputs.FLAVOR == 'prod' || needs.set_env.outputs.FLAVOR == 'both')
-      && (needs.set_env.outputs.PLATFORM == 'android' || needs.set_env.outputs.PLATFORM == 'both')
-    env:
-      VERSION: ${{ needs.set_env.outputs.VERSION }}
-      BUILD_NUMBER: ${{ needs.set_env.outputs.BUILD_NUMBER }}
-      FLAVOR: prod
-      MODE: prod
-      PACKAGE_NAME: com.trendflow.bread
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Free up system disk space
-        run: |
-          echo "=== Disk usage before cleanup ==="
-          df -h
-          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-          sudo rm -rf /usr/local/.ghcup || true
-          sudo rm -rf /opt/ghc || true
-          sudo rm -rf /usr/share/dotnet || true
-          docker system prune -af || true
-          sudo apt-get remove -y '^ghc-8.*' || true
-          sudo apt-get remove -y 'php.*' || true
-          sudo apt-get autoremove -y || true
-          sudo apt-get clean
-          echo "=== Disk usage after cleanup ==="
-          df -h
-
-      - name: Decrypt secrets
-        env:
-          CERT_ENCRYPT_PASSPHRASE: ${{ secrets.CERT_ENCRYPT_PASSPHRASE }}
-        run: |
-          chmod +x .github/scripts/decrypt-secrets.sh
-          .github/scripts/decrypt-secrets.sh
-
-      - name: Check .env file
-        run: |
-          ls -la
-          if [ -f .env ]; then
-            echo "✅ .env file exists"
-            echo "File size: $(wc -c < .env) bytes"
-          else
-            echo "❌ .env file is missing!"
-            exit 1
-          fi
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-          working-directory: android
-
-      - name: Install dependencies
-        working-directory: android
-        run: bundle install
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          cache: true
-
-      - uses: actions/setup-java@v4
-        with:
-          java-version: "17.x"
-          distribution: "zulu"
-          cache: gradle
-
-      # Keystore 복원
-      - name: Decode keystore
-        run: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/magambell-release.keystore
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-
-      # key.properties 생성
-      - name: Create key.properties
-        run: |
-          cat <<EOF > android/key.properties
-          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
-          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          storeFile=app/magambell-release.keystore
-          EOF
-
-      # Play Store 서비스 계정 JSON 생성
-      - name: Create google-play service account JSON
-        run: |
-          echo "$PLAY_JSON" > android/fastlane/google-play-service-account.json
-        env:
-          PLAY_JSON: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-
-      # AAB 빌드 및 Play Store 업로드
-      - name: Build AAB and Upload to Play Store
-        working-directory: android
-        run: bundle exec fastlane internal
-        env:
-          MODE: prod
-          PACKAGE_NAME: com.trendflow.bread
-          VERSION: ${{ env.VERSION }}
-          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
 
   ios-dev:
     timeout-minutes: 60
