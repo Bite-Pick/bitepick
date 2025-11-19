@@ -1,7 +1,7 @@
 package_name(ENV["PACKAGE_NAME"] || "com.trendflow.bread")
 
 # Google Play 서비스 계정 JSON 경로
-# Fastlane은 fastlane/ 디렉토리에서 실행되므로 상대 경로 사용
+# Fastfile 위치 기준으로 절대 경로 생성
 for_lane :internal do
-  json_key_file("google-play-service-account.json")
+  json_key_file(File.join(__dir__, "google-play-service-account.json"))
 end
