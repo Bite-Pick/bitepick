@@ -55,9 +55,12 @@ platform :android do
       "lib/src/main_dev.dart"
     end
 
+    # dev는 APK, prod는 AAB (기본값)
+    artifact_arg = ENV["MODE"] == "dev" ? "--artifact apk" : ""
+
     shorebird_release(
       platform: "android",
-      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]} --artifact apk"
+      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]} #{artifact_arg}"
     )
 
     rescue => exception
