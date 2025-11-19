@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/widgets/mg_text_rich.dart';
 
 class OrderInfoItem extends StatelessWidget {
   const OrderInfoItem({
@@ -46,8 +47,11 @@ class OrderInfoItem extends StatelessWidget {
               Text(storeName).md().bold(),
               Text(address).sm().textGray(),
               Gaps.h4,
-              Text(
-                '${discount.toInt()}% ${price.toPrice()}원 • $count개',
+              MgTextRich(
+                children: [
+                  TextSpan(text: "${discount.toInt()}%").subpointRed(),
+                  TextSpan(text: ' ${price.toPrice()}원 • $count개'),
+                ],
               ).sm().bold(),
             ],
           ),

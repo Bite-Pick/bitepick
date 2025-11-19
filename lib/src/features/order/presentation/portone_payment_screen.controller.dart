@@ -69,9 +69,10 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
 
       talker.info("결제 서버 검증 시작");
 
+      // PortOne에서 반환받은 paymentId는 우리가 보낸 merchantUid
       await ref
           .read(orderRepositoryProvider)
-          .completePayment(impUid: impUid, merchantUid: state.merchantUid);
+          .completePayment(paymentId: state.merchantUid);
 
       ToastPresentor.success(context, "결제가 완료되었습니다.");
       // TODO: 검토 필요
