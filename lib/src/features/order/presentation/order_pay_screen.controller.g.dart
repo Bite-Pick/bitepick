@@ -7,7 +7,7 @@ part of 'order_pay_screen.controller.dart';
 // **************************************************************************
 
 String _$orderPayScreenControllerHash() =>
-    r'f94ca6e9e31ef118e66624cdfb1a2e4dfa49af2b';
+    r'56298d16aa8fe657d67c93be27d5d3ff6dfdb626';
 
 /// See also [OrderPayScreenController].
 @ProviderFor(OrderPayScreenController)

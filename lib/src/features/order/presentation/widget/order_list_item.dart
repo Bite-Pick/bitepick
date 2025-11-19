@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/utils/inquiry_button.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/map/presentation/widget/store_location_info_view.dart';
+import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
 import 'package:magambell/src/features/order/domain/entities/order_guest.dart';
 import 'package:magambell/src/features/order/domain/entities/order_guest_status.dart';
+import 'package:magambell/src/features/order/domain/entities/order_list_item_state.dart';
+import 'package:magambell/src/features/order/presentation/widget/order_detail_info_dialog.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
+import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class OrderListItem extends ConsumerStatefulWidget {
   const OrderListItem(this.order, {super.key});
-  final OrderGuest order;
+  final OrderListItemState order;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _OrderListItemState();
@@ -26,11 +35,41 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MgTag(
-          paddingHeight: MgSizes.size2,
-          backgroundColor: widget.order.orderStatus.color,
-          color: MgColorScheme.gray1,
-          child: Text(widget.order.orderStatus.label),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            MgTag(
+              paddingHeight: MgSizes.size2,
+              backgroundColor: widget.order.orderStatus.color,
+              color: MgColorScheme.gray1,
+              child: Text(widget.order.orderStatus.label),
+            ),
+            Gaps.w8,
+            Text(
+              widget.order.createdAt.convertDate(isLong: true) ?? "",
+            ).textGray(),
+            Spacer(),
+            MgButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: OrderDetailInfoDialog(widget.order.orderId),
+                  ),
+                );
+              },
+              content: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("주문상세").textGray().xs().height(1.5),
+                  BaseSvgIcon.right(
+                    size: MgSizes.lg,
+                    color: MgColorScheme.gray4,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         Gaps.h8,
         if (widget.order.orderStatus != OrderGuestStatus.completed) ...[
@@ -39,41 +78,65 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           Gaps.h20,
         ],
         OrderInfoItem(
-          imageUrl:
-              "https://d1xe26zpyg8fzv.cloudfront.net/STORE/OWNER/758244341543821802/1_b02.jpg",
-          storeName: "가게이름",
-          address: "경상북도 경산시 백자로 76 3층",
-          discount: 10,
-          price: 5000,
-          count: 2,
+          imageUrl: widget.order.imageUrls[0],
+          storeName: widget.order.storeName,
+          address: widget.order.address ?? "",
+          discount: widget.order.discount ?? 0,
+          price: widget.order.salePrice,
+          count: widget.order.quantity,
         ),
-        if (widget.order.orderStatus != OrderGuestStatus.completed) ...[
-          Column(
-            children: [
-              StoreLocationInfoView(
-                storeId: widget.order.storeId,
-                address: "address", // TODO[order]:백엔드 개발 필요
-                latitude: mockLatitude, // TODO: 실제 위도 경도 값으로 변경
-                longitude: mockLongitude,
-                storeName: widget.order.storeName,
-                mapHeight: 160,
-              ),
-              if (widget.order.orderStatus == OrderGuestStatus.pending)
-                MgButton(
-                  content: Text("주문 취소").textGray().regular(),
-                  onPressed: () {
-                    // TODO[order]: 주문 취소 API 연동
-                  },
-                )
-              else
-                MgButton(
-                  content: Text("문의하기").textGray().regular(),
-                  onPressed: () {},
-                ),
-            ],
-          ).margin(vertical: MgSizes.md),
-        ],
+        Gaps.h16,
+        if (widget.order.orderStatus != OrderGuestStatus.completed)
+          StoreLocationInfoView(
+            storeId: widget.order.storeId,
+            address: widget.order.address ?? "",
+            latitude: widget.order.latitude,
+            longitude: widget.order.latitude,
+            storeName: widget.order.storeName,
+            mapHeight: 160,
+          ),
+
+        _buildActions(),
       ],
-    ).margin(all: MgSizes.md);
+    ).margin(horizontal: MgSizes.md);
+  }
+
+  Widget _buildActions() {
+    return switch (widget.order.orderStatus) {
+      OrderGuestStatus.pending || OrderGuestStatus.paid => MgButton(
+        content: Text("주문 취소").textGray().regular(),
+        onPressed: () async {
+          showDialog(
+            context: context,
+            builder: (context) => MgAlertDialog(
+              title: '주문 취소',
+              content: Text('주문을 취소하시겠습니까?'),
+              onConfirm: () => ref
+                  .read(orderRepositoryProvider)
+                  .cancelOrder(widget.order.orderId),
+
+              // TODO: +)주문내역 리스트 리로드
+            ),
+          );
+        },
+      ),
+      OrderGuestStatus.completed => MgButton(
+        onPressed: () async {
+          await ReviewRegisterRoute(
+            orderGoodsId: widget.order.orderId,
+          ).push(context);
+        },
+        content: Text("리뷰쓰기").sm(),
+        padding: Gutter.hxs,
+      ).primary(),
+      _ => MgButton(
+        content: Text("문의하기").sm(),
+        onPressed: () {
+          return InquiryButton.showInquiryBottomSheet(context);
+        },
+        borderColor: MgColorScheme.gray7,
+        padding: Gutter.hxs,
+      ),
+    };
   }
 }
