@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -47,8 +45,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
-        latitude: 37.321021, // TODO: 기본 위치 설정 필요
-        longitude: 127.1098513,
+        latitude: 37.5185663, // TODO: 기본 위치 설정 필요
+        longitude: 127.0230599,
         // latitude: defaultAddress?.longitude ?? 37.5185663,
         // longitude: defaultAddress?.latitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
@@ -73,11 +71,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 builder: (goods) => Column(
                   children: [
                     _buildFilterSection(onlyAvailable, sortType),
-                    ListView.separated(
+                    ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 2,
-                      separatorBuilder: (context, index) => Gaps.h16,
+                      itemCount: goods.length,
                       itemBuilder: (context, index) {
                         final item = goods[index];
                         return HomeGoodsItem(goods: item.toHomeGoodsItem())
@@ -212,8 +209,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
-        // _buildAddress(),
+        _buildAddress(),
         // TODO: 런칭 이후 추가
         //  _buildSearch(),
       ],
