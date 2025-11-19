@@ -48,10 +48,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
-        latitude: 37.321021, // TODO: 기본 위치 설정 필요
-        longitude: 127.1098513,
-        // latitude: defaultAddress?.longitude ?? 37.5185663,
-        // longitude: defaultAddress?.latitude ?? 127.0230599,
+        // latitude: 37.321021, // TODO: 기본 위치 설정 필요
+        // longitude: 127.1098513,
+        latitude: defaultAddress?.longitude ?? 37.5185663,
+        longitude: defaultAddress?.latitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
         sortType: sortType,
       ),
@@ -88,8 +88,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ],
                 ),
-                emptyBuilder: () =>
-                    HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
+                emptyBuilder: () => HomeUnsupportedAreaView.openRequest(
+                  onPressed: () {
+                    ref
+                        .read(storeRepositoryProvider)
+                        .requestOpenRegion(region: defaultAddress?.label ?? "");
+                  },
+                ), // TODO[open]: flag에 따라 다른 화면
                 loadingBuilder: () =>
                     const Center(child: CircularProgressIndicator()),
               ),

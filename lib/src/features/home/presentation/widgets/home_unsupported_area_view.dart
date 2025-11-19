@@ -20,7 +20,7 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
     required this.imageUrl,
     required this.buttonText,
     this.buttonPrefixIconUrl,
-    required this.tooltipText,
+    // required this.tooltipText,
     required this.onPressed,
   });
 
@@ -29,7 +29,7 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
   final String subtitle;
   final String imageUrl;
   final String buttonText;
-  final String tooltipText;
+  // final String tooltipText;
   final VoidCallback onPressed;
   final String? buttonPrefixIconUrl;
 
@@ -45,8 +45,7 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
           () {
             // TODO[open]: 오픈 요청 API 호출
           },
-      tooltipText:
-          "지금 n명이 오픈요청중이에요!", // TODO[open]: n명이 너무 작으면 안보이도록 설계하는건 어떤지?
+      // tooltipText: "", // TODO[open]: n명이 너무 작으면 안보이도록 설계하는건 어떤지?
     );
   }
   factory HomeUnsupportedAreaView.share({VoidCallback? onPressed}) {
@@ -62,7 +61,7 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
           () {
             // TODO[open]: 카카오 공유 기능
           },
-      tooltipText: "오픈 요청이 많은 지역부터 열려요!",
+      // tooltipText: "오픈 요청이 많은 지역부터 열려요!",
     );
   }
 
@@ -81,26 +80,39 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
           Gaps.h16,
           Image.asset(imageUrl, height: MgSizes.size240.h),
           Gaps.h32,
-          MgTooltip(
-            item: Text(tooltipText).xs().white(),
-            defaultVisible: true,
-            closable: false,
-            itemAlignment: Alignment.topCenter,
-            // offset: const Offset(0, -8),
-            child: MgButton(
-              content: buttonPrefixIconUrl != null
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        BaseSvgIcon(assetName: buttonPrefixIconUrl!),
-                        Gaps.w6,
-                        Text(buttonText),
-                      ],
-                    )
-                  : Text(buttonText),
-              onPressed: onPressed,
-            ).primary().margin(horizontal: MgSizes.size56.w),
-          ),
+          // MgTooltip(
+          //   item: Text(tooltipText).xs().white(),
+          //   defaultVisible: true,
+          //   closable: false,
+          //   itemAlignment: Alignment.topCenter,
+          //   // offset: const Offset(0, -8),
+          //   child: MgButton(
+          //     content: buttonPrefixIconUrl != null
+          //         ? Row(
+          //             mainAxisSize: MainAxisSize.min,
+          //             children: [
+          //               BaseSvgIcon(assetName: buttonPrefixIconUrl!),
+          //               Gaps.w6,
+          //               Text(buttonText),
+          //             ],
+          //           )
+          //         : Text(buttonText),
+          //     onPressed: onPressed,
+          //   ).primary().margin(horizontal: MgSizes.size56.w),
+          // ),
+          MgButton(
+            content: buttonPrefixIconUrl != null
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      BaseSvgIcon(assetName: buttonPrefixIconUrl!),
+                      Gaps.w6,
+                      Text(buttonText),
+                    ],
+                  )
+                : Text(buttonText),
+            onPressed: onPressed,
+          ).primary().margin(horizontal: MgSizes.size56.w),
           Gaps.h16,
           Text("지역이 오픈되면 알려드릴게요!").sm().textGray(),
         ],

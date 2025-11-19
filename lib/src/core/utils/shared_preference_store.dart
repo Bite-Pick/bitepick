@@ -10,6 +10,9 @@ class SharedPreferenceKey {
 
   /// Visual Logger 표시 여부
   static const showVisualLogger = 'showVisualLogger';
+
+  /// 오픈 요청한 지역
+  static const requestedRegion = 'requestedRegion';
 }
 
 /// 실제 데이터 IO 하는부분
@@ -94,6 +97,41 @@ class SharedPreferenceStore {
     } catch (e) {
       log('Error loading visual logger visibility: $e');
       return false;
+    }
+  }
+
+  /// 오픈 요청한 지역 저장
+  Future<void> setRequestedRegion(String region) async {
+    try {
+      await (await _sharedPreferences).setString(
+        SharedPreferenceKey.requestedRegion,
+        region,
+      );
+    } catch (e) {
+      log('Error saving requested region: $e');
+    }
+  }
+
+  /// 오픈 요청한 지역 가져오기
+  Future<String?> getRequestedRegion() async {
+    try {
+      return (await _sharedPreferences).getString(
+        SharedPreferenceKey.requestedRegion,
+      );
+    } catch (e) {
+      log('Error loading requested region: $e');
+      return null;
+    }
+  }
+
+  /// 오픈 요청한 지역 삭제
+  Future<void> clearRequestedRegion() async {
+    try {
+      await (await _sharedPreferences).remove(
+        SharedPreferenceKey.requestedRegion,
+      );
+    } catch (e) {
+      log('Error clearing requested region: $e');
     }
   }
 }
