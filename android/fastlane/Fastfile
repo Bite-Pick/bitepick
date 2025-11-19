@@ -16,20 +16,25 @@ platform :android do
       "lib/src/main_dev.dart"
     end
 
-    # Flutter AAB 빌드
+    # Flutter AAB build
     puts "🔨 Building AAB for #{mode} flavor..."
-    sh "cd .. && flutter build appbundle --release --flavor #{mode} -t #{entry_point} --build-name=#{ENV['VERSION']} --build-number=#{ENV['BUILD_NUMBER']}"
+    sh "cd ../.. && flutter build appbundle --release --flavor #{mode} -t #{entry_point} --build-name=#{ENV['VERSION']} --build-number=#{ENV['BUILD_NUMBER']}"
 
-    # AAB 경로 확인 (fastlane은 android/ 기준, 빌드는 루트에서 실행)
-    aab_path = "../../build/app/outputs/bundle/#{mode}Release/app-#{mode}-release.aab"
-    unless File.exist?(aab_path)
-      raise "❌ AAB file not found at #{aab_path}"
+    # AAB 검색 경로
+    bundle_dir = "../../build/app/outputs/bundle/#{mode}Release"
+    aab_path = Dir["#{bundle_dir}/*.aab"].first
+
+    puts "🔍 Searching AAB in: #{File.expand_path(bundle_dir)}"
+
+    unless aab_path && File.exist?(aab_path)
+      puts "❌ AAB not found. Listing bundle directory:"
+      sh "ls -la #{bundle_dir} || echo 'Bundle dir not found'"
+      raise "❌ AAB file not found in #{bundle_dir}"
     end
 
-    puts "✅ AAB built successfully: #{aab_path}"
+    puts "✅ AAB built successfully: #{File.expand_path(aab_path)}"
     puts "📤 Uploading to Play Store internal track..."
 
-    # Play Store 업로드
     upload_to_play_store(
       track: 'internal',
       aab: aab_path,
