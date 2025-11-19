@@ -440,6 +440,10 @@ jobs:
         if: needs.set_env.outputs.IS_PATCH == 'false'
         run: |
           echo "$PLAY_JSON" > android/fastlane/google-play-service-account.json
+          echo "✅ JSON 파일 생성됨"
+          ls -lh android/fastlane/google-play-service-account.json
+          echo "📄 JSON 파일 첫 줄 확인:"
+          head -n 1 android/fastlane/google-play-service-account.json
         env:
           PLAY_JSON: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
 
