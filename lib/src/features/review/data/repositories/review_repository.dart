@@ -86,7 +86,7 @@ class ReviewRepository {
     required String orderGoodsId,
     required int rating,
     required String description,
-    Map<String, dynamic>? reviewImageRegisters,
+    List<Map<String, dynamic>>? reviewImageRegisters,
   }) async {
     final res = await _dio.post(
       '/v1/review',
