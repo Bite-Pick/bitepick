@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
 import 'package:magambell/src/features/review/presentation/review_register_screen.controller.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/mg_textfield.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class ReviewRegisterRoute extends GoRouteData {
   final String orderGoodsId;
@@ -50,29 +54,24 @@ class _ReviewRegisterScreenState extends ConsumerState<ReviewRegisterScreen> {
     );
 
     return BaseScaffold(
-      appBar: BaseAppBar(title: const Text("리뷰 등록")),
+      appBar: BaseAppBar(title: const Text("리뷰 작성")),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Gaps.h16,
           // 별점 선택
           Text("상품은 어떠셨나요?").bold().md(),
-          Gaps.h16,
-          _buildRatingSection(controller.rating, notifier),
-          Gaps.h32,
+          _buildRatingSection(
+            controller.rating,
+            notifier,
+          ).margin(top: MgSizes.md, bottom: MgSizes.xl),
 
           // 리뷰 내용
           Text("상품은 만족하셨나요?").bold().md(),
           Gaps.h16,
           _buildDescriptionField(notifier),
-          Gaps.h8,
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "${_descriptionController.text.length} / 최소 10자",
-            ).textColor(MgColorScheme.gray4).xs(),
-          ),
-          Gaps.h32,
 
+          Gaps.h32,
           // 이미지 업로드
           ImageUploadSection(
             images: controller.images,
@@ -82,30 +81,14 @@ class _ReviewRegisterScreenState extends ConsumerState<ReviewRegisterScreen> {
           Spacer(),
           MgButton(
             onPressed: controller.isSubmitting ? null : _handleSubmit,
-            content: controller.isSubmitting
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
-                          ),
-                        ),
-                      ),
-                      Gaps.w8,
-                      Text(
-                        "업로드 중... ${(controller.uploadProgress * 100).toInt()}%",
-                      ).white().bold(),
-                    ],
-                  )
-                : const Text("작성완료").white().bold(),
-          ),
+            disabled:
+                controller.isSubmitting ||
+                controller.description.isEmpty ||
+                controller.rating == 0,
+            content: Text("작성완료"),
+          ).primary(),
         ],
-      ),
+      ).margin(horizontal: MgSizes.md),
     );
   }
 
@@ -116,66 +99,56 @@ class _ReviewRegisterScreenState extends ConsumerState<ReviewRegisterScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildRatingButton(
-          emoji: "😆",
-          label: "최고에요",
-          rating: 5,
-          isSelected: currentRating == 5,
-          onTap: () => notifier.setRating(5),
+        Expanded(
+          child: _buildRatingButton(
+            text: "최고에요",
+            isSelect: currentRating == 3,
+            onTap: () => notifier.setRating(3),
+            selectImagePath: 'good_select.svg',
+            unSelectImagePath: 'good_unselect.svg',
+          ),
         ),
-        _buildRatingButton(
-          emoji: "🙂",
-          label: "좋아요",
-          rating: 4,
-          isSelected: currentRating == 4,
-          onTap: () => notifier.setRating(4),
+        Expanded(
+          child: _buildRatingButton(
+            text: "좋아요",
+            isSelect: currentRating == 2,
+            onTap: () => notifier.setRating(2),
+            selectImagePath: 'notbad_select.svg',
+            unSelectImagePath: 'notbad_unselect.svg',
+          ),
         ),
-        _buildRatingButton(
-          emoji: "😕",
-          label: "아쉬워요",
-          rating: 3,
-          isSelected: currentRating == 3,
-          onTap: () => notifier.setRating(3),
+        Expanded(
+          child: _buildRatingButton(
+            text: "아쉬워요",
+            isSelect: currentRating == 1,
+            onTap: () => notifier.setRating(1),
+            selectImagePath: 'bad_select.svg',
+            unSelectImagePath: 'bad_unselect.svg',
+          ),
         ),
       ],
     );
   }
 
   Widget _buildRatingButton({
-    required String emoji,
-    required String label,
-    required int rating,
-    required bool isSelected,
+    required String selectImagePath,
+    required String unSelectImagePath,
+    required bool isSelect,
     required VoidCallback onTap,
+    required String text,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: MgSizes.md,
-          vertical: MgSizes.sm,
-        ),
-        decoration: BoxDecoration(
-          color: isSelected ? MgColorScheme.primary : MgColorScheme.gray8,
-          borderRadius: BorderRadius.circular(MgRadius.lg),
-          border: Border.all(
-            color: isSelected ? MgColorScheme.primary : MgColorScheme.gray6,
-            width: 1.5,
+      child: Column(
+        children: [
+          BaseSvgIcon(
+            assetName: isSelect ? selectImagePath : unSelectImagePath,
+            size: 50,
           ),
-        ),
-        child: Column(
-          children: [
-            // TODO badSelect,good,notbad
-            Gaps.h8,
-            Text(label)
-                .textColor(
-                  isSelected ? MgColorScheme.black : MgColorScheme.gray4,
-                )
-                .sm()
-                .medium(),
-          ],
-        ),
-      ),
+          Gaps.h4,
+          Text(text).md(),
+        ],
+      ).margin(vertical: MgSizes.size10),
     );
   }
 
@@ -196,11 +169,16 @@ class _ReviewRegisterScreenState extends ConsumerState<ReviewRegisterScreen> {
           contentPadding: const EdgeInsets.all(MgSizes.md),
           counterText: "",
         ),
-        onChanged: (value) {
-          notifier.setDescription(value);
-          setState(() {}); // 글자 수 업데이트를 위해
-        },
+        onChanged: notifier.setDescription,
       ),
+    );
+    return MgTextField(
+      hintText: '구매하신 바이트백에 대한 후기를 20자 이상 남겨주시면\n다른 구매자들에게도 도움이 됩니다',
+      maxLines: 6,
+      onChanged: (value) {
+        notifier.setDescription(value);
+      },
+      prefixIcon: SizedBox.shrink(),
     );
   }
 
@@ -212,11 +190,8 @@ class _ReviewRegisterScreenState extends ConsumerState<ReviewRegisterScreen> {
     final success = await notifier.submit();
 
     if (success && mounted) {
-      // 리뷰 등록 성공
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('리뷰가 등록되었습니다')));
-      context.pop(); // 이전 화면으로 돌아가기
+      ToastPresentor.success(context, '리뷰가 등록되었습니다');
+      context.pop();
     }
   }
 }

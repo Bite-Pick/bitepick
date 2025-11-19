@@ -2,4 +2,5 @@
 <rect width="50" height="50" rx="25" fill="#EEEEEE"/>
 <path d="M37 16L32 20L37 23" stroke="#757575" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M14 16L19 20L14 23" stroke="#757575" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15 30C15.7292 32.2242 18.6875 36.7361 24.6875 36.9903C30.6875 37.2445 34.0625 32.436 35 30" stroke="#757575" stroke-width="3" stroke-linecap="round"/>
 </svg>

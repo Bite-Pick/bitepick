@@ -55,7 +55,8 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
 
   void removeImage(int index) {
     if (index >= 0 && index < state.images.length) {
-      final updatedImages = List<LocalImage>.from(state.images)..removeAt(index);
+      final updatedImages = List<LocalImage>.from(state.images)
+        ..removeAt(index);
       state = state.copyWith(images: updatedImages);
     }
   }
@@ -88,10 +89,7 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
       // 이미지 메타데이터 생성
       final imageRegisters = state.images.isNotEmpty
           ? state.images.mapIndexed((index, image) {
-              return {
-                'key': image.key,
-                'id': index + 1,
-              };
+              return {'key': image.key, 'id': index + 1};
             }).toList()
           : null;
 
@@ -102,9 +100,7 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
             orderGoodsId: orderGoodsId,
             rating: state.rating,
             description: state.description.trim(),
-            reviewImageRegisters: imageRegisters != null
-                ? {'reviewImageRegisters': imageRegisters}
-                : null,
+            reviewImageRegisters: imageRegisters,
           );
 
       if (presignedUrls == null) {
@@ -117,7 +113,9 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
 
       // 이미지가 있으면 S3 업로드
       if (presignedUrls.isNotEmpty && state.images.isNotEmpty) {
-        await ref.read(presignedImageRepositoryProvider).uploadImagesToS3(
+        await ref
+            .read(presignedImageRepositoryProvider)
+            .uploadImagesToS3(
               localImages: state.images,
               presignedUrls: presignedUrls,
               onProgress: (currentIndex, total, sent, totalBytes) {
@@ -134,10 +132,7 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
       return true;
     } catch (e) {
       talker.error('리뷰 등록 중 오류: $e');
-      state = state.copyWith(
-        isSubmitting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isSubmitting: false, error: e.toString());
       return false;
     }
   }
