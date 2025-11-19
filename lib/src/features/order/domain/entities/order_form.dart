@@ -9,11 +9,11 @@ part 'order_form.g.dart';
 class OrderForm with _$OrderForm {
   const factory OrderForm({
     required int count,
-    String? storeId,
+    required String storeId,
     required PaymentMethod paymentMethod,
     required PaymentCompany paymentsCompany,
     required String pickUpTime, // HH:mm 형식
-    required String request,
+    String? request,
     int? totalPrice,
     String? merchantUid,
   }) = _OrderForm;

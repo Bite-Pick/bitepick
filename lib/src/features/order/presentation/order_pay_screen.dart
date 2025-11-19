@@ -1,5 +1,3 @@
-import 'package:flash/flash.dart';
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,9 +6,11 @@ import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
+import 'package:magambell/src/features/order/presentation/portone_payment_screen.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
 import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
@@ -43,14 +43,14 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     final orderInfo = ref.watch(orderPayScreenControllerProvider);
 
     // TODO: 실제 상품 정보 가져오기 (goodsId로 조회)
-    final storeName = '가게명';
-    final storeAddress = '경상북도 경산시 백자로 76 3층';
     final pickupTime = '오늘 7:00';
     final int originalPrice = orderInfo.originalPrice;
     final int salePrice = orderInfo.salePrice;
     final int discount = orderInfo.discount;
     final quantity = orderInfo.quantity;
     final totalPrice = orderInfo.totalPrice;
+    final storeId = orderInfo.storeId;
+    final storeAddress = orderInfo.storeAddress;
 
     return BaseScaffold(
       appBar: BaseAppBar(),
@@ -88,24 +88,41 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           ),
           // 결제 버튼
           MgButton(
-            onPressed: () async {
-              if (!_allAgreed) {
-                ToastPresentor.error(context, "모든 약관에 동의해 주세요");
+            onPressed: orderInfo.isSubmitting
+                ? null
+                : () async {
+                    if (!_allAgreed) {
+                      ToastPresentor.error(context, "모든 약관에 동의해 주세요");
+                      return;
+                    }
 
-                return;
-              }
-              // TODO: 결제 로직 추가
-              context.showFlash(
-                duration: const Duration(milliseconds: 2000),
-                builder: (context, controller) {
-                  return FlashBar(
-                    controller: controller,
-                    content: Text("결제 기능 구현중"),
-                  );
-                },
-              );
-            },
-            content: Text('${totalPrice.toPrice()}원 결제하기'),
+                    // 주문 등록 (결제 전)
+                    final merchantUid = await ref
+                        .read(orderPayScreenControllerProvider.notifier)
+                        .submitOrder();
+
+                    if (merchantUid == null) {
+                      ToastPresentor.error(context, '주문 정보를 불러오는데 실패했습니다.');
+                      return;
+                    }
+
+                    // 결제 화면으로 이동
+                    PortOnePaymentRoute(
+                      merchantUid: merchantUid,
+                      // orderName: '${widget.storeId} test', // TODO: 실제 orderName 생성
+                      amount: totalPrice,
+                    ).push(context);
+                  },
+            content: orderInfo.isSubmitting
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text('${totalPrice.toPrice()}원 결제하기'),
           ).primary().margin(
             horizontal: MgSizes.md,
             bottom: MgSizes.xxl,

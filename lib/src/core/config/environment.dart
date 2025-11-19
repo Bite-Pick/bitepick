@@ -73,7 +73,7 @@ class Environment {
     BuildType.dev => PORTONE_TEST_CHANNEL_KEY,
     BuildType.prod => PORTONE_CHANNEL_KEY,
   };
-  static String get potoneIMPCode => PORTONE_IMP_CODE;
+  static String get portoneIMPCode => PORTONE_IMP_CODE;
 
   Future<void> run() async {
     await main_app.runMagamBellApp();

@@ -22,11 +22,11 @@ OrderForm _$OrderFormFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OrderForm {
   int get count => throw _privateConstructorUsedError;
-  String? get storeId => throw _privateConstructorUsedError;
+  String get storeId => throw _privateConstructorUsedError;
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
   PaymentCompany get paymentsCompany => throw _privateConstructorUsedError;
   String get pickUpTime => throw _privateConstructorUsedError; // HH:mm 형식
-  String get request => throw _privateConstructorUsedError;
+  String? get request => throw _privateConstructorUsedError;
   int? get totalPrice => throw _privateConstructorUsedError;
   String? get merchantUid => throw _privateConstructorUsedError;
 
@@ -47,11 +47,11 @@ abstract class $OrderFormCopyWith<$Res> {
   @useResult
   $Res call({
     int count,
-    String? storeId,
+    String storeId,
     PaymentMethod paymentMethod,
     PaymentCompany paymentsCompany,
     String pickUpTime,
-    String request,
+    String? request,
     int? totalPrice,
     String? merchantUid,
   });
@@ -73,11 +73,11 @@ class _$OrderFormCopyWithImpl<$Res, $Val extends OrderForm>
   @override
   $Res call({
     Object? count = null,
-    Object? storeId = freezed,
+    Object? storeId = null,
     Object? paymentMethod = null,
     Object? paymentsCompany = null,
     Object? pickUpTime = null,
-    Object? request = null,
+    Object? request = freezed,
     Object? totalPrice = freezed,
     Object? merchantUid = freezed,
   }) {
@@ -87,10 +87,10 @@ class _$OrderFormCopyWithImpl<$Res, $Val extends OrderForm>
                 ? _value.count
                 : count // ignore: cast_nullable_to_non_nullable
                       as int,
-            storeId: freezed == storeId
+            storeId: null == storeId
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as String,
             paymentMethod: null == paymentMethod
                 ? _value.paymentMethod
                 : paymentMethod // ignore: cast_nullable_to_non_nullable
@@ -103,10 +103,10 @@ class _$OrderFormCopyWithImpl<$Res, $Val extends OrderForm>
                 ? _value.pickUpTime
                 : pickUpTime // ignore: cast_nullable_to_non_nullable
                       as String,
-            request: null == request
+            request: freezed == request
                 ? _value.request
                 : request // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             totalPrice: freezed == totalPrice
                 ? _value.totalPrice
                 : totalPrice // ignore: cast_nullable_to_non_nullable
@@ -132,11 +132,11 @@ abstract class _$$OrderFormImplCopyWith<$Res>
   @useResult
   $Res call({
     int count,
-    String? storeId,
+    String storeId,
     PaymentMethod paymentMethod,
     PaymentCompany paymentsCompany,
     String pickUpTime,
-    String request,
+    String? request,
     int? totalPrice,
     String? merchantUid,
   });
@@ -157,11 +157,11 @@ class __$$OrderFormImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? count = null,
-    Object? storeId = freezed,
+    Object? storeId = null,
     Object? paymentMethod = null,
     Object? paymentsCompany = null,
     Object? pickUpTime = null,
-    Object? request = null,
+    Object? request = freezed,
     Object? totalPrice = freezed,
     Object? merchantUid = freezed,
   }) {
@@ -171,10 +171,10 @@ class __$$OrderFormImplCopyWithImpl<$Res>
             ? _value.count
             : count // ignore: cast_nullable_to_non_nullable
                   as int,
-        storeId: freezed == storeId
+        storeId: null == storeId
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as String,
         paymentMethod: null == paymentMethod
             ? _value.paymentMethod
             : paymentMethod // ignore: cast_nullable_to_non_nullable
@@ -187,10 +187,10 @@ class __$$OrderFormImplCopyWithImpl<$Res>
             ? _value.pickUpTime
             : pickUpTime // ignore: cast_nullable_to_non_nullable
                   as String,
-        request: null == request
+        request: freezed == request
             ? _value.request
             : request // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         totalPrice: freezed == totalPrice
             ? _value.totalPrice
             : totalPrice // ignore: cast_nullable_to_non_nullable
@@ -209,11 +209,11 @@ class __$$OrderFormImplCopyWithImpl<$Res>
 class _$OrderFormImpl implements _OrderForm {
   const _$OrderFormImpl({
     required this.count,
-    this.storeId,
+    required this.storeId,
     required this.paymentMethod,
     required this.paymentsCompany,
     required this.pickUpTime,
-    required this.request,
+    this.request,
     this.totalPrice,
     this.merchantUid,
   });
@@ -224,7 +224,7 @@ class _$OrderFormImpl implements _OrderForm {
   @override
   final int count;
   @override
-  final String? storeId;
+  final String storeId;
   @override
   final PaymentMethod paymentMethod;
   @override
@@ -233,7 +233,7 @@ class _$OrderFormImpl implements _OrderForm {
   final String pickUpTime;
   // HH:mm 형식
   @override
-  final String request;
+  final String? request;
   @override
   final int? totalPrice;
   @override
@@ -295,11 +295,11 @@ class _$OrderFormImpl implements _OrderForm {
 abstract class _OrderForm implements OrderForm {
   const factory _OrderForm({
     required final int count,
-    final String? storeId,
+    required final String storeId,
     required final PaymentMethod paymentMethod,
     required final PaymentCompany paymentsCompany,
     required final String pickUpTime,
-    required final String request,
+    final String? request,
     final int? totalPrice,
     final String? merchantUid,
   }) = _$OrderFormImpl;
@@ -310,7 +310,7 @@ abstract class _OrderForm implements OrderForm {
   @override
   int get count;
   @override
-  String? get storeId;
+  String get storeId;
   @override
   PaymentMethod get paymentMethod;
   @override
@@ -318,7 +318,7 @@ abstract class _OrderForm implements OrderForm {
   @override
   String get pickUpTime; // HH:mm 형식
   @override
-  String get request;
+  String? get request;
   @override
   int? get totalPrice;
   @override

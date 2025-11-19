@@ -205,6 +205,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $OrderPayRouteExtension._fromState,
     ),
     GoRouteData.$route(
+      path: 'order/payment',
+      name: 'PortOnePaymentRoute',
+
+      factory: $PortOnePaymentRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
       path: 'owner/store/approved',
       name: 'OwnerStoreApprovedRoute',
 
@@ -247,24 +253,10 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $MyReviewListRouteExtension._fromState,
     ),
     GoRouteData.$route(
-      path: 'admin',
-      name: 'AdminHomeRoute',
+      path: '/review/register/:orderGoodsId',
+      name: 'ReviewRegisterRoute',
 
-      factory: $AdminHomeRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'banner',
-          name: 'AdminBannerListRoute',
-
-          factory: $AdminBannerListRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'waiting-store',
-          name: 'WaitingStoreListRoute',
-
-          factory: $WaitingStoreListRouteExtension._fromState,
-        ),
-      ],
+      factory: $ReviewRegisterRouteExtension._fromState,
     ),
   ],
 );
@@ -431,6 +423,28 @@ extension $OrderPayRouteExtension on OrderPayRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
+extension $PortOnePaymentRouteExtension on PortOnePaymentRoute {
+  static PortOnePaymentRoute _fromState(GoRouterState state) =>
+      PortOnePaymentRoute(
+        merchantUid: state.uri.queryParameters['merchant-uid']!,
+        amount: int.parse(state.uri.queryParameters['amount']!),
+      );
+
+  String get location => GoRouteData.$location(
+    '/order/payment',
+    queryParams: {'merchant-uid': merchantUid, 'amount': amount.toString()},
+  );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 extension $OwnerStoreApprovedRouteExtension on OwnerStoreApprovedRoute {
   static OwnerStoreApprovedRoute _fromState(GoRouterState state) =>
       const OwnerStoreApprovedRoute();
@@ -543,43 +557,13 @@ extension $MyReviewListRouteExtension on MyReviewListRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $AdminHomeRouteExtension on AdminHomeRoute {
-  static AdminHomeRoute _fromState(GoRouterState state) =>
-      const AdminHomeRoute();
+extension $ReviewRegisterRouteExtension on ReviewRegisterRoute {
+  static ReviewRegisterRoute _fromState(GoRouterState state) =>
+      ReviewRegisterRoute(orderGoodsId: state.pathParameters['orderGoodsId']!);
 
-  String get location => GoRouteData.$location('/admin');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $AdminBannerListRouteExtension on AdminBannerListRoute {
-  static AdminBannerListRoute _fromState(GoRouterState state) =>
-      AdminBannerListRoute();
-
-  String get location => GoRouteData.$location('/admin/banner');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $WaitingStoreListRouteExtension on WaitingStoreListRoute {
-  static WaitingStoreListRoute _fromState(GoRouterState state) =>
-      WaitingStoreListRoute();
-
-  String get location => GoRouteData.$location('/admin/waiting-store');
+  String get location => GoRouteData.$location(
+    '/review/register/${Uri.encodeComponent(orderGoodsId)}',
+  );
 
   void go(BuildContext context) => context.go(location);
 
