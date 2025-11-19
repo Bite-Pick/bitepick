@@ -8,9 +8,11 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/debug_text.dart';
+import 'package:magambell/src/core/utils/shared_preference_store.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/banner/presentation/home_banners_view.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
@@ -64,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              // HomeBannersView(),
+              HomeBannersView(), // TODO 이것두 미오픈 지역에서는 노출안하도록..?
               HomeUpdateBanner(),
               MgAsyncAnimatedSwitcher<List<StoreListDTO>>(
                 asyncValue: storeGoodsAsync,
@@ -84,11 +86,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ],
                 ),
-                emptyBuilder: () => HomeUnsupportedAreaView.openRequest(
-                  onPressed: () {
-                    ref
-                        .read(storeRepositoryProvider)
-                        .requestOpenRegion(region: defaultAddress?.label ?? "");
+                emptyBuilder: () => FutureBuilder<String?>(
+                  future: SharedPreferenceStore().getRequestedRegion(),
+                  builder: (context, snapshot) {
+                    final requestedRegion = snapshot.data;
+                    final currentRegion = defaultAddress?.label ?? "";
+
+                    // 저장된 지역이 있고, 현재 주소와 일치하면 share 화면 표시
+                    if (requestedRegion != null &&
+                        requestedRegion == currentRegion) {
+                      return HomeUnsupportedAreaView.share();
+                    }
+
+                    // 아니면 openRequest 화면 표시
+                    return HomeUnsupportedAreaView.openRequest(
+                      onPressed: () {
+                        ref
+                            .read(storeRepositoryProvider)
+                            .requestOpenRegion(region: currentRegion);
+                      },
+                    );
                   },
                 ), // TODO[open]: flag에 따라 다른 화면
                 loadingBuilder: () =>
