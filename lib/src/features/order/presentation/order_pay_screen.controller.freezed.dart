@@ -18,12 +18,14 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$OrderInfo {
   String get storeId => throw _privateConstructorUsedError;
+  String get goodsId => throw _privateConstructorUsedError;
   String get storeAddress => throw _privateConstructorUsedError;
+  String get storeName => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   int get totalPrice => throw _privateConstructorUsedError;
   int get salePrice => throw _privateConstructorUsedError;
   int get originalPrice => throw _privateConstructorUsedError;
-  String get pickUpTime => throw _privateConstructorUsedError;
+  String get pickupTime => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
   String? get merchantUid => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -42,12 +44,14 @@ abstract class $OrderInfoCopyWith<$Res> {
   @useResult
   $Res call({
     String storeId,
+    String goodsId,
     String storeAddress,
+    String storeName,
     int quantity,
     int totalPrice,
     int salePrice,
     int originalPrice,
-    String pickUpTime,
+    String pickupTime,
     bool isSubmitting,
     String? merchantUid,
     String? error,
@@ -70,12 +74,14 @@ class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
   @override
   $Res call({
     Object? storeId = null,
+    Object? goodsId = null,
     Object? storeAddress = null,
+    Object? storeName = null,
     Object? quantity = null,
     Object? totalPrice = null,
     Object? salePrice = null,
     Object? originalPrice = null,
-    Object? pickUpTime = null,
+    Object? pickupTime = null,
     Object? isSubmitting = null,
     Object? merchantUid = freezed,
     Object? error = freezed,
@@ -86,9 +92,17 @@ class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
                       as String,
+            goodsId: null == goodsId
+                ? _value.goodsId
+                : goodsId // ignore: cast_nullable_to_non_nullable
+                      as String,
             storeAddress: null == storeAddress
                 ? _value.storeAddress
                 : storeAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            storeName: null == storeName
+                ? _value.storeName
+                : storeName // ignore: cast_nullable_to_non_nullable
                       as String,
             quantity: null == quantity
                 ? _value.quantity
@@ -106,9 +120,9 @@ class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
                 ? _value.originalPrice
                 : originalPrice // ignore: cast_nullable_to_non_nullable
                       as int,
-            pickUpTime: null == pickUpTime
-                ? _value.pickUpTime
-                : pickUpTime // ignore: cast_nullable_to_non_nullable
+            pickupTime: null == pickupTime
+                ? _value.pickupTime
+                : pickupTime // ignore: cast_nullable_to_non_nullable
                       as String,
             isSubmitting: null == isSubmitting
                 ? _value.isSubmitting
@@ -139,12 +153,14 @@ abstract class _$$OrderInfoImplCopyWith<$Res>
   @useResult
   $Res call({
     String storeId,
+    String goodsId,
     String storeAddress,
+    String storeName,
     int quantity,
     int totalPrice,
     int salePrice,
     int originalPrice,
-    String pickUpTime,
+    String pickupTime,
     bool isSubmitting,
     String? merchantUid,
     String? error,
@@ -166,12 +182,14 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? storeId = null,
+    Object? goodsId = null,
     Object? storeAddress = null,
+    Object? storeName = null,
     Object? quantity = null,
     Object? totalPrice = null,
     Object? salePrice = null,
     Object? originalPrice = null,
-    Object? pickUpTime = null,
+    Object? pickupTime = null,
     Object? isSubmitting = null,
     Object? merchantUid = freezed,
     Object? error = freezed,
@@ -182,9 +200,17 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
                   as String,
+        goodsId: null == goodsId
+            ? _value.goodsId
+            : goodsId // ignore: cast_nullable_to_non_nullable
+                  as String,
         storeAddress: null == storeAddress
             ? _value.storeAddress
             : storeAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        storeName: null == storeName
+            ? _value.storeName
+            : storeName // ignore: cast_nullable_to_non_nullable
                   as String,
         quantity: null == quantity
             ? _value.quantity
@@ -202,9 +228,9 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
             ? _value.originalPrice
             : originalPrice // ignore: cast_nullable_to_non_nullable
                   as int,
-        pickUpTime: null == pickUpTime
-            ? _value.pickUpTime
-            : pickUpTime // ignore: cast_nullable_to_non_nullable
+        pickupTime: null == pickupTime
+            ? _value.pickupTime
+            : pickupTime // ignore: cast_nullable_to_non_nullable
                   as String,
         isSubmitting: null == isSubmitting
             ? _value.isSubmitting
@@ -228,12 +254,14 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
 class _$OrderInfoImpl extends _OrderInfo {
   const _$OrderInfoImpl({
     required this.storeId,
+    required this.goodsId,
     required this.storeAddress,
+    required this.storeName,
     required this.quantity,
     required this.totalPrice,
     required this.salePrice,
     required this.originalPrice,
-    required this.pickUpTime,
+    required this.pickupTime,
     this.isSubmitting = false,
     this.merchantUid,
     this.error,
@@ -242,7 +270,11 @@ class _$OrderInfoImpl extends _OrderInfo {
   @override
   final String storeId;
   @override
+  final String goodsId;
+  @override
   final String storeAddress;
+  @override
+  final String storeName;
   @override
   final int quantity;
   @override
@@ -252,7 +284,7 @@ class _$OrderInfoImpl extends _OrderInfo {
   @override
   final int originalPrice;
   @override
-  final String pickUpTime;
+  final String pickupTime;
   @override
   @JsonKey()
   final bool isSubmitting;
@@ -263,7 +295,7 @@ class _$OrderInfoImpl extends _OrderInfo {
 
   @override
   String toString() {
-    return 'OrderInfo(storeId: $storeId, storeAddress: $storeAddress, quantity: $quantity, totalPrice: $totalPrice, salePrice: $salePrice, originalPrice: $originalPrice, pickUpTime: $pickUpTime, isSubmitting: $isSubmitting, merchantUid: $merchantUid, error: $error)';
+    return 'OrderInfo(storeId: $storeId, goodsId: $goodsId, storeAddress: $storeAddress, storeName: $storeName, quantity: $quantity, totalPrice: $totalPrice, salePrice: $salePrice, originalPrice: $originalPrice, pickupTime: $pickupTime, isSubmitting: $isSubmitting, merchantUid: $merchantUid, error: $error)';
   }
 
   @override
@@ -272,8 +304,11 @@ class _$OrderInfoImpl extends _OrderInfo {
         (other.runtimeType == runtimeType &&
             other is _$OrderInfoImpl &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
+            (identical(other.goodsId, goodsId) || other.goodsId == goodsId) &&
             (identical(other.storeAddress, storeAddress) ||
                 other.storeAddress == storeAddress) &&
+            (identical(other.storeName, storeName) ||
+                other.storeName == storeName) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
             (identical(other.totalPrice, totalPrice) ||
@@ -282,8 +317,8 @@ class _$OrderInfoImpl extends _OrderInfo {
                 other.salePrice == salePrice) &&
             (identical(other.originalPrice, originalPrice) ||
                 other.originalPrice == originalPrice) &&
-            (identical(other.pickUpTime, pickUpTime) ||
-                other.pickUpTime == pickUpTime) &&
+            (identical(other.pickupTime, pickupTime) ||
+                other.pickupTime == pickupTime) &&
             (identical(other.isSubmitting, isSubmitting) ||
                 other.isSubmitting == isSubmitting) &&
             (identical(other.merchantUid, merchantUid) ||
@@ -295,12 +330,14 @@ class _$OrderInfoImpl extends _OrderInfo {
   int get hashCode => Object.hash(
     runtimeType,
     storeId,
+    goodsId,
     storeAddress,
+    storeName,
     quantity,
     totalPrice,
     salePrice,
     originalPrice,
-    pickUpTime,
+    pickupTime,
     isSubmitting,
     merchantUid,
     error,
@@ -318,12 +355,14 @@ class _$OrderInfoImpl extends _OrderInfo {
 abstract class _OrderInfo extends OrderInfo {
   const factory _OrderInfo({
     required final String storeId,
+    required final String goodsId,
     required final String storeAddress,
+    required final String storeName,
     required final int quantity,
     required final int totalPrice,
     required final int salePrice,
     required final int originalPrice,
-    required final String pickUpTime,
+    required final String pickupTime,
     final bool isSubmitting,
     final String? merchantUid,
     final String? error,
@@ -333,7 +372,11 @@ abstract class _OrderInfo extends OrderInfo {
   @override
   String get storeId;
   @override
+  String get goodsId;
+  @override
   String get storeAddress;
+  @override
+  String get storeName;
   @override
   int get quantity;
   @override
@@ -343,7 +386,7 @@ abstract class _OrderInfo extends OrderInfo {
   @override
   int get originalPrice;
   @override
-  String get pickUpTime;
+  String get pickupTime;
   @override
   bool get isSubmitting;
   @override

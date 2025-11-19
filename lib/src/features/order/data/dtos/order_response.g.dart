@@ -7,10 +7,16 @@ part of 'order_response.dart';
 // **************************************************************************
 
 _$OrderResponseImpl _$$OrderResponseImplFromJson(Map<String, dynamic> json) =>
-    _$OrderResponseImpl(merchantUid: json['merchantUid'] as String);
+    _$OrderResponseImpl(
+      merchantUid: json['merchantUid'] as String,
+      totalAmount: (json['totalAmount'] as num).toInt(),
+    );
 
 Map<String, dynamic> _$$OrderResponseImplToJson(_$OrderResponseImpl instance) =>
-    <String, dynamic>{'merchantUid': instance.merchantUid};
+    <String, dynamic>{
+      'merchantUid': instance.merchantUid,
+      'totalAmount': instance.totalAmount,
+    };
 
 _$PaymentCompleteRequestImpl _$$PaymentCompleteRequestImplFromJson(
   Map<String, dynamic> json,

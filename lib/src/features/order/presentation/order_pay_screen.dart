@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
@@ -43,14 +44,14 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     final orderInfo = ref.watch(orderPayScreenControllerProvider);
 
     // TODO: 실제 상품 정보 가져오기 (goodsId로 조회)
-    final pickupTime = '오늘 7:00';
     final int originalPrice = orderInfo.originalPrice;
     final int salePrice = orderInfo.salePrice;
     final int discount = orderInfo.discount;
     final quantity = orderInfo.quantity;
     final totalPrice = orderInfo.totalPrice;
-    final storeId = orderInfo.storeId;
     final storeAddress = orderInfo.storeAddress;
+    final pickupTime = orderInfo.pickupTime;
+    final storeName = orderInfo.storeName;
 
     return BaseScaffold(
       appBar: BaseAppBar(),
@@ -63,13 +64,13 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Gaps.h12,
-                  // TODO: 픽업시간, 메모 입력 UI 추가
                   _buildOrderItemInfoCard(
-                    pickupTime,
+                    storeName,
                     storeAddress,
                     salePrice,
                     quantity,
                     pickupTime,
+                    (salePrice * 100 / originalPrice).toInt(),
                   ).margin(horizontal: MgSizes.md),
                   Divider(thickness: 6).margin(vertical: MgSizes.lg),
                   _buildPaySection().margin(horizontal: MgSizes.md),
@@ -142,7 +143,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     String storeAddress,
     int salePrice,
     int quantity,
-    String time,
+    String pickupTime,
+    int discount,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,9 +157,10 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         _buildOrderItemCard(
           storeName: storeName,
           address: storeAddress,
-          discount: 50,
+          discount: discount,
           price: salePrice * quantity,
           count: quantity,
+          pickupTime: pickupTime,
         ),
       ],
     );
@@ -169,12 +172,12 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     required int discount,
     required int price,
     required int count,
-    String time = '오후 7:00',
+    required String pickupTime,
   }) {
     return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$time 픽업 예정')
+            Text('${pickupTime.convertTime()} 픽업 예정')
                 .md()
                 .bold()
                 .margin(vertical: MgSizes.size10, horizontal: MgSizes.md)

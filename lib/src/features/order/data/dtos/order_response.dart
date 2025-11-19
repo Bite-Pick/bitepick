@@ -8,6 +8,7 @@ part 'order_response.g.dart';
 class OrderResponse with _$OrderResponse {
   const factory OrderResponse({
     required String merchantUid,
+    required int totalAmount,
   }) = _OrderResponse;
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>

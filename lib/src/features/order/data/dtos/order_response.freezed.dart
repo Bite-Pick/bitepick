@@ -22,6 +22,7 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OrderResponse {
   String get merchantUid => throw _privateConstructorUsedError;
+  int get totalAmount => throw _privateConstructorUsedError;
 
   /// Serializes this OrderResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +41,7 @@ abstract class $OrderResponseCopyWith<$Res> {
     $Res Function(OrderResponse) then,
   ) = _$OrderResponseCopyWithImpl<$Res, OrderResponse>;
   @useResult
-  $Res call({String merchantUid});
+  $Res call({String merchantUid, int totalAmount});
 }
 
 /// @nodoc
@@ -57,13 +58,17 @@ class _$OrderResponseCopyWithImpl<$Res, $Val extends OrderResponse>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? merchantUid = null}) {
+  $Res call({Object? merchantUid = null, Object? totalAmount = null}) {
     return _then(
       _value.copyWith(
             merchantUid: null == merchantUid
                 ? _value.merchantUid
                 : merchantUid // ignore: cast_nullable_to_non_nullable
                       as String,
+            totalAmount: null == totalAmount
+                ? _value.totalAmount
+                : totalAmount // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -79,7 +84,7 @@ abstract class _$$OrderResponseImplCopyWith<$Res>
   ) = __$$OrderResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String merchantUid});
+  $Res call({String merchantUid, int totalAmount});
 }
 
 /// @nodoc
@@ -95,13 +100,17 @@ class __$$OrderResponseImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? merchantUid = null}) {
+  $Res call({Object? merchantUid = null, Object? totalAmount = null}) {
     return _then(
       _$OrderResponseImpl(
         merchantUid: null == merchantUid
             ? _value.merchantUid
             : merchantUid // ignore: cast_nullable_to_non_nullable
                   as String,
+        totalAmount: null == totalAmount
+            ? _value.totalAmount
+            : totalAmount // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -110,17 +119,22 @@ class __$$OrderResponseImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$OrderResponseImpl implements _OrderResponse {
-  const _$OrderResponseImpl({required this.merchantUid});
+  const _$OrderResponseImpl({
+    required this.merchantUid,
+    required this.totalAmount,
+  });
 
   factory _$OrderResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderResponseImplFromJson(json);
 
   @override
   final String merchantUid;
+  @override
+  final int totalAmount;
 
   @override
   String toString() {
-    return 'OrderResponse(merchantUid: $merchantUid)';
+    return 'OrderResponse(merchantUid: $merchantUid, totalAmount: $totalAmount)';
   }
 
   @override
@@ -129,12 +143,14 @@ class _$OrderResponseImpl implements _OrderResponse {
         (other.runtimeType == runtimeType &&
             other is _$OrderResponseImpl &&
             (identical(other.merchantUid, merchantUid) ||
-                other.merchantUid == merchantUid));
+                other.merchantUid == merchantUid) &&
+            (identical(other.totalAmount, totalAmount) ||
+                other.totalAmount == totalAmount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, merchantUid);
+  int get hashCode => Object.hash(runtimeType, merchantUid, totalAmount);
 
   /// Create a copy of OrderResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -151,14 +167,18 @@ class _$OrderResponseImpl implements _OrderResponse {
 }
 
 abstract class _OrderResponse implements OrderResponse {
-  const factory _OrderResponse({required final String merchantUid}) =
-      _$OrderResponseImpl;
+  const factory _OrderResponse({
+    required final String merchantUid,
+    required final int totalAmount,
+  }) = _$OrderResponseImpl;
 
   factory _OrderResponse.fromJson(Map<String, dynamic> json) =
       _$OrderResponseImpl.fromJson;
 
   @override
   String get merchantUid;
+  @override
+  int get totalAmount;
 
   /// Create a copy of OrderResponse
   /// with the given fields replaced by the non-null parameter values.
