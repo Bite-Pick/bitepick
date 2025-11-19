@@ -14,6 +14,7 @@ import 'package:magambell/src/features/store/data/repositories/store_repository.
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -122,10 +123,11 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                   onPressed: () async {
                     // TODO: 픽업시간 설정 bottomSheet 추가
                     // 주문 정보 저장
+                    final user = await ref.read(userStateProvider.future);
                     ref
                         .read(orderPayScreenControllerProvider.notifier)
                         .setOrderInfo(
-                          goodsId: widget.id,
+                          storeId: widget.id,
                           quantity: count,
                           totalPrice: goods.salePrice * count,
                           salePrice: goods.salePrice,

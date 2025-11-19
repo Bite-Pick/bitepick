@@ -1,37 +1,31 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
+import 'package:magambell/src/features/order/domain/entities/order_form.dart';
+import 'package:magambell/src/features/order/domain/entities/payment_method.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'order_pay_screen.controller.freezed.dart';
 part 'order_pay_screen.controller.g.dart';
 
-class OrderInfo {
-  final String goodsId;
-  final int quantity;
-  final int totalPrice;
-  final int salePrice;
-  final int originalPrice;
+@freezed
+class OrderInfo with _$OrderInfo {
+  const OrderInfo._();
 
-  OrderInfo({
-    required this.goodsId,
-    required this.quantity,
-    required this.totalPrice,
-    required this.salePrice,
-    required this.originalPrice,
-  });
-
-  OrderInfo copyWith({
-    String? goodsId,
-    int? quantity,
-    int? totalPrice,
-    int? salePrice,
-    int? originalPrice,
-  }) {
-    return OrderInfo(
-      goodsId: goodsId ?? this.goodsId,
-      quantity: quantity ?? this.quantity,
-      totalPrice: totalPrice ?? this.totalPrice,
-      salePrice: salePrice ?? this.salePrice,
-      originalPrice: originalPrice ?? this.originalPrice,
-    );
-  }
+  const factory OrderInfo({
+    required String storeId,
+    required String storeAddress,
+    required int quantity,
+    required int totalPrice,
+    required int salePrice,
+    required int originalPrice,
+    required String pickUpTime,
+    @Default(false) bool isSubmitting,
+    String? merchantUid,
+    String? error,
+  }) = _OrderInfo;
 
   int get discount => originalPrice - salePrice;
 }
@@ -40,28 +34,34 @@ class OrderInfo {
 class OrderPayScreenController extends _$OrderPayScreenController {
   @override
   OrderInfo build() {
-    return OrderInfo(
-      goodsId: '',
+    return const OrderInfo(
+      storeId: '',
+      storeAddress: '',
       quantity: 0,
       totalPrice: 0,
       salePrice: 0,
       originalPrice: 0,
+      pickUpTime: '',
     );
   }
 
   void setOrderInfo({
-    required String goodsId,
-    required int quantity,
-    required int totalPrice,
-    required int salePrice,
-    required int originalPrice,
+    String? storeId,
+    String? storeAddress,
+    int? quantity,
+    int? totalPrice,
+    int? salePrice,
+    int? originalPrice,
+    String? pickUpTime,
   }) {
-    state = OrderInfo(
-      goodsId: goodsId,
-      quantity: quantity,
-      totalPrice: totalPrice,
-      salePrice: salePrice,
-      originalPrice: originalPrice,
+    state = state.copyWith(
+      storeId: storeId ?? state.storeId,
+      storeAddress: storeAddress ?? state.storeAddress,
+      quantity: quantity ?? state.quantity,
+      totalPrice: totalPrice ?? state.totalPrice,
+      salePrice: salePrice ?? state.salePrice,
+      originalPrice: originalPrice ?? state.originalPrice,
+      pickUpTime: pickUpTime ?? state.pickUpTime,
     );
   }
 
@@ -70,5 +70,46 @@ class OrderPayScreenController extends _$OrderPayScreenController {
       quantity: quantity,
       totalPrice: state.salePrice * quantity,
     );
+  }
+
+  // 결제전 주문등록
+  Future<String?> submitOrder() async {
+    try {
+      state = state.copyWith(isSubmitting: true, error: null);
+
+      // API 호출
+      final response = await ref
+          .read(orderRepositoryProvider)
+          .createOrder(
+            OrderForm(
+              count: state.quantity,
+              storeId: state.storeId,
+              paymentMethod: PaymentMethod.easyPay, // NOTE: 사용자 선택 값으로 변경
+              paymentsCompany: PaymentCompany.toss, // NOTE: 사용자 선택 값으로 변경
+              pickUpTime: state.pickUpTime,
+              totalPrice: state.totalPrice,
+              // request: memo,
+            ),
+          );
+
+      // merchantUid 저장
+      state = state.copyWith(
+        merchantUid: response.merchantUid,
+        isSubmitting: false,
+      );
+
+      talker.info('주문 등록 성공: ${response.merchantUid}');
+      return response.merchantUid; // ✔︎ 성공 → merchantUid 반환
+    } catch (e) {
+      talker.error('주문 등록 실패: $e');
+      state = state.copyWith(isSubmitting: false, error: e.toString());
+
+      final context = GlobalVariable.navigatorKey.currentContext;
+      if (context != null) {
+        ToastPresentor.error(context, '주문 등록에 실패했습니다. 다시 시도해주세요.');
+      }
+
+      return null; // ✔︎ 실패 → null 반환
+    }
   }
 }

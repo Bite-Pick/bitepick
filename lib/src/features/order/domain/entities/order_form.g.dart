@@ -9,14 +9,14 @@ part of 'order_form.dart';
 _$OrderFormImpl _$$OrderFormImplFromJson(Map<String, dynamic> json) =>
     _$OrderFormImpl(
       count: (json['count'] as num).toInt(),
-      storeId: json['storeId'] as String?,
+      storeId: json['storeId'] as String,
       paymentMethod: $enumDecode(_$PaymentMethodEnumMap, json['paymentMethod']),
       paymentsCompany: $enumDecode(
         _$PaymentCompanyEnumMap,
         json['paymentsCompany'],
       ),
       pickUpTime: json['pickUpTime'] as String,
-      request: json['request'] as String,
+      request: json['request'] as String?,
       totalPrice: (json['totalPrice'] as num?)?.toInt(),
       merchantUid: json['merchantUid'] as String?,
     );

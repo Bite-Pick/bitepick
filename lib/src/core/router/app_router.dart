@@ -18,6 +18,7 @@ import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.dart';
+import 'package:magambell/src/features/order/presentation/portone_payment_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
@@ -126,6 +127,10 @@ class LoginRoute extends GoRouteData {
       path: 'order/caution',
     ),
     TypedGoRoute<OrderPayRoute>(name: 'OrderPayRoute', path: 'order/pay'),
+    TypedGoRoute<PortOnePaymentRoute>(
+      name: 'PortOnePaymentRoute',
+      path: 'order/payment',
+    ),
     TypedGoRoute<OwnerStoreApprovedRoute>(
       name: 'OwnerStoreApprovedRoute',
       path: 'owner/store/approved',
