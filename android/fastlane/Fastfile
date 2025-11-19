@@ -6,25 +6,23 @@ platform :android do
     mode = ENV["MODE"] || "prod"
     package_name = ENV["PACKAGE_NAME"] || "com.trendflow.bread"
 
-    # AAB 검색 경로 (Shorebird가 이미 빌드한 AAB 재사용)
-    # working-directory: android 기준이므로 ../ 사용
-    bundle_dir = "../build/app/outputs/bundle/#{mode}Release"
+    # Fastfile이 있는 디렉터리 기준으로 build 경로 계산
+    bundle_dir = File.expand_path("../../build/app/outputs/bundle/#{mode}Release", __dir__)
     aab_path = Dir["#{bundle_dir}/*.aab"].first
 
     puts "📂 Current dir: #{Dir.pwd}"
-    puts "🔍 Searching AAB in: #{File.expand_path(bundle_dir)}"
+    puts "🔍 Searching AAB in: #{bundle_dir}"
 
     unless aab_path && File.exist?(aab_path)
       puts "❌ AAB not found. Listing bundle directory:"
       sh "ls -la #{bundle_dir} || echo 'Bundle dir not found'"
-      sh "ls -R ../build/app/outputs || echo 'Outputs dir not found'"
+      sh "ls -R #{File.expand_path('../../build/app/outputs', __dir__)} || echo 'Outputs dir not found'"
       raise "❌ AAB file not found in #{bundle_dir}"
     end
 
-    puts "✅ Found AAB: #{File.expand_path(aab_path)}"
+    puts "✅ Found AAB: #{aab_path}"
     puts "📤 Uploading to Play Store internal track..."
 
-    # Play Store 업로드
     upload_to_play_store(
       track: 'internal',
       aab: aab_path,
