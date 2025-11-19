@@ -2,6 +2,7 @@ import 'dart:developer' show log;
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:magambell/src/core/network/api_client.dart';
@@ -15,7 +16,17 @@ class NaverGeocodingRepository {
   late final Dio _dio;
 
   NaverGeocodingRepository(this.ref) {
-    _dio = ref.read(apiClientProvider);
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: Environment.geocodingApiUrl,
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+        headers: {
+          'x-ncp-apigw-api-key-id': Environment.ncpApiKeyId,
+          'x-ncp-apigw-api-key': Environment.ncpApiKey,
+        },
+      ),
+    );
   }
 
   /// ====== 동(Dong) 키워드 검색 ======
