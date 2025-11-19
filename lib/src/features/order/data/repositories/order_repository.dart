@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/features/order/domain/entities/order_form.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
@@ -75,18 +77,37 @@ class OrderRepository {
   }
 
   /// 주문 생성 (결제 전)
-  Future<OrderResponse> createOrder(OrderForm orderForm) async {
-    final res = await _dio.post(
-      '/v1/order',
-      data: orderForm.toJson(),
-    );
+  Future<OrderResponse> createOrder({
+    required int quantity,
+    required String goodsId,
+    required String pickupTime, // HH:mm 형식
+    required int totalPrice,
+  }) async {
+    try {
+      final res = await _dio.post(
+        '/v1/order',
+        data: {
+          'quantity': quantity,
+          'goodsId': goodsId,
+          'pickupTime': pickupTime,
+          'totalPrice': totalPrice,
+          'memo': "test",
+        },
+      );
 
-    final data = res.data['data'] as Map<String, dynamic>?;
-    if (res.data['status'] != 'OK' || data == null) {
-      throw Exception('Failed to create order');
+      final data = res.data['data'] as Map<String, dynamic>?;
+      if (res.data['status'] != 'OK' || data == null) {
+        throw Exception('Failed to create order');
+      }
+
+      return OrderResponse.fromJson(data);
+    } on DioException catch (e) {
+      // INVALID_PICKUP_TIME 에러 처리
+      if (e.response?.data != null && e.response?.data['code'] == 'INVALID_PICKUP_TIME') {
+        throw InvalidPickupTimeException();
+      }
+      rethrow;
     }
-
-    return OrderResponse.fromJson(data);
   }
 
   /// 결제 완료 처리
@@ -99,10 +120,7 @@ class OrderRepository {
       merchantUid: merchantUid,
     );
 
-    final res = await _dio.post(
-      '/v1/payment/complete',
-      data: request.toJson(),
-    );
+    final res = await _dio.post('/v1/payment/complete', data: request.toJson());
 
     final data = res.data['data'] as Map<String, dynamic>?;
     if (res.data['status'] != 'OK' || data == null) {

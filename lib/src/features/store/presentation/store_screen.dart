@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
@@ -20,6 +22,7 @@ import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/quantity_picker.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class StoreRoute extends GoRouteData {
   const StoreRoute({required this.id});
@@ -121,17 +124,24 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Expanded(
                 child: MgButton(
                   onPressed: () async {
-                    // TODO: 픽업시간 설정 bottomSheet 추가
+                    final _pickUpTime = await showTimeSelector();
+                    if (_pickUpTime == null) {
+                      ToastPresentor.error(context, "픽업시간을 지정해주세요");
+                      return;
+                    }
                     // 주문 정보 저장
-                    final user = await ref.read(userStateProvider.future);
                     ref
                         .read(orderPayScreenControllerProvider.notifier)
                         .setOrderInfo(
-                          storeId: widget.id,
+                          storeName: goods.storeName,
+                          storeAddress: goods.address,
+                          storeId: goods.storeId,
+                          goodsId: goods.goodsId,
                           quantity: count,
                           totalPrice: goods.salePrice * count,
                           salePrice: goods.salePrice,
                           originalPrice: goods.originalPrice,
+                          pickupTime: _pickUpTime.toIso8601String(),
                         );
                     // 주문 확인 화면으로 이동
                     await const OrderCautionRoute().push(context);
@@ -144,6 +154,18 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         )
         .constrained(height: 85)
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md);
+  }
+
+  Future<DateTime?> showTimeSelector() async {
+    DateTime? _time;
+    await TimePickerBottomSheet.show(
+      context,
+      initialTime: DateTime.now(),
+      onTimeSelected: (time) {
+        _time = time;
+      },
+    );
+    return _time;
   }
 }
 

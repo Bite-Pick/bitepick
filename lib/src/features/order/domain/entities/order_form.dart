@@ -12,7 +12,7 @@ class OrderForm with _$OrderForm {
     required String storeId,
     required PaymentMethod paymentMethod,
     required PaymentCompany paymentsCompany,
-    required String pickUpTime, // HH:mm 형식
+    required String pickupTime, // HH:mm 형식
     String? request,
     int? totalPrice,
     String? merchantUid,

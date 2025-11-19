@@ -27,3 +27,12 @@ class DuplicateNotificationStoreException implements Exception {
   @override
   String toString() => 'DuplicateNotificationStoreException: $message';
 }
+
+/// 잘못된 픽업 시간 예외
+class InvalidPickupTimeException implements Exception {
+  final String message;
+  InvalidPickupTimeException([this.message = '선택한 픽업시간이 유효하지 않습니다. 다시 선택해주세요.']);
+
+  @override
+  String toString() => 'InvalidPickupTimeException: $message';
+}

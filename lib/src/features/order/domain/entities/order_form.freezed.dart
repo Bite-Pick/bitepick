@@ -25,7 +25,7 @@ mixin _$OrderForm {
   String get storeId => throw _privateConstructorUsedError;
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
   PaymentCompany get paymentsCompany => throw _privateConstructorUsedError;
-  String get pickUpTime => throw _privateConstructorUsedError; // HH:mm 형식
+  String get pickupTime => throw _privateConstructorUsedError; // HH:mm 형식
   String? get request => throw _privateConstructorUsedError;
   int? get totalPrice => throw _privateConstructorUsedError;
   String? get merchantUid => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $OrderFormCopyWith<$Res> {
     String storeId,
     PaymentMethod paymentMethod,
     PaymentCompany paymentsCompany,
-    String pickUpTime,
+    String pickupTime,
     String? request,
     int? totalPrice,
     String? merchantUid,
@@ -76,7 +76,7 @@ class _$OrderFormCopyWithImpl<$Res, $Val extends OrderForm>
     Object? storeId = null,
     Object? paymentMethod = null,
     Object? paymentsCompany = null,
-    Object? pickUpTime = null,
+    Object? pickupTime = null,
     Object? request = freezed,
     Object? totalPrice = freezed,
     Object? merchantUid = freezed,
@@ -99,9 +99,9 @@ class _$OrderFormCopyWithImpl<$Res, $Val extends OrderForm>
                 ? _value.paymentsCompany
                 : paymentsCompany // ignore: cast_nullable_to_non_nullable
                       as PaymentCompany,
-            pickUpTime: null == pickUpTime
-                ? _value.pickUpTime
-                : pickUpTime // ignore: cast_nullable_to_non_nullable
+            pickupTime: null == pickupTime
+                ? _value.pickupTime
+                : pickupTime // ignore: cast_nullable_to_non_nullable
                       as String,
             request: freezed == request
                 ? _value.request
@@ -135,7 +135,7 @@ abstract class _$$OrderFormImplCopyWith<$Res>
     String storeId,
     PaymentMethod paymentMethod,
     PaymentCompany paymentsCompany,
-    String pickUpTime,
+    String pickupTime,
     String? request,
     int? totalPrice,
     String? merchantUid,
@@ -160,7 +160,7 @@ class __$$OrderFormImplCopyWithImpl<$Res>
     Object? storeId = null,
     Object? paymentMethod = null,
     Object? paymentsCompany = null,
-    Object? pickUpTime = null,
+    Object? pickupTime = null,
     Object? request = freezed,
     Object? totalPrice = freezed,
     Object? merchantUid = freezed,
@@ -183,9 +183,9 @@ class __$$OrderFormImplCopyWithImpl<$Res>
             ? _value.paymentsCompany
             : paymentsCompany // ignore: cast_nullable_to_non_nullable
                   as PaymentCompany,
-        pickUpTime: null == pickUpTime
-            ? _value.pickUpTime
-            : pickUpTime // ignore: cast_nullable_to_non_nullable
+        pickupTime: null == pickupTime
+            ? _value.pickupTime
+            : pickupTime // ignore: cast_nullable_to_non_nullable
                   as String,
         request: freezed == request
             ? _value.request
@@ -212,7 +212,7 @@ class _$OrderFormImpl implements _OrderForm {
     required this.storeId,
     required this.paymentMethod,
     required this.paymentsCompany,
-    required this.pickUpTime,
+    required this.pickupTime,
     this.request,
     this.totalPrice,
     this.merchantUid,
@@ -230,7 +230,7 @@ class _$OrderFormImpl implements _OrderForm {
   @override
   final PaymentCompany paymentsCompany;
   @override
-  final String pickUpTime;
+  final String pickupTime;
   // HH:mm 형식
   @override
   final String? request;
@@ -241,7 +241,7 @@ class _$OrderFormImpl implements _OrderForm {
 
   @override
   String toString() {
-    return 'OrderForm(count: $count, storeId: $storeId, paymentMethod: $paymentMethod, paymentsCompany: $paymentsCompany, pickUpTime: $pickUpTime, request: $request, totalPrice: $totalPrice, merchantUid: $merchantUid)';
+    return 'OrderForm(count: $count, storeId: $storeId, paymentMethod: $paymentMethod, paymentsCompany: $paymentsCompany, pickupTime: $pickupTime, request: $request, totalPrice: $totalPrice, merchantUid: $merchantUid)';
   }
 
   @override
@@ -255,8 +255,8 @@ class _$OrderFormImpl implements _OrderForm {
                 other.paymentMethod == paymentMethod) &&
             (identical(other.paymentsCompany, paymentsCompany) ||
                 other.paymentsCompany == paymentsCompany) &&
-            (identical(other.pickUpTime, pickUpTime) ||
-                other.pickUpTime == pickUpTime) &&
+            (identical(other.pickupTime, pickupTime) ||
+                other.pickupTime == pickupTime) &&
             (identical(other.request, request) || other.request == request) &&
             (identical(other.totalPrice, totalPrice) ||
                 other.totalPrice == totalPrice) &&
@@ -272,7 +272,7 @@ class _$OrderFormImpl implements _OrderForm {
     storeId,
     paymentMethod,
     paymentsCompany,
-    pickUpTime,
+    pickupTime,
     request,
     totalPrice,
     merchantUid,
@@ -298,7 +298,7 @@ abstract class _OrderForm implements OrderForm {
     required final String storeId,
     required final PaymentMethod paymentMethod,
     required final PaymentCompany paymentsCompany,
-    required final String pickUpTime,
+    required final String pickupTime,
     final String? request,
     final int? totalPrice,
     final String? merchantUid,
@@ -316,7 +316,7 @@ abstract class _OrderForm implements OrderForm {
   @override
   PaymentCompany get paymentsCompany;
   @override
-  String get pickUpTime; // HH:mm 형식
+  String get pickupTime; // HH:mm 형식
   @override
   String? get request;
   @override
