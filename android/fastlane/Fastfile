@@ -1,40 +1,30 @@
 default_platform(:android)
 
 platform :android do
-  desc "Build AAB and upload to Play Store internal track"
+  desc "Upload existing AAB to Play Store internal track"
   lane :internal do
-    mode = ENV["MODE"] || "dev"
+    mode = ENV["MODE"] || "prod"
     package_name = ENV["PACKAGE_NAME"] || "com.trendflow.bread"
 
-    # Flavor에 따른 entry point 설정
-    entry_point = case mode
-    when "dev"
-      "lib/src/main_dev.dart"
-    when "prod"
-      "lib/src/main_prod.dart"
-    else
-      "lib/src/main_dev.dart"
-    end
-
-    # Flutter AAB build
-    puts "🔨 Building AAB for #{mode} flavor..."
-    sh "cd ../.. && flutter build appbundle --release --flavor #{mode} -t #{entry_point} --build-name=#{ENV['VERSION']} --build-number=#{ENV['BUILD_NUMBER']}"
-
-    # AAB 검색 경로
-    bundle_dir = "../../build/app/outputs/bundle/#{mode}Release"
+    # AAB 검색 경로 (Shorebird가 이미 빌드한 AAB 재사용)
+    # working-directory: android 기준이므로 ../ 사용
+    bundle_dir = "../build/app/outputs/bundle/#{mode}Release"
     aab_path = Dir["#{bundle_dir}/*.aab"].first
 
+    puts "📂 Current dir: #{Dir.pwd}"
     puts "🔍 Searching AAB in: #{File.expand_path(bundle_dir)}"
 
     unless aab_path && File.exist?(aab_path)
       puts "❌ AAB not found. Listing bundle directory:"
       sh "ls -la #{bundle_dir} || echo 'Bundle dir not found'"
+      sh "ls -R ../build/app/outputs || echo 'Outputs dir not found'"
       raise "❌ AAB file not found in #{bundle_dir}"
     end
 
-    puts "✅ AAB built successfully: #{File.expand_path(aab_path)}"
+    puts "✅ Found AAB: #{File.expand_path(aab_path)}"
     puts "📤 Uploading to Play Store internal track..."
 
+    # Play Store 업로드
     upload_to_play_store(
       track: 'internal',
       aab: aab_path,
