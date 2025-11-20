@@ -23,15 +23,14 @@ platform :android do
     puts "✅ Found AAB: #{aab_path}"
     puts "📤 Uploading to Play Store internal track..."
 
-    # JSON 키 파일 경로 (Fastfile 위치 기준)
-    json_key_path = File.join(__dir__, "google-play-service-account.json")
-    puts "🔑 JSON key path: #{json_key_path}"
+    # 환경 변수에서 JSON 데이터 읽기 (SUPPLY_JSON_KEY_DATA)
+    # GitHub Actions에서 설정됨
+    puts "🔑 Using JSON key from environment variable"
 
     upload_to_play_store(
       track: 'internal',
       aab: aab_path,
       package_name: package_name,
-      json_key: json_key_path,
       skip_upload_changelogs: true,
       skip_upload_screenshots: true,
       skip_upload_images: true,

@@ -457,6 +457,7 @@ jobs:
           PACKAGE_NAME: com.trendflow.bread
           VERSION: ${{ env.VERSION }}
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
 
       - name: Generate log summary
         if: always()
