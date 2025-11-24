@@ -246,6 +246,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
 
       factory: $MyReviewListRouteExtension._fromState,
     ),
+    GoRouteData.$route(
+      path: 'admin',
+      name: 'AdminHomeRoute',
+
+      factory: $AdminHomeRouteExtension._fromState,
+    ),
   ],
 );
 
@@ -512,6 +518,22 @@ extension $MyReviewListRouteExtension on MyReviewListRoute {
       const MyReviewListRoute();
 
   String get location => GoRouteData.$location('/my-reviews');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $AdminHomeRouteExtension on AdminHomeRoute {
+  static AdminHomeRoute _fromState(GoRouterState state) =>
+      const AdminHomeRoute();
+
+  String get location => GoRouteData.$location('/admin');
 
   void go(BuildContext context) => context.go(location);
 
