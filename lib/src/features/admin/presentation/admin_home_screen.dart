@@ -19,10 +19,12 @@ class AdminHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseScaffold(
-      appBar: BaseAppBar(title: const Text('관리자 홈')),
-      body: const Center(
-        child: Text('Admin Home Screen'),
+      canSwipeBack: false,
+      appBar: BaseAppBar(
+        title: const Text('관리자 홈'),
+        leading: SizedBox.shrink(),
       ),
+      body: const Center(child: Text('Admin Home Screen')),
     );
   }
 }
