@@ -10,6 +10,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/domain/entities/home_goods_item_data.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
+import 'package:magambell/src/features/store/presentation/widget/store_image_section.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 
@@ -30,7 +31,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
       onTap: () => StoreRoute(id: goods.storeId!).push(context),
       child: Column(
         children: [
-          _buildImageListView(goods.imageUrl ?? []),
+          StoreImageSection(goods.imageUrl ?? []),
           Gaps.h8,
           DefaultTextStyle(
             style: context.textTheme.titleLarge!,
@@ -73,39 +74,4 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
     );
   }
 
-  Widget _buildImageListView(List<String> images) {
-    // TODO[home] : 기기에 따라 크기를 조정해야하는지 검토
-    // TODO[home] : 3개 이상 넘어가면 하단에 +n 표시
-    final double imagesize = 109.w;
-    return SizedBox(
-      height: imagesize,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: images.length,
-        itemBuilder: (context, index) {
-          final image = images[index];
-          if (image == "") return SizedBox.shrink();
-          return CachedNetworkImage(
-            imageUrl: image,
-            imageBuilder: (context, imageProvider) => Container(
-              height: imagesize,
-              width: imagesize,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-              ),
-            ),
-            placeholder: (context, url) => Container(
-              height: imagesize,
-              width: imagesize,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ).margin(right: MgSizes.size8.w);
-        },
-      ),
-    );
-  }
 }

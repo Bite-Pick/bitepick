@@ -23,7 +23,7 @@ final adminRepositoryProvider = AutoDisposeProvider<AdminRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AdminRepositoryRef = AutoDisposeProviderRef<AdminRepository>;
-String _$pendingStoreListHash() => r'a6f8bc061caa217d510e73dfb45be1a249796a09';
+String _$pendingStoreListHash() => r'43fc5955cb0a880a9cc5eb03d4865c43d860d1ab';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -56,7 +56,7 @@ class PendingStoreListFamily extends Family<AsyncValue<List<PendingStoreDto>>> {
   const PendingStoreListFamily();
 
   /// See also [pendingStoreList].
-  PendingStoreListProvider call({required int page, required int size}) {
+  PendingStoreListProvider call({int page = 1, int size = 20}) {
     return PendingStoreListProvider(page: page, size: size);
   }
 
@@ -86,7 +86,7 @@ class PendingStoreListFamily extends Family<AsyncValue<List<PendingStoreDto>>> {
 class PendingStoreListProvider
     extends AutoDisposeFutureProvider<List<PendingStoreDto>> {
   /// See also [pendingStoreList].
-  PendingStoreListProvider({required int page, required int size})
+  PendingStoreListProvider({int page = 1, int size = 20})
     : this._internal(
         (ref) => pendingStoreList(
           ref as PendingStoreListRef,

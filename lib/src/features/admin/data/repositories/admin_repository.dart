@@ -17,15 +17,15 @@ class AdminRepository {
 
   /// 승인 대기 매장 목록 조회
   Future<List<PendingStoreDto>> getPendingStoreList({
-    required int page,
-    required int size,
+    int page = 1,
+    int size = 20,
   }) async {
     final response = await _dio.get(
       '/v1/store/waiting',
       queryParameters: {'page': page, 'size': size},
     );
 
-    if (response.data['status'] != 'SUCCESS') return [];
+    if (response.data['status'] != 'OK') return [];
 
     final data = response.data['data'];
     if (data == null) return [];
@@ -38,15 +38,17 @@ class AdminRepository {
   }
 
   /// 매장 승인
-  Future<void> approveStore(String storeId) async {
+  Future<bool> approveStore(String storeId) async {
     final response = await _dio.patch(
       '/v1/store/approve',
       data: {'id': storeId},
     );
 
     if (response.data['status'] != 'SUCCESS') {
-      throw Exception('매장 승인에 실패했습니다.');
+      // throw Exception('매장 승인에 실패했습니다.');
+      return false;
     }
+    return true;
   }
 
   /// 매장 이미지 수정 (Presigned URL 방식)
@@ -89,8 +91,8 @@ AdminRepository adminRepository(Ref ref) {
 @riverpod
 Future<List<PendingStoreDto>> pendingStoreList(
   Ref ref, {
-  required int page,
-  required int size,
+  int page = 1,
+  int size = 20,
 }) async {
   return ref
       .read(adminRepositoryProvider)
