@@ -61,7 +61,7 @@ class _BannerListScreenState extends ConsumerState<BannerListScreen>
                         onUpload: ref
                             .read(bannerListScreenControllerProvider.notifier)
                             .registerBanner,
-                            toastMessage: "배너 업로드"
+                        toastMessage: "배너 업로드",
                       );
                     },
                     content: Row(

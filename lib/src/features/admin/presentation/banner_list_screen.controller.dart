@@ -47,7 +47,7 @@ class BannerListScreenController extends _$BannerListScreenController {
           .read(adminRepositoryProvider)
           .editBannerImage(bannerId: bannerId, id: id, key: getFileName(file)),
     );
-  }
+  } 
 
   /// 공통 업로드 로직
   Future<bool> _uploadBanner({
