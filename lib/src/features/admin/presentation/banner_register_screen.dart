@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 
+// TODO: 삭제
 class BannerRegisterRoute extends GoRouteData {
   const BannerRegisterRoute();
 
@@ -20,9 +21,7 @@ class BannerRegisterScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseScaffold(
       appBar: BaseAppBar(title: const Text('배너 등록')),
-      body: const Center(
-        child: Text('Banner Register Screen'),
-      ),
+      body: const Center(child: Text('Banner Register Screen')),
     );
   }
 }

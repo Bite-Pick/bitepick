@@ -6,6 +6,7 @@ import 'package:magambell/src/core/utils/talker_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_home_screen.dart';
+import 'package:magambell/src/features/admin/presentation/banner_list_screen.dart';
 import 'package:magambell/src/features/admin/presentation/banner_register_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
@@ -150,7 +151,7 @@ class LoginRoute extends GoRouteData {
       path: 'my-reviews',
     ),
     TypedGoRoute<AdminHomeRoute>(name: 'AdminHomeRoute', path: 'admin'),
-    TypedGoRoute<BannerRegisterRoute>(name: 'BannerRegisterRoute',path: 'banner/register')
+    TypedGoRoute<BannerListRoute>(name: 'BannerListRoute', path: 'banner'),
   ],
 )
 class DefaultRoute extends GoRouteData {

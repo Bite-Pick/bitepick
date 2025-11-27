@@ -142,10 +142,7 @@ class AdminRepository {
 
   // 배너 삭제
   Future<bool> removeBanner(int bannerId) async {
-    final response = await _dio.delete(
-      '/v1/banner',
-      queryParameters: {"bannerId": bannerId},
-    );
+    final response = await _dio.delete('/v1/banner/$bannerId');
 
     if (response.data['status'] != 'OK') return false;
 

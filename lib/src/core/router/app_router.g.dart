@@ -253,10 +253,10 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $AdminHomeRouteExtension._fromState,
     ),
     GoRouteData.$route(
-      path: 'banner/register',
-      name: 'BannerRegisterRoute',
+      path: 'banner',
+      name: 'BannerListRoute',
 
-      factory: $BannerRegisterRouteExtension._fromState,
+      factory: $BannerListRouteExtension._fromState,
     ),
   ],
 );
@@ -551,11 +551,10 @@ extension $AdminHomeRouteExtension on AdminHomeRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $BannerRegisterRouteExtension on BannerRegisterRoute {
-  static BannerRegisterRoute _fromState(GoRouterState state) =>
-      const BannerRegisterRoute();
+extension $BannerListRouteExtension on BannerListRoute {
+  static BannerListRoute _fromState(GoRouterState state) => BannerListRoute();
 
-  String get location => GoRouteData.$location('/banner/register');
+  String get location => GoRouteData.$location('/banner');
 
   void go(BuildContext context) => context.go(location);
 
