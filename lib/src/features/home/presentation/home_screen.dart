@@ -14,6 +14,7 @@ import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -66,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              // HomeBannersView(),
+              HomeBannersView(),
               HomeUpdateBanner(),
               MgAsyncAnimatedSwitcher<List<StoreListDTO>>(
                 asyncValue: storeGoodsAsync,

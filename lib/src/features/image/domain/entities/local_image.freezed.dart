@@ -139,13 +139,13 @@ class __$$LocalImageImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LocalImageImpl implements _LocalImage {
+class _$LocalImageImpl extends _LocalImage {
   const _$LocalImageImpl({
     required this.id,
     required this.key,
     required this.file,
     this.uploadedUrl,
-  });
+  }) : super._();
 
   @override
   final int id;
@@ -185,13 +185,14 @@ class _$LocalImageImpl implements _LocalImage {
       __$$LocalImageImplCopyWithImpl<_$LocalImageImpl>(this, _$identity);
 }
 
-abstract class _LocalImage implements LocalImage {
+abstract class _LocalImage extends LocalImage {
   const factory _LocalImage({
     required final int id,
     required final String key,
     required final File file,
     final String? uploadedUrl,
   }) = _$LocalImageImpl;
+  const _LocalImage._() : super._();
 
   @override
   int get id;

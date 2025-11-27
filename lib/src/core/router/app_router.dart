@@ -5,6 +5,8 @@ import 'package:magambell/src/core/utils/talker_route_observer.dart';
 import 'package:magambell/src/core/utils/talker_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_home_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
@@ -141,17 +143,21 @@ class LoginRoute extends GoRouteData {
       name: 'GoodsEditRoute',
       path: 'owner/store/edit',
     ),
-    TypedGoRoute<TalkerRoute>(
-      name: 'TalkerRoute',
-      path: 'talker',
-    ),
-    TypedGoRoute<FavoriteRoute>(
-      name: 'FavoriteRoute',
-      path: 'favorite',
-    ),
+    TypedGoRoute<TalkerRoute>(name: 'TalkerRoute', path: 'talker'),
+    TypedGoRoute<FavoriteRoute>(name: 'FavoriteRoute', path: 'favorite'),
     TypedGoRoute<MyReviewListRoute>(
       name: 'MyReviewListRoute',
       path: 'my-reviews',
+    ),
+    TypedGoRoute<AdminHomeRoute>(
+      name: 'AdminHomeRoute',
+      path: 'admin',
+      routes: [
+        TypedGoRoute<AdminBannerListRoute>(
+          name: 'AdminBannerListRoute',
+          path: 'banner',
+        ),
+      ],
     ),
   ],
 )
@@ -188,7 +194,7 @@ class DefaultRoute extends GoRouteData {
         case UserRole.customer:
           return MainRoute().location;
         case UserRole.admin: // TODO: 확인 필요
-          return MainRoute().location;
+          return AdminHomeRoute().location;
       }
     } catch (error) {
       // NOTE: [AppInterceptor]에서 처리
