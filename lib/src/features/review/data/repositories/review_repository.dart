@@ -63,8 +63,7 @@ class ReviewRepository {
     return res.data['status'] == 'OK';
   }
 
-  /// 4. 리뷰 신고 리스트 조회
-  /// TODO[ADMIN]: 신고 리스트
+  /// 4. 리뷰 신고 리스트 조회(리뷰 조회시 필터링)
   Future<List<Map<String, dynamic>>> getReportedReviews({
     int page = 1,
     int size = 10,
@@ -110,7 +109,7 @@ class ReviewRepository {
         .toList();
   }
 
-   // /// 3. 리뷰 평점별 조회
+  // /// 3. 리뷰 평점별 조회
   // Future<Map<String, dynamic>> getRatingStats(String goodsId) async {
   //   final res = await _dio.get(
   //     '/v1/review/rating',
