@@ -7,6 +7,7 @@ import 'package:magambell/src/features/address/presentation/search_address_scree
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_home_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
+import 'package:magambell/src/features/admin/presentation/waiting_store_list_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
@@ -156,6 +157,10 @@ class LoginRoute extends GoRouteData {
         TypedGoRoute<AdminBannerListRoute>(
           name: 'AdminBannerListRoute',
           path: 'banner',
+        ),
+        TypedGoRoute<WaitingStoreListRoute>(
+          name: 'WaitingStoreListRoute',
+          path: 'waiting-store',
         ),
       ],
     ),

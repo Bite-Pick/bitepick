@@ -9,15 +9,23 @@ import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
-class WaitingStoreListView extends ConsumerStatefulWidget {
-  const WaitingStoreListView({super.key});
+class WaitingStoreListRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return WaitingStoreListScreen();
+  }
+}
+
+class WaitingStoreListScreen extends ConsumerStatefulWidget {
+  const WaitingStoreListScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _WaitingStoreListViewState();
+      _WaitingStoreListScreenState();
 }
 
-class _WaitingStoreListViewState extends ConsumerState<WaitingStoreListView> {
+class _WaitingStoreListScreenState
+    extends ConsumerState<WaitingStoreListScreen> {
   @override
   Widget build(BuildContext context) {
     final pendingStoreListAsync = ref.watch(pendingStoreListProvider());

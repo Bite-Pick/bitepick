@@ -7,6 +7,12 @@ class R {
   static const String ASSETS_ICONS_SVG_ALIGN_JUSTIFY_SVG =
       'assets/icons/svg/align-justify.svg';
 
+  static const String ASSETS_ICONS_SVG_BAD_SELECT_SVG =
+      'assets/icons/svg/bad_select.svg';
+
+  static const String ASSETS_ICONS_SVG_BAD_UNSELECT_SVG =
+      'assets/icons/svg/bad_unselect.svg';
+
   static const String ASSETS_ICONS_SVG_BANK_BUSANBANK_SVG =
       'assets/icons/svg/bank/BusanBank.svg';
 
@@ -168,6 +174,15 @@ class R {
   static const String ASSETS_ICONS_SVG_FOLDER_SVG =
       'assets/icons/svg/folder.svg';
 
+  static const String ASSETS_ICONS_SVG_GALLERY_VERTICAL_SVG =
+      'assets/icons/svg/gallery-vertical.svg';
+
+  static const String ASSETS_ICONS_SVG_GOOD_SELECT_SVG =
+      'assets/icons/svg/good_select.svg';
+
+  static const String ASSETS_ICONS_SVG_GOOD_UNSELECT_SVG =
+      'assets/icons/svg/good_unselect.svg';
+
   static const String ASSETS_ICONS_SVG_HEART_SVG = 'assets/icons/svg/heart.svg';
 
   static const String ASSETS_ICONS_SVG_HELP_CIRCLE_SVG =
@@ -201,6 +216,12 @@ class R {
   static const String ASSETS_ICONS_SVG_MORE_VERTICAL_SVG =
       'assets/icons/svg/more-vertical.svg';
 
+  static const String ASSETS_ICONS_SVG_NOTBAD_SELECT_SVG =
+      'assets/icons/svg/notbad_select.svg';
+
+  static const String ASSETS_ICONS_SVG_NOTBAD_UNSELECT_SVG =
+      'assets/icons/svg/notbad_unselect.svg';
+
   static const String ASSETS_ICONS_SVG_PAPERCLIP_SVG =
       'assets/icons/svg/paperclip.svg';
 
@@ -223,6 +244,9 @@ class R {
 
   static const String ASSETS_ICONS_SVG_STAR_SVG = 'assets/icons/svg/star.svg';
 
+  static const String ASSETS_ICONS_SVG_STORE_ALT_SVG =
+      'assets/icons/svg/store-alt.svg';
+
   static const String ASSETS_ICONS_SVG_THUMB_DOWN_SVG =
       'assets/icons/svg/thumb-down.svg';
 
@@ -234,6 +258,9 @@ class R {
 
   static const String ASSETS_ICONS_SVG_UPLOAD_SVG =
       'assets/icons/svg/upload.svg';
+
+  static const String ASSETS_ICONS_SVG_USER_CHECK_SVG =
+      'assets/icons/svg/user-check.svg';
 
   static const String ASSETS_IMAGES_APPLE_PNG = 'assets/images/apple.png';
 
