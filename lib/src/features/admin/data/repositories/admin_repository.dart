@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/admin/data/dtos/pending_store.dto.dart';
+import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -78,9 +79,80 @@ class AdminRepository {
         .toList();
   }
 
-  // TODO: 배너 등록 /v1/banner
+  /// 배너 리스트 조회
+  Future<List<BannerImage>> getBannerImages() async {
+    final response = await _dio.get('/v1/banner/images');
 
-  // TODO: 신고하기 v1/review/report
+    if (response.data['status'] != 'OK') return [];
+
+    final data = response.data['data'];
+    if (data == null) return [];
+
+    final list = data['bannerPreSignedUrlImages'] as List? ?? [];
+
+    return list
+        .map((json) => BannerImage.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
+  // 배너 등록 /v1/banner
+  Future<PresignedUrlImage?> registerBanner(int id, String key) async {
+    final response = await _dio.post(
+      '/v1/banner',
+      data: {
+        "bannerImagesRegister": {"id": id, "key": key},
+      },
+    );
+
+    if (response.data['status'] != 'OK') return null;
+
+    final data = response.data['data'];
+    if (data == null) return null;
+
+    final bannerPreSignedUrlImages =
+        data['bannerPreSignedUrlImage'] as Map<String, dynamic>;
+
+    return PresignedUrlImage.fromJson(bannerPreSignedUrlImages);
+  }
+
+  // 배너 이미지 교체 /v1/banner
+  Future<PresignedUrlImage?> editBannerImage({
+    required int bannerId,
+    required int id,
+    required String key,
+  }) async {
+    final response = await _dio.patch(
+      '/v1/banner',
+      data: {
+        "bannerId": id,
+        "bannerImagesRegister": {"id": id, "key": key},
+      },
+    );
+
+    if (response.data['status'] != 'OK') return null;
+
+    final data = response.data['data'];
+    if (data == null) return null;
+
+    final bannerPreSignedUrlImages =
+        data['bannerPreSignedUrlImage'] as Map<String, dynamic>;
+
+    return PresignedUrlImage.fromJson(bannerPreSignedUrlImages);
+  }
+
+  // 배너 삭제
+  Future<bool> removeBanner(int bannerId) async {
+    final response = await _dio.delete(
+      '/v1/banner',
+      queryParameters: {"bannerId": bannerId},
+    );
+
+    if (response.data['status'] != 'OK') return false;
+
+    final data = response.data['data'];
+    if (data == null) return false;
+    return true;
+  }
 }
 
 @riverpod
@@ -97,4 +169,9 @@ Future<List<PendingStoreDto>> pendingStoreList(
   return ref
       .read(adminRepositoryProvider)
       .getPendingStoreList(page: page, size: size);
+}
+
+@riverpod
+Future<List<BannerImage>> bannerImages(Ref ref) async {
+  return ref.read(adminRepositoryProvider).getBannerImages();
 }

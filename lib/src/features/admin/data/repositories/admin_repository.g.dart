@@ -183,5 +183,23 @@ class _PendingStoreListProviderElement
   int get size => (origin as PendingStoreListProvider).size;
 }
 
+String _$bannerImagesHash() => r'9a25c1ad5efcafe38b5e58c472baff51aad4177f';
+
+/// See also [bannerImages].
+@ProviderFor(bannerImages)
+final bannerImagesProvider =
+    AutoDisposeFutureProvider<List<BannerImage>>.internal(
+      bannerImages,
+      name: r'bannerImagesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$bannerImagesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BannerImagesRef = AutoDisposeFutureProviderRef<List<BannerImage>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

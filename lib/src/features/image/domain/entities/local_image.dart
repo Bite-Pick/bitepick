@@ -13,4 +13,9 @@ class LocalImage with _$LocalImage {
     required File file,
     String? uploadedUrl, // S3 업로드 완료 후 URL
   }) = _LocalImage;
+
+  const LocalImage._();
 }
+
+int getId() => DateTime.now().microsecondsSinceEpoch;
+String getFileName(File file) => file.path.split('/').last;
