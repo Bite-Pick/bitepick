@@ -15,6 +15,7 @@ import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class SearchAddressRoute extends GoRouteData {
   const SearchAddressRoute();
@@ -54,9 +55,7 @@ class _SearchAddressScreenState extends ConsumerState<SearchAddressScreen> {
       next,
     ) {
       if (next != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next)));
+        ToastPresentor.success(context, next);
         controller.clearMessage();
       }
     });

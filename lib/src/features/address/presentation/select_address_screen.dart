@@ -47,13 +47,16 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
           Gaps.h40,
 
           ..._buildServiceAreas(),
-          Spacer(),
+          const Spacer(),
           MgButton(
-            onPressed: () {
-              ref.invalidate(userStateProvider);
-              DefaultRoute().go(context);
-            },
-            content: Text("확인"),
+            // 주소를 선택해야만 확인 버튼 활성화
+            onPressed: _selectedIndex != null
+                ? () {
+                    ref.invalidate(userStateProvider);
+                    DefaultRoute().go(context);
+                  }
+                : null,
+            content: const Text("확인"),
           ).primary(),
         ],
       ).margin(horizontal: MgSizes.md),
@@ -66,9 +69,9 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
           final isSelect = _selectedIndex == index;
 
           return GestureDetector(
-            onTap: () {
+            onTap: () async {
               setState(() => _selectedIndex = index);
-              ref
+              await ref
                   .read(searchAddressScreenControllerProvider.notifier)
                   .selectFromSaved(address);
             },
