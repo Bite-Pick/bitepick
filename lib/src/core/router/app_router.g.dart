@@ -256,7 +256,7 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       path: 'banner',
       name: 'BannerListRoute',
 
-      factory: $BannerListRouteExtension._fromState,
+      factory: $AdminBannerListRouteExtension._fromState,
     ),
   ],
 );
@@ -551,8 +551,9 @@ extension $AdminHomeRouteExtension on AdminHomeRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $BannerListRouteExtension on BannerListRoute {
-  static BannerListRoute _fromState(GoRouterState state) => BannerListRoute();
+extension $AdminBannerListRouteExtension on AdminBannerListRoute {
+  static AdminBannerListRoute _fromState(GoRouterState state) =>
+      AdminBannerListRoute();
 
   String get location => GoRouteData.$location('/banner');
 

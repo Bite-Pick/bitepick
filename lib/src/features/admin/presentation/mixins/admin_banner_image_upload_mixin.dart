@@ -7,7 +7,7 @@ import 'package:magambell/src/features/image/utils/image_requester.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 /// 배너 이미지 업로드 공통 로직 Mixin
-mixin BannerImageUploadMixin {
+mixin AdminBannerImageUploadMixin {
   /// 배너 이미지 선택 및 업로드 처리
   ///
   /// [context]: BuildContext

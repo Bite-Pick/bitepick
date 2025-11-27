@@ -5,20 +5,21 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
-import 'package:magambell/src/features/admin/presentation/banner_list_screen.controller.dart';
-import 'package:magambell/src/features/admin/presentation/mixins/banner_image_upload_mixin.dart';
+import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.controller.dart';
+import 'package:magambell/src/features/admin/presentation/mixins/admin_banner_image_upload_mixin.dart';
+import 'package:magambell/src/features/banner/domain/constants.dart';
 import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
-class AdminBannerItem extends ConsumerWidget with BannerImageUploadMixin {
+class AdminBannerItem extends ConsumerWidget with AdminBannerImageUploadMixin {
   const AdminBannerItem(this.bannerImage, {super.key});
   final BannerImage bannerImage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uploadState = ref.watch(bannerListScreenControllerProvider);
+    final uploadState = ref.watch(adminBannerListScreenControllerProvider);
     final isUploading =
         uploadState.isProgress &&
         uploadState.uploadingId == bannerImage.bannerId;
@@ -33,8 +34,8 @@ class AdminBannerItem extends ConsumerWidget with BannerImageUploadMixin {
               children: [
                 CachedNetworkImage(
                   imageUrl: bannerImage.url,
-                  width: 343,
-                  height: 150,
+                  width: BANNER_SIZE.width,
+                  height: BANNER_SIZE.height,
                   fit: BoxFit.cover,
                 ),
                 // 업로드 중 오버레이
@@ -63,7 +64,8 @@ class AdminBannerItem extends ConsumerWidget with BannerImageUploadMixin {
                               bannerId: bannerImage.bannerId,
                               onUpload: ref
                                   .read(
-                                    bannerListScreenControllerProvider.notifier,
+                                    adminBannerListScreenControllerProvider
+                                        .notifier,
                                   )
                                   .editBanner,
                               toastMessage: "배너 이미지 수정",

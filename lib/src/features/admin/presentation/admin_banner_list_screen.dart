@@ -6,46 +6,50 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
-import 'package:magambell/src/features/admin/presentation/banner_list_screen.controller.dart';
-import 'package:magambell/src/features/admin/presentation/mixins/banner_image_upload_mixin.dart';
+import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.controller.dart';
+import 'package:magambell/src/features/admin/presentation/mixins/admin_banner_image_upload_mixin.dart';
 import 'package:magambell/src/features/admin/presentation/widgets/admin_banner_item.dart';
+import 'package:magambell/src/features/banner/domain/constants.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/toast_presentor.dart';
 
-class BannerListRoute extends GoRouteData {
+class AdminBannerListRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const BannerListScreen();
+    return const AdminBannerListScreen();
   }
 }
 
-class BannerListScreen extends ConsumerStatefulWidget {
-  const BannerListScreen({super.key});
+class AdminBannerListScreen extends ConsumerStatefulWidget {
+  const AdminBannerListScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _BannerListScreenState();
+      _AdminBannerListScreen();
 }
 
-class _BannerListScreenState extends ConsumerState<BannerListScreen>
-    with BannerImageUploadMixin {
+class _AdminBannerListScreen extends ConsumerState<AdminBannerListScreen>
+    with AdminBannerImageUploadMixin {
   @override
   Widget build(BuildContext context) {
     final bannerImagesAsync = ref.watch(bannerImagesProvider);
-    final controllerState = ref.watch(bannerListScreenControllerProvider);
-    final controller = ref.watch(bannerListScreenControllerProvider.notifier);
+    final controllerState = ref.watch(adminBannerListScreenControllerProvider);
+    final controller = ref.watch(
+      adminBannerListScreenControllerProvider.notifier,
+    );
     return BaseScaffold(
       backgroundColor: MgColorScheme.gray10,
       appBar: BaseAppBar(title: Text("배너 관리")),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("(343x160)배율로 이미지를 등록해주세요").textGray().bold(),
+          Text(
+            "(${BANNER_SIZE.width}x${BANNER_SIZE.height})배율로 이미지를 등록해주세요",
+          ).textGray().bold(),
           Gaps.h20,
           Column(
                 children: [
@@ -59,7 +63,9 @@ class _BannerListScreenState extends ConsumerState<BannerListScreen>
                         ref,
                         bannerId: getId(),
                         onUpload: ref
-                            .read(bannerListScreenControllerProvider.notifier)
+                            .read(
+                              adminBannerListScreenControllerProvider.notifier,
+                            )
                             .registerBanner,
                         toastMessage: "배너 업로드",
                       );

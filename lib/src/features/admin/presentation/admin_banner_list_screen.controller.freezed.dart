@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'banner_list_screen.controller.dart';
+part of 'admin_banner_list_screen.controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,45 +16,47 @@ final _privateConstructorUsedError = UnsupportedError(
 );
 
 /// @nodoc
-mixin _$BannerListScreenControllerState {
+mixin _$AdminBannerListScreenControllerState {
   bool get isProgress => throw _privateConstructorUsedError;
   int? get uploadingId => throw _privateConstructorUsedError;
 
-  /// Create a copy of BannerListScreenControllerState
+  /// Create a copy of AdminBannerListScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $BannerListScreenControllerStateCopyWith<BannerListScreenControllerState>
+  $AdminBannerListScreenControllerStateCopyWith<
+    AdminBannerListScreenControllerState
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $BannerListScreenControllerStateCopyWith<$Res> {
-  factory $BannerListScreenControllerStateCopyWith(
-    BannerListScreenControllerState value,
-    $Res Function(BannerListScreenControllerState) then,
+abstract class $AdminBannerListScreenControllerStateCopyWith<$Res> {
+  factory $AdminBannerListScreenControllerStateCopyWith(
+    AdminBannerListScreenControllerState value,
+    $Res Function(AdminBannerListScreenControllerState) then,
   ) =
-      _$BannerListScreenControllerStateCopyWithImpl<
+      _$AdminBannerListScreenControllerStateCopyWithImpl<
         $Res,
-        BannerListScreenControllerState
+        AdminBannerListScreenControllerState
       >;
   @useResult
   $Res call({bool isProgress, int? uploadingId});
 }
 
 /// @nodoc
-class _$BannerListScreenControllerStateCopyWithImpl<
+class _$AdminBannerListScreenControllerStateCopyWithImpl<
   $Res,
-  $Val extends BannerListScreenControllerState
+  $Val extends AdminBannerListScreenControllerState
 >
-    implements $BannerListScreenControllerStateCopyWith<$Res> {
-  _$BannerListScreenControllerStateCopyWithImpl(this._value, this._then);
+    implements $AdminBannerListScreenControllerStateCopyWith<$Res> {
+  _$AdminBannerListScreenControllerStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of BannerListScreenControllerState
+  /// Create a copy of AdminBannerListScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -76,37 +78,37 @@ class _$BannerListScreenControllerStateCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$BannerListScreenControllerStateImplCopyWith<$Res>
-    implements $BannerListScreenControllerStateCopyWith<$Res> {
-  factory _$$BannerListScreenControllerStateImplCopyWith(
-    _$BannerListScreenControllerStateImpl value,
-    $Res Function(_$BannerListScreenControllerStateImpl) then,
-  ) = __$$BannerListScreenControllerStateImplCopyWithImpl<$Res>;
+abstract class _$$AdminBannerListScreenControllerStateImplCopyWith<$Res>
+    implements $AdminBannerListScreenControllerStateCopyWith<$Res> {
+  factory _$$AdminBannerListScreenControllerStateImplCopyWith(
+    _$AdminBannerListScreenControllerStateImpl value,
+    $Res Function(_$AdminBannerListScreenControllerStateImpl) then,
+  ) = __$$AdminBannerListScreenControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isProgress, int? uploadingId});
 }
 
 /// @nodoc
-class __$$BannerListScreenControllerStateImplCopyWithImpl<$Res>
+class __$$AdminBannerListScreenControllerStateImplCopyWithImpl<$Res>
     extends
-        _$BannerListScreenControllerStateCopyWithImpl<
+        _$AdminBannerListScreenControllerStateCopyWithImpl<
           $Res,
-          _$BannerListScreenControllerStateImpl
+          _$AdminBannerListScreenControllerStateImpl
         >
-    implements _$$BannerListScreenControllerStateImplCopyWith<$Res> {
-  __$$BannerListScreenControllerStateImplCopyWithImpl(
-    _$BannerListScreenControllerStateImpl _value,
-    $Res Function(_$BannerListScreenControllerStateImpl) _then,
+    implements _$$AdminBannerListScreenControllerStateImplCopyWith<$Res> {
+  __$$AdminBannerListScreenControllerStateImplCopyWithImpl(
+    _$AdminBannerListScreenControllerStateImpl _value,
+    $Res Function(_$AdminBannerListScreenControllerStateImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of BannerListScreenControllerState
+  /// Create a copy of AdminBannerListScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({Object? isProgress = null, Object? uploadingId = freezed}) {
     return _then(
-      _$BannerListScreenControllerStateImpl(
+      _$AdminBannerListScreenControllerStateImpl(
         isProgress: null == isProgress
             ? _value.isProgress
             : isProgress // ignore: cast_nullable_to_non_nullable
@@ -122,10 +124,10 @@ class __$$BannerListScreenControllerStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BannerListScreenControllerStateImpl
+class _$AdminBannerListScreenControllerStateImpl
     with DiagnosticableTreeMixin
-    implements _BannerListScreenControllerState {
-  const _$BannerListScreenControllerStateImpl({
+    implements _AdminBannerListScreenControllerState {
+  const _$AdminBannerListScreenControllerStateImpl({
     required this.isProgress,
     this.uploadingId,
   });
@@ -137,14 +139,14 @@ class _$BannerListScreenControllerStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BannerListScreenControllerState(isProgress: $isProgress, uploadingId: $uploadingId)';
+    return 'AdminBannerListScreenControllerState(isProgress: $isProgress, uploadingId: $uploadingId)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'BannerListScreenControllerState'))
+      ..add(DiagnosticsProperty('type', 'AdminBannerListScreenControllerState'))
       ..add(DiagnosticsProperty('isProgress', isProgress))
       ..add(DiagnosticsProperty('uploadingId', uploadingId));
   }
@@ -153,7 +155,7 @@ class _$BannerListScreenControllerStateImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BannerListScreenControllerStateImpl &&
+            other is _$AdminBannerListScreenControllerStateImpl &&
             (identical(other.isProgress, isProgress) ||
                 other.isProgress == isProgress) &&
             (identical(other.uploadingId, uploadingId) ||
@@ -163,38 +165,38 @@ class _$BannerListScreenControllerStateImpl
   @override
   int get hashCode => Object.hash(runtimeType, isProgress, uploadingId);
 
-  /// Create a copy of BannerListScreenControllerState
+  /// Create a copy of AdminBannerListScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$BannerListScreenControllerStateImplCopyWith<
-    _$BannerListScreenControllerStateImpl
+  _$$AdminBannerListScreenControllerStateImplCopyWith<
+    _$AdminBannerListScreenControllerStateImpl
   >
   get copyWith =>
-      __$$BannerListScreenControllerStateImplCopyWithImpl<
-        _$BannerListScreenControllerStateImpl
+      __$$AdminBannerListScreenControllerStateImplCopyWithImpl<
+        _$AdminBannerListScreenControllerStateImpl
       >(this, _$identity);
 }
 
-abstract class _BannerListScreenControllerState
-    implements BannerListScreenControllerState {
-  const factory _BannerListScreenControllerState({
+abstract class _AdminBannerListScreenControllerState
+    implements AdminBannerListScreenControllerState {
+  const factory _AdminBannerListScreenControllerState({
     required final bool isProgress,
     final int? uploadingId,
-  }) = _$BannerListScreenControllerStateImpl;
+  }) = _$AdminBannerListScreenControllerStateImpl;
 
   @override
   bool get isProgress;
   @override
   int? get uploadingId;
 
-  /// Create a copy of BannerListScreenControllerState
+  /// Create a copy of AdminBannerListScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$BannerListScreenControllerStateImplCopyWith<
-    _$BannerListScreenControllerStateImpl
+  _$$AdminBannerListScreenControllerStateImplCopyWith<
+    _$AdminBannerListScreenControllerStateImpl
   >
   get copyWith => throw _privateConstructorUsedError;
 }

@@ -7,6 +7,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
+import 'package:magambell/src/features/banner/domain/constants.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class HomeBannersView extends ConsumerStatefulWidget {
@@ -18,7 +19,6 @@ class HomeBannersView extends ConsumerStatefulWidget {
 
 class _HomeBannersViewState extends ConsumerState<HomeBannersView> {
   final SwiperController _swiperController = SwiperController();
-  static const double bannerHeight = 160;
   @override
   Widget build(BuildContext context) {
     final bannerImagesAsync = ref.watch(bannerImagesProvider);
@@ -39,13 +39,13 @@ class _HomeBannersViewState extends ConsumerState<HomeBannersView> {
             final bannerImage = bannerImages[index];
             return CachedNetworkImage(
               imageUrl: bannerImage.url,
-              width: 343,
-              height: 160,
+              width: BANNER_SIZE.width,
+              height: BANNER_SIZE.height,
               fit: BoxFit.cover,
             ).clipRRect(all: MgRadius.sm);
           },
           pagination: swiperPageIndicator(),
-        ).constrained(height: bannerHeight);
+        ).constrained(height: BANNER_SIZE.height);
       },
     ).margin(horizontal: MgSizes.md);
   }

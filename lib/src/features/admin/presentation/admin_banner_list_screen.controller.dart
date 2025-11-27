@@ -11,22 +11,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part 'banner_list_screen.controller.freezed.dart';
-part 'banner_list_screen.controller.g.dart';
+part 'admin_banner_list_screen.controller.freezed.dart';
+part 'admin_banner_list_screen.controller.g.dart';
 
 @freezed
-class BannerListScreenControllerState with _$BannerListScreenControllerState {
-  const factory BannerListScreenControllerState({
+class AdminBannerListScreenControllerState
+    with _$AdminBannerListScreenControllerState {
+  const factory AdminBannerListScreenControllerState({
     required bool isProgress,
     int? uploadingId,
-  }) = _BannerListScreenControllerState;
+  }) = _AdminBannerListScreenControllerState;
 }
 
 @riverpod
-class BannerListScreenController extends _$BannerListScreenController {
+class AdminBannerListScreenController extends _$AdminBannerListScreenController {
   @override
-  BannerListScreenControllerState build() {
-    return const BannerListScreenControllerState(isProgress: false);
+  AdminBannerListScreenControllerState build() {
+    return const AdminBannerListScreenControllerState(isProgress: false);
   }
 
   /// 배너 등록 (새로운 배너)
@@ -47,7 +48,7 @@ class BannerListScreenController extends _$BannerListScreenController {
           .read(adminRepositoryProvider)
           .editBannerImage(bannerId: bannerId, id: id, key: getFileName(file)),
     );
-  } 
+  }
 
   /// 공통 업로드 로직
   Future<bool> _uploadBanner({
