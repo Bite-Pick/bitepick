@@ -56,7 +56,8 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
                       "픽업시간 : ${goods.startTime.convertTime() ?? ''} ~ ${goods.endTime.convertTime() ?? ''}",
                     ),
                     Gaps.w12,
-                    if (goods.distance != 0) Text("거리 : ${goods.distance}"),
+                    if (goods.distance != 0)
+                      Text("거리 : ${goods.distance.toStringAsFixed(2)}km"),
                   ],
                 ),
               ],
