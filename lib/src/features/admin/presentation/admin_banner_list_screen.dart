@@ -38,9 +38,7 @@ class _AdminBannerListScreen extends ConsumerState<AdminBannerListScreen>
   Widget build(BuildContext context) {
     final bannerImagesAsync = ref.watch(bannerImagesProvider);
     final controllerState = ref.watch(adminBannerListScreenControllerProvider);
-    final controller = ref.watch(
-      adminBannerListScreenControllerProvider.notifier,
-    );
+
     return BaseScaffold(
       backgroundColor: MgColorScheme.gray10,
       appBar: BaseAppBar(title: Text("배너 관리")),
@@ -50,42 +48,7 @@ class _AdminBannerListScreen extends ConsumerState<AdminBannerListScreen>
           Text(
             "(${BANNER_SIZE.width}x${BANNER_SIZE.height})배율로 이미지를 등록해주세요",
           ).textGray().bold(),
-          Gaps.h20,
-          Column(
-                children: [
-                  Text("배너 등록").lg().bold(),
-                  Gaps.h12,
-                  MgButton(
-                    disabled: controllerState.isProgress,
-                    onPressed: () async {
-                      await handleBannerImageUpload(
-                        context,
-                        ref,
-                        bannerId: getId(),
-                        onUpload: ref
-                            .read(
-                              adminBannerListScreenControllerProvider.notifier,
-                            )
-                            .registerBanner,
-                        toastMessage: "배너 업로드",
-                      );
-                    },
-                    content: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        BaseSvgIcon.upload(),
-                        Gaps.w8,
-                        const Text("이미지 선택"),
-                      ],
-                    ),
-                  ).gray(),
-                ],
-              )
-              .margin(vertical: MgSizes.md, horizontal: MgSizes.sm)
-              .decorated(
-                color: MgColorScheme.lightest,
-                borderRadius: BorderRadius.circular(MgRadius.md),
-              ),
+          Text("현재 화면에는 실제 비율의 0.7배로 표시됩니다").xs().textGray(),
           Gaps.h20,
           Expanded(
             child: MgAsyncAnimatedSwitcher(
@@ -107,11 +70,32 @@ class _AdminBannerListScreen extends ConsumerState<AdminBannerListScreen>
                     Expanded(
                       child: ListView.separated(
                         itemBuilder: (context, index) {
+                          if (index == totalCount) {
+                            return MgButton(
+                              disabled: controllerState.isProgress,
+                              onPressed: () async {
+                                await handleBannerImageUpload(
+                                  context,
+                                  ref,
+                                  bannerId: getId(),
+                                  onUpload: ref
+                                      .read(
+                                        adminBannerListScreenControllerProvider
+                                            .notifier,
+                                      )
+                                      .registerBanner,
+                                  toastMessage: "배너 업로드",
+                                );
+                              },
+                              content: BaseSvgIcon.plus(),
+                              borderColor: MgColorScheme.gray8,
+                            );
+                          }
                           final bannerImage = bannerImages[index];
                           return AdminBannerItem(bannerImage);
                         },
                         separatorBuilder: (context, index) => Gaps.h12,
-                        itemCount: totalCount,
+                        itemCount: totalCount + 1,
                       ),
                     ),
                   ],

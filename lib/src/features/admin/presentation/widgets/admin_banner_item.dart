@@ -17,25 +17,38 @@ class AdminBannerItem extends ConsumerWidget with AdminBannerImageUploadMixin {
   const AdminBannerItem(this.bannerImage, {super.key});
   final BannerImage bannerImage;
 
+  void _handleRemoveBanner(BuildContext context, WidgetRef ref) async {
+    final res = await ref
+        .read(adminRepositoryProvider)
+        .removeBanner(bannerImage.bannerId);
+
+    if (!context.mounted) return;
+
+    if (!res) {
+      ToastPresentor.error(context, "삭제 실패");
+      return;
+    }
+    ToastPresentor.success(context, "삭제 성공");
+    ref.invalidate(bannerImagesProvider);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uploadState = ref.watch(adminBannerListScreenControllerProvider);
     final isUploading =
         uploadState.isProgress &&
         uploadState.uploadingId == bannerImage.bannerId;
-
-    return Column(
+    final List<(String, String)> menus = [('edit', '이미지 수정'), ('remove', '삭제')];
+    return Row(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text("id : ${bannerImage.bannerId}"),
-            ),
+            Text(bannerImage.bannerId.toString()),
+            Gaps.w16,
             Stack(
               children: [
                 CachedNetworkImage(
                   imageUrl: bannerImage.url,
-                  width: BANNER_SIZE.width,
-                  height: BANNER_SIZE.height,
+                  width: BANNER_SIZE.width * 0.7,
+                  height: BANNER_SIZE.height * 0.7,
                   fit: BoxFit.cover,
                 ),
                 // 업로드 중 오버레이
@@ -50,76 +63,49 @@ class AdminBannerItem extends ConsumerWidget with AdminBannerImageUploadMixin {
                   ),
               ],
             ).margin(vertical: MgSizes.sm),
-            Row(
-              children: [
-                Flexible(
-                  flex: 7,
-                  child: MgButton(
-                    onPressed: isUploading
-                        ? null
-                        : () async {
-                            await handleBannerImageUpload(
-                              context,
-                              ref,
-                              bannerId: bannerImage.bannerId,
-                              onUpload: ref
-                                  .read(
-                                    adminBannerListScreenControllerProvider
-                                        .notifier,
-                                  )
-                                  .editBanner,
-                              toastMessage: "배너 이미지 수정",
-                            );
-                          },
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BaseSvgIcon.rotateCw(size: MgSizes.md),
-                        Gaps.w8,
-                        Text(isUploading ? "업로드 중..." : "이미지 변경"),
-                      ],
-                    ),
-                    borderColor: MgColorScheme.gray7,
-                    padding: Gutter.hxs,
-                  ),
-                ),
-                Gaps.w12,
-                Flexible(
-                  flex: 3,
-                  child: MgButton(
-                    onPressed: isUploading
-                        ? null
-                        : () async {
-                            final res = await ref
-                                .read(adminRepositoryProvider)
-                                .removeBanner(bannerImage.bannerId);
+            Spacer(),
+            PopupMenuButton<String>(
+              icon: BaseSvgIcon.moreVertical(),
+              onSelected: (value) {
+                if (isUploading) return;
 
-                            if (!res) {
-                              ToastPresentor.error(context, "삭제 실패");
-                              return;
-                            }
-                            ToastPresentor.success(context, "삭제 성공");
-                            ref.invalidate(bannerImagesProvider);
-                          },
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BaseSvgIcon.trash(size: MgSizes.md),
-                        Gaps.w8,
-                        const Text("삭제"),
-                      ],
-                    ),
-                    padding: Gutter.hxs,
-                  ).red(),
-                ),
+                switch (value) {
+                  case 'edit':
+                    handleBannerImageUpload(
+                      context,
+                      ref,
+                      bannerId: bannerImage.bannerId,
+                      onUpload: ref
+                          .read(
+                            adminBannerListScreenControllerProvider.notifier,
+                          )
+                          .editBanner,
+                      toastMessage: "배너 이미지 수정",
+                    );
+                  case 'remove':
+                    _handleRemoveBanner(context, ref);
+                }
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              offset: const Offset(0, 36), // 클릭 위치로부터 아래로 띄움
+              itemBuilder: (context) => [
+                for (final (value, label) in menus) ...[
+                  PopupMenuItem<String>(
+                    value: value,
+                    child: Center(child: Text(label)),
+                  ),
+                  if (value != menus.last.$1) const PopupMenuDivider(),
+                ],
               ],
             ),
           ],
         )
         .margin(all: MgSizes.sm)
         .decorated(
-          color: MgColorScheme.gray8,
           borderRadius: BorderRadius.circular(MgRadius.md),
+          border: Border.all(width: 1, color: MgColorScheme.gray8),
         );
   }
 }
