@@ -96,11 +96,15 @@ class AdminRepository {
   }
 
   // 배너 등록 /v1/banner
-  Future<PresignedUrlImage?> registerBanner(int id, String key) async {
+  Future<BannerImage?> registerBanner(int id, String key) async {
     final response = await _dio.post(
       '/v1/banner',
       data: {
-        "bannerImagesRegister": {"id": id, "key": key},
+        "bannerImagesRegister": {
+          "id":
+              1, // TODO: 임시하드코딩; id값을 DateTime.milliseconds 값으로 넣으면 HttpRequestMethodNotSupportedException 발생
+          "key": key,
+        },
       },
     );
 
@@ -112,11 +116,11 @@ class AdminRepository {
     final bannerPreSignedUrlImages =
         data['bannerPreSignedUrlImage'] as Map<String, dynamic>;
 
-    return PresignedUrlImage.fromJson(bannerPreSignedUrlImages);
+    return BannerImage.fromJson(bannerPreSignedUrlImages);
   }
 
   // 배너 이미지 교체 /v1/banner
-  Future<PresignedUrlImage?> editBannerImage({
+  Future<BannerImage?> editBannerImage({
     required int bannerId,
     required int id,
     required String key,
@@ -137,7 +141,7 @@ class AdminRepository {
     final bannerPreSignedUrlImages =
         data['bannerPreSignedUrlImage'] as Map<String, dynamic>;
 
-    return PresignedUrlImage.fromJson(bannerPreSignedUrlImages);
+    return BannerImage.fromJson(bannerPreSignedUrlImages);
   }
 
   // 배너 삭제

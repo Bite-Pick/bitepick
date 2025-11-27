@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
+import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
@@ -52,8 +53,7 @@ class BannerListScreenController extends _$BannerListScreenController {
   Future<bool> _uploadBanner({
     required File file,
     required int id,
-    required Future<PresignedUrlImage?> Function(int id, String key)
-    getPresignedUrl,
+    required Future<BannerImage?> Function(int id, String key) getPresignedUrl,
   }) async {
     state = state.copyWith(isProgress: true, uploadingId: id);
 
@@ -61,13 +61,17 @@ class BannerListScreenController extends _$BannerListScreenController {
       talker.debug('[Banner] Starting upload for ID: $id');
 
       // 1. Presigned URL 요청
-      final presignedImage = await getPresignedUrl(id, _getFileName(file));
-
-      if (presignedImage == null) {
+      final bannerImage = await getPresignedUrl(id, _getFileName(file));
+      if (bannerImage == null) {
         talker.error('[Banner] Failed to get presigned URL for ID: $id');
         state = state.copyWith(isProgress: false, uploadingId: null);
         return false;
       }
+
+      final presignedImage = PresignedUrlImage(
+        id: bannerImage.id,
+        url: bannerImage.url,
+      );
 
       talker.debug('[Banner] Got presigned URL for ID: $id');
 
@@ -87,11 +91,9 @@ class BannerListScreenController extends _$BannerListScreenController {
 
       state = state.copyWith(isProgress: false, uploadingId: null);
 
-      if (success) {
-        talker.info('[Banner] ✅ Upload success for ID: $id');
-      } else {
-        talker.error('[Banner] ❌ Upload failed for ID: $id');
-      }
+      success
+          ? talker.info('[Banner] ✅ Upload success for ID: $id')
+          : talker.error('[Banner] ❌ Upload failed for ID: $id');
 
       return success;
     } catch (e, stack) {
@@ -100,8 +102,6 @@ class BannerListScreenController extends _$BannerListScreenController {
       return false;
     }
   }
-
-  
 
   /// 파일명 추출
   String _getFileName(File file) => file.path.split('/').last;

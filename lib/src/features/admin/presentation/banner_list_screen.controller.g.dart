@@ -7,7 +7,7 @@ part of 'banner_list_screen.controller.dart';
 // **************************************************************************
 
 String _$bannerListScreenControllerHash() =>
-    r'be74125292cf5b8db8451a8c00fe1344a414c79f';
+    r'55a7c4457d1f1c03aff7352cfcf357f9c412f984';
 
 /// See also [BannerListScreenController].
 @ProviderFor(BannerListScreenController)
