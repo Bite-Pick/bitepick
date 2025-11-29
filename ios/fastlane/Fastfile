@@ -24,8 +24,8 @@ platform :ios do
 
     sh('flutter pub get')
 
-    # Clean version number (remove 'v' prefix and flavor suffix like '-dev', '-prod')
-    clean_version = ENV["VERSION_NUMBER"].sub(/^v/, '').sub(/-dev$/, '').sub(/-prod$/, '')
+    # Clean version number (remove 'v' prefix and flavor suffix like '-dev', '-prod', '-ios')
+    clean_version = ENV["VERSION_NUMBER"].sub(/^v/, '').sub(/-dev$/, '').sub(/-prod$/, '').sub(/-ios$/, '')
     puts "📦 Using clean version: #{clean_version}"
 
     increment_build_number(build_number: ENV["BUILD_NUMBER"])
@@ -69,11 +69,27 @@ platform :ios do
     puts "   경로: #{export_options_path}"
     puts "   프로비저닝 프로파일: #{provisioning_profiles}"
 
-    shorebird_release(
-      platform: "ios",
-      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{clean_version} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]}",
-      export_options: export_options_path
-    )
+    begin
+      shorebird_release(
+        platform: "ios",
+        args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{clean_version} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]} --verbose",
+        export_options: export_options_path
+      )
+    rescue => e
+      puts "❌ Shorebird release failed with error: #{e.message}"
+
+      # Try to find and display Shorebird logs
+      log_dir = File.expand_path("~/Library/Application Support/shorebird/logs")
+      if Dir.exist?(log_dir)
+        latest_log = Dir.glob("#{log_dir}/*_shorebird.log").max_by { |f| File.mtime(f) }
+        if latest_log
+          puts "\n📄 Latest Shorebird log (#{latest_log}):"
+          puts File.read(latest_log)
+        end
+      end
+
+      raise e
+    end
 
     # IPA 파일 경로 찾기 (여러 경로 시도)
     possible_paths = [
@@ -177,97 +193,6 @@ platform :ios do
       raise exception
   end
 
-  desc "Distribute iOS build to Firebase App Distribution"
-  lane :distribute do
-    # Shorebird release IPA가 이미 빌드되었다고 가정하고 배포만 진행
-    flavor = ENV["MODE"] || "dev"
-
-    # Flavor에 따른 Firebase App ID 설정
-    firebase_app_id = if flavor == "dev"
-      ENV["FIREBASE_APP_ID_IOS_DEV"]
-    else
-      ENV["FIREBASE_APP_ID_IOS"]
-    end
-
-    # 현재 작업 디렉터리 출력 (디버깅용)
-    puts "📍 현재 작업 디렉터리: #{Dir.pwd}"
-
-    # Shorebird IPA 파일 찾기 (glob 패턴 사용)
-    # fastlane 작업 디렉터리는 ios/fastlane이므로 ../../build/ios/ipa/*.ipa로 검색
-    ipa_files = Dir.glob("../../build/ios/ipa/*.ipa")
-
-    puts "🔍 검색된 IPA 파일들: #{ipa_files.inspect}"
-
-    ipa_path = nil
-    if ipa_files.any?
-      ipa_path = File.expand_path(ipa_files.first)
-      puts "📦 IPA 파일 확인됨: #{ipa_path}"
-    else
-      # 대체 경로들도 확인
-      possible_ipa_paths = [
-        "../../build/ios/ipa/Runner.ipa",
-        "../../build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app"
-      ]
-
-      possible_ipa_paths.each do |path|
-        puts "🔍 IPA 파일 확인 중: #{path}"
-        if File.exist?(path)
-          ipa_path = File.expand_path(path)
-          puts "📦 IPA 파일 확인됨: #{ipa_path}"
-          break
-        end
-      end
-    end
-
-    unless ipa_path
-      puts "❌ IPA 파일을 찾을 수 없습니다!"
-      puts "확인한 디렉터리 내용:"
-
-      # build 디렉터리 구조 출력
-      build_dir = "../../build/ios"
-      if Dir.exist?(build_dir)
-        puts "\n#{build_dir} 디렉터리 구조:"
-        Dir.glob("#{build_dir}/**/*").each { |f| puts "  - #{f}" }
-      else
-        puts "  - #{build_dir} 디렉터리가 존재하지 않습니다"
-      end
-
-      raise "IPA file not found"
-    end
-
-    # Distribute to Firebase App Distribution
-    puts "🔍 Firebase App Distribution 설정 확인:"
-    puts "  - App ID: #{firebase_app_id}"
-    puts "  - Flavor: #{flavor}"
-    puts "  - IPA Path: #{ipa_path}"
-    puts "  - Google Credentials: #{ENV["GOOGLE_APPLICATION_CREDENTIALS"] ? "설정됨" : "미설정"}"
-
-    # Firebase App ID가 없으면 에러
-    if firebase_app_id.nil? || firebase_app_id.empty?
-      raise "Firebase App ID is not set. Please check FIREBASE_APP_ID_IOS or FIREBASE_APP_ID_IOS_DEV environment variable."
-    end
-
-    firebase_params = {
-      app: firebase_app_id,
-      ipa_path: ipa_path,
-      release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
-    }
-
-    # 그룹이나 테스터 이메일이 설정된 경우에만 추가
-    if ENV["FIREBASE_GROUPS"]
-      firebase_params[:groups] = ENV["FIREBASE_GROUPS"]
-    elsif ENV["FIREBASE_TESTERS"]
-      firebase_params[:testers] = ENV["FIREBASE_TESTERS"]
-    end
-
-    firebase_app_distribution(firebase_params)
-
-    puts "✅ Shorebird Firebase App Distribution 배포 완료!"
-
-    rescue => exception
-      puts "❌ Firebase App Distribution 배포 실패: #{exception.message}"
-      raise exception
-  end
 end
 
 # Handle asset changes error
