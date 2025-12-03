@@ -455,7 +455,7 @@ jobs:
         run: bundle exec fastlane internal
         env:
           MODE: prod
-          PACKAGE_NAME: com.trendflow.bread
+          PACKAGE_NAME: com.trendflow.bitepick
           VERSION: ${{ env.VERSION }}
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
           SUPPLY_JSON_KEY_DATA: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}

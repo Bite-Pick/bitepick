@@ -1,1 +1,1 @@
-package_name(ENV["PACKAGE_NAME"] || "com.trendflow.bread")
+package_name(ENV["PACKAGE_NAME"] || "com.trendflow.bitepick")

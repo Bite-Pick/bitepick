@@ -4,7 +4,7 @@ platform :android do
   desc "Upload existing AAB to Play Store internal track"
   lane :internal do
     mode = ENV["MODE"] || "prod"
-    package_name = ENV["PACKAGE_NAME"] || "com.trendflow.bread"
+    package_name = ENV["PACKAGE_NAME"] || "com.trendflow.bitepick"
 
     # Fastfile이 있는 디렉터리 기준으로 build 경로 계산
     bundle_dir = File.expand_path("../../build/app/outputs/bundle/#{mode}Release", __dir__)
