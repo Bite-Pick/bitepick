@@ -251,12 +251,14 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       name: 'AdminHomeRoute',
 
       factory: $AdminHomeRouteExtension._fromState,
-    ),
-    GoRouteData.$route(
-      path: 'banner',
-      name: 'BannerListRoute',
+      routes: [
+        GoRouteData.$route(
+          path: 'banner',
+          name: 'AdminBannerListRoute',
 
-      factory: $AdminBannerListRouteExtension._fromState,
+          factory: $AdminBannerListRouteExtension._fromState,
+        ),
+      ],
     ),
   ],
 );
@@ -555,7 +557,7 @@ extension $AdminBannerListRouteExtension on AdminBannerListRoute {
   static AdminBannerListRoute _fromState(GoRouterState state) =>
       AdminBannerListRoute();
 
-  String get location => GoRouteData.$location('/banner');
+  String get location => GoRouteData.$location('/admin/banner');
 
   void go(BuildContext context) => context.go(location);
 

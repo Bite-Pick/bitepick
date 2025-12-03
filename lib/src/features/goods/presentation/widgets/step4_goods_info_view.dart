@@ -80,6 +80,7 @@ class Step4GoodsInfoView extends ConsumerWidget {
                   onUpdateGoodsDetail(index, null, name);
                 },
                 initialImage: detail.localImage.file,
+                initialImageUrl: detail.localImage.uploadedUrl,
                 initialName: detail.name,
               );
             }),

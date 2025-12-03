@@ -10,7 +10,7 @@ class LocalImage with _$LocalImage {
   const factory LocalImage({
     required int id,
     required String key,
-    required File file,
+    File? file, // 이미 업로드된 이미지의 경우 null일 수 있음
     String? uploadedUrl, // S3 업로드 완료 후 URL
   }) = _LocalImage;
 

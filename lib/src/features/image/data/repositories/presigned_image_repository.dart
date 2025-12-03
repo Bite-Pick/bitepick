@@ -96,7 +96,7 @@ class PreSignedImageRepository {
 
       await uploadToS3WithPresignedUrl(
         presignedUrl: presignedUrl.url,
-        file: localImage.file,
+        file: localImage.file!,
         onProgress: onProgress != null
             ? (sent, total) => onProgress(i, localImages.length, sent, total)
             : null,

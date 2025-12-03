@@ -49,7 +49,8 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
   }
 
   Widget _buildImageUploadArea() {
-    final canAddMore = widget.images.length < ImageUploadSection.MAX_IMAGE_COUNT;
+    final canAddMore =
+        widget.images.length < ImageUploadSection.MAX_IMAGE_COUNT;
 
     return GestureDetector(
       child: DottedBorder(
@@ -63,11 +64,11 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
             children: [
               BaseSvgIcon.camera(color: MgColorScheme.gray4),
               Gaps.w8,
-              Text("사진추가(${widget.images.length}/${ImageUploadSection.MAX_IMAGE_COUNT})")
+              Text(
+                    "사진추가(${widget.images.length}/${ImageUploadSection.MAX_IMAGE_COUNT})",
+                  )
                   .textColor(
-                    !canAddMore
-                        ? MgColorScheme.alertRed
-                        : MgColorScheme.gray4,
+                    !canAddMore ? MgColorScheme.alertRed : MgColorScheme.gray4,
                   )
                   .regular(),
             ],
@@ -93,6 +94,8 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
 
           final imageIndex = canAddMore ? index - 1 : index;
           final localImage = localImages[imageIndex];
+          if (localImage.file == null) return const SizedBox.shrink();
+
           return Stack(
             children: [
               Container(
@@ -103,7 +106,7 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
                   borderRadius: BorderRadius.circular(MgRadius.sm),
                   border: Border.all(color: MgColorScheme.gray7),
                   image: DecorationImage(
-                    image: FileImage(localImage.file),
+                    image: FileImage(localImage.file!),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -119,7 +122,11 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
                       color: Colors.black.withOpacity(0.6),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.close, size: 16, color: Colors.white),
+                    child: const Icon(
+                      Icons.close,
+                      size: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -163,11 +170,14 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
 
   Future<void> _pickImages() async {
     try {
-      final remainingSlots = ImageUploadSection.MAX_IMAGE_COUNT - widget.images.length;
+      final remainingSlots =
+          ImageUploadSection.MAX_IMAGE_COUNT - widget.images.length;
 
       if (remainingSlots <= 0) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('최대 5장까지만 업로드할 수 있습니다')));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('최대 5장까지만 업로드할 수 있습니다')));
         }
         return;
       }

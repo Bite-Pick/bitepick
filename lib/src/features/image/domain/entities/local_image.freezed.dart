@@ -19,7 +19,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$LocalImage {
   int get id => throw _privateConstructorUsedError;
   String get key => throw _privateConstructorUsedError;
-  File get file => throw _privateConstructorUsedError;
+  File? get file =>
+      throw _privateConstructorUsedError; // 이미 업로드된 이미지의 경우 null일 수 있음
   String? get uploadedUrl => throw _privateConstructorUsedError;
 
   /// Create a copy of LocalImage
@@ -36,7 +37,7 @@ abstract class $LocalImageCopyWith<$Res> {
     $Res Function(LocalImage) then,
   ) = _$LocalImageCopyWithImpl<$Res, LocalImage>;
   @useResult
-  $Res call({int id, String key, File file, String? uploadedUrl});
+  $Res call({int id, String key, File? file, String? uploadedUrl});
 }
 
 /// @nodoc
@@ -56,7 +57,7 @@ class _$LocalImageCopyWithImpl<$Res, $Val extends LocalImage>
   $Res call({
     Object? id = null,
     Object? key = null,
-    Object? file = null,
+    Object? file = freezed,
     Object? uploadedUrl = freezed,
   }) {
     return _then(
@@ -69,10 +70,10 @@ class _$LocalImageCopyWithImpl<$Res, $Val extends LocalImage>
                 ? _value.key
                 : key // ignore: cast_nullable_to_non_nullable
                       as String,
-            file: null == file
+            file: freezed == file
                 ? _value.file
                 : file // ignore: cast_nullable_to_non_nullable
-                      as File,
+                      as File?,
             uploadedUrl: freezed == uploadedUrl
                 ? _value.uploadedUrl
                 : uploadedUrl // ignore: cast_nullable_to_non_nullable
@@ -92,7 +93,7 @@ abstract class _$$LocalImageImplCopyWith<$Res>
   ) = __$$LocalImageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String key, File file, String? uploadedUrl});
+  $Res call({int id, String key, File? file, String? uploadedUrl});
 }
 
 /// @nodoc
@@ -111,7 +112,7 @@ class __$$LocalImageImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? key = null,
-    Object? file = null,
+    Object? file = freezed,
     Object? uploadedUrl = freezed,
   }) {
     return _then(
@@ -124,10 +125,10 @@ class __$$LocalImageImplCopyWithImpl<$Res>
             ? _value.key
             : key // ignore: cast_nullable_to_non_nullable
                   as String,
-        file: null == file
+        file: freezed == file
             ? _value.file
             : file // ignore: cast_nullable_to_non_nullable
-                  as File,
+                  as File?,
         uploadedUrl: freezed == uploadedUrl
             ? _value.uploadedUrl
             : uploadedUrl // ignore: cast_nullable_to_non_nullable
@@ -143,7 +144,7 @@ class _$LocalImageImpl extends _LocalImage {
   const _$LocalImageImpl({
     required this.id,
     required this.key,
-    required this.file,
+    this.file,
     this.uploadedUrl,
   }) : super._();
 
@@ -152,7 +153,8 @@ class _$LocalImageImpl extends _LocalImage {
   @override
   final String key;
   @override
-  final File file;
+  final File? file;
+  // 이미 업로드된 이미지의 경우 null일 수 있음
   @override
   final String? uploadedUrl;
 
@@ -189,7 +191,7 @@ abstract class _LocalImage extends LocalImage {
   const factory _LocalImage({
     required final int id,
     required final String key,
-    required final File file,
+    final File? file,
     final String? uploadedUrl,
   }) = _$LocalImageImpl;
   const _LocalImage._() : super._();
@@ -199,7 +201,7 @@ abstract class _LocalImage extends LocalImage {
   @override
   String get key;
   @override
-  File get file;
+  File? get file; // 이미 업로드된 이미지의 경우 null일 수 있음
   @override
   String? get uploadedUrl;
 

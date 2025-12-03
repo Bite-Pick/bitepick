@@ -17,6 +17,7 @@ class GoodsDetailInfoFormItem extends StatefulWidget {
     required this.onImageChanged,
     required this.onNameChanged,
     this.initialImage,
+    this.initialImageUrl, // 이미 업로드된 이미지 URL
     this.initialName,
   });
 
@@ -25,6 +26,7 @@ class GoodsDetailInfoFormItem extends StatefulWidget {
   final Function(File?) onImageChanged;
   final Function(String) onNameChanged;
   final File? initialImage;
+  final String? initialImageUrl; // 이미 업로드된 이미지 URL
   final String? initialName;
 
   @override
@@ -73,6 +75,27 @@ class _GoodsDetailInfoFormItemState extends State<GoodsDetailInfoFormItem> {
     }
   }
 
+  DecorationImage? _buildImageProvider() {
+    // 새로 선택한 이미지가 있으면 우선 표시
+    if (_selectedImage != null) {
+      return DecorationImage(
+        image: FileImage(_selectedImage!),
+        fit: BoxFit.cover,
+      );
+    }
+
+    // 이미 업로드된 이미지 URL이 있으면 표시
+    if (widget.initialImageUrl != null) {
+      return DecorationImage(
+        image: NetworkImage(widget.initialImageUrl!),
+        fit: BoxFit.cover,
+      );
+    }
+
+    // 이미지가 없으면 null 반환 (카메라 아이콘 표시)
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -97,14 +120,9 @@ class _GoodsDetailInfoFormItemState extends State<GoodsDetailInfoFormItem> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(MgRadius.sm),
                     border: Border.all(color: MgColorScheme.gray7),
-                    image: _selectedImage != null
-                        ? DecorationImage(
-                            image: FileImage(_selectedImage!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
+                    image: _buildImageProvider(),
                   ),
-                  child: _selectedImage == null
+                  child: _selectedImage == null && widget.initialImageUrl == null
                       ? BaseSvgIcon.camera().margin(all: MgSizes.size28)
                       : null,
                 ),

@@ -31,12 +31,13 @@ class Goods with _$Goods {
 
 
 // TODO: GoodsImagesList 파일 분리 필요
+// TODO: 현재 Null로 들어간값들이 있어 임시처리, required로 타입 강제 필요
 @freezed
 class GoodsImagesList with _$GoodsImagesList {
   const factory GoodsImagesList({
-    required int goodsImageId,
-    required String goodsName,
-    required String imageUrl,
+    int? goodsImageId,
+    String? goodsName,
+    String? imageUrl,
   }) = _GoodsImagesList;
   const GoodsImagesList._();
 
