@@ -85,8 +85,20 @@ class PreSignedImageRepository {
     void Function(int currentIndex, int total, int sent, int totalBytes)?
     onProgress,
   }) async {
-    for (var i = 0; i < localImages.length; i++) {
-      final localImage = localImages[i];
+    // 이미 업로드된 이미지(uploadedUrl이 있고 file이 null인 경우)는 제외
+    final imagesToUpload = localImages
+        .where((img) => img.file != null && img.uploadedUrl == null)
+        .toList();
+
+    if (imagesToUpload.isEmpty) {
+      talker.info('[S3] No new images to upload');
+      return;
+    }
+
+    talker.info('[S3] Uploading ${imagesToUpload.length} new images');
+
+    for (var i = 0; i < imagesToUpload.length; i++) {
+      final localImage = imagesToUpload[i];
       final presignedUrl = presignedUrls.firstWhere(
         (url) =>
             url.id == localImage.id + 1, // TODO[image]:저장할때부터 0번째 Index로 넣기
@@ -98,7 +110,7 @@ class PreSignedImageRepository {
         presignedUrl: presignedUrl.url,
         file: localImage.file!,
         onProgress: onProgress != null
-            ? (sent, total) => onProgress(i, localImages.length, sent, total)
+            ? (sent, total) => onProgress(i, imagesToUpload.length, sent, total)
             : null,
       );
     }
