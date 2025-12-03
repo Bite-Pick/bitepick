@@ -286,7 +286,8 @@ jobs:
             # Extract errors, warnings, and success messages
             for level in error warning success; do
               if grep -i "$level" "$latest_log" > /dev/null; then
-                echo "## ${level^} Messages:" >> log_summary.md
+                level_cap=$(echo "$level" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
+                echo "## ${level_cap} Messages:" >> log_summary.md
                 grep -i "$level" "$latest_log" | head -10 >> log_summary.md
                 echo "" >> log_summary.md
               fi
@@ -477,7 +478,8 @@ jobs:
             # Extract errors, warnings, and success messages
             for level in error warning success; do
               if grep -i "$level" "$latest_log" > /dev/null; then
-                echo "## ${level^} Messages:" >> log_summary.md
+                level_cap=$(echo "$level" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
+                echo "## ${level_cap} Messages:" >> log_summary.md
                 grep -i "$level" "$latest_log" | head -10 >> log_summary.md
                 echo "" >> log_summary.md
               fi
@@ -619,7 +621,8 @@ jobs:
             # Extract errors, warnings, and success messages
             for level in error warning success; do
               if grep -i "$level" "$latest_log" > /dev/null; then
-                echo "## ${level^} Messages:" >> log_summary_ios.md
+                level_cap=$(echo "$level" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
+                echo "## ${level_cap} Messages:" >> log_summary_ios.md
                 grep -i "$level" "$latest_log" | head -10 >> log_summary_ios.md
                 echo "" >> log_summary_ios.md
               fi
@@ -800,7 +803,8 @@ jobs:
             # Extract errors, warnings, and success messages
             for level in error warning success; do
               if grep -i "$level" "$latest_log" > /dev/null; then
-                echo "## ${level^} Messages:" >> log_summary_ios.md
+                level_cap=$(echo "$level" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
+                echo "## ${level_cap} Messages:" >> log_summary_ios.md
                 grep -i "$level" "$latest_log" | head -10 >> log_summary_ios.md
                 echo "" >> log_summary_ios.md
               fi
