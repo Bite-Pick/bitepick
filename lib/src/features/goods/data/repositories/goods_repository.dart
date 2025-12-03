@@ -43,7 +43,7 @@ class GoodsRepository {
     if (data == "success") return [];
 
     final presignedImagesData =
-        res.data['data']['goodsPreSignedImages'] as List?;
+        res.data['data']['goodsPreSignedUrlImages'] as List?;
     if (presignedImagesData == null) return []; // 임시 처리
     return presignedImagesData
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
@@ -83,7 +83,7 @@ class GoodsRepository {
     final data = res.data['data'];
     if (data == null) return [];
 
-    final presignedImagesData = data['goodsPreSignedImages'] as List?;
+    final presignedImagesData = data['goodsPreSignedUrlImages'] as List?;
     if (presignedImagesData == null) return []; // 임시 처리
     return presignedImagesData
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))

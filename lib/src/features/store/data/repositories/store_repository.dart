@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
-import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';

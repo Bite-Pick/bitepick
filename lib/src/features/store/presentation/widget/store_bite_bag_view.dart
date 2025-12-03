@@ -43,7 +43,15 @@ class StoreBiteBagView extends StatelessWidget {
   }
 
   Widget _buildImages(List<GoodsImagesList> goodsImages) {
-    if (goodsImages.isEmpty) {
+    final _goodsImages = goodsImages
+        .where(
+          (g) =>
+              g.goodsImageId != null &&
+              g.goodsName != null &&
+              g.imageUrl != null,
+        )
+        .toList();
+    if (_goodsImages.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -57,12 +65,12 @@ class StoreBiteBagView extends StatelessWidget {
       child: Wrap(
         runSpacing: MgSizes.md,
         spacing: MgSizes.md,
-        children: goodsImages
+        children: _goodsImages
             .map(
               (goodsImage) => Column(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: goodsImage.imageUrl,
+                    imageUrl: goodsImage.imageUrl!,
                     imageBuilder: (context, imageProvider) {
                       return Container(
                         height: 100.w,
@@ -78,7 +86,7 @@ class StoreBiteBagView extends StatelessWidget {
                     },
                   ),
                   Gaps.h4,
-                  Text(goodsImage.goodsName),
+                  Text(goodsImage.goodsName!),
                 ],
               ),
             )

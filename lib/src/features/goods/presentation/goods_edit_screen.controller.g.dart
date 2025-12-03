@@ -7,7 +7,7 @@ part of 'goods_edit_screen.controller.dart';
 // **************************************************************************
 
 String _$goodsEditScreenControllerHash() =>
-    r'044410463101ee256ed45aafc61e72e4eb5f4dad';
+    r'7b80fa468fb2b57ad4654959cccd0a127e1f6006';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,9 +32,9 @@ class _SystemHash {
 
 abstract class _$GoodsEditScreenController
     extends BuildlessAutoDisposeNotifier<GoodsEditState> {
-  late final Goods goods;
+  late final (Goods, List<GoodsImagesList>?) param;
 
-  GoodsEditState build(Goods goods);
+  GoodsEditState build((Goods, List<GoodsImagesList>?) param);
 }
 
 /// See also [GoodsEditScreenController].
@@ -47,15 +47,17 @@ class GoodsEditScreenControllerFamily extends Family<GoodsEditState> {
   const GoodsEditScreenControllerFamily();
 
   /// See also [GoodsEditScreenController].
-  GoodsEditScreenControllerProvider call(Goods goods) {
-    return GoodsEditScreenControllerProvider(goods);
+  GoodsEditScreenControllerProvider call(
+    (Goods, List<GoodsImagesList>?) param,
+  ) {
+    return GoodsEditScreenControllerProvider(param);
   }
 
   @override
   GoodsEditScreenControllerProvider getProviderOverride(
     covariant GoodsEditScreenControllerProvider provider,
   ) {
-    return call(provider.goods);
+    return call(provider.param);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -81,9 +83,9 @@ class GoodsEditScreenControllerProvider
           GoodsEditState
         > {
   /// See also [GoodsEditScreenController].
-  GoodsEditScreenControllerProvider(Goods goods)
+  GoodsEditScreenControllerProvider((Goods, List<GoodsImagesList>?) param)
     : this._internal(
-        () => GoodsEditScreenController()..goods = goods,
+        () => GoodsEditScreenController()..param = param,
         from: goodsEditScreenControllerProvider,
         name: r'goodsEditScreenControllerProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -92,7 +94,7 @@ class GoodsEditScreenControllerProvider
         dependencies: GoodsEditScreenControllerFamily._dependencies,
         allTransitiveDependencies:
             GoodsEditScreenControllerFamily._allTransitiveDependencies,
-        goods: goods,
+        param: param,
       );
 
   GoodsEditScreenControllerProvider._internal(
@@ -102,16 +104,16 @@ class GoodsEditScreenControllerProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.goods,
+    required this.param,
   }) : super.internal();
 
-  final Goods goods;
+  final (Goods, List<GoodsImagesList>?) param;
 
   @override
   GoodsEditState runNotifierBuild(
     covariant GoodsEditScreenController notifier,
   ) {
-    return notifier.build(goods);
+    return notifier.build(param);
   }
 
   @override
@@ -119,13 +121,13 @@ class GoodsEditScreenControllerProvider
     return ProviderOverride(
       origin: this,
       override: GoodsEditScreenControllerProvider._internal(
-        () => create()..goods = goods,
+        () => create()..param = param,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        goods: goods,
+        param: param,
       ),
     );
   }
@@ -138,13 +140,13 @@ class GoodsEditScreenControllerProvider
 
   @override
   bool operator ==(Object other) {
-    return other is GoodsEditScreenControllerProvider && other.goods == goods;
+    return other is GoodsEditScreenControllerProvider && other.param == param;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, goods.hashCode);
+    hash = _SystemHash.combine(hash, param.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -154,8 +156,8 @@ class GoodsEditScreenControllerProvider
 // ignore: unused_element
 mixin GoodsEditScreenControllerRef
     on AutoDisposeNotifierProviderRef<GoodsEditState> {
-  /// The parameter `goods` of this provider.
-  Goods get goods;
+  /// The parameter `param` of this provider.
+  (Goods, List<GoodsImagesList>?) get param;
 }
 
 class _GoodsEditScreenControllerProviderElement
@@ -168,7 +170,8 @@ class _GoodsEditScreenControllerProviderElement
   _GoodsEditScreenControllerProviderElement(super.provider);
 
   @override
-  Goods get goods => (origin as GoodsEditScreenControllerProvider).goods;
+  (Goods, List<GoodsImagesList>?) get param =>
+      (origin as GoodsEditScreenControllerProvider).param;
 }
 
 // ignore_for_file: type=lint

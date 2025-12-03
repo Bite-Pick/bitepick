@@ -8,6 +8,7 @@ import 'package:magambell/src/features/goods/presentation/goods_edit_screen.cont
 import 'package:magambell/src/features/goods/presentation/widgets/step2_time_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step3_price_info_view.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/step4_goods_info_view.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -17,19 +18,21 @@ import 'package:reactive_forms/reactive_forms.dart';
 class GoodsEditRoute extends GoRouteData {
   const GoodsEditRoute({this.$extra = const {}});
 
-  /// `extra.goods`: Goods?
+  /// `extra.goods`: Goods, `extra.goodsImageList`: List<GoodsImagesList>?
   final Map<String, dynamic>? $extra;
   Map<String, dynamic> get extra => $extra ?? {};
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final Goods goods = extra["goods"];
-    return GoodsEditScreen(goods);
+    final List<GoodsImagesList>? goodsImageList = extra["goodsImageList"];
+    return GoodsEditScreen(goods, goodsImageList: goodsImageList);
   }
 }
 
 class GoodsEditScreen extends ConsumerStatefulWidget {
   final Goods goods;
-  const GoodsEditScreen(this.goods, {super.key});
+  final List<GoodsImagesList>? goodsImageList;
+  const GoodsEditScreen(this.goods, {super.key, this.goodsImageList});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -39,9 +42,10 @@ class GoodsEditScreen extends ConsumerStatefulWidget {
 class _GoodsEditScreenState extends ConsumerState<GoodsEditScreen> {
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(goodsEditScreenControllerProvider(widget.goods));
+    final providerParam = (widget.goods, widget.goodsImageList);
+    final state = ref.watch(goodsEditScreenControllerProvider(providerParam));
     final controller = ref.read(
-      goodsEditScreenControllerProvider(widget.goods).notifier,
+      goodsEditScreenControllerProvider(providerParam).notifier,
     );
 
     return ReactiveForm(
@@ -61,6 +65,7 @@ class _GoodsEditScreenState extends ConsumerState<GoodsEditScreen> {
                       if (!context.mounted) return;
                       if (result) {
                         ToastPresentor.success(context, "상품을 성공적으로 수정했습니다");
+                        ref.invalidate(ownerStoreProvider);
                         context.pop(true); // 수정 성공 후 복귀
                       }
                     },
@@ -74,8 +79,9 @@ class _GoodsEditScreenState extends ConsumerState<GoodsEditScreen> {
   }
 
   Widget _buildContent() {
+    final providerParam = (widget.goods, widget.goodsImageList);
     final controller = ref.read(
-      goodsEditScreenControllerProvider(widget.goods).notifier,
+      goodsEditScreenControllerProvider(providerParam).notifier,
     );
     return SingleChildScrollView(
       child: Column(
@@ -86,7 +92,7 @@ class _GoodsEditScreenState extends ConsumerState<GoodsEditScreen> {
           Divider(thickness: MgSizes.size6).margin(vertical: MgSizes.xxl),
           Step4GoodsInfoView(
             goodsDetails: ref
-                .read(goodsEditScreenControllerProvider(widget.goods))
+                .read(goodsEditScreenControllerProvider(providerParam))
                 .goodsDetails,
             onAddGoodsDetail: controller.addGoodsDetail,
             onUpdateGoodsDetail: controller.updateGoodsDetail,

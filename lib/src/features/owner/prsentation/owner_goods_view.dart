@@ -38,7 +38,10 @@ class OwnerGoodsView extends ConsumerWidget {
             MgButton(
               onPressed: () async {
                 await GoodsEditRoute(
-                  $extra: {"goods": store.goodsList[0]},
+                  $extra: {
+                    "goods": store.goodsList[0],
+                    "goodsImageList": store.goodsImageList,
+                  },
                 ).push(context);
               },
               content: Text("상품 관리하기"),

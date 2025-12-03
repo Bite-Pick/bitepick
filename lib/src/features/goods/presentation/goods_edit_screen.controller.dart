@@ -5,6 +5,7 @@ import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
@@ -34,7 +35,8 @@ const _minDuration = Duration(minutes: 10);
 @riverpod
 class GoodsEditScreenController extends _$GoodsEditScreenController {
   @override
-  GoodsEditState build(Goods goods) {
+  GoodsEditState build((Goods, List<GoodsImagesList>?) param) {
+    final (goods, goodsImageList) = param;
     final form = _createForm();
 
     // form 상태 변경을 감지하여 UI 업데이트
@@ -84,8 +86,31 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     // 서버에서 받은 Goods로 초기값 채우기
     form.patchValue(_initialFormValueFrom(goods), updateParent: true);
 
+    // goodsImageList를 goodsDetails로 변환하여 초기값 설정
+    final initialGoodsDetails = _convertGoodsImageListToDetails(goodsImageList);
+
     ref.onDispose(form.dispose);
-    return GoodsEditState(form: form);
+    return GoodsEditState(form: form, goodsDetails: initialGoodsDetails);
+  }
+
+  List<GoodsDetailItem> _convertGoodsImageListToDetails(
+      List<GoodsImagesList>? goodsImageList) {
+    if (goodsImageList == null || goodsImageList.isEmpty) {
+      return [];
+    }
+
+    return goodsImageList.mapIndexed((index, imageItem) {
+      // 서버에서 받은 이미지는 이미 업로드된 상태이므로 uploadedUrl에 저장
+      return GoodsDetailItem(
+        localImage: LocalImage(
+          id: index,
+          key: imageItem.imageUrl?.split('/').last ?? '',
+          file: null, // 이미 업로드된 이미지는 file이 없음
+          uploadedUrl: imageItem.imageUrl,
+        ),
+        name: imageItem.goodsName ?? '',
+      );
+    }).toList();
   }
 
   Map<String, Object?> _initialFormValueFrom(Goods goods) {
