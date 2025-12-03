@@ -258,6 +258,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
 
           factory: $AdminBannerListRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: 'waiting-store',
+          name: 'WaitingStoreListRoute',
+
+          factory: $WaitingStoreListRouteExtension._fromState,
+        ),
       ],
     ),
   ],
@@ -558,6 +564,22 @@ extension $AdminBannerListRouteExtension on AdminBannerListRoute {
       AdminBannerListRoute();
 
   String get location => GoRouteData.$location('/admin/banner');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $WaitingStoreListRouteExtension on WaitingStoreListRoute {
+  static WaitingStoreListRoute _fromState(GoRouterState state) =>
+      WaitingStoreListRoute();
+
+  String get location => GoRouteData.$location('/admin/waiting-store');
 
   void go(BuildContext context) => context.go(location);
 

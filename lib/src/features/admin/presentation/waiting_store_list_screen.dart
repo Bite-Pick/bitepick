@@ -5,38 +5,51 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
 import 'package:magambell/src/features/admin/presentation/widgets/pending_store_item.dart';
+import 'package:magambell/src/widgets/base_appbar.dart';
+import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
-class WaitingStoreListView extends ConsumerStatefulWidget {
-  const WaitingStoreListView({super.key});
+class WaitingStoreListRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return WaitingStoreListScreen();
+  }
+}
+
+class WaitingStoreListScreen extends ConsumerStatefulWidget {
+  const WaitingStoreListScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _WaitingStoreListViewState();
+      _WaitingStoreListScreenState();
 }
 
-class _WaitingStoreListViewState extends ConsumerState<WaitingStoreListView> {
+class _WaitingStoreListScreenState
+    extends ConsumerState<WaitingStoreListScreen> {
   @override
   Widget build(BuildContext context) {
     final pendingStoreListAsync = ref.watch(pendingStoreListProvider());
-    return MgAsyncAnimatedSwitcher(
-      asyncValue: pendingStoreListAsync,
-      builder: (stores) {
-        return ListView.separated(
-          itemCount: stores.length,
-          itemBuilder: (context, index) {
-            final store = stores[index];
-            return PendingStoreItem(
-              store,
-              onApprove: () => _showApprovalDialog(context, store.storeId),
-            );
-          },
-          separatorBuilder: (context, index) =>
-              Divider(thickness: MgSizes.sm).margin(vertical: MgSizes.lg),
-        );
-      },
+    return BaseScaffold(
+      appBar: BaseAppBar(title: Text("가입 매장 승인")),
+      body: MgAsyncAnimatedSwitcher(
+        asyncValue: pendingStoreListAsync,
+        builder: (stores) {
+          return ListView.separated(
+            itemCount: stores.length,
+            itemBuilder: (context, index) {
+              final store = stores[index];
+              return PendingStoreItem(
+                store,
+                onApprove: () => _showApprovalDialog(context, store.storeId),
+              );
+            },
+            separatorBuilder: (context, index) =>
+                Divider().margin(vertical: MgSizes.md),
+          );
+        },
+      ),
     );
   }
 

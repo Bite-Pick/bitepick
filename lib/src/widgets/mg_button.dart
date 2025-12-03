@@ -81,10 +81,10 @@ class MgButton extends StatelessWidget {
     disabled: true,
   );
 
-  MgButton red() => copyWith(
-    backgroundColor: MgColorScheme.alertRed,
-    textColor: MgColorScheme.white,
-    borderColor: Colors.transparent,
+  MgButton red({bool light = false}) => copyWith(
+    backgroundColor: light ? MgColorScheme.white : MgColorScheme.alertRed,
+    textColor: light ? MgColorScheme.alertRed : MgColorScheme.white,
+    borderColor: light ? MgColorScheme.alertRed : Colors.transparent,
   );
 
   MgButton gray() => copyWith(
