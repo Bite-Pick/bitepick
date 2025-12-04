@@ -42,6 +42,6 @@ class PendingStoreItem extends StatelessWidget {
         StoreImageSection(store.imageUrl),
         Gaps.h8,
       ],
-    ).margin(horizontal: MgSizes.md);
+    ).margin(horizontal: MgSizes.xl);
   }
 }
