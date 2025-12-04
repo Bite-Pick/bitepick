@@ -357,7 +357,7 @@ jobs:
       # Keystore 복원
       - name: Decode keystore
         run: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/magambell-release.keystore
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/bitepick-release.keystore
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
 
@@ -368,7 +368,7 @@ jobs:
           storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
           keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          storeFile=magambell-release.keystore
+          storeFile=bitepick-release.keystore
           EOF
 
       # 서명 파일 확인
