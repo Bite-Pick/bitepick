@@ -1,9 +1,0 @@
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"
-#include "Generated.xcconfig"
-
-FLUTTER_TARGET=lib/src/main_dev.dart
-PRODUCT_BUNDLE_IDENTIFIER = com.trendflow.bread.dev
-APP_DISPLAY_NAME = 바이트픽 DEV
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-dev

@@ -39,7 +39,10 @@ class Environment {
   static String get ncpApiKey => X_NCP_APIGW_API_KEY;
 
   // Kakao
-  static String get kakaoNativeAppKey => KAKAO_NATIVE_APP_KEY;
+  static String get kakaoNativeAppKey =>  switch (instance._buildType) {
+    BuildType.dev => KAKAO_NATIVE_DEV_APP_KEY,
+    BuildType.prod => KAKAO_NATIVE_PROD_APP_KEY,
+  };
   static String get kakaoJavascriptKey => KAKAO_JAVASCRIPT_KEY;
   static String get kakaoRestApiKey => KAKAO_REST_API_KEY;
 
