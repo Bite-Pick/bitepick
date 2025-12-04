@@ -37,7 +37,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>kakaobcb4d8bf8ed16431cfd46d0169736d66</string>
+					<string>$(KAKAO_NATIVE_APP_KEY)</string>
 				</array>
 			</dict>
 		</array>
@@ -66,11 +66,11 @@
 		<key>NidAppName</key>
 		<string>바이트픽</string>
 		<key>NidClientID</key>
-		<string>BVHH2fcyVFbjZQFCNMY7</string>
+		<string>${NAVER_CLIENT_ID}</string>
 		<key>NidClientSecret</key>
-		<string>Lhpj63W9LZ</string>
+		<string>${NAVER_CLIENT_SECRET}</string>
 		<key>NidUrlScheme</key>
-		<string>bitepick</string>
+		<string>${NAVER_SERVICE_URL_SCHEME}</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>UILaunchStoryboardName</key>

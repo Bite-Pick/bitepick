@@ -31,7 +31,8 @@ final String PORTONE_TEST_CHANNEL_KEY = dotenv.env['PORTONE_TEST_CHANNEL_KEY']!;
 final String PORTONE_CHANNEL_KEY = dotenv.env['PORTONE_CHANNEL_KEY']!;
 
 // kakao
-final String KAKAO_NATIVE_APP_KEY = dotenv.env['KAKAO_NATIVE_APP_KEY']!;
+final String KAKAO_NATIVE_PROD_APP_KEY = dotenv.env['KAKAO_NATIVE_PROD_APP_KEY']!;
+final String KAKAO_NATIVE_DEV_APP_KEY = dotenv.env['KAKAO_NATIVE_DEV_APP_KEY']!;
 final String KAKAO_JAVASCRIPT_KEY = dotenv.env['KAKAO_JAVASCRIPT_KEY']!;
 final String KAKAO_REST_API_KEY = dotenv.env['KAKAO_REST_API_KEY']!;
 
