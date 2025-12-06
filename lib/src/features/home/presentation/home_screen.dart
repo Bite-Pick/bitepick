@@ -77,7 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 2,
+                      itemCount: goods.length,
                       separatorBuilder: (context, index) => Gaps.h16,
                       itemBuilder: (context, index) {
                         final item = goods[index];

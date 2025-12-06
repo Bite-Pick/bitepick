@@ -49,7 +49,22 @@ class _AdminBannerListScreen extends ConsumerState<AdminBannerListScreen>
             "(${BANNER_SIZE.width}x${BANNER_SIZE.height})배율로 이미지를 등록해주세요",
           ).textGray().bold(),
           Text("현재 화면에는 실제 비율의 0.7배로 표시됩니다").xs().textGray(),
-          Gaps.h20,
+          MgButton(
+            disabled: controllerState.isProgress,
+            onPressed: () async {
+              await handleBannerImageUpload(
+                context,
+                ref,
+                bannerId: getId(),
+                onUpload: ref
+                    .read(adminBannerListScreenControllerProvider.notifier)
+                    .registerBanner,
+                toastMessage: "배너 업로드",
+              );
+            },
+            content: BaseSvgIcon.plus(),
+            borderColor: MgColorScheme.gray8,
+          ).margin(vertical: MgSizes.xl),
           Expanded(
             child: MgAsyncAnimatedSwitcher(
               asyncValue: bannerImagesAsync,
@@ -70,32 +85,11 @@ class _AdminBannerListScreen extends ConsumerState<AdminBannerListScreen>
                     Expanded(
                       child: ListView.separated(
                         itemBuilder: (context, index) {
-                          if (index == totalCount) {
-                            return MgButton(
-                              disabled: controllerState.isProgress,
-                              onPressed: () async {
-                                await handleBannerImageUpload(
-                                  context,
-                                  ref,
-                                  bannerId: getId(),
-                                  onUpload: ref
-                                      .read(
-                                        adminBannerListScreenControllerProvider
-                                            .notifier,
-                                      )
-                                      .registerBanner,
-                                  toastMessage: "배너 업로드",
-                                );
-                              },
-                              content: BaseSvgIcon.plus(),
-                              borderColor: MgColorScheme.gray8,
-                            );
-                          }
                           final bannerImage = bannerImages[index];
                           return AdminBannerItem(bannerImage);
                         },
                         separatorBuilder: (context, index) => Gaps.h12,
-                        itemCount: totalCount + 1,
+                        itemCount: totalCount,
                       ),
                     ),
                   ],

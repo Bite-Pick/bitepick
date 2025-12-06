@@ -4,9 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import 'package:magambell/src/core/network/api_client.dart';
-
 import 'package:magambell/src/features/address/domain/entities/area.dart';
 
 part 'naver_geocoding_repository.g.dart';
