@@ -1,6 +1,7 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 
 class MgAsyncAnimatedSwitcher<T> extends ConsumerWidget {
@@ -39,10 +40,11 @@ class MgAsyncAnimatedSwitcher<T> extends ConsumerWidget {
       child: asyncValue.when(
         data: (data) {
           if (data is List && data.isEmpty) {
-            if (emptyBuilder != null) {
-              return emptyBuilder!();
-            }
-            return const Center(child: Text('데이터가 없습니다'));
+            if (emptyBuilder != null) return emptyBuilder!();
+
+            return Environment.instance.isDev
+                ? Center(child: Text('데이터가 없습니다'))
+                : SizedBox.shrink();
           }
           return builder(data);
         },

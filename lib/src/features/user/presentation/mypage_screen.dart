@@ -146,6 +146,8 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
 
   Widget _buildProfileSection() {
     final userState = ref.read(userStateProvider).asData!.value;
+    if (userState == null) return SizedBox.shrink();
+
     return Row(
       children: [
         UserProfileItem(),

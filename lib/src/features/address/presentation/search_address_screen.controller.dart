@@ -42,6 +42,8 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
     _repository = NaverGeocodingRepository(ref);
 
     ref.onDispose(() => _debounceTimer?.cancel());
+
+    // 즉시 로드 시작 (비동기지만 상태는 즉시 업데이트됨)
     _loadFromStorage();
 
     return const SearchAddressState();
@@ -169,6 +171,23 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
 
     state = state.copyWith(addresses: updated, message: null);
     await _saveToStorage(updated);
+  }
+
+  /// 임시 주소 선택 (저장하지 않고 상태만 변경)
+  /// 서비스 가능 지역 등 미리 정의된 주소를 임시로 사용할 때
+  void selectTemporaryAddress(Address address) {
+    // 기존 저장된 주소들의 isDefault를 모두 false로
+    final updatedAddresses = state.addresses
+        .map((a) => a.copyWith(isDefault: false))
+        .toList();
+
+    // 임시 주소를 isDefault=true로 설정하여 맨 앞에 추가 (저장은 하지 않음)
+    final tempAddress = address.copyWith(isDefault: true);
+    final withTemp = [tempAddress, ...updatedAddresses];
+
+    state = state.copyWith(addresses: withTemp, message: null);
+
+    log('[Address] Temporary address selected (not saved): ${address.label}');
   }
 
   /// 삭제
@@ -308,18 +327,24 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
     return 0;
   }
 
-  void _loadFromStorage() async {
-    final addresses = await _store.getAddresses();
-    if (addresses == null) {
+  Future<void> _loadFromStorage() async {
+    final addressesJson = await _store.getAddresses();
+    if (addressesJson == null || addressesJson.isEmpty) {
       state = state.copyWith(addresses: []);
       return;
     }
     try {
-      final list =
-          (jsonDecode(addresses) as List)
-              .map((j) => Address.fromJson(j as Map<String, dynamic>))
-              .toList()
-            ..sort(_defaultFirst);
+      final list = (jsonDecode(addressesJson) as List)
+          .map((j) => Address.fromJson(j as Map<String, dynamic>))
+          .toList()
+        ..sort(_defaultFirst);
+
+      log('[Address] Loaded ${list.length} addresses from storage');
+      if (list.isNotEmpty) {
+        final defaultAddr = list.firstWhere((a) => a.isDefault, orElse: () => list.first);
+        log('[Address] Default address: ${defaultAddr.label}');
+      }
+
       state = state.copyWith(addresses: list);
     } catch (e) {
       log('Error parsing addresses from storage: $e');
@@ -328,8 +353,13 @@ class SearchAddressScreenController extends _$SearchAddressScreenController {
   }
 
   Future<void> _saveToStorage(List<Address> addresses) async {
-    await _store.setAddresses(
-      jsonEncode(addresses.map((e) => e.toJson()).toList()),
-    );
+    final json = jsonEncode(addresses.map((e) => e.toJson()).toList());
+    await _store.setAddresses(json);
+
+    log('[Address] Saved ${addresses.length} addresses to storage');
+    if (addresses.isNotEmpty) {
+      final defaultAddr = addresses.firstWhere((a) => a.isDefault, orElse: () => addresses.first);
+      log('[Address] Default address saved: ${defaultAddr.label}');
+    }
   }
 }

@@ -48,10 +48,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final storeGoodsAsync = ref.watch(
       storeGoodsListProvider(
-        latitude: 37.321021, // TODO: 기본 위치 설정 필요
-        longitude: 127.1098513,
-        // latitude: defaultAddress?.longitude ?? 37.5185663,
-        // longitude: defaultAddress?.latitude ?? 127.0230599,
+        // latitude: 37.321021, // TODO: 기본 위치 설정 필요
+        // longitude: 127.1098513,
+        latitude: defaultAddress?.latitude ?? 37.5185663,
+        longitude: defaultAddress?.longitude ?? 127.0230599,
         onlyAvailable: onlyAvailable,
         sortType: sortType,
       ),
@@ -67,17 +67,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              HomeBannersView(),
-              HomeUpdateBanner(),
               MgAsyncAnimatedSwitcher<List<StoreListDTO>>(
                 asyncValue: storeGoodsAsync,
                 builder: (goods) => Column(
                   children: [
+                    HomeBannersView(),
+                    HomeUpdateBanner(),
                     _buildFilterSection(onlyAvailable, sortType),
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 2,
+                      itemCount: goods.length,
                       separatorBuilder: (context, index) => Gaps.h16,
                       itemBuilder: (context, index) {
                         final item = goods[index];
@@ -88,8 +88,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ],
                 ),
-                emptyBuilder: () =>
-                    HomeUnsupportedAreaView.openRequest(), // TODO[open]: flag에 따라 다른 화면
+                emptyBuilder: () => HomeUnsupportedAreaView.openRequest(
+                  onPressed: () {
+                    ref
+                        .read(storeRepositoryProvider)
+                        .requestOpenRegion(region: defaultAddress?.label ?? "");
+                  },
+                ), // TODO[open]: flag에 따라 다른 화면
                 loadingBuilder: () =>
                     const Center(child: CircularProgressIndicator()),
               ),
@@ -213,8 +218,8 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
-        // _buildAddress(),
+        // SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
+        _buildAddress(),
         // TODO: 런칭 이후 추가
         //  _buildSearch(),
       ],
@@ -243,14 +248,18 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Widget _buildAddressBottomSheet() {
     return MgBottomsheet(
       Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
-          ...widget.addresses.map(
+
+          // 서비스 가능 지역만 표시
+          ...serviceAreas.map(
             (address) => _buildAddressBottomSheetItem(
               address,
               isSelect: widget.defaultAddress?.label == address.label,
             ),
           ),
+
           Gaps.h16,
           MgButton(
             content: Text("주소 직접 설정하기").sm().textGray().regular(),
@@ -271,9 +280,10 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   }) {
     return GestureDetector(
       onTap: () {
+        // 서비스 가능 지역: 임시 적용만 (저장하지 않음)
         ref
             .read(searchAddressScreenControllerProvider.notifier)
-            .selectFromSaved(address);
+            .selectTemporaryAddress(address);
         Navigator.of(context).pop();
       },
       child:
