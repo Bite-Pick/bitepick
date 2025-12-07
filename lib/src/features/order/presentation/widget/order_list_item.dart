@@ -46,10 +46,11 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
         OrderInfoItem(
           imageUrl: widget.order.imageUrls[0],
           storeName: widget.order.storeName,
-          address: widget.order.address ?? "",
-          discount: widget.order.discount ?? 0,
+          address: widget.order.address, // TODO: address 내려주도록 서버 작업 필요
+          discount: widget.order.discount, // TODO: discount 내려주도록 서버 작업 필요
           price: widget.order.salePrice,
           count: widget.order.quantity,
+          imageSize: 80, // TODO: address, discount 추가시 100으로 원복
         ),
         Gaps.h16,
         if (widget.order.orderStatus != OrderGuestStatus.completed)
