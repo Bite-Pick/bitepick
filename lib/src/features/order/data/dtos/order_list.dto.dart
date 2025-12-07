@@ -18,6 +18,7 @@ class OrderListDTO with _$OrderListDTO {
     required List<String> reviewIds,
     required String payType,
     required String easyPayProvider,
+    String? pickupTime,
     // NOTE: test 필요
     double? latitude,
     double? longitude,
@@ -60,12 +61,11 @@ class OrderListDTO with _$OrderListDTO {
 class OrderGoodsDTO with _$OrderGoodsDTO {
   const factory OrderGoodsDTO({
     required String orderGoodsId,
-    required String goodsName,
+    String? goodsName,
     required int quantity,
     required int salePrice,
   }) = _OrderGoodsDTO;
 
   factory OrderGoodsDTO.fromJson(Map<String, dynamic> json) =>
       _$OrderGoodsDTOFromJson(json);
-  const OrderGoodsDTO._();
 }

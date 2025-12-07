@@ -8,7 +8,7 @@ part 'order_detail.dto.g.dart';
 class OrderDetailDTO with _$OrderDetailDTO {
   const factory OrderDetailDTO({
     required String orderId,
-    required String orderGoodsId,
+    // required String orderGoodsId,
     required OrderGuestStatus orderStatus,
     required String storeName,
     required String storeAddress,
