@@ -110,9 +110,10 @@ class __$$MgDefaultNavigatorStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$MgDefaultNavigatorStateImpl implements _MgDefaultNavigatorState {
-  _$MgDefaultNavigatorStateImpl({required this.tabIndex});
+  const _$MgDefaultNavigatorStateImpl({this.tabIndex = 0});
 
   @override
+  @JsonKey()
   final int tabIndex;
 
   @override
@@ -145,7 +146,7 @@ class _$MgDefaultNavigatorStateImpl implements _MgDefaultNavigatorState {
 }
 
 abstract class _MgDefaultNavigatorState implements MgDefaultNavigatorState {
-  factory _MgDefaultNavigatorState({required final int tabIndex}) =
+  const factory _MgDefaultNavigatorState({final int tabIndex}) =
       _$MgDefaultNavigatorStateImpl;
 
   @override

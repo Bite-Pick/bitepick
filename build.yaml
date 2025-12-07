@@ -8,7 +8,7 @@ targets:
         generate_for:
           - lib/src/features/**/*.controller.dart
           - lib/src/features/*/domain/entities/*.dart
-          - lib/src/core/navigator/default_navigator.controller.dart
+          - lib/src/core/navigator/navigator_controller.dart
           - lib/src/features/*/data/dtos/*.dart
       json_serializable:
         generate_for:
@@ -23,3 +23,4 @@ targets:
           - lib/src/core/network/api_client.dart
           - lib/src/core/utils/visual_logger_provider.dart
           - lib/src/features/notification/domain/push_notification.dart
+          - lib/src/core/navigator/navigator_controller.dart

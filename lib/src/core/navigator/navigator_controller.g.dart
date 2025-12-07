@@ -1,31 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'owner_order_list_view.controller.dart';
+part of 'navigator_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ownerOrderListControllerHash() =>
-    r'5825b1b23c1a3b2f46ef1322ddc3e924ab42deb9';
+String _$navigatorControllerHash() =>
+    r'32c017b252d04875c48a875a00922960f437f539';
 
-/// See also [OwnerOrderListController].
-@ProviderFor(OwnerOrderListController)
-final ownerOrderListControllerProvider =
-    AutoDisposeAsyncNotifierProvider<
-      OwnerOrderListController,
-      OwnerOrderListState
+/// See also [NavigatorController].
+@ProviderFor(NavigatorController)
+final navigatorControllerProvider =
+    AutoDisposeNotifierProvider<
+      NavigatorController,
+      MgDefaultNavigatorState
     >.internal(
-      OwnerOrderListController.new,
-      name: r'ownerOrderListControllerProvider',
+      NavigatorController.new,
+      name: r'navigatorControllerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$ownerOrderListControllerHash,
+          : _$navigatorControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$OwnerOrderListController =
-    AutoDisposeAsyncNotifier<OwnerOrderListState>;
+typedef _$NavigatorController = AutoDisposeNotifier<MgDefaultNavigatorState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

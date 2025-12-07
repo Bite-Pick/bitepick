@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide NavigatorState;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
@@ -18,52 +19,35 @@ class MainRoute extends GoRouteData {
   }
 }
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  late final NavigatorController _navigatorController;
-
-  final List<Widget> _screens = const [
+  static const List<Widget> _screens = [
     HomeScreen(),
     OrderListScreen(),
     MypageScreen(),
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _navigatorController = NavigatorController();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final navState = ref.watch(navigatorControllerProvider);
 
-  @override
-  void dispose() {
-    _navigatorController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<MgDefaultNavigatorState>(
-      valueListenable: _navigatorController,
-      builder: (context, navState, child) {
-        return BaseScaffold(
-          body: IndexedStack(index: navState.tabIndex, children: _screens),
-          bottomNavigationBar: _buildBottomNavigationBar(navState),
-        );
-      },
+    return BaseScaffold(
+      body: IndexedStack(index: navState.tabIndex, children: _screens),
+      bottomNavigationBar: _buildBottomNavigationBar(context, ref, navState),
     );
   }
 
-  Widget _buildBottomNavigationBar(MgDefaultNavigatorState navState) {
+  Widget _buildBottomNavigationBar(
+    BuildContext context,
+    WidgetRef ref,
+    MgDefaultNavigatorState navState,
+  ) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: navState.tabIndex,
-      onTap: _navigatorController.changeTabIndex,
+      onTap: (index) =>
+          ref.read(navigatorControllerProvider.notifier).changeTabIndex(index),
       selectedItemColor: MgColorScheme.black,
       unselectedItemColor: MgColorScheme.gray5,
       selectedLabelStyle: Theme.of(context).textTheme.bodySmall,

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/config/environment.dart';
+import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
@@ -83,8 +84,10 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
           .completePayment(paymentId: state.merchantUid);
 
       ToastPresentor.success(context, "결제가 완료되었습니다.");
-      // TODO: 검토 필요
-      MainRoute().go(context);
+
+      ref.invalidate(userOrdersProvider());
+      ref.read(navigatorControllerProvider.notifier).changeTabIndex(1);
+      DefaultRoute().go(context);
     } catch (e, st) {
       talker.error("결제 오류: $e\n$st");
       ToastPresentor.error(context, "결제 검증 실패");
