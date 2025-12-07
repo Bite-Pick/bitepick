@@ -95,7 +95,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
               BaseSvgIcon.right(size: MgSizes.lg, color: MgColorScheme.gray4),
             ],
           ),
-          padding: Gutter.hlg+Gutter.wsm.copyWith(right: 0),
+          padding: Gutter.hlg + Gutter.wsm.copyWith(right: 0),
         ),
       ],
     );
@@ -111,9 +111,11 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
             builder: (context) => MgAlertDialog(
               title: '주문 취소',
               content: Text('주문을 취소하시겠습니까?'),
-              onConfirm: () => ref
-                  .read(orderRepositoryProvider)
-                  .cancelOrder(widget.order.orderId),
+              onConfirm: () {
+                ref
+                    .read(orderRepositoryProvider)
+                    .cancelOrder(widget.order.orderId);
+              },
 
               // TODO: +)주문내역 리스트 리로드
             ),

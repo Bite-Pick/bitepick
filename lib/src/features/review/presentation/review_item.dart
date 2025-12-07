@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
@@ -10,6 +13,7 @@ import 'package:magambell/src/features/user/presentation/user_profile_item.dart'
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 enum ReviewItemButtonType { report, delete, none }
 
@@ -74,6 +78,19 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
           ),
           Gaps.h12,
           Text(widget.review.description).textGray(),
+          Gaps.h8,
+          Row(
+            children: widget.review.imageUrls
+                .map(
+                  (imageUrl) => CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: imageUrl,
+                    height: 120,
+                    width: 120,
+                  ),
+                )
+                .toList(),
+          ).constrained(height: 120),
         ],
       ),
     );
@@ -115,9 +132,17 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
       builder: (context) => MgAlertDialog(
         title: '리뷰 삭제',
         content: Text('리뷰를 삭제하시겠습니까?'),
-        onConfirm: () async => ref
-            .read(reviewRepositoryProvider)
-            .deleteReview(widget.review.reviewId),
+        onConfirm: () async {
+          final res = await ref
+              .read(reviewRepositoryProvider)
+              .deleteReview(widget.review.reviewId);
+          if (res) {
+            ToastPresentor.success(context, "리뷰가 삭제되었습니다.");
+            ref.invalidate(reviewsProvider(goodsId: widget.review.goodsId));
+          } else {
+            ToastPresentor.error(context, "리뷰 삭제에 실패했습니다. 문의해주세요");
+          }
+        },
       ),
     );
   }
