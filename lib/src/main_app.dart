@@ -5,8 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/core/utils/talker_screen.dart';
 import 'package:magambell/src/core/utils/visual_logger_visible_builder.dart';
 import 'package:magambell/src/widgets/visual_logger.dart';
+import 'package:go_router/go_router.dart';
 
 class MagambellApp extends ConsumerWidget {
   const MagambellApp({super.key});
@@ -29,12 +32,7 @@ class MagambellApp extends ConsumerWidget {
           theme: MgTheme.getInstance().themeData,
           routerConfig: router,
           builder: (context, child) {
-            return Stack(
-              children: [
-                child!,
-                const _VisualElements(),
-              ],
-            );
+            return Stack(children: [child!, const _VisualElements()]);
           },
         );
       },
@@ -52,14 +50,40 @@ class _VisualElements extends StatelessWidget {
       right: 16,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
         children: [
           VisualLoggerVisibleBuilder(
             builder: (context, visible) {
               return visible ? const VisualLogger() : const SizedBox.shrink();
             },
           ),
+          // if (MgTalker.isEnabled) ...[
+          const SizedBox(height: 8),
+          _TalkerButton(),
+          // ],
         ],
       ),
+    );
+  }
+}
+
+class _TalkerButton extends StatelessWidget {
+  const _TalkerButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      mini: true,
+      backgroundColor: Colors.blue,
+      child: const Icon(Icons.bug_report, color: Colors.white),
+      onPressed: () {
+        final navigatorContext = GlobalVariable.navigatorKey.currentContext;
+        if (navigatorContext != null) {
+          Navigator.of(navigatorContext).push(
+            MaterialPageRoute(builder: (context) => const MgTalkerScreen()),
+          );
+        }
+      },
     );
   }
 }
