@@ -45,10 +45,11 @@ class Review with _$Review {
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
 
+  // TODO: 서버 로직 확인 필요
   String get ratingLabel {
     if (rating == 5) {
       return '최고에요';
-    } else if (rating >= 3) {
+    } else if (rating >= 2) {
       return '좋아요';
     } else {
       return '별로에요';

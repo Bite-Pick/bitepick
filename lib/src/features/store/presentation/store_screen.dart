@@ -100,7 +100,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               controller: _tabController,
               children: [
                 StoreBiteBagView(store.goodsImageList ?? []),
-                StoreReviewListView(widget.id),
+                StoreReviewListView(store.goodsId),
               ],
             ),
           ),

@@ -91,9 +91,9 @@ class ReviewRepository {
     final res = await _dio.post(
       '/v1/review',
       data: {
-        'goodsId': orderGoodsId,
+        'orderGoodsId': orderGoodsId,
         'rating': rating,
-        'content': description,
+        'description': description,
         'reviewImageRegisters': reviewImageRegisters,
       },
     );
