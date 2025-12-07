@@ -19,13 +19,13 @@ enum PaymentMethod {
 /// 간편결제 업체
 // NOTE: 현재 tosspay만 활성화
 enum PaymentCompany {
-  naver('NAVER', '네이버페이', 'naverpay'),
-  kakao('KAKAO', '카카오페이', 'kakaopay'),
-  toss('TOSS', '토스페이', 'tosspay');
+  naver('NAVER', '네이버페이', 'tosspayments.naverpay'), // TODO: pgProvider 확인 필요
+  kakao('KAKAO', '카카오페이', 'tosspayments.kakaopay'),
+  toss('TOSS', '토스페이', 'tosspayments');
 
   final String key;
   final String displayName;
-  final String pgProvider;
+  final String pgProvider; // V1 API: {PG사}.{간편결제사} 형식
 
   const PaymentCompany(this.key, this.displayName, this.pgProvider);
 
