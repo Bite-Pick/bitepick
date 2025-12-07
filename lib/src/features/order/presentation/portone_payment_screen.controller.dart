@@ -44,8 +44,8 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
       merchantUid: state.merchantUid,
       amount: state.amount,
       appScheme: "bitepick",
-      name:
-          '${orderForm.storeId}_${orderForm.storeName}_${orderForm.goodsId}', // TODO:[payment] id 노출 안되도록
+      name: '${orderForm.storeName} 바이트백', // TODO:[payment] id 노출 안되도록 임시 변경
+      // '${orderForm.storeId}_${orderForm.storeName}_${orderForm.goodsId}',
       buyerTel: '', // TODO : 현재 mypage 정보 조회 API에서 반환되지 않으므로 추가해야함
       digital: false,
     );
