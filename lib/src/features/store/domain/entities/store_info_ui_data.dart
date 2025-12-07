@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 
 part 'store_info_ui_data.freezed.dart';
 
@@ -18,6 +19,7 @@ class StoreInfoUiData with _$StoreInfoUiData {
     required String endTime,
     required String description,
     String? parkingDescription, // TODO: parkingDescription 확인필요
+    List<GoodsImagesList>? goodsImageList, // TODO: goodsImageList 확인필요
     double? latitude,
     double? longitude,
   }) = _StoreInfoUiData;

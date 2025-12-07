@@ -33,9 +33,8 @@ mixin _$OrderListDTO {
   String get easyPayProvider => throw _privateConstructorUsedError;
   String? get pickupTime => throw _privateConstructorUsedError; // NOTE: test 필요
   double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude =>
-      throw _privateConstructorUsedError; // TODO: API 반환값 추가 필요
-  String? get memo => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  String? get memo => throw _privateConstructorUsedError; // TODO: API 반환값 추가 필요
   int? get discount => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
 
@@ -384,9 +383,9 @@ class _$OrderListDTOImpl extends _OrderListDTO {
   final double? latitude;
   @override
   final double? longitude;
-  // TODO: API 반환값 추가 필요
   @override
   final String? memo;
+  // TODO: API 반환값 추가 필요
   @override
   final int? discount;
   @override
@@ -522,9 +521,9 @@ abstract class _OrderListDTO extends OrderListDTO {
   @override
   double? get latitude;
   @override
-  double? get longitude; // TODO: API 반환값 추가 필요
+  double? get longitude;
   @override
-  String? get memo;
+  String? get memo; // TODO: API 반환값 추가 필요
   @override
   int? get discount;
   @override

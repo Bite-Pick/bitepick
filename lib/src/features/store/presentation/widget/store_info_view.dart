@@ -90,6 +90,7 @@ class StoreInfoView extends ConsumerWidget {
         ),
         Gaps.h12,
         Text(storeInfo.storeName).md().bold(),
+        // TODO: 가게 등록시 descritpion을 입력하는 란이 없음..
         // Text(storeInfo.description).regular().textGray().margin(
         //   top: MgSizes.size4,
         //   bottom: MgSizes.size8,

@@ -100,7 +100,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
         children: [
           Expanded(
             child: MgButton(
-              onPressed: _showCancelDialog,
+              onPressed: _showRejectDialog,
               content: Text("주문 취소").textColor(MgColorScheme.gray2),
             ).gray(),
           ),
@@ -172,19 +172,6 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
         onConfirm: (reason) => ref
             .read(ownerOrderListControllerProvider.notifier)
             .rejectOrder(widget.order.orderId, rejectReason: reason),
-      ),
-    );
-  }
-
-  void _showCancelDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => MgAlertDialog(
-        title: '주문 취소',
-        content: Text('주문을 취소하시겠습니까?'),
-        onConfirm: () => ref
-            .read(ownerOrderListControllerProvider.notifier)
-            .cancelOrder(widget.order.orderId),
       ),
     );
   }
