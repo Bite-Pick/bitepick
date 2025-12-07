@@ -38,16 +38,6 @@ class OrderListScreen extends ConsumerWidget {
           );
         },
       ),
-      // body: ListView.separated(
-      //   itemCount: 3,
-      //   separatorBuilder: (context, index) =>
-      //       Divider(thickness: 6).margin(vertical: MgSizes.lg),
-      //   itemBuilder: (context, index) {
-      //     // final order = orders[index];
-      //     // return OrderListItem(order.toOrderListItemState());
-      //     return OrderListItem(mockOrderListItemStates[index]);
-      //   },
-      // ),
     );
   }
 

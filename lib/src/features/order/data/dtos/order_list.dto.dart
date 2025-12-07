@@ -5,6 +5,7 @@ import 'package:magambell/src/features/order/domain/entities/order_list_item_sta
 part 'order_list.dto.freezed.dart';
 part 'order_list.dto.g.dart';
 
+// guest용 주문 내역 DTO
 @freezed
 class OrderListDTO with _$OrderListDTO {
   const factory OrderListDTO({
@@ -22,8 +23,8 @@ class OrderListDTO with _$OrderListDTO {
     // NOTE: test 필요
     double? latitude,
     double? longitude,
-    // TODO: API 반환값 추가 필요
     String? memo,
+    // TODO: API 반환값 추가 필요
     int? discount,
     String? address,
   }) = _OrderListDTO;
@@ -53,6 +54,8 @@ class OrderListDTO with _$OrderListDTO {
       address: address,
       memo: memo,
       goodsName: goodsName,
+      pickupTime: pickupTime,
+      orderGoodsId: goods.orderGoodsId,
     );
   }
 }

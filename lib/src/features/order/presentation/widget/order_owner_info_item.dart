@@ -108,7 +108,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
           Expanded(
             child: MgButton(
               onPressed: _showCompleteDialog,
-              content: const Text("준비 완료"),
+              content: const Text("완료"), // TODO: 유저가 픽업하면 완료를 누르는건지...?
             ).primary(),
           ),
         ],

@@ -25,9 +25,9 @@ extension OrderStatusExt on OrderGuestStatus {
       case OrderGuestStatus.pending:
         return '수락대기';
       case OrderGuestStatus.paid:
-        return '주문 접수';
+        return '수락대기'; // TODO: 원래는 주문접수인데 시안상 수락대기라 나와있어서 확인 필요
       case OrderGuestStatus.accepted:
-        return '픽업 대기';
+        return '픽업대기';
       case OrderGuestStatus.rejected:
         return '매장 취소';
       case OrderGuestStatus.completed:

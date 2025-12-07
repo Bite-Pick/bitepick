@@ -25,6 +25,7 @@ mixin _$OrderListItemState {
   int get quantity => throw _privateConstructorUsedError;
   int get salePrice => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
+  String? get pickupTime => throw _privateConstructorUsedError;
   String? get orderGoodsId => throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
   String? get memo => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $OrderListItemStateCopyWith<$Res> {
     int quantity,
     int salePrice,
     String storeName,
+    String? pickupTime,
     String? orderGoodsId,
     String? goodsName,
     String? memo,
@@ -89,6 +91,7 @@ class _$OrderListItemStateCopyWithImpl<$Res, $Val extends OrderListItemState>
     Object? quantity = null,
     Object? salePrice = null,
     Object? storeName = null,
+    Object? pickupTime = freezed,
     Object? orderGoodsId = freezed,
     Object? goodsName = freezed,
     Object? memo = freezed,
@@ -131,6 +134,10 @@ class _$OrderListItemStateCopyWithImpl<$Res, $Val extends OrderListItemState>
                 ? _value.storeName
                 : storeName // ignore: cast_nullable_to_non_nullable
                       as String,
+            pickupTime: freezed == pickupTime
+                ? _value.pickupTime
+                : pickupTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
             orderGoodsId: freezed == orderGoodsId
                 ? _value.orderGoodsId
                 : orderGoodsId // ignore: cast_nullable_to_non_nullable
@@ -183,6 +190,7 @@ abstract class _$$OrderListItemStateImplCopyWith<$Res>
     int quantity,
     int salePrice,
     String storeName,
+    String? pickupTime,
     String? orderGoodsId,
     String? goodsName,
     String? memo,
@@ -215,6 +223,7 @@ class __$$OrderListItemStateImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? salePrice = null,
     Object? storeName = null,
+    Object? pickupTime = freezed,
     Object? orderGoodsId = freezed,
     Object? goodsName = freezed,
     Object? memo = freezed,
@@ -257,6 +266,10 @@ class __$$OrderListItemStateImplCopyWithImpl<$Res>
             ? _value.storeName
             : storeName // ignore: cast_nullable_to_non_nullable
                   as String,
+        pickupTime: freezed == pickupTime
+            ? _value.pickupTime
+            : pickupTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
         orderGoodsId: freezed == orderGoodsId
             ? _value.orderGoodsId
             : orderGoodsId // ignore: cast_nullable_to_non_nullable
@@ -302,6 +315,7 @@ class _$OrderListItemStateImpl implements _OrderListItemState {
     required this.quantity,
     required this.salePrice,
     required this.storeName,
+    this.pickupTime,
     this.orderGoodsId,
     this.goodsName,
     this.memo,
@@ -334,6 +348,8 @@ class _$OrderListItemStateImpl implements _OrderListItemState {
   @override
   final String storeName;
   @override
+  final String? pickupTime;
+  @override
   final String? orderGoodsId;
   @override
   final String? goodsName;
@@ -350,7 +366,7 @@ class _$OrderListItemStateImpl implements _OrderListItemState {
 
   @override
   String toString() {
-    return 'OrderListItemState(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, storeId: $storeId, imageUrls: $imageUrls, quantity: $quantity, salePrice: $salePrice, storeName: $storeName, orderGoodsId: $orderGoodsId, goodsName: $goodsName, memo: $memo, latitude: $latitude, longitude: $longitude, discount: $discount, address: $address)';
+    return 'OrderListItemState(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, storeId: $storeId, imageUrls: $imageUrls, quantity: $quantity, salePrice: $salePrice, storeName: $storeName, pickupTime: $pickupTime, orderGoodsId: $orderGoodsId, goodsName: $goodsName, memo: $memo, latitude: $latitude, longitude: $longitude, discount: $discount, address: $address)';
   }
 
   @override
@@ -374,6 +390,8 @@ class _$OrderListItemStateImpl implements _OrderListItemState {
                 other.salePrice == salePrice) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
+            (identical(other.pickupTime, pickupTime) ||
+                other.pickupTime == pickupTime) &&
             (identical(other.orderGoodsId, orderGoodsId) ||
                 other.orderGoodsId == orderGoodsId) &&
             (identical(other.goodsName, goodsName) ||
@@ -399,6 +417,7 @@ class _$OrderListItemStateImpl implements _OrderListItemState {
     quantity,
     salePrice,
     storeName,
+    pickupTime,
     orderGoodsId,
     goodsName,
     memo,
@@ -430,6 +449,7 @@ abstract class _OrderListItemState implements OrderListItemState {
     required final int quantity,
     required final int salePrice,
     required final String storeName,
+    final String? pickupTime,
     final String? orderGoodsId,
     final String? goodsName,
     final String? memo,
@@ -455,6 +475,8 @@ abstract class _OrderListItemState implements OrderListItemState {
   int get salePrice;
   @override
   String get storeName;
+  @override
+  String? get pickupTime;
   @override
   String? get orderGoodsId;
   @override
