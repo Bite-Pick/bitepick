@@ -111,6 +111,8 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   }
 
   Widget _buildBottomButton(GoodsDetailDto goods) {
+    final now = DateTime.now();
+    final isInvalidPickupTime = DateTime.now().isAfter(goods.endTime);
     return SafeArea(
           child: Row(
             children: [
@@ -120,10 +122,14 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
+                  disabled: isInvalidPickupTime,
                   onPressed: () async {
+                    if (isInvalidPickupTime) {
+                      ToastPresentor.error(context, "오늘 픽업시간이 종료되었습니다");
+                      return;
+                    }
                     final _pickUpTime = await showTimeSelector(
-                      // TODO: min(goods.startTime,DateTime.now()),
-                      goods.startTime,
+                      now.isBefore(goods.startTime) ? goods.startTime : now,
                       goods.endTime,
                     );
                     if (_pickUpTime == null) {
