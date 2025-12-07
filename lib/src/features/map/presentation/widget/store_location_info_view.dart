@@ -17,45 +17,48 @@ class StoreLocationInfoView extends StatelessWidget {
   const StoreLocationInfoView({
     super.key,
     required this.storeId,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
     required this.storeName,
     required this.address,
     this.mapHeight = 100,
   });
 
   final String storeId;
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
   final String storeName;
   final String address;
   final double mapHeight;
 
   @override
   Widget build(BuildContext context) {
+    if (latitude == null || longitude == null) return SizedBox.shrink();
+
     return Column(
       spacing: MgSizes.md,
       children: [
-        GestureDetector(
-          onTap: () async =>
-              // 지도 전체화면으로 이동
-              StoreMapRoute(
-                id: storeId,
-                $extra: StoreMapExtra(
-                  storeName: storeName,
-                  latitude: latitude,
-                  longitude: longitude,
-                  address: address,
-                ),
-              ).push(context),
-          child: IgnorePointer(
-            child: BaseMapView(
-              latitude: latitude,
-              longitude: longitude,
-              buildingName: storeName,
-            ).constrained(height: mapHeight),
+        if (latitude != null && longitude != null)
+          GestureDetector(
+            onTap: () async =>
+                // 지도 전체화면으로 이동
+                StoreMapRoute(
+                  id: storeId,
+                  $extra: StoreMapExtra(
+                    storeName: storeName,
+                    latitude: latitude!,
+                    longitude: longitude!,
+                    address: address,
+                  ),
+                ).push(context),
+            child: IgnorePointer(
+              child: BaseMapView(
+                latitude: latitude!,
+                longitude: longitude!,
+                buildingName: storeName,
+              ).constrained(height: mapHeight),
+            ),
           ),
-        ),
         MgButton(
           onPressed: () async {
             await MgBottomsheet.show(context, (context, bottomState) {
@@ -89,8 +92,8 @@ class StoreLocationInfoView extends StatelessWidget {
             R.ASSETS_IMAGES_APPLE_PNG,
             () async {
               await MapLauncher.openAppleMapRoute(
-                latitude: latitude,
-                longitude: longitude,
+                latitude: latitude!,
+                longitude: longitude!,
                 destinationName: storeName,
               );
               if (context.mounted) Navigator.of(context).pop();
@@ -104,8 +107,8 @@ class StoreLocationInfoView extends StatelessWidget {
             () async {
               final packageInfo = await PackageInfo.fromPlatform();
               await MapLauncher.openNaverMapRoute(
-                latitude: latitude,
-                longitude: longitude,
+                latitude: latitude!,
+                longitude: longitude!,
                 destinationName: storeName,
                 appPackageName: packageInfo.packageName,
               );
@@ -119,8 +122,8 @@ class StoreLocationInfoView extends StatelessWidget {
             R.ASSETS_IMAGES_KAKAOMAP_PNG,
             () async {
               await MapLauncher.openKakaoMapRoute(
-                latitude: latitude,
-                longitude: longitude,
+                latitude: latitude!,
+                longitude: longitude!,
               );
               if (context.mounted) Navigator.of(context).pop();
             },

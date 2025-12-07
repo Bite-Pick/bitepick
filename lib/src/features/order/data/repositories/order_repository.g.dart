@@ -208,5 +208,257 @@ class _StoreOrdersProviderElement
       (origin as StoreOrdersProvider).orderStatus;
 }
 
+String _$userOrdersHash() => r'd8f64f88b017f934afa9702faed5f00d0a082bed';
+
+/// See also [userOrders].
+@ProviderFor(userOrders)
+const userOrdersProvider = UserOrdersFamily();
+
+/// See also [userOrders].
+class UserOrdersFamily extends Family<AsyncValue<List<OrderListDTO>>> {
+  /// See also [userOrders].
+  const UserOrdersFamily();
+
+  /// See also [userOrders].
+  UserOrdersProvider call({int page = 1, int size = 10}) {
+    return UserOrdersProvider(page: page, size: size);
+  }
+
+  @override
+  UserOrdersProvider getProviderOverride(
+    covariant UserOrdersProvider provider,
+  ) {
+    return call(page: provider.page, size: provider.size);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'userOrdersProvider';
+}
+
+/// See also [userOrders].
+class UserOrdersProvider extends AutoDisposeFutureProvider<List<OrderListDTO>> {
+  /// See also [userOrders].
+  UserOrdersProvider({int page = 1, int size = 10})
+    : this._internal(
+        (ref) => userOrders(ref as UserOrdersRef, page: page, size: size),
+        from: userOrdersProvider,
+        name: r'userOrdersProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$userOrdersHash,
+        dependencies: UserOrdersFamily._dependencies,
+        allTransitiveDependencies: UserOrdersFamily._allTransitiveDependencies,
+        page: page,
+        size: size,
+      );
+
+  UserOrdersProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.page,
+    required this.size,
+  }) : super.internal();
+
+  final int page;
+  final int size;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<OrderListDTO>> Function(UserOrdersRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: UserOrdersProvider._internal(
+        (ref) => create(ref as UserOrdersRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        page: page,
+        size: size,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<OrderListDTO>> createElement() {
+    return _UserOrdersProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UserOrdersProvider &&
+        other.page == page &&
+        other.size == size;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, page.hashCode);
+    hash = _SystemHash.combine(hash, size.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin UserOrdersRef on AutoDisposeFutureProviderRef<List<OrderListDTO>> {
+  /// The parameter `page` of this provider.
+  int get page;
+
+  /// The parameter `size` of this provider.
+  int get size;
+}
+
+class _UserOrdersProviderElement
+    extends AutoDisposeFutureProviderElement<List<OrderListDTO>>
+    with UserOrdersRef {
+  _UserOrdersProviderElement(super.provider);
+
+  @override
+  int get page => (origin as UserOrdersProvider).page;
+  @override
+  int get size => (origin as UserOrdersProvider).size;
+}
+
+String _$userOrderDetailHash() => r'6bd315f64a7b86ba731708c97aa15bb5fed014f1';
+
+/// See also [userOrderDetail].
+@ProviderFor(userOrderDetail)
+const userOrderDetailProvider = UserOrderDetailFamily();
+
+/// See also [userOrderDetail].
+class UserOrderDetailFamily extends Family<AsyncValue<OrderDetailDTO?>> {
+  /// See also [userOrderDetail].
+  const UserOrderDetailFamily();
+
+  /// See also [userOrderDetail].
+  UserOrderDetailProvider call({required String orderId}) {
+    return UserOrderDetailProvider(orderId: orderId);
+  }
+
+  @override
+  UserOrderDetailProvider getProviderOverride(
+    covariant UserOrderDetailProvider provider,
+  ) {
+    return call(orderId: provider.orderId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'userOrderDetailProvider';
+}
+
+/// See also [userOrderDetail].
+class UserOrderDetailProvider
+    extends AutoDisposeFutureProvider<OrderDetailDTO?> {
+  /// See also [userOrderDetail].
+  UserOrderDetailProvider({required String orderId})
+    : this._internal(
+        (ref) => userOrderDetail(ref as UserOrderDetailRef, orderId: orderId),
+        from: userOrderDetailProvider,
+        name: r'userOrderDetailProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$userOrderDetailHash,
+        dependencies: UserOrderDetailFamily._dependencies,
+        allTransitiveDependencies:
+            UserOrderDetailFamily._allTransitiveDependencies,
+        orderId: orderId,
+      );
+
+  UserOrderDetailProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.orderId,
+  }) : super.internal();
+
+  final String orderId;
+
+  @override
+  Override overrideWith(
+    FutureOr<OrderDetailDTO?> Function(UserOrderDetailRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: UserOrderDetailProvider._internal(
+        (ref) => create(ref as UserOrderDetailRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        orderId: orderId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<OrderDetailDTO?> createElement() {
+    return _UserOrderDetailProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is UserOrderDetailProvider && other.orderId == orderId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, orderId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin UserOrderDetailRef on AutoDisposeFutureProviderRef<OrderDetailDTO?> {
+  /// The parameter `orderId` of this provider.
+  String get orderId;
+}
+
+class _UserOrderDetailProviderElement
+    extends AutoDisposeFutureProviderElement<OrderDetailDTO?>
+    with UserOrderDetailRef {
+  _UserOrderDetailProviderElement(super.provider);
+
+  @override
+  String get orderId => (origin as UserOrderDetailProvider).orderId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -23,6 +23,10 @@ extension DateTimeExtension on DateTime {
   String toDate() {
     return DateFormat('yy.MM.dd').format(this);
   }
+
+  String toLongDate() {
+    return DateFormat('yyyy.MM.dd HH:mm').format(this);
+  }
 }
 
 extension StringDateTimeExtension on String {
@@ -31,7 +35,9 @@ extension StringDateTimeExtension on String {
     return DateTime.tryParse(this)?.toTime();
   }
 
-  String? convertDate() {
-    return DateTime.tryParse(this)?.toDate();
+  String? convertDate({bool isLong = false}) {
+    return isLong
+        ? DateTime.tryParse(this)?.toLongDate()
+        : DateTime.tryParse(this)?.toDate();
   }
 }

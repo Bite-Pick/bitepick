@@ -24,7 +24,9 @@ Future<void> _firebaseMessagingBackgroundHandler(
   try {
     // 백그라운드 핸들러는 별도 isolate에서 실행되므로 Firebase 초기화 필요
     await Firebase.initializeApp();
-    talker.info('[FCM] Background message received: ${remoteMessage.messageId}');
+    talker.info(
+      '[FCM] Background message received: ${remoteMessage.messageId}',
+    );
     // Background에서 서버에 푸시 수신 로그 전송 등의 처리 가능
   } catch (e, stackTrace) {
     talker.error('[FCM] Background handler error', e, stackTrace);

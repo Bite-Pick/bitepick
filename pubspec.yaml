@@ -65,6 +65,10 @@ dependencies:
   lottie: ^3.3.2
   geocoding: ^3.0.0
 
+  # PortOne Payment
+  webview_flutter: ^4.10.0
+  portone_flutter: ^0.12.1
+
 
 dev_dependencies:
   flutter_test:

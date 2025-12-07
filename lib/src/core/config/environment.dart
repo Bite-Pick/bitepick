@@ -67,6 +67,14 @@ class Environment {
     BuildType.prod => FIREBASE_PROJECT_ID_ANDROID_PROD,
   };
 
+  // portone
+  static String get portoneStoreId => PORTONE_STORE_ID;
+  static String get portoneChannelKey => switch (instance._buildType) {
+    BuildType.dev => PORTONE_TEST_CHANNEL_KEY,
+    BuildType.prod => PORTONE_CHANNEL_KEY,
+  };
+  static String get portoneIMPCode => PORTONE_IMP_CODE;
+
   Future<void> run() async {
     await main_app.runMagamBellApp();
   }

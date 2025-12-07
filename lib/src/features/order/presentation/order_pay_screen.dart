@@ -1,15 +1,17 @@
-import 'package:flash/flash.dart';
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/constants.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
+import 'package:magambell/src/features/order/presentation/portone_payment_screen.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
 import 'package:magambell/src/widgets/agreement_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
@@ -42,14 +44,14 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     final orderInfo = ref.watch(orderPayScreenControllerProvider);
 
     // TODO: 실제 상품 정보 가져오기 (goodsId로 조회)
-    final storeName = '가게명';
-    final storeAddress = '경상북도 경산시 백자로 76 3층';
-    final pickupTime = '오늘 7:00';
     final int originalPrice = orderInfo.originalPrice;
     final int salePrice = orderInfo.salePrice;
     final int discount = orderInfo.discount;
     final quantity = orderInfo.quantity;
     final totalPrice = orderInfo.totalPrice;
+    final storeAddress = orderInfo.storeAddress;
+    final pickupTime = orderInfo.pickupTime;
+    final storeName = orderInfo.storeName;
 
     return BaseScaffold(
       appBar: BaseAppBar(),
@@ -62,13 +64,13 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Gaps.h12,
-                  // TODO: 픽업시간, 메모 입력 UI 추가
                   _buildOrderItemInfoCard(
-                    pickupTime,
+                    storeName,
                     storeAddress,
                     salePrice,
                     quantity,
                     pickupTime,
+                    (salePrice * 100 / originalPrice).toInt(),
                   ).margin(horizontal: MgSizes.md),
                   Divider(thickness: 6).margin(vertical: MgSizes.lg),
                   _buildPaySection().margin(horizontal: MgSizes.md),
@@ -87,24 +89,41 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           ),
           // 결제 버튼
           MgButton(
-            onPressed: () async {
-              if (!_allAgreed) {
-                ToastPresentor.error(context, "모든 약관에 동의해 주세요");
-               
-                return;
-              }
-              // TODO: 결제 로직 추가
-              context.showFlash(
-                duration: const Duration(milliseconds: 2000),
-                builder: (context, controller) {
-                  return FlashBar(
-                    controller: controller,
-                    content: Text("결제 기능 구현중"),
-                  );
-                },
-              );
-            },
-            content: Text('${totalPrice.toPrice()}원 결제하기'),
+            onPressed: orderInfo.isSubmitting
+                ? null
+                : () async {
+                    if (!_allAgreed) {
+                      ToastPresentor.error(context, "모든 약관에 동의해 주세요");
+                      return;
+                    }
+
+                    // 주문 등록 (결제 전)
+                    final merchantUid = await ref
+                        .read(orderPayScreenControllerProvider.notifier)
+                        .submitOrder();
+
+                    if (merchantUid == null) {
+                      ToastPresentor.error(context, '주문 정보를 불러오는데 실패했습니다.');
+                      return;
+                    }
+
+                    // 결제 화면으로 이동
+                    PortOnePaymentRoute(
+                      merchantUid: merchantUid,
+                      // orderName: '${widget.storeId} test', // TODO: 실제 orderName 생성
+                      amount: totalPrice,
+                    ).push(context);
+                  },
+            content: orderInfo.isSubmitting
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text('${totalPrice.toPrice()}원 결제하기'),
           ).primary().margin(
             horizontal: MgSizes.md,
             bottom: MgSizes.xxl,
@@ -124,7 +143,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     String storeAddress,
     int salePrice,
     int quantity,
-    String time,
+    String pickupTime,
+    int discount,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,9 +157,10 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         _buildOrderItemCard(
           storeName: storeName,
           address: storeAddress,
-          discount: 50,
+          discount: discount,
           price: salePrice * quantity,
           count: quantity,
+          pickupTime: pickupTime,
         ),
       ],
     );
@@ -151,12 +172,12 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     required int discount,
     required int price,
     required int count,
-    String time = '오후 7:00',
+    required String pickupTime,
   }) {
     return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$time 픽업 예정')
+            Text('${pickupTime.convertTime()} 픽업 예정')
                 .md()
                 .bold()
                 .margin(vertical: MgSizes.size10, horizontal: MgSizes.md)
@@ -194,11 +215,27 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
 
   Widget _buildPaySection() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 결제 수단 섹션
         _buildSectionTitle('결제 수단'),
         Gaps.h12,
-        // TODO: 결제 수단 선택 UI 추가
+        // TODO: 버튼이 아니라 선택되어있는 것처럼 보여야할 듯
+        MgButton(
+          onPressed: () {},
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                R.ASSETS_IMAGES_TOSS_PAYMENTS_PNG,
+                height: MgSizes.lg,
+              ),
+              Gaps.w8,
+              Text("토스페이").bold().md(),
+            ],
+          ),
+          borderColor: MgColorScheme.gray8,
+        ),
       ],
     );
   }
@@ -233,15 +270,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     return AgreementSection(
       items: const [
         AgreementItem(text: '개인정보 수집 및 이용 동의 (필수)', link: PRIAVCY_POLICY),
-        AgreementItem(
-          text: '개인정보 제3자 정보 제공 동의 (필수)',
-          link: 'https://example.com/third-party', // TODO[asset]:  제3자 정보 제공
-        ),
-        AgreementItem(
-          text: '결제대행 서비스 이용약관 동의 (필수)',
-          link:
-              'https://example.com/payment-terms', // TODO[asset]:  결제대행 서비스 이용약관
-        ),
+        AgreementItem(text: '개인정보 제3자 정보 제공 동의 (필수)', link: GUEST_SERVICE_TERM),
       ],
       allAgreeText: '주문내용 확인 및 결제 동의',
       onAllAgreedChanged: (allAgreed) {

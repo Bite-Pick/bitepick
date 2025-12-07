@@ -7,7 +7,7 @@ part of 'search_address_screen.controller.dart';
 // **************************************************************************
 
 String _$searchAddressScreenControllerHash() =>
-    r'fa662466c81b7c925d221b708287240c7d415972';
+    r'34f7b454d3dd4b691e02732996ff094ec61f78ee';
 
 /// ====== Controller (Riverpod Generator) ======
 ///

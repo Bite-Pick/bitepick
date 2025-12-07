@@ -42,11 +42,12 @@ extension OrderStatusExt on OrderGuestStatus {
   Color get color {
     switch (this) {
       case OrderGuestStatus.paid:
-        return MgColorScheme.primary;
+      // return MgColorScheme.primary;
       case OrderGuestStatus.accepted:
-        return MgColorScheme.secondary;
+        return MgColorScheme.lightest;
       case OrderGuestStatus.pending:
       case OrderGuestStatus.completed:
+        return MgColorScheme.gray8;
       case OrderGuestStatus.canceled:
       case OrderGuestStatus.rejected:
       case OrderGuestStatus.failed:

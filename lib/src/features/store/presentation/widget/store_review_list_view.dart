@@ -29,6 +29,7 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
     );
     return MgAsyncAnimatedSwitcher(
       asyncValue: reviewsAsync,
+      emptyBuilder: () => Center(child: Text("리뷰가 없습니다")),
       builder: (reviews) {
         return SingleChildScrollView(
           padding: EdgeInsets.zero,

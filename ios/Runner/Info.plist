@@ -52,6 +52,43 @@
 			<string>kakaokompassauth</string>
 			<string>kakaolink</string>
 			<string>kakaotalk</string>
+
+			<!-- 은행 앱 -->
+			<string>kftc-bankpay</string>
+			<string>ispmobile</string>
+			<string>kb-acp</string>
+			<string>kb-auth</string>
+			<string>kbbank</string>
+			<string>liivbank</string>
+			<string>newliiv</string>
+
+			<!-- 카드사 앱 -->
+			<string>hdcardappcardansimclick</string>
+			<string>hyundaicardappcardid</string>
+			<string>shinhan-sr-ansimclick</string>
+			<string>samsungpay</string>
+			<string>mpocket.online.ansimclick</string>
+			<string>ansimclickscard</string>
+			<string>nhappcardansimclick</string>
+			<string>nonghyupcardansimclick</string>
+			<string>hanawalletmembers</string>
+			<string>citicardappkr</string>
+			<string>com.wooricard.wcard</string>
+
+			<!-- 간편결제 -->
+			<string>payco</string>
+			<string>supertoss</string>
+			<string>kakaobank</string>
+
+			<!-- 기타 -->
+			<string>v3mobileplusweb</string>
+			<string>alipays</string>
+			<string>weixin</string>
+
+			<!-- 통신사 인증 -->
+			<string>tauthlink</string>
+			<string>ktauthexternalcall</string>
+			<string>upluscorporation</string>
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true />
@@ -94,8 +131,11 @@
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
 			<true />
+			<key>NSAllowsArbitraryLoadsInWebContent</key>
+			<true />
+			<key>NSAllowsLocalNetworking</key>
+			<true />
 		</dict>
-		<!-- FCM Background Modes -->
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>fetch</string>
