@@ -22,8 +22,9 @@ build_runner:
 sh_patch_android:
 	@shorebird release android -t lib/src/main_prod.dart --flavor prod
 sh_patch_ios:
-	@shorebird release ios -t lib/src/main_prod.dart --flavor prod
-
+	@shorebird patch ios -t lib/src/main_prod.dart --flavor prod
+sh_patch_ios_dev:
+	@shorebird patch ios -t lib/src/main_dev.dart --flavor dev
 # GPG_PASSPHRASE=key_here
 SECRETS_DIR=.github/secrets
 

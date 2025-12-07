@@ -627,10 +627,12 @@ extension $WaitingStoreListRouteExtension on WaitingStoreListRoute {
 
 extension $ReviewRegisterRouteExtension on ReviewRegisterRoute {
   static ReviewRegisterRoute _fromState(GoRouterState state) =>
-      ReviewRegisterRoute(orderGoodsId: state.pathParameters['orderGoodsId']!);
+      ReviewRegisterRoute(
+        orderGoodsId: int.parse(state.pathParameters['orderGoodsId']!),
+      );
 
   String get location => GoRouteData.$location(
-    '/review/register/${Uri.encodeComponent(orderGoodsId)}',
+    '/review/register/${Uri.encodeComponent(orderGoodsId.toString())}',
   );
 
   void go(BuildContext context) => context.go(location);
