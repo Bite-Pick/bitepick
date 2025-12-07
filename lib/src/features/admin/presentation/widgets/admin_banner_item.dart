@@ -10,7 +10,6 @@ import 'package:magambell/src/features/admin/presentation/mixins/admin_banner_im
 import 'package:magambell/src/features/banner/domain/constants.dart';
 import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
-import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class AdminBannerItem extends ConsumerWidget with AdminBannerImageUploadMixin {

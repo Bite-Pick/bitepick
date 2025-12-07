@@ -6,8 +6,6 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
-import 'package:magambell/src/features/order/domain/entities/order_guest.dart';
-import 'package:magambell/src/features/order/domain/entities/order_list_item_state.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_list_item.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -40,16 +38,6 @@ class OrderListScreen extends ConsumerWidget {
           );
         },
       ),
-      // body: ListView.separated(
-      //   itemCount: 3,
-      //   separatorBuilder: (context, index) =>
-      //       Divider(thickness: 6).margin(vertical: MgSizes.lg),
-      //   itemBuilder: (context, index) {
-      //     // final order = orders[index];
-      //     // return OrderListItem(order.toOrderListItemState());
-      //     return OrderListItem(mockOrderListItemStates[index]);
-      //   },
-      // ),
     );
   }
 

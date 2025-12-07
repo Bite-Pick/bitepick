@@ -101,7 +101,7 @@ class Step2TimeInfoView extends ConsumerWidget {
         TimePickerBottomSheet.show(
           context,
           initialTime: control.value,
-          onTimeSelected: (time) {
+          onTimeSelected: (time, errorMessage) {
             control.value = time;
           },
         );

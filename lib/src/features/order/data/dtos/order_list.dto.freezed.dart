@@ -30,12 +30,11 @@ mixin _$OrderListDTO {
   List<OrderGoodsDTO> get goodsList => throw _privateConstructorUsedError;
   List<String> get reviewIds => throw _privateConstructorUsedError;
   String get payType => throw _privateConstructorUsedError;
-  String get easyPayProvider =>
-      throw _privateConstructorUsedError; // NOTE: test 필요
+  String get easyPayProvider => throw _privateConstructorUsedError;
+  String? get pickupTime => throw _privateConstructorUsedError; // NOTE: test 필요
   double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude =>
-      throw _privateConstructorUsedError; // TODO: API 반환값 추가 필요
-  String? get memo => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  String? get memo => throw _privateConstructorUsedError; // TODO: API 반환값 추가 필요
   int? get discount => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
 
@@ -67,6 +66,7 @@ abstract class $OrderListDTOCopyWith<$Res> {
     List<String> reviewIds,
     String payType,
     String easyPayProvider,
+    String? pickupTime,
     double? latitude,
     double? longitude,
     String? memo,
@@ -100,6 +100,7 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
     Object? reviewIds = null,
     Object? payType = null,
     Object? easyPayProvider = null,
+    Object? pickupTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? memo = freezed,
@@ -148,6 +149,10 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
                 ? _value.easyPayProvider
                 : easyPayProvider // ignore: cast_nullable_to_non_nullable
                       as String,
+            pickupTime: freezed == pickupTime
+                ? _value.pickupTime
+                : pickupTime // ignore: cast_nullable_to_non_nullable
+                      as String?,
             latitude: freezed == latitude
                 ? _value.latitude
                 : latitude // ignore: cast_nullable_to_non_nullable
@@ -194,6 +199,7 @@ abstract class _$$OrderListDTOImplCopyWith<$Res>
     List<String> reviewIds,
     String payType,
     String easyPayProvider,
+    String? pickupTime,
     double? latitude,
     double? longitude,
     String? memo,
@@ -226,6 +232,7 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
     Object? reviewIds = null,
     Object? payType = null,
     Object? easyPayProvider = null,
+    Object? pickupTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? memo = freezed,
@@ -274,6 +281,10 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
             ? _value.easyPayProvider
             : easyPayProvider // ignore: cast_nullable_to_non_nullable
                   as String,
+        pickupTime: freezed == pickupTime
+            ? _value.pickupTime
+            : pickupTime // ignore: cast_nullable_to_non_nullable
+                  as String?,
         latitude: freezed == latitude
             ? _value.latitude
             : latitude // ignore: cast_nullable_to_non_nullable
@@ -313,6 +324,7 @@ class _$OrderListDTOImpl extends _OrderListDTO {
     required final List<String> reviewIds,
     required this.payType,
     required this.easyPayProvider,
+    this.pickupTime,
     this.latitude,
     this.longitude,
     this.memo,
@@ -364,14 +376,16 @@ class _$OrderListDTOImpl extends _OrderListDTO {
   final String payType;
   @override
   final String easyPayProvider;
+  @override
+  final String? pickupTime;
   // NOTE: test 필요
   @override
   final double? latitude;
   @override
   final double? longitude;
-  // TODO: API 반환값 추가 필요
   @override
   final String? memo;
+  // TODO: API 반환값 추가 필요
   @override
   final int? discount;
   @override
@@ -379,7 +393,7 @@ class _$OrderListDTOImpl extends _OrderListDTO {
 
   @override
   String toString() {
-    return 'OrderListDTO(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, storeId: $storeId, storeName: $storeName, imageUrls: $imageUrls, goodsList: $goodsList, reviewIds: $reviewIds, payType: $payType, easyPayProvider: $easyPayProvider, latitude: $latitude, longitude: $longitude, memo: $memo, discount: $discount, address: $address)';
+    return 'OrderListDTO(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, storeId: $storeId, storeName: $storeName, imageUrls: $imageUrls, goodsList: $goodsList, reviewIds: $reviewIds, payType: $payType, easyPayProvider: $easyPayProvider, pickupTime: $pickupTime, latitude: $latitude, longitude: $longitude, memo: $memo, discount: $discount, address: $address)';
   }
 
   @override
@@ -410,6 +424,8 @@ class _$OrderListDTOImpl extends _OrderListDTO {
             (identical(other.payType, payType) || other.payType == payType) &&
             (identical(other.easyPayProvider, easyPayProvider) ||
                 other.easyPayProvider == easyPayProvider) &&
+            (identical(other.pickupTime, pickupTime) ||
+                other.pickupTime == pickupTime) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -434,6 +450,7 @@ class _$OrderListDTOImpl extends _OrderListDTO {
     const DeepCollectionEquality().hash(_reviewIds),
     payType,
     easyPayProvider,
+    pickupTime,
     latitude,
     longitude,
     memo,
@@ -467,6 +484,7 @@ abstract class _OrderListDTO extends OrderListDTO {
     required final List<String> reviewIds,
     required final String payType,
     required final String easyPayProvider,
+    final String? pickupTime,
     final double? latitude,
     final double? longitude,
     final String? memo,
@@ -497,13 +515,15 @@ abstract class _OrderListDTO extends OrderListDTO {
   @override
   String get payType;
   @override
-  String get easyPayProvider; // NOTE: test 필요
+  String get easyPayProvider;
+  @override
+  String? get pickupTime; // NOTE: test 필요
   @override
   double? get latitude;
   @override
-  double? get longitude; // TODO: API 반환값 추가 필요
+  double? get longitude;
   @override
-  String? get memo;
+  String? get memo; // TODO: API 반환값 추가 필요
   @override
   int? get discount;
   @override
@@ -524,7 +544,7 @@ OrderGoodsDTO _$OrderGoodsDTOFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OrderGoodsDTO {
   String get orderGoodsId => throw _privateConstructorUsedError;
-  String get goodsName => throw _privateConstructorUsedError;
+  String? get goodsName => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   int get salePrice => throw _privateConstructorUsedError;
 
@@ -547,7 +567,7 @@ abstract class $OrderGoodsDTOCopyWith<$Res> {
   @useResult
   $Res call({
     String orderGoodsId,
-    String goodsName,
+    String? goodsName,
     int quantity,
     int salePrice,
   });
@@ -569,7 +589,7 @@ class _$OrderGoodsDTOCopyWithImpl<$Res, $Val extends OrderGoodsDTO>
   @override
   $Res call({
     Object? orderGoodsId = null,
-    Object? goodsName = null,
+    Object? goodsName = freezed,
     Object? quantity = null,
     Object? salePrice = null,
   }) {
@@ -579,10 +599,10 @@ class _$OrderGoodsDTOCopyWithImpl<$Res, $Val extends OrderGoodsDTO>
                 ? _value.orderGoodsId
                 : orderGoodsId // ignore: cast_nullable_to_non_nullable
                       as String,
-            goodsName: null == goodsName
+            goodsName: freezed == goodsName
                 ? _value.goodsName
                 : goodsName // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             quantity: null == quantity
                 ? _value.quantity
                 : quantity // ignore: cast_nullable_to_non_nullable
@@ -608,7 +628,7 @@ abstract class _$$OrderGoodsDTOImplCopyWith<$Res>
   @useResult
   $Res call({
     String orderGoodsId,
-    String goodsName,
+    String? goodsName,
     int quantity,
     int salePrice,
   });
@@ -629,7 +649,7 @@ class __$$OrderGoodsDTOImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? orderGoodsId = null,
-    Object? goodsName = null,
+    Object? goodsName = freezed,
     Object? quantity = null,
     Object? salePrice = null,
   }) {
@@ -639,10 +659,10 @@ class __$$OrderGoodsDTOImplCopyWithImpl<$Res>
             ? _value.orderGoodsId
             : orderGoodsId // ignore: cast_nullable_to_non_nullable
                   as String,
-        goodsName: null == goodsName
+        goodsName: freezed == goodsName
             ? _value.goodsName
             : goodsName // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         quantity: null == quantity
             ? _value.quantity
             : quantity // ignore: cast_nullable_to_non_nullable
@@ -658,13 +678,13 @@ class __$$OrderGoodsDTOImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$OrderGoodsDTOImpl extends _OrderGoodsDTO {
+class _$OrderGoodsDTOImpl implements _OrderGoodsDTO {
   const _$OrderGoodsDTOImpl({
     required this.orderGoodsId,
-    required this.goodsName,
+    this.goodsName,
     required this.quantity,
     required this.salePrice,
-  }) : super._();
+  });
 
   factory _$OrderGoodsDTOImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderGoodsDTOImplFromJson(json);
@@ -672,7 +692,7 @@ class _$OrderGoodsDTOImpl extends _OrderGoodsDTO {
   @override
   final String orderGoodsId;
   @override
-  final String goodsName;
+  final String? goodsName;
   @override
   final int quantity;
   @override
@@ -717,14 +737,13 @@ class _$OrderGoodsDTOImpl extends _OrderGoodsDTO {
   }
 }
 
-abstract class _OrderGoodsDTO extends OrderGoodsDTO {
+abstract class _OrderGoodsDTO implements OrderGoodsDTO {
   const factory _OrderGoodsDTO({
     required final String orderGoodsId,
-    required final String goodsName,
+    final String? goodsName,
     required final int quantity,
     required final int salePrice,
   }) = _$OrderGoodsDTOImpl;
-  const _OrderGoodsDTO._() : super._();
 
   factory _OrderGoodsDTO.fromJson(Map<String, dynamic> json) =
       _$OrderGoodsDTOImpl.fromJson;
@@ -732,7 +751,7 @@ abstract class _OrderGoodsDTO extends OrderGoodsDTO {
   @override
   String get orderGoodsId;
   @override
-  String get goodsName;
+  String? get goodsName;
   @override
   int get quantity;
   @override

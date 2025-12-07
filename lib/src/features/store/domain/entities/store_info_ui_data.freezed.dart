@@ -31,6 +31,8 @@ mixin _$StoreInfoUiData {
   String get description => throw _privateConstructorUsedError;
   String? get parkingDescription =>
       throw _privateConstructorUsedError; // TODO: parkingDescription 확인필요
+  List<GoodsImagesList>? get goodsImageList =>
+      throw _privateConstructorUsedError; // TODO: goodsImageList 확인필요
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
 
@@ -62,6 +64,7 @@ abstract class $StoreInfoUiDataCopyWith<$Res> {
     String endTime,
     String description,
     String? parkingDescription,
+    List<GoodsImagesList>? goodsImageList,
     double? latitude,
     double? longitude,
   });
@@ -95,6 +98,7 @@ class _$StoreInfoUiDataCopyWithImpl<$Res, $Val extends StoreInfoUiData>
     Object? endTime = null,
     Object? description = null,
     Object? parkingDescription = freezed,
+    Object? goodsImageList = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
   }) {
@@ -152,6 +156,10 @@ class _$StoreInfoUiDataCopyWithImpl<$Res, $Val extends StoreInfoUiData>
                 ? _value.parkingDescription
                 : parkingDescription // ignore: cast_nullable_to_non_nullable
                       as String?,
+            goodsImageList: freezed == goodsImageList
+                ? _value.goodsImageList
+                : goodsImageList // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsImagesList>?,
             latitude: freezed == latitude
                 ? _value.latitude
                 : latitude // ignore: cast_nullable_to_non_nullable
@@ -189,6 +197,7 @@ abstract class _$$StoreInfoUiDataImplCopyWith<$Res>
     String endTime,
     String description,
     String? parkingDescription,
+    List<GoodsImagesList>? goodsImageList,
     double? latitude,
     double? longitude,
   });
@@ -221,6 +230,7 @@ class __$$StoreInfoUiDataImplCopyWithImpl<$Res>
     Object? endTime = null,
     Object? description = null,
     Object? parkingDescription = freezed,
+    Object? goodsImageList = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
   }) {
@@ -278,6 +288,10 @@ class __$$StoreInfoUiDataImplCopyWithImpl<$Res>
             ? _value.parkingDescription
             : parkingDescription // ignore: cast_nullable_to_non_nullable
                   as String?,
+        goodsImageList: freezed == goodsImageList
+            ? _value._goodsImageList
+            : goodsImageList // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsImagesList>?,
         latitude: freezed == latitude
             ? _value.latitude
             : latitude // ignore: cast_nullable_to_non_nullable
@@ -308,9 +322,11 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
     required this.endTime,
     required this.description,
     this.parkingDescription,
+    final List<GoodsImagesList>? goodsImageList,
     this.latitude,
     this.longitude,
-  }) : _imageUrls = imageUrls;
+  }) : _imageUrls = imageUrls,
+       _goodsImageList = goodsImageList;
 
   @override
   final String storeId;
@@ -345,6 +361,18 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
   @override
   final String? parkingDescription;
   // TODO: parkingDescription 확인필요
+  final List<GoodsImagesList>? _goodsImageList;
+  // TODO: parkingDescription 확인필요
+  @override
+  List<GoodsImagesList>? get goodsImageList {
+    final value = _goodsImageList;
+    if (value == null) return null;
+    if (_goodsImageList is EqualUnmodifiableListView) return _goodsImageList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  // TODO: goodsImageList 확인필요
   @override
   final double? latitude;
   @override
@@ -352,7 +380,7 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
 
   @override
   String toString() {
-    return 'StoreInfoUiData(storeId: $storeId, storeName: $storeName, address: $address, imageUrls: $imageUrls, stockQuantity: $stockQuantity, saleStatus: $saleStatus, discount: $discount, salePrice: $salePrice, originPrice: $originPrice, startTime: $startTime, endTime: $endTime, description: $description, parkingDescription: $parkingDescription, latitude: $latitude, longitude: $longitude)';
+    return 'StoreInfoUiData(storeId: $storeId, storeName: $storeName, address: $address, imageUrls: $imageUrls, stockQuantity: $stockQuantity, saleStatus: $saleStatus, discount: $discount, salePrice: $salePrice, originPrice: $originPrice, startTime: $startTime, endTime: $endTime, description: $description, parkingDescription: $parkingDescription, goodsImageList: $goodsImageList, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -385,6 +413,10 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
                 other.description == description) &&
             (identical(other.parkingDescription, parkingDescription) ||
                 other.parkingDescription == parkingDescription) &&
+            const DeepCollectionEquality().equals(
+              other._goodsImageList,
+              _goodsImageList,
+            ) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -407,6 +439,7 @@ class _$StoreInfoUiDataImpl implements _StoreInfoUiData {
     endTime,
     description,
     parkingDescription,
+    const DeepCollectionEquality().hash(_goodsImageList),
     latitude,
     longitude,
   );
@@ -438,6 +471,7 @@ abstract class _StoreInfoUiData implements StoreInfoUiData {
     required final String endTime,
     required final String description,
     final String? parkingDescription,
+    final List<GoodsImagesList>? goodsImageList,
     final double? latitude,
     final double? longitude,
   }) = _$StoreInfoUiDataImpl;
@@ -468,6 +502,8 @@ abstract class _StoreInfoUiData implements StoreInfoUiData {
   String get description;
   @override
   String? get parkingDescription; // TODO: parkingDescription 확인필요
+  @override
+  List<GoodsImagesList>? get goodsImageList; // TODO: goodsImageList 확인필요
   @override
   double? get latitude;
   @override

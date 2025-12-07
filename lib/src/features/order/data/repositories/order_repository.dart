@@ -63,9 +63,8 @@ class OrderRepository {
   }
 
   Future<OrderDetailDTO?> getUserOrderDetail(String orderId) async {
-    final res = await _dio.get('/v1/order$orderId');
-    // TODO: orderDetailDTO 확인필요
-    final data = res.data['data']['orderDetailDTO'] as Map<String, dynamic>?;
+    final res = await _dio.get('/v1/order/$orderId');
+    final data = res.data['data'] as Map<String, dynamic>?;
     if (res.data['status'] != 'OK' || data == null) return null;
     return OrderDetailDTO.fromJson(data);
   }
@@ -119,7 +118,7 @@ class OrderRepository {
           'goodsId': goodsId,
           'pickupTime': pickupTime,
           'totalPrice': totalPrice,
-          'memo': "test",
+          'memo': "test", // TODO: 서버에 제거하도록 요청
         },
       );
 

@@ -24,6 +24,7 @@ _$OrderListDTOImpl _$$OrderListDTOImplFromJson(Map<String, dynamic> json) =>
           .toList(),
       payType: json['payType'] as String,
       easyPayProvider: json['easyPayProvider'] as String,
+      pickupTime: json['pickupTime'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       memo: json['memo'] as String?,
@@ -43,6 +44,7 @@ Map<String, dynamic> _$$OrderListDTOImplToJson(_$OrderListDTOImpl instance) =>
       'reviewIds': instance.reviewIds,
       'payType': instance.payType,
       'easyPayProvider': instance.easyPayProvider,
+      'pickupTime': instance.pickupTime,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'memo': instance.memo,
@@ -63,7 +65,7 @@ const _$OrderGuestStatusEnumMap = {
 _$OrderGoodsDTOImpl _$$OrderGoodsDTOImplFromJson(Map<String, dynamic> json) =>
     _$OrderGoodsDTOImpl(
       orderGoodsId: json['orderGoodsId'] as String,
-      goodsName: json['goodsName'] as String,
+      goodsName: json['goodsName'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       salePrice: (json['salePrice'] as num).toInt(),
     );

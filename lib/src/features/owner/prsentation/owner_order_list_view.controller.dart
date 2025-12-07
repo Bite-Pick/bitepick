@@ -121,15 +121,4 @@ class OwnerOrderListController extends _$OwnerOrderListController {
       rethrow;
     }
   }
-
-  Future<void> cancelOrder(String orderId) async {
-    try {
-      await ref.read(orderRepositoryProvider).cancelOrder(orderId);
-      await refresh();
-    } catch (e) {
-      final currentState = state.requireValue;
-      state = AsyncValue.data(currentState.copyWith(error: e.toString()));
-      rethrow;
-    }
-  }
 }

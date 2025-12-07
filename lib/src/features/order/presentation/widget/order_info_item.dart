@@ -10,16 +10,16 @@ class OrderInfoItem extends StatelessWidget {
     super.key,
     required this.imageUrl,
     required this.storeName,
-    required this.address,
-    required this.discount,
+    this.address,
+    this.discount,
     required this.price,
     required this.count,
     this.imageSize = 100,
   });
   final String imageUrl;
   final String storeName;
-  final String address;
-  final int discount;
+  final String? address;
+  final int? discount;
   final int price;
   final int count;
   final double imageSize;
@@ -45,12 +45,13 @@ class OrderInfoItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(storeName).md().bold(),
-              Text(address).sm().textGray(),
+              if (address != null) Text(address!).sm().textGray(),
               Gaps.h4,
               MgTextRich(
                 children: [
-                  TextSpan(text: "${discount.toInt()}%").subpointRed(),
-                  TextSpan(text: ' ${price.toPrice()}원 • $count개'),
+                  if (discount != null)
+                    TextSpan(text: "${discount!.toInt()}% ").subpointRed(),
+                  TextSpan(text: '${price.toPrice()}원 • $count개'),
                 ],
               ).sm().bold(),
             ],

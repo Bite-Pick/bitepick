@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/config/environment.dart';
+import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
@@ -43,8 +44,8 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
       merchantUid: state.merchantUid,
       amount: state.amount,
       appScheme: "bitepick",
-      name:
-          '${orderForm.storeId}_${orderForm.storeName}_${orderForm.goodsId}', // TODO:[payment] id 노출 안되도록
+      name: '${orderForm.storeName} 바이트백', // TODO:[payment] id 노출 안되도록 임시 변경
+      // '${orderForm.storeId}_${orderForm.storeName}_${orderForm.goodsId}',
       buyerTel: '', // TODO : 현재 mypage 정보 조회 API에서 반환되지 않으므로 추가해야함
       digital: false,
     );
@@ -66,14 +67,11 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
     state = state.copyWith(isProcessing: true);
 
     try {
-      final success = result["imp_success"] == "true";
       final impUid = result["imp_uid"];
 
-      if (!success || impUid == null) {
+      if (impUid == null) {
         talker.error("결제 실패: $result");
-
         ToastPresentor.error(context, result["error_msg"] ?? "결제 실패");
-
         context.pop();
         return;
       }
@@ -86,8 +84,10 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
           .completePayment(paymentId: state.merchantUid);
 
       ToastPresentor.success(context, "결제가 완료되었습니다.");
-      // TODO: 검토 필요
-      MainRoute().go(context);
+
+      ref.invalidate(userOrdersProvider());
+      ref.read(navigatorControllerProvider.notifier).changeTabIndex(1);
+      DefaultRoute().go(context);
     } catch (e, st) {
       talker.error("결제 오류: $e\n$st");
       ToastPresentor.error(context, "결제 검증 실패");

@@ -193,8 +193,10 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
           .createStore(
             name: formValue['storeName'] as String,
             address: fullAddress,
-            latitude: latitude ?? 0,
-            longitude: longitude ?? 0,
+            latitude:
+                latitude ??
+                37.3182127917921, // TODO: dev 카카오 API 심사동안 기본값 마북동에서 조회되도록 수정
+            longitude: longitude ?? 127.130195848036,
             ownerName: formValue['representativeName'] as String,
             ownerPhone: formValue['representativePhone'] as String,
             businessNumber: formValue['businessNumber'] as String,

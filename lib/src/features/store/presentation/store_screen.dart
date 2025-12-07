@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
-import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
@@ -16,7 +14,6 @@ import 'package:magambell/src/features/store/data/repositories/store_repository.
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
-import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -102,8 +99,8 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             body: TabBarView(
               controller: _tabController,
               children: [
-                StoreBiteBagView(store.goodsImageList ?? []),
-                StoreReviewListView(widget.id),
+                StoreBiteBagView(store.goodsImages ?? []),
+                StoreReviewListView(store.goodsId),
               ],
             ),
           ),
@@ -114,6 +111,8 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   }
 
   Widget _buildBottomButton(GoodsDetailDto goods) {
+    final now = DateTime.now();
+    final isInvalidPickupTime = DateTime.now().isAfter(goods.endTime);
     return SafeArea(
           child: Row(
             children: [
@@ -123,8 +122,16 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
+                  disabled: isInvalidPickupTime,
                   onPressed: () async {
-                    final _pickUpTime = await showTimeSelector();
+                    if (isInvalidPickupTime) {
+                      ToastPresentor.error(context, "오늘 픽업시간이 종료되었습니다");
+                      return;
+                    }
+                    final _pickUpTime = await showTimeSelector(
+                      now.isBefore(goods.startTime) ? goods.startTime : now,
+                      goods.endTime,
+                    );
                     if (_pickUpTime == null) {
                       ToastPresentor.error(context, "픽업시간을 지정해주세요");
                       return;
@@ -156,14 +163,29 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md);
   }
 
-  Future<DateTime?> showTimeSelector() async {
+  Future<DateTime?> showTimeSelector(
+    DateTime startTime,
+    DateTime endTime,
+  ) async {
     DateTime? _time;
     await TimePickerBottomSheet.show(
       context,
       initialTime: DateTime.now(),
-      onTimeSelected: (time) {
-        _time = time;
+      startTime: startTime,
+      endTime: endTime,
+      onTimeSelected: (selected, error) {
+        if (error != null) {
+          // 이론상 disabled라 안 들어오지만, 안전망으로 남겨둘 수 있음
+          ToastPresentor.error(context, error);
+          return;
+        }
+
+        // 정상 처리
+        _time = selected;
       },
+      // onSelectionChanged: (selected, errorMessage) {
+      //   if (errorMessage != null) ToastPresentor.error(context, errorMessage);
+      // },
     );
     return _time;
   }
