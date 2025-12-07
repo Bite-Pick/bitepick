@@ -183,12 +183,6 @@ class R {
   static const String ASSETS_ICONS_SVG_GOOD_UNSELECT_SVG =
       'assets/icons/svg/good_unselect.svg';
 
-  static const String ASSETS_ICONS_SVG_GOOD_SELECT_SVG =
-      'assets/icons/svg/good_select.svg';
-
-  static const String ASSETS_ICONS_SVG_GOOD_UNSELECT_SVG =
-      'assets/icons/svg/good_unselect.svg';
-
   static const String ASSETS_ICONS_SVG_HEART_SVG = 'assets/icons/svg/heart.svg';
 
   static const String ASSETS_ICONS_SVG_HELP_CIRCLE_SVG =

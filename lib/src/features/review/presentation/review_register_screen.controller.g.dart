@@ -7,7 +7,7 @@ part of 'review_register_screen.controller.dart';
 // **************************************************************************
 
 String _$reviewRegisterScreenControllerHash() =>
-    r'56d3fe004934f6ab7ea98bb35b9018dfdd3f2acc';
+    r'fe84ab46f52d700f4095e7ba11e3a752a8267880';
 
 /// Copied from Dart SDK
 class _SystemHash {
