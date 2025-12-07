@@ -28,7 +28,7 @@ class _HomeBannersViewState extends ConsumerState<HomeBannersView> {
       builder: (bannerImages) {
         return Swiper(
           controller: _swiperController,
-          autoplay: true,
+          autoplay: bannerImages.length == 1 ? false : true,
           autoplayDelay: 4000,
           loop: true,
           onIndexChanged: (int index) async {
