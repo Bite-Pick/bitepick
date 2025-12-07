@@ -9,6 +9,7 @@ part of 'order_detail.dto.dart';
 _$OrderDetailDTOImpl _$$OrderDetailDTOImplFromJson(Map<String, dynamic> json) =>
     _$OrderDetailDTOImpl(
       orderId: json['orderId'] as String,
+      orderGoodsId: json['orderGoodsId'] as String,
       orderStatus: $enumDecode(_$OrderGuestStatusEnumMap, json['orderStatus']),
       storeName: json['storeName'] as String,
       storeAddress: json['storeAddress'] as String,
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$OrderDetailDTOImplToJson(
   _$OrderDetailDTOImpl instance,
 ) => <String, dynamic>{
   'orderId': instance.orderId,
+  'orderGoodsId': instance.orderGoodsId,
   'orderStatus': _$OrderGuestStatusEnumMap[instance.orderStatus]!,
   'storeName': instance.storeName,
   'storeAddress': instance.storeAddress,

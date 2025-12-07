@@ -21,8 +21,8 @@ OrderDetailDTO _$OrderDetailDTOFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$OrderDetailDTO {
-  String get orderId =>
-      throw _privateConstructorUsedError; // required String orderGoodsId,
+  String get orderId => throw _privateConstructorUsedError;
+  String get orderGoodsId => throw _privateConstructorUsedError;
   OrderGuestStatus get orderStatus => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   String get storeAddress => throw _privateConstructorUsedError;
@@ -56,6 +56,7 @@ abstract class $OrderDetailDTOCopyWith<$Res> {
   @useResult
   $Res call({
     String orderId,
+    String orderGoodsId,
     OrderGuestStatus orderStatus,
     String storeName,
     String storeAddress,
@@ -88,6 +89,7 @@ class _$OrderDetailDTOCopyWithImpl<$Res, $Val extends OrderDetailDTO>
   @override
   $Res call({
     Object? orderId = null,
+    Object? orderGoodsId = null,
     Object? orderStatus = null,
     Object? storeName = null,
     Object? storeAddress = null,
@@ -107,6 +109,10 @@ class _$OrderDetailDTOCopyWithImpl<$Res, $Val extends OrderDetailDTO>
             orderId: null == orderId
                 ? _value.orderId
                 : orderId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            orderGoodsId: null == orderGoodsId
+                ? _value.orderGoodsId
+                : orderGoodsId // ignore: cast_nullable_to_non_nullable
                       as String,
             orderStatus: null == orderStatus
                 ? _value.orderStatus
@@ -177,6 +183,7 @@ abstract class _$$OrderDetailDTOImplCopyWith<$Res>
   @useResult
   $Res call({
     String orderId,
+    String orderGoodsId,
     OrderGuestStatus orderStatus,
     String storeName,
     String storeAddress,
@@ -208,6 +215,7 @@ class __$$OrderDetailDTOImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? orderId = null,
+    Object? orderGoodsId = null,
     Object? orderStatus = null,
     Object? storeName = null,
     Object? storeAddress = null,
@@ -227,6 +235,10 @@ class __$$OrderDetailDTOImplCopyWithImpl<$Res>
         orderId: null == orderId
             ? _value.orderId
             : orderId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        orderGoodsId: null == orderGoodsId
+            ? _value.orderGoodsId
+            : orderGoodsId // ignore: cast_nullable_to_non_nullable
                   as String,
         orderStatus: null == orderStatus
             ? _value.orderStatus
@@ -290,6 +302,7 @@ class __$$OrderDetailDTOImplCopyWithImpl<$Res>
 class _$OrderDetailDTOImpl implements _OrderDetailDTO {
   const _$OrderDetailDTOImpl({
     required this.orderId,
+    required this.orderGoodsId,
     required this.orderStatus,
     required this.storeName,
     required this.storeAddress,
@@ -310,7 +323,8 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
 
   @override
   final String orderId;
-  // required String orderGoodsId,
+  @override
+  final String orderGoodsId;
   @override
   final OrderGuestStatus orderStatus;
   @override
@@ -340,7 +354,7 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
 
   @override
   String toString() {
-    return 'OrderDetailDTO(orderId: $orderId, orderStatus: $orderStatus, storeName: $storeName, storeAddress: $storeAddress, imageUrl: $imageUrl, quantity: $quantity, totalPrice: $totalPrice, pickupTime: $pickupTime, createdAt: $createdAt, storeId: $storeId, payType: $payType, easyPayProvider: $easyPayProvider, reviewId: $reviewId, memo: $memo)';
+    return 'OrderDetailDTO(orderId: $orderId, orderGoodsId: $orderGoodsId, orderStatus: $orderStatus, storeName: $storeName, storeAddress: $storeAddress, imageUrl: $imageUrl, quantity: $quantity, totalPrice: $totalPrice, pickupTime: $pickupTime, createdAt: $createdAt, storeId: $storeId, payType: $payType, easyPayProvider: $easyPayProvider, reviewId: $reviewId, memo: $memo)';
   }
 
   @override
@@ -349,6 +363,8 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
         (other.runtimeType == runtimeType &&
             other is _$OrderDetailDTOImpl &&
             (identical(other.orderId, orderId) || other.orderId == orderId) &&
+            (identical(other.orderGoodsId, orderGoodsId) ||
+                other.orderGoodsId == orderGoodsId) &&
             (identical(other.orderStatus, orderStatus) ||
                 other.orderStatus == orderStatus) &&
             (identical(other.storeName, storeName) ||
@@ -379,6 +395,7 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
   int get hashCode => Object.hash(
     runtimeType,
     orderId,
+    orderGoodsId,
     orderStatus,
     storeName,
     storeAddress,
@@ -414,6 +431,7 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
 abstract class _OrderDetailDTO implements OrderDetailDTO {
   const factory _OrderDetailDTO({
     required final String orderId,
+    required final String orderGoodsId,
     required final OrderGuestStatus orderStatus,
     required final String storeName,
     required final String storeAddress,
@@ -433,7 +451,9 @@ abstract class _OrderDetailDTO implements OrderDetailDTO {
       _$OrderDetailDTOImpl.fromJson;
 
   @override
-  String get orderId; // required String orderGoodsId,
+  String get orderId;
+  @override
+  String get orderGoodsId;
   @override
   OrderGuestStatus get orderStatus;
   @override

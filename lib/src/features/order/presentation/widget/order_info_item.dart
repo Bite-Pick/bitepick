@@ -50,8 +50,8 @@ class OrderInfoItem extends StatelessWidget {
               MgTextRich(
                 children: [
                   if (discount != null)
-                    TextSpan(text: "${discount!.toInt()}%").subpointRed(),
-                  TextSpan(text: ' ${price.toPrice()}원 • $count개'),
+                    TextSpan(text: "${discount!.toInt()}% ").subpointRed(),
+                  TextSpan(text: '${price.toPrice()}원 • $count개'),
                 ],
               ).sm().bold(),
             ],
