@@ -66,14 +66,11 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
     state = state.copyWith(isProcessing: true);
 
     try {
-      final success = result["imp_success"] == "true";
       final impUid = result["imp_uid"];
 
-      if (!success || impUid == null) {
+      if (impUid == null) {
         talker.error("결제 실패: $result");
-
         ToastPresentor.error(context, result["error_msg"] ?? "결제 실패");
-
         context.pop();
         return;
       }
