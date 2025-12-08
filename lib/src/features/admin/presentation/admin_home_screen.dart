@@ -10,7 +10,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
-import 'package:magambell/src/features/admin/presentation/waiting_store_list_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_pending_store_list_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -33,6 +33,7 @@ class AdminHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingStoreListAsync = ref.watch(pendingStoreListProvider());
     return BaseScaffold(
+      canSwipeBack: false,
       appBar: BaseAppBar(
         action: OwnerMoreButton(),
         leading: SizedBox.shrink(),
@@ -61,7 +62,7 @@ class AdminHomeScreen extends ConsumerWidget {
                 leadingIconPath: 'user-check.svg',
                 title: "가입 매장 승인",
                 onTap: () async {
-                  await WaitingStoreListRoute().push(context);
+                  await AdminPendingStoreListRoute().push(context);
                   // TODO: 라우팅 돌아와서 counting 업데이트
                 },
                 badgeCount: pendingStores.length,

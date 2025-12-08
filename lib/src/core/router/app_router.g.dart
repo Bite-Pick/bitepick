@@ -268,12 +268,20 @@ RouteBase get $defaultRoute => GoRouteData.$route(
           path: 'waiting-store',
           name: 'WaitingStoreListRoute',
 
-          factory: $WaitingStoreListRouteExtension._fromState,
+          factory: $AdminPendingStoreListRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'approval',
+              name: 'AdminPendingStoreDetailRoute',
+
+              factory: $AdminPendingStoreDetailRouteExtension._fromState,
+            ),
+          ],
         ),
       ],
     ),
     GoRouteData.$route(
-      path: '/review/register/:orderGoodsId',
+      path: 'review/register/:orderGoodsId',
       name: 'ReviewRegisterRoute',
 
       factory: $ReviewRegisterRouteExtension._fromState,
@@ -609,9 +617,9 @@ extension $AdminBannerListRouteExtension on AdminBannerListRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $WaitingStoreListRouteExtension on WaitingStoreListRoute {
-  static WaitingStoreListRoute _fromState(GoRouterState state) =>
-      WaitingStoreListRoute();
+extension $AdminPendingStoreListRouteExtension on AdminPendingStoreListRoute {
+  static AdminPendingStoreListRoute _fromState(GoRouterState state) =>
+      AdminPendingStoreListRoute();
 
   String get location => GoRouteData.$location('/admin/waiting-store');
 
@@ -623,6 +631,27 @@ extension $WaitingStoreListRouteExtension on WaitingStoreListRoute {
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
+}
+
+extension $AdminPendingStoreDetailRouteExtension
+    on AdminPendingStoreDetailRoute {
+  static AdminPendingStoreDetailRoute _fromState(GoRouterState state) =>
+      AdminPendingStoreDetailRoute(
+        $extra: state.extra as AdminPendingStoreDetailExtra,
+      );
+
+  String get location => GoRouteData.$location('/admin/waiting-store/approval');
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
 extension $ReviewRegisterRouteExtension on ReviewRegisterRoute {
