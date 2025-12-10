@@ -110,6 +110,7 @@ class _AdminPendingStoreDetailScreenState
           enabled: false,
         ),
         buildSectionTitle("대표이미지"),
+        // TODO: 이미지 수정 기능 추가(+다중 이미지 처리 관련 서버 수정)
         widget.store.imageUrl.isNotEmpty
             ? Row(
                 children: widget.store.imageUrl
@@ -234,8 +235,9 @@ class _AdminPendingStoreDetailScreenState
     if (res && mounted) {
       context.pop();
       ToastPresentor.success(context, '매장이 승인되었습니다');
+      ref.invalidate(pendingStoreListProvider);
     } else {
-      ToastPresentor.success(context, '매장 승인이 실패하였습니다');
+      ToastPresentor.error(context, '매장 승인이 실패하였습니다');
     }
   }
 

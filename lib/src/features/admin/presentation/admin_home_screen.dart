@@ -69,13 +69,13 @@ class AdminHomeScreen extends ConsumerWidget {
               );
             },
           ),
-          _buildMenu(
-            leadingIconPath: 'store-alt.svg',
-            title: "입점 매장 관리",
-            onTap: () async {
-              // TODO: 입점 매장 화면 추가
-            },
-          ),
+          // _buildMenu(
+          //   leadingIconPath: 'store-alt.svg',
+          //   title: "입점 매장 관리",
+          //   onTap: () async {
+          //     // TODO: 입점 매장 화면 추가
+          //   },
+          // ),
           Gaps.h2, //12+2+12
           Text("서비스 관리").bold().md(),
           _buildMenu(

@@ -40,16 +40,11 @@ class _AdmingPendingStoreListScreenState
             itemCount: stores.length,
             itemBuilder: (context, index) {
               final store = stores[index];
-              return GestureDetector(
-                onTap: () => AdminPendingStoreDetailRoute(
+              return AdminPendingStoreItem(
+                store,
+                onApprove: () async => AdminPendingStoreDetailRoute(
                   $extra: AdminPendingStoreDetailExtra(pendingStore: store),
                 ).go(context),
-                child: AdminPendingStoreItem(
-                  store,
-                  onApprove: () async => AdminPendingStoreDetailRoute(
-                    $extra: AdminPendingStoreDetailExtra(pendingStore: store),
-                  ).go(context),
-                ),
               );
             },
             separatorBuilder: (context, index) =>
