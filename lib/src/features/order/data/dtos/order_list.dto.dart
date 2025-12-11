@@ -20,13 +20,12 @@ class OrderListDTO with _$OrderListDTO {
     required String payType,
     required String easyPayProvider,
     String? pickupTime,
-    // NOTE: test 필요
     double? latitude,
     double? longitude,
     String? memo,
-    // TODO: API 반환값 추가 필요
     int? discount,
     String? address,
+    required bool isReviewWritten,
   }) = _OrderListDTO;
 
   factory OrderListDTO.fromJson(Map<String, dynamic> json) =>
@@ -56,6 +55,7 @@ class OrderListDTO with _$OrderListDTO {
       goodsName: goodsName,
       pickupTime: pickupTime,
       orderGoodsId: goods.orderGoodsId,
+      isReviewWritten: isReviewWritten,
     );
   }
 }

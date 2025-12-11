@@ -30,6 +30,7 @@ _$OrderListDTOImpl _$$OrderListDTOImplFromJson(Map<String, dynamic> json) =>
       memo: json['memo'] as String?,
       discount: (json['discount'] as num?)?.toInt(),
       address: json['address'] as String?,
+      isReviewWritten: json['isReviewWritten'] as bool,
     );
 
 Map<String, dynamic> _$$OrderListDTOImplToJson(_$OrderListDTOImpl instance) =>
@@ -50,6 +51,7 @@ Map<String, dynamic> _$$OrderListDTOImplToJson(_$OrderListDTOImpl instance) =>
       'memo': instance.memo,
       'discount': instance.discount,
       'address': instance.address,
+      'isReviewWritten': instance.isReviewWritten,
     };
 
 const _$OrderGuestStatusEnumMap = {
