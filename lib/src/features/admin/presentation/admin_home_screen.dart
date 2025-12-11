@@ -53,10 +53,11 @@ class AdminHomeScreen extends ConsumerWidget {
         spacing: MgSizes.sm,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // TODO: 가입 유저수, 가입 매장 수
+        // TODO: 가입 유g저수, 가입 매장 수
           Text("매장관리").bold().md(),
           MgAsyncAnimatedSwitcher(
             asyncValue: pendingStoreListAsync,
+            emptyBuilder: () => Text("가입 대기 중인 매장이 없습니다").sm(),
             builder: (pendingStores) {
               return _buildMenu(
                 leadingIconPath: 'user-check.svg',
