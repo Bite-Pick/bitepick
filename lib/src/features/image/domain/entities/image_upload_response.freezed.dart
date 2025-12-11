@@ -22,7 +22,7 @@ PresignedUrlImage _$PresignedUrlImageFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PresignedUrlImage {
   int get id => throw _privateConstructorUsedError;
-  String get url => throw _privateConstructorUsedError;
+  String? get url => throw _privateConstructorUsedError;
 
   /// Serializes this PresignedUrlImage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,7 +41,7 @@ abstract class $PresignedUrlImageCopyWith<$Res> {
     $Res Function(PresignedUrlImage) then,
   ) = _$PresignedUrlImageCopyWithImpl<$Res, PresignedUrlImage>;
   @useResult
-  $Res call({int id, String url});
+  $Res call({int id, String? url});
 }
 
 /// @nodoc
@@ -58,17 +58,17 @@ class _$PresignedUrlImageCopyWithImpl<$Res, $Val extends PresignedUrlImage>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = null, Object? url = null}) {
+  $Res call({Object? id = null, Object? url = freezed}) {
     return _then(
       _value.copyWith(
             id: null == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as int,
-            url: null == url
+            url: freezed == url
                 ? _value.url
                 : url // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
           )
           as $Val,
     );
@@ -84,7 +84,7 @@ abstract class _$$PresignedUrlImageImplCopyWith<$Res>
   ) = __$$PresignedUrlImageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String url});
+  $Res call({int id, String? url});
 }
 
 /// @nodoc
@@ -100,17 +100,17 @@ class __$$PresignedUrlImageImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = null, Object? url = null}) {
+  $Res call({Object? id = null, Object? url = freezed}) {
     return _then(
       _$PresignedUrlImageImpl(
         id: null == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as int,
-        url: null == url
+        url: freezed == url
             ? _value.url
             : url // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
       ),
     );
   }
@@ -119,7 +119,7 @@ class __$$PresignedUrlImageImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$PresignedUrlImageImpl implements _PresignedUrlImage {
-  const _$PresignedUrlImageImpl({required this.id, required this.url});
+  const _$PresignedUrlImageImpl({required this.id, this.url});
 
   factory _$PresignedUrlImageImpl.fromJson(Map<String, dynamic> json) =>
       _$$PresignedUrlImageImplFromJson(json);
@@ -127,7 +127,7 @@ class _$PresignedUrlImageImpl implements _PresignedUrlImage {
   @override
   final int id;
   @override
-  final String url;
+  final String? url;
 
   @override
   String toString() {
@@ -165,10 +165,8 @@ class _$PresignedUrlImageImpl implements _PresignedUrlImage {
 }
 
 abstract class _PresignedUrlImage implements PresignedUrlImage {
-  const factory _PresignedUrlImage({
-    required final int id,
-    required final String url,
-  }) = _$PresignedUrlImageImpl;
+  const factory _PresignedUrlImage({required final int id, final String? url}) =
+      _$PresignedUrlImageImpl;
 
   factory _PresignedUrlImage.fromJson(Map<String, dynamic> json) =
       _$PresignedUrlImageImpl.fromJson;
@@ -176,7 +174,7 @@ abstract class _PresignedUrlImage implements PresignedUrlImage {
   @override
   int get id;
   @override
-  String get url;
+  String? get url;
 
   /// Create a copy of PresignedUrlImage
   /// with the given fields replaced by the non-null parameter values.

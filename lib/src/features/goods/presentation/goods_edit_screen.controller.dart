@@ -5,7 +5,6 @@ import 'package:dartx/dartx.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
-import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
@@ -94,7 +93,8 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
   }
 
   List<GoodsDetailItem> _convertGoodsImageListToDetails(
-      List<GoodsImagesList>? goodsImageList) {
+    List<GoodsImagesList>? goodsImageList,
+  ) {
     if (goodsImageList == null || goodsImageList.isEmpty) {
       return [];
     }
@@ -103,7 +103,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       // 서버에서 받은 이미지는 이미 업로드된 상태이므로 uploadedUrl에 저장
       return GoodsDetailItem(
         localImage: LocalImage(
-          id: imageItem.goodsImageId ?? index,
+          id: imageItem.id ?? index,
           key: imageItem.imageUrl?.split('/').last ?? '',
           file: null, // 이미 업로드된 이미지는 file이 없음
           uploadedUrl: imageItem.imageUrl,
@@ -276,9 +276,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
           .editGoods(
-            // name: formValue['name'] as String?,
             goodsId: formValue['goodsId'] as String,
-            // description: formValue['description'] as String?,
             originalPrice: formValue['originalPrice'] as int,
             discount: formValue['discount'] as int,
             salePrice: formValue['salePrice'] as int,
@@ -295,12 +293,13 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       } else {
         talker.info('바이트백 수정 성공, 이미지 업로드 준비');
       }
-      // 임시처리
+      // NOTE[image]: 이미지 변경이 없을 경우 presignedUrl을 Null로 반환
+      presignedUrls.removeWhere((presigendUrl) => presigendUrl.url == null);
       if (presignedUrls.isEmpty) {
+        talker.debug('업로드할 이미지가 없음, 완료 처리');
         state = state.copyWith(isSubmitting: false);
         return true;
       }
-
       // Presigned URL로 S3에 이미지 업로드
       await ref
           .read(presignedImageRepositoryProvider)

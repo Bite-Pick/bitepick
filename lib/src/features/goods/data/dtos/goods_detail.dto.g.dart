@@ -27,7 +27,7 @@ _$GoodsDetailDtoImpl _$$GoodsDetailDtoImplFromJson(Map<String, dynamic> json) =>
       averageRating: (json['averageRating'] as num).toDouble(),
       parkingDescription: json['parkingDescription'] as String?,
       goodsImages: (json['goodsImages'] as List<dynamic>?)
-          ?.map((e) => GoodsDetailDtoImage.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => GoodsImagesList.fromJson(e as Map<String, dynamic>))
           .toList(),
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
@@ -55,20 +55,4 @@ Map<String, dynamic> _$$GoodsDetailDtoImplToJson(
   'goodsImages': instance.goodsImages,
   'latitude': instance.latitude,
   'longitude': instance.longitude,
-};
-
-_$GoodsDetailDtoImageImpl _$$GoodsDetailDtoImageImplFromJson(
-  Map<String, dynamic> json,
-) => _$GoodsDetailDtoImageImpl(
-  id: (json['id'] as num).toInt(),
-  key: json['key'] as String,
-  goodsName: json['goodsName'] as String,
-);
-
-Map<String, dynamic> _$$GoodsDetailDtoImageImplToJson(
-  _$GoodsDetailDtoImageImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'key': instance.key,
-  'goodsName': instance.goodsName,
 };

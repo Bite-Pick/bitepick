@@ -24,7 +24,7 @@ class GoodsDetailDto with _$GoodsDetailDto {
     required int reviewCount,
     required double averageRating,
     String? parkingDescription,
-    List<GoodsDetailDtoImage>? goodsImages,
+    List<GoodsImagesList>? goodsImages,
     required double latitude,
     required double longitude,
   }) = _GoodsDetailDto;
@@ -50,28 +50,7 @@ class GoodsDetailDto with _$GoodsDetailDto {
       endTime: endTime.toIso8601String(),
       description: description ?? '',
       parkingDescription: parkingDescription,
-      goodsImageList: goodsImages?.map((e) => e.toGoodsImagesList()).toList(),
-    );
-  }
-}
-
-@freezed
-class GoodsDetailDtoImage with _$GoodsDetailDtoImage {
-  const factory GoodsDetailDtoImage({
-    required int id,
-    required String key,
-    required String goodsName,
-  }) = _GoodsDetailDtoImage;
-
-  factory GoodsDetailDtoImage.fromJson(Map<String, dynamic> json) =>
-      _$GoodsDetailDtoImageFromJson(json);
-
-  const GoodsDetailDtoImage._();
-  GoodsImagesList toGoodsImagesList() {
-    return GoodsImagesList(
-      goodsImageId: id,
-      imageUrl: key,
-      goodsName: goodsName,
+      goodsImageList: goodsImages
     );
   }
 }

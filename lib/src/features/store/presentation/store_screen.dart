@@ -11,6 +11,7 @@ import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bo
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
+import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
@@ -98,7 +99,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             body: TabBarView(
               controller: _tabController,
               children: [
-                // StoreBiteBagView(store.goodsImages ?? []), // TODO: 서버 수정
+                StoreBiteBagView(store.goodsImages ?? []), 
                 StoreReviewListView(store.goodsId),
               ],
             ),
