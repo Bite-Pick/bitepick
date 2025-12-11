@@ -31,13 +31,14 @@ mixin _$GoodsDetailDto {
   int get originalPrice => throw _privateConstructorUsedError;
   int get salePrice => throw _privateConstructorUsedError;
   int get discount => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   String get saleStatus => throw _privateConstructorUsedError;
   int get reviewCount => throw _privateConstructorUsedError;
   double get averageRating => throw _privateConstructorUsedError;
   String? get parkingDescription => throw _privateConstructorUsedError;
-  List<GoodsImagesList>? get goodsImages => throw _privateConstructorUsedError;
+  List<GoodsDetailDtoImage>? get goodsImages =>
+      throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
 
@@ -69,13 +70,13 @@ abstract class $GoodsDetailDtoCopyWith<$Res> {
     int originalPrice,
     int salePrice,
     int discount,
-    String description,
+    String? description,
     int quantity,
     String saleStatus,
     int reviewCount,
     double averageRating,
     String? parkingDescription,
-    List<GoodsImagesList>? goodsImages,
+    List<GoodsDetailDtoImage>? goodsImages,
     double latitude,
     double longitude,
   });
@@ -106,7 +107,7 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
     Object? originalPrice = null,
     Object? salePrice = null,
     Object? discount = null,
-    Object? description = null,
+    Object? description = freezed,
     Object? quantity = null,
     Object? saleStatus = null,
     Object? reviewCount = null,
@@ -158,10 +159,10 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
                 ? _value.discount
                 : discount // ignore: cast_nullable_to_non_nullable
                       as int,
-            description: null == description
+            description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             quantity: null == quantity
                 ? _value.quantity
                 : quantity // ignore: cast_nullable_to_non_nullable
@@ -185,7 +186,7 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
             goodsImages: freezed == goodsImages
                 ? _value.goodsImages
                 : goodsImages // ignore: cast_nullable_to_non_nullable
-                      as List<GoodsImagesList>?,
+                      as List<GoodsDetailDtoImage>?,
             latitude: null == latitude
                 ? _value.latitude
                 : latitude // ignore: cast_nullable_to_non_nullable
@@ -220,13 +221,13 @@ abstract class _$$GoodsDetailDtoImplCopyWith<$Res>
     int originalPrice,
     int salePrice,
     int discount,
-    String description,
+    String? description,
     int quantity,
     String saleStatus,
     int reviewCount,
     double averageRating,
     String? parkingDescription,
-    List<GoodsImagesList>? goodsImages,
+    List<GoodsDetailDtoImage>? goodsImages,
     double latitude,
     double longitude,
   });
@@ -256,7 +257,7 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
     Object? originalPrice = null,
     Object? salePrice = null,
     Object? discount = null,
-    Object? description = null,
+    Object? description = freezed,
     Object? quantity = null,
     Object? saleStatus = null,
     Object? reviewCount = null,
@@ -308,10 +309,10 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
             ? _value.discount
             : discount // ignore: cast_nullable_to_non_nullable
                   as int,
-        description: null == description
+        description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         quantity: null == quantity
             ? _value.quantity
             : quantity // ignore: cast_nullable_to_non_nullable
@@ -335,7 +336,7 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
         goodsImages: freezed == goodsImages
             ? _value._goodsImages
             : goodsImages // ignore: cast_nullable_to_non_nullable
-                  as List<GoodsImagesList>?,
+                  as List<GoodsDetailDtoImage>?,
         latitude: null == latitude
             ? _value.latitude
             : latitude // ignore: cast_nullable_to_non_nullable
@@ -363,13 +364,13 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
     required this.originalPrice,
     required this.salePrice,
     required this.discount,
-    required this.description,
+    this.description,
     required this.quantity,
     required this.saleStatus,
     required this.reviewCount,
     required this.averageRating,
     this.parkingDescription,
-    final List<GoodsImagesList>? goodsImages,
+    final List<GoodsDetailDtoImage>? goodsImages,
     required this.latitude,
     required this.longitude,
   }) : _images = images,
@@ -406,7 +407,7 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
   @override
   final int discount;
   @override
-  final String description;
+  final String? description;
   @override
   final int quantity;
   @override
@@ -417,9 +418,9 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
   final double averageRating;
   @override
   final String? parkingDescription;
-  final List<GoodsImagesList>? _goodsImages;
+  final List<GoodsDetailDtoImage>? _goodsImages;
   @override
-  List<GoodsImagesList>? get goodsImages {
+  List<GoodsDetailDtoImage>? get goodsImages {
     final value = _goodsImages;
     if (value == null) return null;
     if (_goodsImages is EqualUnmodifiableListView) return _goodsImages;
@@ -533,13 +534,13 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
     required final int originalPrice,
     required final int salePrice,
     required final int discount,
-    required final String description,
+    final String? description,
     required final int quantity,
     required final String saleStatus,
     required final int reviewCount,
     required final double averageRating,
     final String? parkingDescription,
-    final List<GoodsImagesList>? goodsImages,
+    final List<GoodsDetailDtoImage>? goodsImages,
     required final double latitude,
     required final double longitude,
   }) = _$GoodsDetailDtoImpl;
@@ -569,7 +570,7 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
   @override
   int get discount;
   @override
-  String get description;
+  String? get description;
   @override
   int get quantity;
   @override
@@ -581,7 +582,7 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
   @override
   String? get parkingDescription;
   @override
-  List<GoodsImagesList>? get goodsImages;
+  List<GoodsDetailDtoImage>? get goodsImages;
   @override
   double get latitude;
   @override
@@ -592,5 +593,197 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GoodsDetailDtoImplCopyWith<_$GoodsDetailDtoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+GoodsDetailDtoImage _$GoodsDetailDtoImageFromJson(Map<String, dynamic> json) {
+  return _GoodsDetailDtoImage.fromJson(json);
+}
+
+/// @nodoc
+mixin _$GoodsDetailDtoImage {
+  int get id => throw _privateConstructorUsedError;
+  String get key => throw _privateConstructorUsedError;
+  String get goodsName => throw _privateConstructorUsedError;
+
+  /// Serializes this GoodsDetailDtoImage to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of GoodsDetailDtoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $GoodsDetailDtoImageCopyWith<GoodsDetailDtoImage> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GoodsDetailDtoImageCopyWith<$Res> {
+  factory $GoodsDetailDtoImageCopyWith(
+    GoodsDetailDtoImage value,
+    $Res Function(GoodsDetailDtoImage) then,
+  ) = _$GoodsDetailDtoImageCopyWithImpl<$Res, GoodsDetailDtoImage>;
+  @useResult
+  $Res call({int id, String key, String goodsName});
+}
+
+/// @nodoc
+class _$GoodsDetailDtoImageCopyWithImpl<$Res, $Val extends GoodsDetailDtoImage>
+    implements $GoodsDetailDtoImageCopyWith<$Res> {
+  _$GoodsDetailDtoImageCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of GoodsDetailDtoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? key = null, Object? goodsName = null}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            key: null == key
+                ? _value.key
+                : key // ignore: cast_nullable_to_non_nullable
+                      as String,
+            goodsName: null == goodsName
+                ? _value.goodsName
+                : goodsName // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$GoodsDetailDtoImageImplCopyWith<$Res>
+    implements $GoodsDetailDtoImageCopyWith<$Res> {
+  factory _$$GoodsDetailDtoImageImplCopyWith(
+    _$GoodsDetailDtoImageImpl value,
+    $Res Function(_$GoodsDetailDtoImageImpl) then,
+  ) = __$$GoodsDetailDtoImageImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int id, String key, String goodsName});
+}
+
+/// @nodoc
+class __$$GoodsDetailDtoImageImplCopyWithImpl<$Res>
+    extends _$GoodsDetailDtoImageCopyWithImpl<$Res, _$GoodsDetailDtoImageImpl>
+    implements _$$GoodsDetailDtoImageImplCopyWith<$Res> {
+  __$$GoodsDetailDtoImageImplCopyWithImpl(
+    _$GoodsDetailDtoImageImpl _value,
+    $Res Function(_$GoodsDetailDtoImageImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of GoodsDetailDtoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? key = null, Object? goodsName = null}) {
+    return _then(
+      _$GoodsDetailDtoImageImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        key: null == key
+            ? _value.key
+            : key // ignore: cast_nullable_to_non_nullable
+                  as String,
+        goodsName: null == goodsName
+            ? _value.goodsName
+            : goodsName // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$GoodsDetailDtoImageImpl extends _GoodsDetailDtoImage {
+  const _$GoodsDetailDtoImageImpl({
+    required this.id,
+    required this.key,
+    required this.goodsName,
+  }) : super._();
+
+  factory _$GoodsDetailDtoImageImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GoodsDetailDtoImageImplFromJson(json);
+
+  @override
+  final int id;
+  @override
+  final String key;
+  @override
+  final String goodsName;
+
+  @override
+  String toString() {
+    return 'GoodsDetailDtoImage(id: $id, key: $key, goodsName: $goodsName)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GoodsDetailDtoImageImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.key, key) || other.key == key) &&
+            (identical(other.goodsName, goodsName) ||
+                other.goodsName == goodsName));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, key, goodsName);
+
+  /// Create a copy of GoodsDetailDtoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GoodsDetailDtoImageImplCopyWith<_$GoodsDetailDtoImageImpl> get copyWith =>
+      __$$GoodsDetailDtoImageImplCopyWithImpl<_$GoodsDetailDtoImageImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$GoodsDetailDtoImageImplToJson(this);
+  }
+}
+
+abstract class _GoodsDetailDtoImage extends GoodsDetailDtoImage {
+  const factory _GoodsDetailDtoImage({
+    required final int id,
+    required final String key,
+    required final String goodsName,
+  }) = _$GoodsDetailDtoImageImpl;
+  const _GoodsDetailDtoImage._() : super._();
+
+  factory _GoodsDetailDtoImage.fromJson(Map<String, dynamic> json) =
+      _$GoodsDetailDtoImageImpl.fromJson;
+
+  @override
+  int get id;
+  @override
+  String get key;
+  @override
+  String get goodsName;
+
+  /// Create a copy of GoodsDetailDtoImage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GoodsDetailDtoImageImplCopyWith<_$GoodsDetailDtoImageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

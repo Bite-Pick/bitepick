@@ -20,14 +20,14 @@ _$GoodsDetailDtoImpl _$$GoodsDetailDtoImplFromJson(Map<String, dynamic> json) =>
       originalPrice: (json['originalPrice'] as num).toInt(),
       salePrice: (json['salePrice'] as num).toInt(),
       discount: (json['discount'] as num).toInt(),
-      description: json['description'] as String,
+      description: json['description'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       saleStatus: json['saleStatus'] as String,
       reviewCount: (json['reviewCount'] as num).toInt(),
       averageRating: (json['averageRating'] as num).toDouble(),
       parkingDescription: json['parkingDescription'] as String?,
       goodsImages: (json['goodsImages'] as List<dynamic>?)
-          ?.map((e) => GoodsImagesList.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => GoodsDetailDtoImage.fromJson(e as Map<String, dynamic>))
           .toList(),
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
@@ -55,4 +55,20 @@ Map<String, dynamic> _$$GoodsDetailDtoImplToJson(
   'goodsImages': instance.goodsImages,
   'latitude': instance.latitude,
   'longitude': instance.longitude,
+};
+
+_$GoodsDetailDtoImageImpl _$$GoodsDetailDtoImageImplFromJson(
+  Map<String, dynamic> json,
+) => _$GoodsDetailDtoImageImpl(
+  id: (json['id'] as num).toInt(),
+  key: json['key'] as String,
+  goodsName: json['goodsName'] as String,
+);
+
+Map<String, dynamic> _$$GoodsDetailDtoImageImplToJson(
+  _$GoodsDetailDtoImageImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'key': instance.key,
+  'goodsName': instance.goodsName,
 };

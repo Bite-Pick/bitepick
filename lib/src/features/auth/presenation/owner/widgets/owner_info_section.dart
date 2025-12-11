@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
