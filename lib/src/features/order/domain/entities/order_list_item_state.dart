@@ -14,6 +14,7 @@ class OrderListItemState with _$OrderListItemState {
     required int quantity,
     required int salePrice,
     required String storeName,
+    required bool isReviewWritten,
     String? pickupTime,
     String? orderGoodsId,
     String? goodsName,

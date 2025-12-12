@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';

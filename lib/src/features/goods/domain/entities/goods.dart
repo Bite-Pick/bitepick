@@ -35,9 +35,10 @@ class Goods with _$Goods {
 @freezed
 class GoodsImagesList with _$GoodsImagesList {
   const factory GoodsImagesList({
-    int? goodsImageId,
+    int? id,
     String? goodsName,
     String? imageUrl,
+    String? key,
   }) = _GoodsImagesList;
   const GoodsImagesList._();
 

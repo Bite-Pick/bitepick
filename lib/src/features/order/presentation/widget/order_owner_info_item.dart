@@ -47,9 +47,11 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
             Gaps.h8,
             _buildInfoRow('주문일시', _formatTime(widget.order.createdAt)),
             Gaps.h8,
-            Text("요청사항").textGray().sm(),
-            Gaps.h4,
-            Text(widget.order.memo ?? '요청사항 없음').sm().regular(),
+            if (widget.order.memo != null) ...[
+              Text("요청사항").textGray().sm(),
+              Gaps.h4,
+              Text(widget.order.memo ?? '요청사항 없음').sm().regular(),
+            ],
 
             // 버튼 영역
             if (_buildActionButtons() != null) ...[

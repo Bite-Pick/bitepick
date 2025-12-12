@@ -30,6 +30,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       'storeName': FormControl<String>(
         validators: [Validators.required, Validators.minLength(1)],
       ),
+      'description': FormControl<String>(validators: [Validators.required]),
       'postalCode': FormControl<String>(validators: [Validators.required]),
       'address': FormControl<String>(validators: [Validators.required]),
       'addressDetail': FormControl<String>(),
@@ -124,6 +125,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
   // 필드명 한글 매핑
   static const Map<String, String> _fieldNameMap = {
     'storeName': '매장 이름',
+    'description': '매장 설명',
     'postalCode': '우편번호',
     'address': '주소',
     'addressDetail': '상세주소',
@@ -193,6 +195,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
           .createStore(
             name: formValue['storeName'] as String,
             address: fullAddress,
+            description: formValue['description'] as String,
             latitude:
                 latitude ??
                 37.3182127917921, // TODO: dev 카카오 API 심사동안 기본값 마북동에서 조회되도록 수정

@@ -46,7 +46,7 @@ class StoreBiteBagView extends StatelessWidget {
     final _goodsImages = goodsImages
         .where(
           (g) =>
-              g.goodsImageId != null &&
+              g.id != null &&
               g.goodsName != null &&
               g.imageUrl != null,
         )

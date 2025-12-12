@@ -266,7 +266,6 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
               SearchAddressRoute().push(context);
             },
           ).transparent(),
-          DebugText("현재 데이터가 많지않아 주소를 바꿔도 데이터변동은 없도록 임시처리해뒀습니다!"),
         ],
       ).margin(all: MgSizes.md),
     );

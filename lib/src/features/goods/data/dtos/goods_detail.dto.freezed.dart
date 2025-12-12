@@ -31,7 +31,7 @@ mixin _$GoodsDetailDto {
   int get originalPrice => throw _privateConstructorUsedError;
   int get salePrice => throw _privateConstructorUsedError;
   int get discount => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   String get saleStatus => throw _privateConstructorUsedError;
   int get reviewCount => throw _privateConstructorUsedError;
@@ -69,7 +69,7 @@ abstract class $GoodsDetailDtoCopyWith<$Res> {
     int originalPrice,
     int salePrice,
     int discount,
-    String description,
+    String? description,
     int quantity,
     String saleStatus,
     int reviewCount,
@@ -106,7 +106,7 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
     Object? originalPrice = null,
     Object? salePrice = null,
     Object? discount = null,
-    Object? description = null,
+    Object? description = freezed,
     Object? quantity = null,
     Object? saleStatus = null,
     Object? reviewCount = null,
@@ -158,10 +158,10 @@ class _$GoodsDetailDtoCopyWithImpl<$Res, $Val extends GoodsDetailDto>
                 ? _value.discount
                 : discount // ignore: cast_nullable_to_non_nullable
                       as int,
-            description: null == description
+            description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             quantity: null == quantity
                 ? _value.quantity
                 : quantity // ignore: cast_nullable_to_non_nullable
@@ -220,7 +220,7 @@ abstract class _$$GoodsDetailDtoImplCopyWith<$Res>
     int originalPrice,
     int salePrice,
     int discount,
-    String description,
+    String? description,
     int quantity,
     String saleStatus,
     int reviewCount,
@@ -256,7 +256,7 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
     Object? originalPrice = null,
     Object? salePrice = null,
     Object? discount = null,
-    Object? description = null,
+    Object? description = freezed,
     Object? quantity = null,
     Object? saleStatus = null,
     Object? reviewCount = null,
@@ -308,10 +308,10 @@ class __$$GoodsDetailDtoImplCopyWithImpl<$Res>
             ? _value.discount
             : discount // ignore: cast_nullable_to_non_nullable
                   as int,
-        description: null == description
+        description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         quantity: null == quantity
             ? _value.quantity
             : quantity // ignore: cast_nullable_to_non_nullable
@@ -363,7 +363,7 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
     required this.originalPrice,
     required this.salePrice,
     required this.discount,
-    required this.description,
+    this.description,
     required this.quantity,
     required this.saleStatus,
     required this.reviewCount,
@@ -406,7 +406,7 @@ class _$GoodsDetailDtoImpl extends _GoodsDetailDto {
   @override
   final int discount;
   @override
-  final String description;
+  final String? description;
   @override
   final int quantity;
   @override
@@ -533,7 +533,7 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
     required final int originalPrice,
     required final int salePrice,
     required final int discount,
-    required final String description,
+    final String? description,
     required final int quantity,
     required final String saleStatus,
     required final int reviewCount,
@@ -569,7 +569,7 @@ abstract class _GoodsDetailDto extends GoodsDetailDto {
   @override
   int get discount;
   @override
-  String get description;
+  String? get description;
   @override
   int get quantity;
   @override

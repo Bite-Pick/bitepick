@@ -118,7 +118,6 @@ class OrderRepository {
           'goodsId': goodsId,
           'pickupTime': pickupTime,
           'totalPrice': totalPrice,
-          'memo': "test", // TODO: 서버에 제거하도록 요청
         },
       );
 

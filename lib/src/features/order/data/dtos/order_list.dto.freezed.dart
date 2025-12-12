@@ -29,14 +29,15 @@ mixin _$OrderListDTO {
   List<String> get imageUrls => throw _privateConstructorUsedError;
   List<OrderGoodsDTO> get goodsList => throw _privateConstructorUsedError;
   List<String> get reviewIds => throw _privateConstructorUsedError;
-  String get payType => throw _privateConstructorUsedError;
-  String get easyPayProvider => throw _privateConstructorUsedError;
-  String? get pickupTime => throw _privateConstructorUsedError; // NOTE: test 필요
+  String? get payType => throw _privateConstructorUsedError;
+  String? get easyPayProvider => throw _privateConstructorUsedError;
+  String? get pickupTime => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
-  String? get memo => throw _privateConstructorUsedError; // TODO: API 반환값 추가 필요
+  String? get memo => throw _privateConstructorUsedError;
   int? get discount => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
+  bool get isReviewWritten => throw _privateConstructorUsedError;
 
   /// Serializes this OrderListDTO to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,14 +65,15 @@ abstract class $OrderListDTOCopyWith<$Res> {
     List<String> imageUrls,
     List<OrderGoodsDTO> goodsList,
     List<String> reviewIds,
-    String payType,
-    String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? pickupTime,
     double? latitude,
     double? longitude,
     String? memo,
     int? discount,
     String? address,
+    bool isReviewWritten,
   });
 }
 
@@ -98,14 +100,15 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
     Object? imageUrls = null,
     Object? goodsList = null,
     Object? reviewIds = null,
-    Object? payType = null,
-    Object? easyPayProvider = null,
+    Object? payType = freezed,
+    Object? easyPayProvider = freezed,
     Object? pickupTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? memo = freezed,
     Object? discount = freezed,
     Object? address = freezed,
+    Object? isReviewWritten = null,
   }) {
     return _then(
       _value.copyWith(
@@ -141,14 +144,14 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
                 ? _value.reviewIds
                 : reviewIds // ignore: cast_nullable_to_non_nullable
                       as List<String>,
-            payType: null == payType
+            payType: freezed == payType
                 ? _value.payType
                 : payType // ignore: cast_nullable_to_non_nullable
-                      as String,
-            easyPayProvider: null == easyPayProvider
+                      as String?,
+            easyPayProvider: freezed == easyPayProvider
                 ? _value.easyPayProvider
                 : easyPayProvider // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             pickupTime: freezed == pickupTime
                 ? _value.pickupTime
                 : pickupTime // ignore: cast_nullable_to_non_nullable
@@ -173,6 +176,10 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
                 ? _value.address
                 : address // ignore: cast_nullable_to_non_nullable
                       as String?,
+            isReviewWritten: null == isReviewWritten
+                ? _value.isReviewWritten
+                : isReviewWritten // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -197,14 +204,15 @@ abstract class _$$OrderListDTOImplCopyWith<$Res>
     List<String> imageUrls,
     List<OrderGoodsDTO> goodsList,
     List<String> reviewIds,
-    String payType,
-    String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? pickupTime,
     double? latitude,
     double? longitude,
     String? memo,
     int? discount,
     String? address,
+    bool isReviewWritten,
   });
 }
 
@@ -230,14 +238,15 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
     Object? imageUrls = null,
     Object? goodsList = null,
     Object? reviewIds = null,
-    Object? payType = null,
-    Object? easyPayProvider = null,
+    Object? payType = freezed,
+    Object? easyPayProvider = freezed,
     Object? pickupTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? memo = freezed,
     Object? discount = freezed,
     Object? address = freezed,
+    Object? isReviewWritten = null,
   }) {
     return _then(
       _$OrderListDTOImpl(
@@ -273,14 +282,14 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
             ? _value._reviewIds
             : reviewIds // ignore: cast_nullable_to_non_nullable
                   as List<String>,
-        payType: null == payType
+        payType: freezed == payType
             ? _value.payType
             : payType // ignore: cast_nullable_to_non_nullable
-                  as String,
-        easyPayProvider: null == easyPayProvider
+                  as String?,
+        easyPayProvider: freezed == easyPayProvider
             ? _value.easyPayProvider
             : easyPayProvider // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         pickupTime: freezed == pickupTime
             ? _value.pickupTime
             : pickupTime // ignore: cast_nullable_to_non_nullable
@@ -305,6 +314,10 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
             ? _value.address
             : address // ignore: cast_nullable_to_non_nullable
                   as String?,
+        isReviewWritten: null == isReviewWritten
+            ? _value.isReviewWritten
+            : isReviewWritten // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -322,14 +335,15 @@ class _$OrderListDTOImpl extends _OrderListDTO {
     required final List<String> imageUrls,
     required final List<OrderGoodsDTO> goodsList,
     required final List<String> reviewIds,
-    required this.payType,
-    required this.easyPayProvider,
+    this.payType,
+    this.easyPayProvider,
     this.pickupTime,
     this.latitude,
     this.longitude,
     this.memo,
     this.discount,
     this.address,
+    required this.isReviewWritten,
   }) : _imageUrls = imageUrls,
        _goodsList = goodsList,
        _reviewIds = reviewIds,
@@ -373,27 +387,27 @@ class _$OrderListDTOImpl extends _OrderListDTO {
   }
 
   @override
-  final String payType;
+  final String? payType;
   @override
-  final String easyPayProvider;
+  final String? easyPayProvider;
   @override
   final String? pickupTime;
-  // NOTE: test 필요
   @override
   final double? latitude;
   @override
   final double? longitude;
   @override
   final String? memo;
-  // TODO: API 반환값 추가 필요
   @override
   final int? discount;
   @override
   final String? address;
+  @override
+  final bool isReviewWritten;
 
   @override
   String toString() {
-    return 'OrderListDTO(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, storeId: $storeId, storeName: $storeName, imageUrls: $imageUrls, goodsList: $goodsList, reviewIds: $reviewIds, payType: $payType, easyPayProvider: $easyPayProvider, pickupTime: $pickupTime, latitude: $latitude, longitude: $longitude, memo: $memo, discount: $discount, address: $address)';
+    return 'OrderListDTO(orderId: $orderId, orderStatus: $orderStatus, createdAt: $createdAt, storeId: $storeId, storeName: $storeName, imageUrls: $imageUrls, goodsList: $goodsList, reviewIds: $reviewIds, payType: $payType, easyPayProvider: $easyPayProvider, pickupTime: $pickupTime, latitude: $latitude, longitude: $longitude, memo: $memo, discount: $discount, address: $address, isReviewWritten: $isReviewWritten)';
   }
 
   @override
@@ -433,7 +447,9 @@ class _$OrderListDTOImpl extends _OrderListDTO {
             (identical(other.memo, memo) || other.memo == memo) &&
             (identical(other.discount, discount) ||
                 other.discount == discount) &&
-            (identical(other.address, address) || other.address == address));
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.isReviewWritten, isReviewWritten) ||
+                other.isReviewWritten == isReviewWritten));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -456,6 +472,7 @@ class _$OrderListDTOImpl extends _OrderListDTO {
     memo,
     discount,
     address,
+    isReviewWritten,
   );
 
   /// Create a copy of OrderListDTO
@@ -482,14 +499,15 @@ abstract class _OrderListDTO extends OrderListDTO {
     required final List<String> imageUrls,
     required final List<OrderGoodsDTO> goodsList,
     required final List<String> reviewIds,
-    required final String payType,
-    required final String easyPayProvider,
+    final String? payType,
+    final String? easyPayProvider,
     final String? pickupTime,
     final double? latitude,
     final double? longitude,
     final String? memo,
     final int? discount,
     final String? address,
+    required final bool isReviewWritten,
   }) = _$OrderListDTOImpl;
   const _OrderListDTO._() : super._();
 
@@ -513,21 +531,23 @@ abstract class _OrderListDTO extends OrderListDTO {
   @override
   List<String> get reviewIds;
   @override
-  String get payType;
+  String? get payType;
   @override
-  String get easyPayProvider;
+  String? get easyPayProvider;
   @override
-  String? get pickupTime; // NOTE: test 필요
+  String? get pickupTime;
   @override
   double? get latitude;
   @override
   double? get longitude;
   @override
-  String? get memo; // TODO: API 반환값 추가 필요
+  String? get memo;
   @override
   int? get discount;
   @override
   String? get address;
+  @override
+  bool get isReviewWritten;
 
   /// Create a copy of OrderListDTO
   /// with the given fields replaced by the non-null parameter values.

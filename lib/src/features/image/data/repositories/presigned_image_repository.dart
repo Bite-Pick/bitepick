@@ -105,9 +105,15 @@ class PreSignedImageRepository {
         orElse: () =>
             throw Exception('Presigned URL not found for ${localImage.key}'),
       );
+      if (presignedUrl.url == null) {
+        talker.error(
+          '[S3] Presigned URL is null for image id: ${presignedUrl.id}',
+        );
+        return;
+      }
 
       await uploadToS3WithPresignedUrl(
-        presignedUrl: presignedUrl.url,
+        presignedUrl: presignedUrl.url!,
         file: localImage.file!,
         onProgress: onProgress != null
             ? (sent, total) => onProgress(i, imagesToUpload.length, sent, total)

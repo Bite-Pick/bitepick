@@ -45,7 +45,7 @@ class AdminRepository {
       data: {'id': storeId},
     );
 
-    if (response.data['status'] != 'SUCCESS') {
+    if (response.data['status'] != 'OK') {
       // throw Exception('매장 승인에 실패했습니다.');
       return false;
     }
