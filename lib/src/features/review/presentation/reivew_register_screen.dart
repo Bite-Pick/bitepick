@@ -191,7 +191,7 @@ class _ReviewRegisterScreenState extends ConsumerState<ReviewRegisterScreen> {
 
     if (success && mounted) {
       ToastPresentor.success(context, '리뷰가 등록되었습니다');
-      context.pop();
+      context.pop(true);
     }
   }
 }

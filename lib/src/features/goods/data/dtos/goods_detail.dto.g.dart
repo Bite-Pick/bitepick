@@ -20,7 +20,7 @@ _$GoodsDetailDtoImpl _$$GoodsDetailDtoImplFromJson(Map<String, dynamic> json) =>
       originalPrice: (json['originalPrice'] as num).toInt(),
       salePrice: (json['salePrice'] as num).toInt(),
       discount: (json['discount'] as num).toInt(),
-      description: json['description'] as String,
+      description: json['description'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       saleStatus: json['saleStatus'] as String,
       reviewCount: (json['reviewCount'] as num).toInt(),

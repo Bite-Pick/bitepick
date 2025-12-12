@@ -18,7 +18,7 @@ class GoodsDetailDto with _$GoodsDetailDto {
     required int originalPrice,
     required int salePrice,
     required int discount,
-    required String description,
+    String? description,
     required int quantity,
     required String saleStatus,
     required int reviewCount,
@@ -27,7 +27,6 @@ class GoodsDetailDto with _$GoodsDetailDto {
     List<GoodsImagesList>? goodsImages,
     required double latitude,
     required double longitude,
-    // TODO: lat,long 추가 필요
   }) = _GoodsDetailDto;
 
   factory GoodsDetailDto.fromJson(Map<String, dynamic> json) =>
@@ -49,9 +48,9 @@ class GoodsDetailDto with _$GoodsDetailDto {
       originPrice: originalPrice,
       startTime: startTime.toIso8601String(),
       endTime: endTime.toIso8601String(),
-      description: description,
+      description: description ?? '',
       parkingDescription: parkingDescription,
-      goodsImageList: goodsImages,
+      goodsImageList: goodsImages
     );
   }
 }

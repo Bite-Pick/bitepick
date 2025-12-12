@@ -99,7 +99,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             body: TabBarView(
               controller: _tabController,
               children: [
-                StoreBiteBagView(store.goodsImages ?? []),
+                StoreBiteBagView(store.goodsImages ?? []), 
                 StoreReviewListView(store.goodsId),
               ],
             ),

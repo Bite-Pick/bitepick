@@ -24,7 +24,8 @@ class AdminBannerListScreenControllerState
 }
 
 @riverpod
-class AdminBannerListScreenController extends _$AdminBannerListScreenController {
+class AdminBannerListScreenController
+    extends _$AdminBannerListScreenController {
   @override
   AdminBannerListScreenControllerState build() {
     return const AdminBannerListScreenControllerState(isProgress: false);
@@ -81,7 +82,7 @@ class AdminBannerListScreenController extends _$AdminBannerListScreenController 
           .read(presignedImageRepositoryProvider)
           .uploadToS3WithPresignedUrl(
             file: file,
-            presignedUrl: presignedImage.url,
+            presignedUrl: presignedImage.url!,
             onProgress: (sent, totalBytes) {
               final progress = (sent / totalBytes * 100).toStringAsFixed(1);
               talker.debug(

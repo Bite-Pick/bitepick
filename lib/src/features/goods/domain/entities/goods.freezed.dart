@@ -540,9 +540,10 @@ GoodsImagesList _$GoodsImagesListFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GoodsImagesList {
-  int? get goodsImageId => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
+  String? get key => throw _privateConstructorUsedError;
 
   /// Serializes this GoodsImagesList to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -561,7 +562,7 @@ abstract class $GoodsImagesListCopyWith<$Res> {
     $Res Function(GoodsImagesList) then,
   ) = _$GoodsImagesListCopyWithImpl<$Res, GoodsImagesList>;
   @useResult
-  $Res call({int? goodsImageId, String? goodsName, String? imageUrl});
+  $Res call({int? id, String? goodsName, String? imageUrl, String? key});
 }
 
 /// @nodoc
@@ -579,15 +580,16 @@ class _$GoodsImagesListCopyWithImpl<$Res, $Val extends GoodsImagesList>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? goodsImageId = freezed,
+    Object? id = freezed,
     Object? goodsName = freezed,
     Object? imageUrl = freezed,
+    Object? key = freezed,
   }) {
     return _then(
       _value.copyWith(
-            goodsImageId: freezed == goodsImageId
-                ? _value.goodsImageId
-                : goodsImageId // ignore: cast_nullable_to_non_nullable
+            id: freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
                       as int?,
             goodsName: freezed == goodsName
                 ? _value.goodsName
@@ -596,6 +598,10 @@ class _$GoodsImagesListCopyWithImpl<$Res, $Val extends GoodsImagesList>
             imageUrl: freezed == imageUrl
                 ? _value.imageUrl
                 : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            key: freezed == key
+                ? _value.key
+                : key // ignore: cast_nullable_to_non_nullable
                       as String?,
           )
           as $Val,
@@ -612,7 +618,7 @@ abstract class _$$GoodsImagesListImplCopyWith<$Res>
   ) = __$$GoodsImagesListImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? goodsImageId, String? goodsName, String? imageUrl});
+  $Res call({int? id, String? goodsName, String? imageUrl, String? key});
 }
 
 /// @nodoc
@@ -629,15 +635,16 @@ class __$$GoodsImagesListImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? goodsImageId = freezed,
+    Object? id = freezed,
     Object? goodsName = freezed,
     Object? imageUrl = freezed,
+    Object? key = freezed,
   }) {
     return _then(
       _$GoodsImagesListImpl(
-        goodsImageId: freezed == goodsImageId
-            ? _value.goodsImageId
-            : goodsImageId // ignore: cast_nullable_to_non_nullable
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
                   as int?,
         goodsName: freezed == goodsName
             ? _value.goodsName
@@ -646,6 +653,10 @@ class __$$GoodsImagesListImplCopyWithImpl<$Res>
         imageUrl: freezed == imageUrl
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        key: freezed == key
+            ? _value.key
+            : key // ignore: cast_nullable_to_non_nullable
                   as String?,
       ),
     );
@@ -656,24 +667,27 @@ class __$$GoodsImagesListImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GoodsImagesListImpl extends _GoodsImagesList {
   const _$GoodsImagesListImpl({
-    this.goodsImageId,
+    this.id,
     this.goodsName,
     this.imageUrl,
+    this.key,
   }) : super._();
 
   factory _$GoodsImagesListImpl.fromJson(Map<String, dynamic> json) =>
       _$$GoodsImagesListImplFromJson(json);
 
   @override
-  final int? goodsImageId;
+  final int? id;
   @override
   final String? goodsName;
   @override
   final String? imageUrl;
+  @override
+  final String? key;
 
   @override
   String toString() {
-    return 'GoodsImagesList(goodsImageId: $goodsImageId, goodsName: $goodsName, imageUrl: $imageUrl)';
+    return 'GoodsImagesList(id: $id, goodsName: $goodsName, imageUrl: $imageUrl, key: $key)';
   }
 
   @override
@@ -681,18 +695,17 @@ class _$GoodsImagesListImpl extends _GoodsImagesList {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GoodsImagesListImpl &&
-            (identical(other.goodsImageId, goodsImageId) ||
-                other.goodsImageId == goodsImageId) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.goodsName, goodsName) ||
                 other.goodsName == goodsName) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.key, key) || other.key == key));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, goodsImageId, goodsName, imageUrl);
+  int get hashCode => Object.hash(runtimeType, id, goodsName, imageUrl, key);
 
   /// Create a copy of GoodsImagesList
   /// with the given fields replaced by the non-null parameter values.
@@ -713,9 +726,10 @@ class _$GoodsImagesListImpl extends _GoodsImagesList {
 
 abstract class _GoodsImagesList extends GoodsImagesList {
   const factory _GoodsImagesList({
-    final int? goodsImageId,
+    final int? id,
     final String? goodsName,
     final String? imageUrl,
+    final String? key,
   }) = _$GoodsImagesListImpl;
   const _GoodsImagesList._() : super._();
 
@@ -723,11 +737,13 @@ abstract class _GoodsImagesList extends GoodsImagesList {
       _$GoodsImagesListImpl.fromJson;
 
   @override
-  int? get goodsImageId;
+  int? get id;
   @override
   String? get goodsName;
   @override
   String? get imageUrl;
+  @override
+  String? get key;
 
   /// Create a copy of GoodsImagesList
   /// with the given fields replaced by the non-null parameter values.

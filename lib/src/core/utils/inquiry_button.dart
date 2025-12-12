@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 class InquiryButton extends StatelessWidget {
   const InquiryButton({super.key});
 
-  static const String kakaoChannelUrl = 'http://pf.kakao.com/_UmqJn';
+  static const String kakaoChannelUrl = 'https://pf.kakao.com/_Uwxbpn';
 
   @override
   Widget build(BuildContext context) {

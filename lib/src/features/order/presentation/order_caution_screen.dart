@@ -35,7 +35,7 @@ class OrderCautionScreen extends StatelessWidget {
           // Content cards
           _buildCautionCard(
             number: '01',
-            title: 'OO백은 랜덤으로 구성되어있어요',
+            title: '바이트백은 랜덤으로 구성되어있어요',
             subtitle: '랜덤하게 드리는 특별한 선물을 기대해보세요',
             imagePath: R.ASSETS_IMAGES_ORDER_CAUTION_1_PNG,
           ),

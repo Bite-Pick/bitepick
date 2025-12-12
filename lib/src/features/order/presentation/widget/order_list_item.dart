@@ -123,19 +123,23 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           );
         },
       ),
-      OrderGuestStatus.completed => MgButton(
-        onPressed: () async {
-          if (widget.order.orderGoodsId == null) {
-            ToastPresentor.error(context, "리뷰 작성이 불가능한 주문입니다.");
-            return;
-          }
-          await ReviewRegisterRoute(
-            orderGoodsId: widget.order.orderGoodsId!,
-          ).push(context);
-        },
-        content: Text("리뷰쓰기").sm(),
-        padding: Gutter.hxs,
-      ).primary(),
+      OrderGuestStatus.completed =>
+        widget.order.isReviewWritten
+            ? SizedBox.shrink()
+            : MgButton(
+                onPressed: () async {
+                  if (widget.order.orderGoodsId == null) {
+                    ToastPresentor.error(context, "리뷰 작성이 불가능한 주문입니다.");
+                    return;
+                  }
+                  final result = await ReviewRegisterRoute(
+                    orderGoodsId: widget.order.orderGoodsId!,
+                  ).push(context);
+                  if (result) ref.invalidate(userOrdersProvider());
+                },
+                content: Text("리뷰쓰기").sm(),
+                padding: Gutter.hxs,
+              ).primary(),
       _ => MgButton(
         content: Text("문의하기").sm().regular(),
         onPressed: () {

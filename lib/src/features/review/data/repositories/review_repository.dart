@@ -88,15 +88,15 @@ class ReviewRepository {
     required String description,
     List<Map<String, dynamic>>? reviewImageRegisters,
   }) async {
-    final res = await _dio.post(
-      '/v1/review',
-      data: {
-        'orderGoodsId': orderGoodsId,
-        'rating': rating,
-        'description': description,
-        'reviewImageRegisters': reviewImageRegisters,
-      },
-    );
+    final data = {
+      'orderGoodsId': orderGoodsId,
+      'rating': rating,
+      'description': description,
+      'reviewImageRegisters': reviewImageRegisters,
+    };
+    data.removeWhere((key, value) => value == null);
+    // TODO: 리뷰 사진 선택값으로 서버수정 필요
+    final res = await _dio.post('/v1/review', data: data);
 
     if (res.data['status'] != 'OK') return null;
 

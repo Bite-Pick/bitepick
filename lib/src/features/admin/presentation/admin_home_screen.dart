@@ -10,7 +10,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
-import 'package:magambell/src/features/admin/presentation/waiting_store_list_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_pending_store_list_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -33,6 +33,7 @@ class AdminHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingStoreListAsync = ref.watch(pendingStoreListProvider());
     return BaseScaffold(
+      canSwipeBack: false,
       appBar: BaseAppBar(
         action: OwnerMoreButton(),
         leading: SizedBox.shrink(),
@@ -52,29 +53,30 @@ class AdminHomeScreen extends ConsumerWidget {
         spacing: MgSizes.sm,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // TODO: 가입 유저수, 가입 매장 수
+        // TODO: 가입 유g저수, 가입 매장 수
           Text("매장관리").bold().md(),
           MgAsyncAnimatedSwitcher(
             asyncValue: pendingStoreListAsync,
+            emptyBuilder: () => Text("가입 대기 중인 매장이 없습니다").sm(),
             builder: (pendingStores) {
               return _buildMenu(
                 leadingIconPath: 'user-check.svg',
                 title: "가입 매장 승인",
                 onTap: () async {
-                  await WaitingStoreListRoute().push(context);
+                  await AdminPendingStoreListRoute().push(context);
                   // TODO: 라우팅 돌아와서 counting 업데이트
                 },
                 badgeCount: pendingStores.length,
               );
             },
           ),
-          _buildMenu(
-            leadingIconPath: 'store-alt.svg',
-            title: "입점 매장 관리",
-            onTap: () async {
-              // TODO: 입점 매장 화면 추가
-            },
-          ),
+          // _buildMenu(
+          //   leadingIconPath: 'store-alt.svg',
+          //   title: "입점 매장 관리",
+          //   onTap: () async {
+          //     // TODO: 입점 매장 화면 추가
+          //   },
+          // ),
           Gaps.h2, //12+2+12
           Text("서비스 관리").bold().md(),
           _buildMenu(

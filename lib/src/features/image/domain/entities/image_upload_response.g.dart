@@ -10,7 +10,7 @@ _$PresignedUrlImageImpl _$$PresignedUrlImageImplFromJson(
   Map<String, dynamic> json,
 ) => _$PresignedUrlImageImpl(
   id: (json['id'] as num).toInt(),
-  url: json['url'] as String,
+  url: json['url'] as String?,
 );
 
 Map<String, dynamic> _$$PresignedUrlImageImplToJson(
