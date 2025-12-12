@@ -138,7 +138,9 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
               .deleteReview(widget.review.reviewId);
           if (res) {
             ToastPresentor.success(context, "리뷰가 삭제되었습니다.");
+            // TODO: refactor 각 화면에서 사용하는 provider만 invalidate하도록
             ref.invalidate(reviewsProvider(goodsId: widget.review.goodsId));
+            ref.invalidate(myReviewsProvider);
           } else {
             ToastPresentor.error(context, "리뷰 삭제에 실패했습니다. 문의해주세요");
           }

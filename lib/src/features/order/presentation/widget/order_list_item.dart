@@ -132,9 +132,10 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
                     ToastPresentor.error(context, "리뷰 작성이 불가능한 주문입니다.");
                     return;
                   }
-                  await ReviewRegisterRoute(
+                  final result = await ReviewRegisterRoute(
                     orderGoodsId: widget.order.orderGoodsId!,
                   ).push(context);
+                  if (result) ref.invalidate(userOrdersProvider());
                 },
                 content: Text("리뷰쓰기").sm(),
                 padding: Gutter.hxs,
