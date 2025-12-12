@@ -14,8 +14,7 @@ class MgTalker {
     // Prod 환경: Release 모드가 아닐 때만 활성화
     final shouldEnableLog =
         kDebugMode ||
-        Environment.instance.isDev ||
-        (Environment.instance.isProd );
+        Environment.instance.isDev;
 
     _instance = TalkerFlutter.init(
       settings: TalkerSettings(
@@ -41,8 +40,7 @@ class MgTalker {
   /// Talker가 활성화되어 있는지 확인
   static bool get isEnabled {
     return kDebugMode ||
-           Environment.instance.isDev ||
-           (Environment.instance.isProd);
+           Environment.instance.isDev;
   }
 }
 

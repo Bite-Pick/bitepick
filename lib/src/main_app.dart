@@ -57,33 +57,11 @@ class _VisualElements extends StatelessWidget {
               return visible ? const VisualLogger() : const SizedBox.shrink();
             },
           ),
-          // if (MgTalker.isEnabled) ...[
-          const SizedBox(height: 8),
-          _TalkerButton(),
-          // ],
+          if (MgTalker.isEnabled) ...[
+            const SizedBox(height: 8),
+          ],
         ],
       ),
-    );
-  }
-}
-
-class _TalkerButton extends StatelessWidget {
-  const _TalkerButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      mini: true,
-      backgroundColor: Colors.blue,
-      child: const Icon(Icons.bug_report, color: Colors.white),
-      onPressed: () {
-        final navigatorContext = GlobalVariable.navigatorKey.currentContext;
-        if (navigatorContext != null) {
-          Navigator.of(navigatorContext).push(
-            MaterialPageRoute(builder: (context) => const MgTalkerScreen()),
-          );
-        }
-      },
     );
   }
 }
