@@ -22,8 +22,8 @@ _$OrderListDTOImpl _$$OrderListDTOImplFromJson(Map<String, dynamic> json) =>
       reviewIds: (json['reviewIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      payType: json['payType'] as String,
-      easyPayProvider: json['easyPayProvider'] as String,
+      payType: json['payType'] as String?,
+      easyPayProvider: json['easyPayProvider'] as String?,
       pickupTime: json['pickupTime'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),

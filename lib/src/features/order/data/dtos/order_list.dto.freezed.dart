@@ -29,8 +29,8 @@ mixin _$OrderListDTO {
   List<String> get imageUrls => throw _privateConstructorUsedError;
   List<OrderGoodsDTO> get goodsList => throw _privateConstructorUsedError;
   List<String> get reviewIds => throw _privateConstructorUsedError;
-  String get payType => throw _privateConstructorUsedError;
-  String get easyPayProvider => throw _privateConstructorUsedError;
+  String? get payType => throw _privateConstructorUsedError;
+  String? get easyPayProvider => throw _privateConstructorUsedError;
   String? get pickupTime => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
@@ -65,8 +65,8 @@ abstract class $OrderListDTOCopyWith<$Res> {
     List<String> imageUrls,
     List<OrderGoodsDTO> goodsList,
     List<String> reviewIds,
-    String payType,
-    String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? pickupTime,
     double? latitude,
     double? longitude,
@@ -100,8 +100,8 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
     Object? imageUrls = null,
     Object? goodsList = null,
     Object? reviewIds = null,
-    Object? payType = null,
-    Object? easyPayProvider = null,
+    Object? payType = freezed,
+    Object? easyPayProvider = freezed,
     Object? pickupTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
@@ -144,14 +144,14 @@ class _$OrderListDTOCopyWithImpl<$Res, $Val extends OrderListDTO>
                 ? _value.reviewIds
                 : reviewIds // ignore: cast_nullable_to_non_nullable
                       as List<String>,
-            payType: null == payType
+            payType: freezed == payType
                 ? _value.payType
                 : payType // ignore: cast_nullable_to_non_nullable
-                      as String,
-            easyPayProvider: null == easyPayProvider
+                      as String?,
+            easyPayProvider: freezed == easyPayProvider
                 ? _value.easyPayProvider
                 : easyPayProvider // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             pickupTime: freezed == pickupTime
                 ? _value.pickupTime
                 : pickupTime // ignore: cast_nullable_to_non_nullable
@@ -204,8 +204,8 @@ abstract class _$$OrderListDTOImplCopyWith<$Res>
     List<String> imageUrls,
     List<OrderGoodsDTO> goodsList,
     List<String> reviewIds,
-    String payType,
-    String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? pickupTime,
     double? latitude,
     double? longitude,
@@ -238,8 +238,8 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
     Object? imageUrls = null,
     Object? goodsList = null,
     Object? reviewIds = null,
-    Object? payType = null,
-    Object? easyPayProvider = null,
+    Object? payType = freezed,
+    Object? easyPayProvider = freezed,
     Object? pickupTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
@@ -282,14 +282,14 @@ class __$$OrderListDTOImplCopyWithImpl<$Res>
             ? _value._reviewIds
             : reviewIds // ignore: cast_nullable_to_non_nullable
                   as List<String>,
-        payType: null == payType
+        payType: freezed == payType
             ? _value.payType
             : payType // ignore: cast_nullable_to_non_nullable
-                  as String,
-        easyPayProvider: null == easyPayProvider
+                  as String?,
+        easyPayProvider: freezed == easyPayProvider
             ? _value.easyPayProvider
             : easyPayProvider // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         pickupTime: freezed == pickupTime
             ? _value.pickupTime
             : pickupTime // ignore: cast_nullable_to_non_nullable
@@ -335,8 +335,8 @@ class _$OrderListDTOImpl extends _OrderListDTO {
     required final List<String> imageUrls,
     required final List<OrderGoodsDTO> goodsList,
     required final List<String> reviewIds,
-    required this.payType,
-    required this.easyPayProvider,
+    this.payType,
+    this.easyPayProvider,
     this.pickupTime,
     this.latitude,
     this.longitude,
@@ -387,9 +387,9 @@ class _$OrderListDTOImpl extends _OrderListDTO {
   }
 
   @override
-  final String payType;
+  final String? payType;
   @override
-  final String easyPayProvider;
+  final String? easyPayProvider;
   @override
   final String? pickupTime;
   @override
@@ -499,8 +499,8 @@ abstract class _OrderListDTO extends OrderListDTO {
     required final List<String> imageUrls,
     required final List<OrderGoodsDTO> goodsList,
     required final List<String> reviewIds,
-    required final String payType,
-    required final String easyPayProvider,
+    final String? payType,
+    final String? easyPayProvider,
     final String? pickupTime,
     final double? latitude,
     final double? longitude,
@@ -531,9 +531,9 @@ abstract class _OrderListDTO extends OrderListDTO {
   @override
   List<String> get reviewIds;
   @override
-  String get payType;
+  String? get payType;
   @override
-  String get easyPayProvider;
+  String? get easyPayProvider;
   @override
   String? get pickupTime;
   @override
