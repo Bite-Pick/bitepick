@@ -28,8 +28,6 @@ class GoodsRepository {
     final res = await _dio.post(
       '/v1/goods',
       data: {
-        'name': "test", // TODO: 백엔드 수정 필요
-        // 'description': 'test..;;', //TODO ASAP수정필요.......
         'originalPrice': originalPrice,
         'discount': discount,
         'salePrice': salePrice,
@@ -53,8 +51,6 @@ class GoodsRepository {
 
   Future<List<PresignedUrlImage>?> editGoods({
     required String goodsId,
-    // String? name,
-    // required String description,
     required int originalPrice,
     required int discount,
     required int salePrice,

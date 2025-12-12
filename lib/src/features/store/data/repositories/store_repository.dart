@@ -62,6 +62,7 @@ class StoreRepository {
 
   Future<List<PresignedUrlImage>> createStore({
     required String name,
+    required String description,
     required String address,
     required double latitude,
     required double longitude,
@@ -77,6 +78,7 @@ class StoreRepository {
       '/v1/store',
       data: {
         'name': name,
+        'description': description,
         'address': address,
         'latitude': latitude,
         'longitude': longitude,
