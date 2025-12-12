@@ -22,6 +22,12 @@ class PendingStoreDto with _$PendingStoreDto {
     required double longitude,
     required double latitude,
     required String address,
+    
+    required String ownerName,
+    required String ownerPhone,
+    required String businessNumber,
+    required String bankName,
+    required String bankAccount,
   }) = _PendingStoreDto;
 
   factory PendingStoreDto.fromJson(Map<String, dynamic> json) =>

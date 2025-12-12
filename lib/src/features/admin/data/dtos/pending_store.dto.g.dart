@@ -26,6 +26,11 @@ _$PendingStoreDtoImpl _$$PendingStoreDtoImplFromJson(
   longitude: (json['longitude'] as num).toDouble(),
   latitude: (json['latitude'] as num).toDouble(),
   address: json['address'] as String,
+  ownerName: json['ownerName'] as String,
+  ownerPhone: json['ownerPhone'] as String,
+  businessNumber: json['businessNumber'] as String,
+  bankName: json['bankName'] as String,
+  bankAccount: json['bankAccount'] as String,
 );
 
 Map<String, dynamic> _$$PendingStoreDtoImplToJson(
@@ -46,4 +51,9 @@ Map<String, dynamic> _$$PendingStoreDtoImplToJson(
   'longitude': instance.longitude,
   'latitude': instance.latitude,
   'address': instance.address,
+  'ownerName': instance.ownerName,
+  'ownerPhone': instance.ownerPhone,
+  'businessNumber': instance.businessNumber,
+  'bankName': instance.bankName,
+  'bankAccount': instance.bankAccount,
 };

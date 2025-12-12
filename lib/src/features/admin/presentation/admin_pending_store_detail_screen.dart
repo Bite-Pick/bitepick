@@ -9,6 +9,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/admin/data/dtos/pending_store.dto.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
+import 'package:magambell/src/features/auth/presenation/owner/widgets/owner_info_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
@@ -74,9 +75,10 @@ class _AdminPendingStoreDetailScreenState
                     _buildStoreGoodsInfoSection().margin(
                       horizontal: MgSizes.xl,
                     ),
-                    // const OwnerInfoSection(
-                    //   enabled: false, // 읽기 전용
-                    // ).margin(horizontal: MgSizes.xl),
+                    Divider(thickness: MgSizes.size6).margin(top: MgSizes.xxxl),
+                    const OwnerInfoSection(
+                      enabled: false, // 읽기 전용
+                    ).margin(horizontal: MgSizes.xl),
                   ],
                 ),
               ),
@@ -104,11 +106,11 @@ class _AdminPendingStoreDetailScreenState
         MgReactiveTextField(formControlName: 'storeName', enabled: false),
         buildSectionTitle("매장주소"),
         MgReactiveTextField(formControlName: 'address', enabled: false),
-        buildSectionTitle("주차안내"),
-        MgReactiveTextField(
-          formControlName: 'parkingDescription',
-          enabled: false,
-        ),
+        // buildSectionTitle("주차안내"),
+        // MgReactiveTextField(
+        //   formControlName: 'parkingDescription',
+        //   enabled: false,
+        // ),
         buildSectionTitle("대표이미지"),
         // TODO: 이미지 수정 기능 추가(+다중 이미지 처리 관련 서버 수정)
         widget.store.imageUrl.isNotEmpty
@@ -160,11 +162,6 @@ class _AdminPendingStoreDetailScreenState
         value: store.storeName,
         validators: [Validators.required],
       ),
-      // Assuming postalCode is part of the address and needs to be extracted or is missing.
-      'postalCode': FormControl<String>(
-        value: '', // TODO: DTO does not have postalCode
-        validators: [Validators.required],
-      ),
       'address': FormControl<String>(
         value: store.address,
         validators: [Validators.required],
@@ -186,30 +183,27 @@ class _AdminPendingStoreDetailScreenState
         value: '${store.discount}%',
         validators: [Validators.required],
       ),
-      'addressDetail': FormControl<String>(
-        value: '',
-      ), // TODO: DTO does not have addressDetail
       'parkingDescription': FormControl<String>(
-        value: '',
-      ), // TODO: DTO does not have parkingDescription
+        value: '', // TODO: 서버 수정 필요!!
+      ),
       'representativeName': FormControl<String>(
-        value: '', // TODO: DTO does not have representativeName
+        value: store.ownerName,
         validators: [Validators.required],
       ),
       'representativePhone': FormControl<String>(
-        value: '', // TODO: DTO does not have representativePhone
+        value: store.ownerPhone,
         validators: [Validators.required],
       ),
       'businessNumber': FormControl<String>(
-        value: '', // TODO: DTO does not have businessNumber
+        value: store.businessNumber,
         validators: [Validators.required, Validators.minLength(10)],
       ),
       'bankName': FormControl<String?>(
-        value: null, // TODO: DTO does not have bankName
+        value: store.bankName,
         validators: [Validators.required],
       ),
       'accountNumber': FormControl<String>(
-        value: '', // TODO: DTO does not have accountNumber
+        value: store.bankAccount,
         validators: [Validators.required],
       ),
     });

@@ -37,6 +37,11 @@ mixin _$PendingStoreDto {
   double get longitude => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
+  String get ownerName => throw _privateConstructorUsedError;
+  String get ownerPhone => throw _privateConstructorUsedError;
+  String get businessNumber => throw _privateConstructorUsedError;
+  String get bankName => throw _privateConstructorUsedError;
+  String get bankAccount => throw _privateConstructorUsedError;
 
   /// Serializes this PendingStoreDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -71,6 +76,11 @@ abstract class $PendingStoreDtoCopyWith<$Res> {
     double longitude,
     double latitude,
     String address,
+    String ownerName,
+    String ownerPhone,
+    String businessNumber,
+    String bankName,
+    String bankAccount,
   });
 }
 
@@ -104,6 +114,11 @@ class _$PendingStoreDtoCopyWithImpl<$Res, $Val extends PendingStoreDto>
     Object? longitude = null,
     Object? latitude = null,
     Object? address = null,
+    Object? ownerName = null,
+    Object? ownerPhone = null,
+    Object? businessNumber = null,
+    Object? bankName = null,
+    Object? bankAccount = null,
   }) {
     return _then(
       _value.copyWith(
@@ -167,6 +182,26 @@ class _$PendingStoreDtoCopyWithImpl<$Res, $Val extends PendingStoreDto>
                 ? _value.address
                 : address // ignore: cast_nullable_to_non_nullable
                       as String,
+            ownerName: null == ownerName
+                ? _value.ownerName
+                : ownerName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ownerPhone: null == ownerPhone
+                ? _value.ownerPhone
+                : ownerPhone // ignore: cast_nullable_to_non_nullable
+                      as String,
+            businessNumber: null == businessNumber
+                ? _value.businessNumber
+                : businessNumber // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bankName: null == bankName
+                ? _value.bankName
+                : bankName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bankAccount: null == bankAccount
+                ? _value.bankAccount
+                : bankAccount // ignore: cast_nullable_to_non_nullable
+                      as String,
           )
           as $Val,
     );
@@ -198,6 +233,11 @@ abstract class _$$PendingStoreDtoImplCopyWith<$Res>
     double longitude,
     double latitude,
     String address,
+    String ownerName,
+    String ownerPhone,
+    String businessNumber,
+    String bankName,
+    String bankAccount,
   });
 }
 
@@ -230,6 +270,11 @@ class __$$PendingStoreDtoImplCopyWithImpl<$Res>
     Object? longitude = null,
     Object? latitude = null,
     Object? address = null,
+    Object? ownerName = null,
+    Object? ownerPhone = null,
+    Object? businessNumber = null,
+    Object? bankName = null,
+    Object? bankAccount = null,
   }) {
     return _then(
       _$PendingStoreDtoImpl(
@@ -293,6 +338,26 @@ class __$$PendingStoreDtoImplCopyWithImpl<$Res>
             ? _value.address
             : address // ignore: cast_nullable_to_non_nullable
                   as String,
+        ownerName: null == ownerName
+            ? _value.ownerName
+            : ownerName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ownerPhone: null == ownerPhone
+            ? _value.ownerPhone
+            : ownerPhone // ignore: cast_nullable_to_non_nullable
+                  as String,
+        businessNumber: null == businessNumber
+            ? _value.businessNumber
+            : businessNumber // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bankName: null == bankName
+            ? _value.bankName
+            : bankName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bankAccount: null == bankAccount
+            ? _value.bankAccount
+            : bankAccount // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -317,6 +382,11 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
     required this.longitude,
     required this.latitude,
     required this.address,
+    required this.ownerName,
+    required this.ownerPhone,
+    required this.businessNumber,
+    required this.bankName,
+    required this.bankAccount,
   }) : _imageUrl = imageUrl;
 
   factory _$PendingStoreDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -359,10 +429,20 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
   final double latitude;
   @override
   final String address;
+  @override
+  final String ownerName;
+  @override
+  final String ownerPhone;
+  @override
+  final String businessNumber;
+  @override
+  final String bankName;
+  @override
+  final String bankAccount;
 
   @override
   String toString() {
-    return 'PendingStoreDto(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus, longitude: $longitude, latitude: $latitude, address: $address)';
+    return 'PendingStoreDto(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus, longitude: $longitude, latitude: $latitude, address: $address, ownerName: $ownerName, ownerPhone: $ownerPhone, businessNumber: $businessNumber, bankName: $bankName, bankAccount: $bankAccount)';
   }
 
   @override
@@ -395,12 +475,22 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
                 other.longitude == longitude) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
-            (identical(other.address, address) || other.address == address));
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.ownerName, ownerName) ||
+                other.ownerName == ownerName) &&
+            (identical(other.ownerPhone, ownerPhone) ||
+                other.ownerPhone == ownerPhone) &&
+            (identical(other.businessNumber, businessNumber) ||
+                other.businessNumber == businessNumber) &&
+            (identical(other.bankName, bankName) ||
+                other.bankName == bankName) &&
+            (identical(other.bankAccount, bankAccount) ||
+                other.bankAccount == bankAccount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     storeId,
     storeName,
@@ -417,7 +507,12 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
     longitude,
     latitude,
     address,
-  );
+    ownerName,
+    ownerPhone,
+    businessNumber,
+    bankName,
+    bankAccount,
+  ]);
 
   /// Create a copy of PendingStoreDto
   /// with the given fields replaced by the non-null parameter values.
@@ -453,6 +548,11 @@ abstract class _PendingStoreDto implements PendingStoreDto {
     required final double longitude,
     required final double latitude,
     required final String address,
+    required final String ownerName,
+    required final String ownerPhone,
+    required final String businessNumber,
+    required final String bankName,
+    required final String bankAccount,
   }) = _$PendingStoreDtoImpl;
 
   factory _PendingStoreDto.fromJson(Map<String, dynamic> json) =
@@ -489,6 +589,16 @@ abstract class _PendingStoreDto implements PendingStoreDto {
   double get latitude;
   @override
   String get address;
+  @override
+  String get ownerName;
+  @override
+  String get ownerPhone;
+  @override
+  String get businessNumber;
+  @override
+  String get bankName;
+  @override
+  String get bankAccount;
 
   /// Create a copy of PendingStoreDto
   /// with the given fields replaced by the non-null parameter values.
