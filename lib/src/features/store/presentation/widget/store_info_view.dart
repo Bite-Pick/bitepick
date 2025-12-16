@@ -16,6 +16,7 @@ import 'package:magambell/src/features/map/presentation/widget/store_location_in
 import 'package:magambell/src/features/store/domain/entities/store_info_ui_data.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_favorite_icon.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class StoreInfoView extends ConsumerWidget {
@@ -67,7 +68,7 @@ class StoreInfoView extends ConsumerWidget {
               child: Center(child: Text('이미지 없음').textGray()),
             );
           }
-          return CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover);
+          return BaseNetworkImage(imageUrl: imageUrl);
         },
       ),
     );

@@ -7,6 +7,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
@@ -44,12 +45,7 @@ class StoreBiteBagView extends StatelessWidget {
 
   Widget _buildImages(List<GoodsImagesList> goodsImages) {
     final _goodsImages = goodsImages
-        .where(
-          (g) =>
-              g.id != null &&
-              g.goodsName != null &&
-              g.imageUrl != null,
-        )
+        .where((g) => g.id != null && g.goodsName != null && g.imageUrl != null)
         .toList();
     if (_goodsImages.isEmpty) {
       return Column(
@@ -69,21 +65,10 @@ class StoreBiteBagView extends StatelessWidget {
             .map(
               (goodsImage) => Column(
                 children: [
-                  CachedNetworkImage(
+                  BaseNetworkImage(
                     imageUrl: goodsImage.imageUrl!,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        height: 100.w,
-                        width: 100.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
+                    width: 100.w,
+                    height: 100.w,
                   ),
                   Gaps.h4,
                   Text(goodsImage.goodsName!),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/price_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/mg_text_rich.dart';
 
 class OrderInfoItem extends StatelessWidget {
@@ -28,18 +29,11 @@ class OrderInfoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CachedNetworkImage(
+        BaseNetworkImage(
           imageUrl: imageUrl,
-          imageBuilder: (context, imageProvider) => Container(
-            height: imageSize,
-            width: imageSize,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-            ),
-          ),
+          width: imageSize,
+          height: imageSize,
         ),
-        Gaps.w12,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

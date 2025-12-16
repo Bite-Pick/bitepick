@@ -122,12 +122,12 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
-                  disabled: isInvalidPickupTime,
+                  // disabled: isInvalidPickupTime,
                   onPressed: () async {
-                    if (isInvalidPickupTime) {
-                      ToastPresentor.error(context, "오늘 픽업시간이 종료되었습니다");
-                      return;
-                    }
+                    // if (isInvalidPickupTime) {
+                    //   ToastPresentor.error(context, "오늘 픽업시간이 종료되었습니다");
+                    //   return;
+                    // }
                     final _pickUpTime = await showTimeSelector(
                       now.isBefore(goods.startTime) ? goods.startTime : now,
                       goods.endTime,

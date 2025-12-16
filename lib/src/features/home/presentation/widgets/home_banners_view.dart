@@ -8,6 +8,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
 import 'package:magambell/src/features/banner/domain/constants.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class HomeBannersView extends ConsumerStatefulWidget {
@@ -37,12 +38,11 @@ class _HomeBannersViewState extends ConsumerState<HomeBannersView> {
           itemCount: bannerImages.length,
           itemBuilder: (_, index) {
             final bannerImage = bannerImages[index];
-            return CachedNetworkImage(
+            return BaseNetworkImage(
               imageUrl: bannerImage.url,
               width: BANNER_SIZE.width,
               height: BANNER_SIZE.height,
-              fit: BoxFit.cover,
-            ).clipRRect(all: MgRadius.sm);
+            );
           },
           pagination: swiperPageIndicator(),
         ).constrained(height: BANNER_SIZE.height);

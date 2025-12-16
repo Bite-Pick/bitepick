@@ -11,6 +11,7 @@ import 'package:magambell/src/features/admin/data/dtos/pending_store.dto.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/owner_info_section.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -117,19 +118,10 @@ class _AdminPendingStoreDetailScreenState
             ? Row(
                 children: widget.store.imageUrl
                     .map(
-                      (url) => CachedNetworkImage(
+                      (url) => BaseNetworkImage(
                         imageUrl: url,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 80.w,
-                          height: 80.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                        width: 80.w,
+                        height: 80.w,
                       ).margin(right: MgSizes.xs),
                     )
                     .toList(),

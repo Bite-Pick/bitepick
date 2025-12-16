@@ -9,6 +9,7 @@ import 'package:magambell/src/features/admin/presentation/admin_banner_list_scre
 import 'package:magambell/src/features/admin/presentation/mixins/admin_banner_image_upload_mixin.dart';
 import 'package:magambell/src/features/banner/domain/constants.dart';
 import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
@@ -44,11 +45,10 @@ class AdminBannerItem extends ConsumerWidget with AdminBannerImageUploadMixin {
             Gaps.w16,
             Stack(
               children: [
-                CachedNetworkImage(
+                BaseNetworkImage(
                   imageUrl: bannerImage.url,
                   width: BANNER_SIZE.width * 0.7,
                   height: BANNER_SIZE.height * 0.7,
-                  fit: BoxFit.cover,
                 ),
                 // 업로드 중 오버레이
                 if (isUploading)
