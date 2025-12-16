@@ -98,7 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   text: "카카오톡으로 로그인",
                   imagePath: R.ASSETS_IMAGES_KAKAO_LOGIN_PNG,
                   backgroundColor: MgColorScheme.primary,
-                  textColor: MgColorScheme.text,
+                  textColor: MgColorScheme.gray1,
                   isLoading: isLoading,
                 ),
                 _buildSocialLoginButton(

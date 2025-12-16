@@ -68,11 +68,11 @@ class OrderCautionScreen extends StatelessWidget {
     return Column(
           children: [
             Text(number)
-                .textColor(MgColorScheme.white)
+                .textColor(MgColorScheme.gray11)
                 .bold()
                 .margin(horizontal: MgSizes.md, vertical: MgSizes.xs)
                 .decorated(
-                  color: MgColorScheme.green,
+                  color: MgColorScheme.systemSuccess,
                   borderRadius: BorderRadius.circular(1000),
                 ),
             Gaps.h8,

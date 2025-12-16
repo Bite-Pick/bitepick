@@ -81,7 +81,7 @@ class _MgTextFieldState extends State<MgTextField> {
     if (!widget.enabled) return Colors.transparent;
 
     if (widget.error != null && widget.error!.isNotEmpty) {
-      return MgColorScheme.subpointRed;
+      return MgColorScheme.systemError;
     }
     // TODO: focus 되었을 때 색상 논의(_isFocused ? MgColorScheme.primary :)
     return _isFocused ? MgColorScheme.gray4 : MgColorScheme.gray7;
@@ -144,7 +144,7 @@ class _MgTextFieldState extends State<MgTextField> {
                   widget.inputStyle ??
                   const TextStyle(
                     fontSize: MgFontSize.md,
-                    color: MgColorScheme.text,
+                    color: MgColorScheme.gray1,
                   ),
               placeholder: widget.hintText,
               placeholderStyle: const TextStyle(
@@ -190,7 +190,7 @@ class _MgTextFieldState extends State<MgTextField> {
               child: Text(
                 widget.error!,
                 style: const TextStyle(
-                  color: MgColorScheme.subpointRed,
+                  color: MgColorScheme.systemError,
                   fontSize: fontSizeSm,
                 ),
               ),

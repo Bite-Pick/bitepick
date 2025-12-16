@@ -48,13 +48,13 @@ class MainScreen extends ConsumerWidget {
       currentIndex: navState.tabIndex,
       onTap: (index) =>
           ref.read(navigatorControllerProvider.notifier).changeTabIndex(index),
-      selectedItemColor: MgColorScheme.black,
+      selectedItemColor: MgColorScheme.gray0,
       unselectedItemColor: MgColorScheme.gray5,
       selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
       unselectedLabelStyle: Theme.of(
         context,
       ).textTheme.bodySmall!.copyWith(color: MgColorScheme.gray6),
-      backgroundColor: MgColorScheme.white,
+      backgroundColor: MgColorScheme.gray11,
       items: [
         _buildBottomNavigationBarItem(
           iconName: 'home',

@@ -57,8 +57,8 @@ class BankListBottomsheet extends StatelessWidget {
                                     width: 1,
                                   ),
                             color: isSelected
-                                ? MgColorScheme.lightest
-                                : MgColorScheme.white,
+                                ? MgColorScheme.primaryLightest
+                                : MgColorScheme.gray11,
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,

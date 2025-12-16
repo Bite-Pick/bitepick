@@ -30,7 +30,7 @@ class StoreBiteBagView extends StatelessWidget {
   Widget _buildNoticeItem() {
     return Row(
           children: [
-            BaseSvgIcon.speakerFilled(color: MgColorScheme.alertRed),
+            BaseSvgIcon.speakerFilled(color: MgColorScheme.systemError),
             Gaps.w8,
             Text("아래의 상품 중 랜덤으로 구성됩니다!"),
           ],

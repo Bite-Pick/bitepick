@@ -68,7 +68,7 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
                     "사진추가(${widget.images.length}/${ImageUploadSection.MAX_IMAGE_COUNT})",
                   )
                   .textColor(
-                    !canAddMore ? MgColorScheme.alertRed : MgColorScheme.gray4,
+                    !canAddMore ? MgColorScheme.systemError : MgColorScheme.gray4,
                   )
                   .regular(),
             ],
@@ -205,7 +205,7 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('이미지 선택 중 오류가 발생했습니다: $e'),
-            backgroundColor: MgColorScheme.subpointRed,
+            backgroundColor: MgColorScheme.systemError,
           ),
         );
       }

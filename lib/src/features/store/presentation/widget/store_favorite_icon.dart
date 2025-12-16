@@ -25,7 +25,7 @@ class StoreFavoriteIcon extends ConsumerWidget {
         asyncValue: favoriteAsync,
         builder: (isFavorite) {
           return (isFavorite == true)
-              ? BaseSvgIcon.heartFilled(color: MgColorScheme.navigationPrimary)
+              ? BaseSvgIcon.heartFilled(color: MgColorScheme.systemError)
               : BaseSvgIcon.heart();
         },
       ),

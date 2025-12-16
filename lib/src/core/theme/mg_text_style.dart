@@ -52,52 +52,36 @@ extension MgStyledText on Text {
 
   Text secondary() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.secondary,
+      color: MgColorScheme.oldSecondary,
     ),
   );
 
   Text red() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointRed,
+      color: MgColorScheme.systemError,
     ),
   );
 
   Text subpointGreen() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointGreen,
-    ),
-  );
-
-  Text subpointPink() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointPink,
+      color: MgColorScheme.systemSuccess,
     ),
   );
 
   Text textMain() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.text),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray1),
   );
 
   Text textGray() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray),
-  );
-
-  Text textInactive() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.inactive),
-  );
-
-  Text textHeader() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.headerText,
-    ),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray5),
   );
 
   Text white() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.white),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray11),
   );
 
   Text black() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.black),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray0),
   );
 
   Text textColor(Color? color) =>
@@ -270,42 +254,36 @@ extension MgStyledTextSpan on TextSpan {
 
   TextSpan secondary() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.secondary,
+      color: MgColorScheme.oldSecondary,
     ),
   );
 
   TextSpan subpointRed() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointRed,
+      color: MgColorScheme.systemError,
     ),
   );
 
   TextSpan subpointGreen() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointGreen,
-    ),
-  );
-
-  TextSpan subpointPink() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointPink,
+      color: MgColorScheme.systemSuccess,
     ),
   );
 
   TextSpan textMain() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.text),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray1),
   );
 
   TextSpan textGray() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray5),
   );
 
   TextSpan white() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.white),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray11),
   );
 
   TextSpan black() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.black),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray0),
   );
 
   TextSpan textColor(Color? color) =>

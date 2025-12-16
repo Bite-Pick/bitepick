@@ -36,7 +36,7 @@ class SearchAddressResultItem extends ConsumerWidget {
               onTap: () => controller.deleteAddress(address),
               child: BaseSvgIcon.trash(
                 size: 20,
-              ).color(MgColorScheme.subpointRed),
+              ).color(MgColorScheme.systemError),
             ),
           ] else if (address.isDefault) ...[
             Gaps.w12,

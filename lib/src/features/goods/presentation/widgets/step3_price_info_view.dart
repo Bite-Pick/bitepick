@@ -56,7 +56,7 @@ class Step3PriceInfoView extends ConsumerWidget {
                   )
                   .margin(vertical: MgSizes.sm, horizontal: MgSizes.size20)
                   .decorated(
-                    color: MgColorScheme.lightest,
+                    color: MgColorScheme.primaryLightest,
                     borderRadius: BorderRadius.circular(MgRadius.md),
                   )
                   .margin(top: MgSizes.xxl),

@@ -77,7 +77,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                   TabBar(
                     dividerColor: Colors.transparent,
                     controller: _tabController,
-                    labelColor: MgColorScheme.text,
+                    labelColor: MgColorScheme.gray1,
                     unselectedLabelColor: MgColorScheme.gray5,
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicator: UnderlineTabIndicator(
@@ -208,7 +208,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(color: MgColorScheme.white, child: _tabBar);
+    return Container(color: MgColorScheme.gray11, child: _tabBar);
   }
 
   @override

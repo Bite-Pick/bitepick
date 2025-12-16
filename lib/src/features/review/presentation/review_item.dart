@@ -48,7 +48,7 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
       padding: const EdgeInsets.all(MgSizes.md),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: MgColorScheme.divider, width: 1),
+          bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
         ),
       ),
       child: Column(

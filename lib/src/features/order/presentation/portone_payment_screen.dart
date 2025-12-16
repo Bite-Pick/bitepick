@@ -68,7 +68,7 @@ class _PortOnePaymentScreenState extends ConsumerState<PortOnePaymentScreen> {
             )
           : IamportPayment(
               initialChild: Container(
-                color: MgColorScheme.white,
+                color: MgColorScheme.gray11,
                 child: const Center(child: CircularProgressIndicator()),
               ),
               userCode: Environment.portoneIMPCode,

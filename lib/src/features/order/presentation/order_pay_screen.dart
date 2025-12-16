@@ -55,7 +55,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
 
     return BaseScaffold(
       appBar: BaseAppBar(),
-      backgroundColor: MgColorScheme.white,
+      backgroundColor: MgColorScheme.gray11,
       body: Column(
         children: [
           Expanded(
@@ -182,7 +182,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                 .bold()
                 .margin(vertical: MgSizes.size10, horizontal: MgSizes.md)
                 .constrained(width: double.infinity)
-                .colored(MgColorScheme.lightest),
+                .colored(MgColorScheme.primaryLightest),
             OrderInfoItem(
               imageUrl: mockImage,
               storeName: storeName,
@@ -254,7 +254,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
             _buildSectionTitle('총 결제 금액'),
             Text(
               '${totalPrice.toPrice()}원',
-            ).lg().bold().textColor(MgColorScheme.subpointRed),
+            ).lg().bold().textColor(MgColorScheme.systemError),
           ],
         ),
         _buildPriceRow(

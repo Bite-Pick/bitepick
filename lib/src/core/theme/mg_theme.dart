@@ -14,13 +14,13 @@ class MgTheme {
 
   ColorScheme get _colorScheme => ColorScheme.light(
     primary: MgColorScheme.primary,
-    secondary: MgColorScheme.secondary,
-    surface: MgColorScheme.background,
-    error: MgColorScheme.subpointRed,
-    onPrimary: MgColorScheme.black,
-    onSecondary: MgColorScheme.white,
-    onSurface: MgColorScheme.text,
-    onError: MgColorScheme.white,
+    secondary: MgColorScheme.oldSecondary,
+    surface: MgColorScheme.gray11,
+    error: MgColorScheme.systemError,
+    onPrimary: MgColorScheme.gray0,
+    onSecondary: MgColorScheme.gray11,
+    onSurface: MgColorScheme.gray1,
+    onError: MgColorScheme.gray11,
   );
 
   TextTheme get textTheme => mgTextTheme(_colorScheme);
@@ -31,11 +31,11 @@ class MgTheme {
       textTheme: textTheme,
       brightness: Brightness.light,
       colorScheme: _colorScheme,
-      scaffoldBackgroundColor: MgColorScheme.background,
+      scaffoldBackgroundColor: MgColorScheme.gray11,
       fontFamily: MgFontFamily.regular,
       useMaterial3: true,
       dividerTheme: const DividerThemeData(
-        color: MgColorScheme.divider,
+        color: MgColorScheme.gray8,
         thickness: 1,
         space: 1,
       ),
@@ -45,17 +45,17 @@ class MgTheme {
   // Semantic Color Scheme
   MgSemanticColorScheme get semanticColorScheme => const MgSemanticColorScheme(
     primary: MgColorScheme.primary,
-    secondary: MgColorScheme.secondary,
-    success: MgColorScheme.subpointGreen,
+    secondary: MgColorScheme.oldSecondary,
+    success: MgColorScheme.systemSuccess,
     warning: MgColorScheme.primary,
-    danger: MgColorScheme.subpointRed,
-    text: MgColorScheme.text,
-    subText: MgColorScheme.gray,
-    optionalText: MgColorScheme.inactive,
-    reversedText: MgColorScheme.white,
-    background: MgColorScheme.background,
-    surface: MgColorScheme.white,
-    divider: MgColorScheme.divider,
+    danger: MgColorScheme.systemError,
+    text: MgColorScheme.gray1,
+    subText: MgColorScheme.gray5,
+    optionalText: MgColorScheme.gray6,
+    reversedText: MgColorScheme.gray11,
+    background: MgColorScheme.gray11,
+    surface: MgColorScheme.gray11,
+    divider: MgColorScheme.gray8,
     border: MgColorScheme.gray7,
   );
 }

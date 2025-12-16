@@ -59,32 +59,32 @@ class MgButton extends StatelessWidget {
   }
 
   MgButton primary({bool whiteBg = false}) => copyWith(
-    backgroundColor: whiteBg ? MgColorScheme.white : MgColorScheme.primary,
-    textColor: whiteBg ? MgColorScheme.primary : MgColorScheme.text,
+    backgroundColor: whiteBg ? MgColorScheme.gray11 : MgColorScheme.primary,
+    textColor: whiteBg ? MgColorScheme.primary : MgColorScheme.gray1,
     borderColor: whiteBg ? MgColorScheme.primary : null,
   );
 
   MgButton secondary({bool whiteBg = false}) => copyWith(
-    backgroundColor: whiteBg ? MgColorScheme.white : MgColorScheme.secondary,
-    textColor: whiteBg ? MgColorScheme.secondary : MgColorScheme.white,
-    borderColor: whiteBg ? MgColorScheme.secondary : null,
+    backgroundColor: whiteBg ? MgColorScheme.gray11 : MgColorScheme.oldSecondary,
+    textColor: whiteBg ? MgColorScheme.oldSecondary : MgColorScheme.gray11,
+    borderColor: whiteBg ? MgColorScheme.oldSecondary : null,
   );
   MgButton transparent() => copyWith(
-    backgroundColor: MgColorScheme.white,
-    textColor: MgColorScheme.text,
+    backgroundColor: MgColorScheme.gray11,
+    textColor: MgColorScheme.gray1,
     borderColor: Colors.transparent,
   );
 
   MgButton asDisabled() => copyWith(
     backgroundColor: MgColorScheme.gray10,
-    textColor: MgColorScheme.white,
+    textColor: MgColorScheme.gray11,
     disabled: true,
   );
 
   MgButton red({bool light = false}) => copyWith(
-    backgroundColor: light ? MgColorScheme.white : MgColorScheme.alertRed,
-    textColor: light ? MgColorScheme.alertRed : MgColorScheme.white,
-    borderColor: light ? MgColorScheme.alertRed : Colors.transparent,
+    backgroundColor: light ? MgColorScheme.gray11 : MgColorScheme.systemError,
+    textColor: light ? MgColorScheme.systemError : MgColorScheme.gray11,
+    borderColor: light ? MgColorScheme.systemError : Colors.transparent,
   );
 
   MgButton gray() => copyWith(
@@ -103,7 +103,7 @@ class MgButton extends StatelessWidget {
         : backgroundColor;
     final effectiveTextColor = isDisabled
         ? MgColorScheme.gray4
-        : (textColor ?? MgColorScheme.text);
+        : (textColor ?? MgColorScheme.gray1);
 
     final child = Material(
       color: Colors.transparent,
@@ -161,7 +161,7 @@ class MgButton extends StatelessWidget {
       content: Text(text).md().bold(),
       backgroundColor: isActive
           ? MgColorScheme.primary
-          : MgColorScheme.disabled,
+          : MgColorScheme.primaryLightest,
       textColor: const Color(0xFF212121),
       height: 52,
       padding: const EdgeInsets.symmetric(vertical: 17),

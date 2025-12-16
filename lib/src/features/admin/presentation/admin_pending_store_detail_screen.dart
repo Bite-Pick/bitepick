@@ -64,7 +64,7 @@ class _AdminPendingStoreDetailScreenState
       formGroup: form,
       child: BaseScaffold(
         appBar: const BaseAppBar(title: Text("가입매장 검토")),
-        backgroundColor: MgColorScheme.white,
+        backgroundColor: MgColorScheme.gray11,
         body: Column(
           children: [
             Expanded(

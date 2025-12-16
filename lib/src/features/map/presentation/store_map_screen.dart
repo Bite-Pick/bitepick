@@ -95,7 +95,7 @@ class StoreMapScreen extends StatelessWidget {
         )
         .margin(all: MgSizes.md)
         .decorated(
-          color: MgColorScheme.white,
+          color: MgColorScheme.gray11,
           borderRadius: BorderRadius.circular(MgSizes.lg),
         )
         .margin(horizontal: MgSizes.md);

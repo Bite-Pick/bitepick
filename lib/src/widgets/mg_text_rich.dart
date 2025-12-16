@@ -11,8 +11,8 @@ class MgTextRich extends Text {
     super.textAlign,
     super.maxLines,
     bool? asterisk,
-  })  : _asterisk = asterisk ?? false,
-        super.rich(TextSpan(text: text));
+  }) : _asterisk = asterisk ?? false,
+       super.rich(TextSpan(text: text));
 
   MgTextRich.singleAsterisk(
     this.text, {
@@ -20,9 +20,9 @@ class MgTextRich extends Text {
     super.style,
     super.textAlign,
     super.maxLines,
-  })  : children = [],
-        _asterisk = true,
-        super.rich(TextSpan(text: text));
+  }) : children = [],
+       _asterisk = true,
+       super.rich(TextSpan(text: text));
 
   final List<InlineSpan> children;
   final String text;
@@ -33,15 +33,14 @@ class MgTextRich extends Text {
     TextStyle? style,
     TextAlign? textAlign,
     int? maxLines,
-  }) =>
-      MgTextRich(
-        children: children,
-        text: text,
-        asterisk: asterisk ?? _asterisk,
-        style: style ?? super.style,
-        textAlign: textAlign ?? super.textAlign,
-        maxLines: maxLines ?? super.maxLines,
-      );
+  }) => MgTextRich(
+    children: children,
+    text: text,
+    asterisk: asterisk ?? _asterisk,
+    style: style ?? super.style,
+    textAlign: textAlign ?? super.textAlign,
+    maxLines: maxLines ?? super.maxLines,
+  );
 
   MgTextRich asterisk() => copyWith(asterisk: true);
 
@@ -55,15 +54,14 @@ class MgTextRich extends Text {
           if (_asterisk) ...[
             WidgetSpan(
               alignment: PlaceholderAlignment.middle,
-              child: Text(" *")
-                  .copyWith(
-                    style: (style ?? const TextStyle()).copyWith(
-                      color: MgColorScheme.subpointRed,
-                      fontFamily: MgFontFamily.bold,
-                      fontWeight: FontWeight.w700,
-                      height: 0,
-                    ),
-                  ),
+              child: Text(" *").copyWith(
+                style: (style ?? const TextStyle()).copyWith(
+                  color: MgColorScheme.systemError,
+                  fontFamily: MgFontFamily.bold,
+                  fontWeight: FontWeight.w700,
+                  height: 0,
+                ),
+              ),
             ),
           ],
         ],
@@ -77,61 +75,42 @@ class MgTextRich extends Text {
   /* ******************* Color ******************* */
 
   MgTextRich primary() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          color: MgColorScheme.primary,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.primary),
+  );
 
   MgTextRich secondary() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          color: MgColorScheme.secondary,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      color: MgColorScheme.oldSecondary,
+    ),
+  );
 
   MgTextRich red() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          color: MgColorScheme.subpointRed,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      color: MgColorScheme.systemError,
+    ),
+  );
 
   MgTextRich subpointGreen() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          color: MgColorScheme.subpointGreen,
-        ),
-      );
-
-  MgTextRich subpointPink() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          color: MgColorScheme.subpointPink,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      color: MgColorScheme.systemSuccess,
+    ),
+  );
 
   MgTextRich textMain() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.text),
-      );
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray1),
+  );
 
   MgTextRich textGray() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray),
-      );
-
-  MgTextRich textInactive() => copyWith(
-        style:
-            (style ?? const TextStyle()).copyWith(color: MgColorScheme.inactive),
-      );
-
-  MgTextRich textHeader() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          color: MgColorScheme.headerText,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray5),
+  );
 
   MgTextRich white() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.white),
-      );
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray11),
+  );
 
   MgTextRich black() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.black),
-      );
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray0),
+  );
 
   MgTextRich textColor(Color? color) =>
       copyWith(style: (style ?? const TextStyle()).copyWith(color: color));
@@ -139,101 +118,101 @@ class MgTextRich extends Text {
   /* ******************* Weight ******************* */
 
   MgTextRich thin() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.thin,
-          fontWeight: FontWeight.w100,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.thin,
+      fontWeight: FontWeight.w100,
+    ),
+  );
 
   MgTextRich extraLight() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.extraLight,
-          fontWeight: FontWeight.w200,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.extraLight,
+      fontWeight: FontWeight.w200,
+    ),
+  );
 
   MgTextRich light() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.light,
-          fontWeight: FontWeight.w300,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.light,
+      fontWeight: FontWeight.w300,
+    ),
+  );
 
   MgTextRich regular() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.regular,
-          fontWeight: FontWeight.w400,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.regular,
+      fontWeight: FontWeight.w400,
+    ),
+  );
 
   MgTextRich medium() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.medium,
-          fontWeight: FontWeight.w500,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.medium,
+      fontWeight: FontWeight.w500,
+    ),
+  );
 
   MgTextRich semibold() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.semiBold,
-          fontWeight: FontWeight.w600,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.semiBold,
+      fontWeight: FontWeight.w600,
+    ),
+  );
 
   MgTextRich bold() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.bold,
-          fontWeight: FontWeight.w700,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.bold,
+      fontWeight: FontWeight.w700,
+    ),
+  );
 
   MgTextRich extraBold() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.extraBold,
-          fontWeight: FontWeight.w800,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.extraBold,
+      fontWeight: FontWeight.w800,
+    ),
+  );
 
   MgTextRich black900() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          fontFamily: MgFontFamily.black,
-          fontWeight: FontWeight.w900,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      fontFamily: MgFontFamily.black,
+      fontWeight: FontWeight.w900,
+    ),
+  );
 
   MgTextRich fontWeight(FontWeight? fontWeight) => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontWeight: fontWeight),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontWeight: fontWeight),
+  );
 
   /* ******************* Size ******************* */
 
   MgTextRich xxs() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xxs),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xxs),
+  );
 
   MgTextRich xs() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xs),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xs),
+  );
 
   MgTextRich sm() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.sm),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.sm),
+  );
 
   MgTextRich md() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.md),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.md),
+  );
 
   MgTextRich lg() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.lg),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.lg),
+  );
 
   MgTextRich xl() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xl),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xl),
+  );
 
   MgTextRich xxl() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xxl),
-      );
+    style: (style ?? const TextStyle()).copyWith(fontSize: MgFontSize.xxl),
+  );
 
   MgTextRich fontSize(double? size) =>
       copyWith(style: (style ?? const TextStyle()).copyWith(fontSize: size));
@@ -253,24 +232,24 @@ class MgTextRich extends Text {
   MgTextRich max(int maxLines) => copyWith(maxLines: maxLines);
 
   MgTextRich ellipsis() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          overflow: TextOverflow.ellipsis,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      overflow: TextOverflow.ellipsis,
+    ),
+  );
 
   MgTextRich underline() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          decoration: TextDecoration.underline,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      decoration: TextDecoration.underline,
+    ),
+  );
 
   MgTextRich lineThrough() => copyWith(
-        style: (style ?? const TextStyle()).copyWith(
-          decoration: TextDecoration.lineThrough,
-        ),
-      );
+    style: (style ?? const TextStyle()).copyWith(
+      decoration: TextDecoration.lineThrough,
+    ),
+  );
 
   MgTextRich letterSpacing([double? spacing = 0]) => copyWith(
-        style: (style ?? const TextStyle()).copyWith(letterSpacing: spacing),
-      );
+    style: (style ?? const TextStyle()).copyWith(letterSpacing: spacing),
+  );
 }

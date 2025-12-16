@@ -64,23 +64,23 @@ class MgTag extends StatelessWidget {
   }
 
   MgTag primary({bool light = false}) => copyWith(
-    color: light ? MgColorScheme.primary : MgColorScheme.white,
-    backgroundColor: light ? MgColorScheme.lightest : MgColorScheme.primary,
+    color: light ? MgColorScheme.primary : MgColorScheme.gray11,
+    backgroundColor: light ? MgColorScheme.primaryLightest : MgColorScheme.primary,
   );
 
   MgTag secondary({bool light = false}) => copyWith(
-    color: light ? MgColorScheme.secondary : MgColorScheme.white,
-    backgroundColor: light ? MgColorScheme.gray9 : MgColorScheme.secondary,
+    color: light ? MgColorScheme.oldSecondary : MgColorScheme.gray11,
+    backgroundColor: light ? MgColorScheme.gray9 : MgColorScheme.oldSecondary,
   );
 
   MgTag danger({bool light = false}) => copyWith(
-    color: light ? MgColorScheme.alertRed : MgColorScheme.white,
-    backgroundColor: light ? Colors.transparent : MgColorScheme.alertRed,
+    color: light ? MgColorScheme.systemError : MgColorScheme.gray11,
+    backgroundColor: light ? Colors.transparent : MgColorScheme.systemError,
   );
 
   MgTag gray({bool light = false}) => copyWith(
-    color: light ? MgColorScheme.gray : MgColorScheme.white,
-    backgroundColor: light ? MgColorScheme.gray9 : MgColorScheme.gray,
+    color: light ? MgColorScheme.gray5 : MgColorScheme.gray11,
+    backgroundColor: light ? MgColorScheme.gray9 : MgColorScheme.gray5,
   );
 
   MgTag transparent() => copyWith(backgroundColor: Colors.transparent);
