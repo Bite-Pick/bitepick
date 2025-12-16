@@ -112,10 +112,18 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
 
   Widget _buildBottomButton(GoodsDetailDto goods) {
     final now = DateTime.now();
-    final end = goods.endTime;
+    final endTime = goods.endTime;
+    final goodsStartTime = goods.startTime;
     final isInvalidPickupTime =
         (now.hour * 3600 + now.minute * 60 + now.second) >
-        (end.hour * 3600 + end.minute * 60 + end.second);
+        (endTime.hour * 3600 + endTime.minute * 60 + endTime.second);
+    final startTime =
+        (now.hour * 3600 + now.minute * 60 + now.second) >
+            (goodsStartTime.hour * 3600 +
+                goodsStartTime.minute * 60 +
+                goodsStartTime.second)
+        ? now
+        : goodsStartTime;
     return SafeArea(
           child: Row(
             children: [
@@ -131,14 +139,6 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                       ToastPresentor.error(context, "오늘 픽업시간이 종료되었습니다");
                       return;
                     }
-                    final _pickUpTime = await showTimeSelector(
-                      now.isBefore(goods.startTime) ? goods.startTime : now,
-                      goods.endTime,
-                    );
-                    if (_pickUpTime == null) {
-                      ToastPresentor.error(context, "픽업시간을 지정해주세요");
-                      return;
-                    }
                     // 주문 정보 저장
                     ref
                         .read(orderPayScreenControllerProvider.notifier)
@@ -151,7 +151,8 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                           totalPrice: goods.salePrice * count,
                           salePrice: goods.salePrice,
                           originalPrice: goods.originalPrice,
-                          pickupTime: _pickUpTime.toIso8601String(),
+                          startTime: startTime,
+                          endTime: endTime,
                         );
                     // 주문 확인 화면으로 이동
                     await const OrderCautionRoute().push(context);
@@ -164,33 +165,6 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         )
         .constrained(height: 85)
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md);
-  }
-
-  Future<DateTime?> showTimeSelector(
-    DateTime startTime,
-    DateTime endTime,
-  ) async {
-    DateTime? _time;
-    await TimePickerBottomSheet.show(
-      context,
-      initialTime: DateTime.now(),
-      startTime: startTime,
-      endTime: endTime,
-      onTimeSelected: (selected, error) {
-        if (error != null) {
-          // 이론상 disabled라 안 들어오지만, 안전망으로 남겨둘 수 있음
-          ToastPresentor.error(context, error);
-          return;
-        }
-
-        // 정상 처리
-        _time = selected;
-      },
-      // onSelectionChanged: (selected, errorMessage) {
-      //   if (errorMessage != null) ToastPresentor.error(context, errorMessage);
-      // },
-    );
-    return _time;
   }
 }
 

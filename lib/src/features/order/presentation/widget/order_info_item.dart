@@ -34,6 +34,7 @@ class OrderInfoItem extends StatelessWidget {
           width: imageSize,
           height: imageSize,
         ),
+        Gaps.w12,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -10,6 +10,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/order/presentation/portone_payment_screen.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_info_item.dart';
@@ -96,6 +97,10 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                       ToastPresentor.error(context, "모든 약관에 동의해 주세요");
                       return;
                     }
+                    if (pickupTime == null) {
+                      ToastPresentor.error(context, "픽업 시간을 설정해 주세요");
+                      return;
+                    }
 
                     // 주문 등록 (결제 전)
                     final merchantUid = await ref
@@ -143,7 +148,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     String storeAddress,
     int salePrice,
     int quantity,
-    String pickupTime,
+    String? pickupTime,
     int discount,
   ) {
     return Column(
@@ -154,6 +159,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         Gaps.h4,
         Text('픽업 예정 시간을 꼭 지켜서 와주세요').sm().textGray(),
         Gaps.h16,
+        // TODO: 픽업시간 드롭다운 추가
         _buildOrderItemCard(
           storeName: storeName,
           address: storeAddress,
@@ -172,17 +178,13 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     required int discount,
     required int price,
     required int count,
-    required String pickupTime,
+    String? pickupTime,
   }) {
     return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${pickupTime.convertTime()} 픽업 예정')
-                .md()
-                .bold()
-                .margin(vertical: MgSizes.size10, horizontal: MgSizes.md)
-                .constrained(width: double.infinity)
-                .colored(MgColorScheme.primaryLightest),
+            _buildPickupTimeSection(pickupTime),
+
             OrderInfoItem(
               imageUrl: mockImage,
               storeName: storeName,
@@ -200,6 +202,62 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           border: Border.all(color: MgColorScheme.gray8),
           borderRadius: BorderRadius.circular(MgRadius.md),
         );
+  }
+
+  Widget _buildPickupTimeSection(String? pickupTime) {
+    final orderInfo = ref.watch(orderPayScreenControllerProvider);
+    final startTime = orderInfo.startTime;
+    final endTime = orderInfo.endTime;
+    return GestureDetector(
+      onTap: () async {
+        final selectedTime = await showTimeSelector(startTime, endTime);
+        if (selectedTime != null) {
+          ref
+              .read(orderPayScreenControllerProvider.notifier)
+              .updatePickupTime(selectedTime.toIso8601String());
+        }
+      },
+      child: pickupTime == null
+          ? Row(
+              children: [
+                Expanded(child: Text('픽업시간 설정').sm().textGray()),
+                BaseSvgIcon.down(),
+              ],
+            ).padding(horizontal: MgSizes.lg, vertical: MgSizes.sm)
+          : Text('${pickupTime.convertTime()} 픽업 예정')
+                .md()
+                .bold()
+                .margin(vertical: MgSizes.size10, horizontal: MgSizes.md)
+                .constrained(width: double.infinity)
+                .colored(MgColorScheme.primaryLightest),
+    );
+  }
+
+  Future<DateTime?> showTimeSelector(
+    DateTime startTime,
+    DateTime endTime,
+  ) async {
+    DateTime? _time;
+    await TimePickerBottomSheet.show(
+      context,
+      initialTime: DateTime.now(),
+      startTime: startTime,
+      endTime: endTime,
+      onTimeSelected: (selected, error) {
+        if (error != null) {
+          // 이론상 disabled라 안 들어오지만, 안전망으로 남겨둘 수 있음
+          ToastPresentor.error(context, error);
+          return;
+        }
+
+        // 정상 처리
+        _time = selected;
+      },
+      // onSelectionChanged: (selected, errorMessage) {
+      //   if (errorMessage != null) ToastPresentor.error(context, errorMessage);
+      // },
+    );
+    return _time;
   }
 
   Widget _buildPriceRow(String label, int price) {

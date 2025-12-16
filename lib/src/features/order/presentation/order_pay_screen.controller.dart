@@ -24,7 +24,9 @@ class OrderInfo with _$OrderInfo {
     required int totalPrice,
     required int salePrice,
     required int originalPrice,
-    required String pickupTime,
+    required String? pickupTime,
+    required DateTime startTime,
+    required DateTime endTime,
     @Default(false) bool isSubmitting,
     String? merchantUid,
     String? error,
@@ -37,6 +39,7 @@ class OrderInfo with _$OrderInfo {
 class OrderPayScreenController extends _$OrderPayScreenController {
   @override
   OrderInfo build() {
+    final now = DateTime.now();
     return OrderInfo(
       storeId: '',
       goodsId: '',
@@ -45,8 +48,10 @@ class OrderPayScreenController extends _$OrderPayScreenController {
       totalPrice: 0,
       salePrice: 0,
       originalPrice: 0,
-      pickupTime: 'DateTime.now()',
+      pickupTime: null,
       storeName: '',
+      startTime: now,
+      endTime: now,
     );
   }
 
@@ -60,6 +65,8 @@ class OrderPayScreenController extends _$OrderPayScreenController {
     int? originalPrice,
     String? pickupTime,
     String? goodsId,
+    DateTime? startTime,
+    DateTime? endTime,
   }) {
     state = state.copyWith(
       storeId: storeId ?? state.storeId,
@@ -71,8 +78,13 @@ class OrderPayScreenController extends _$OrderPayScreenController {
       salePrice: salePrice ?? state.salePrice,
       originalPrice: originalPrice ?? state.originalPrice,
       pickupTime: pickupTime ?? state.pickupTime,
+      startTime: startTime ?? state.startTime,
+      endTime: endTime ?? state.endTime,
     );
   }
+
+  void updatePickupTime(String pickupTime) =>
+      state = state.copyWith(pickupTime: pickupTime);
 
   void updateQuantity(int quantity) {
     state = state.copyWith(
@@ -94,7 +106,7 @@ class OrderPayScreenController extends _$OrderPayScreenController {
             goodsId: state.goodsId,
             // paymentMethod: PaymentMethod.easyPay, // NOTE: 사용자 선택 값으로 변경
             // paymentsCompany: PaymentCompany.toss, // NOTE: 사용자 선택 값으로 변경
-            pickupTime: state.pickupTime,
+            pickupTime: state.pickupTime!,
             totalPrice: state.totalPrice,
             // request: memo,
           );
