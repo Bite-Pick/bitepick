@@ -231,9 +231,9 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Widget _buildAddressBottomSheet() {
     return MgBottomsheet(
       Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("선택가능한 주소").md().bold().margin(vertical: MgSizes.xl),
+          Text("픽업 가능한 지역").md().bold().margin(vertical: MgSizes.xl),
 
           // 서비스 가능 지역만 표시
           ...serviceAreas.map(
@@ -243,14 +243,15 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
             ),
           ),
 
-          Gaps.h16,
-          MgButton(
-            content: Text("주소 직접 설정하기").sm().textGray().regular(),
-            onPressed: () {
-              context.pop();
-              // SearchAddressRoute().push(context);
-            },
-          ).transparent(),
+          // Gaps.h16,
+          // MgButton(
+          // TODO: 서비스 지역 요청 추가 필요
+          //   content: Text("원하는 지역이 없어요").sm().textGray().regular(),
+          //   onPressed: () {
+          //     context.pop();
+          //     // SearchAddressRoute().push(context);
+          //   },
+          // ).transparent(),
         ],
       ).margin(all: MgSizes.md),
     );
