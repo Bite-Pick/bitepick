@@ -68,7 +68,7 @@ class StoreInfoView extends ConsumerWidget {
               child: Center(child: Text('이미지 없음').textGray()),
             );
           }
-          return BaseNetworkImage(imageUrl: imageUrl);
+          return BaseNetworkImage(imageUrl: imageUrl, borderRadius: 0);
         },
       ),
     );

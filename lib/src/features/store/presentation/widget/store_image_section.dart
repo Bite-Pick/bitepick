@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:magambell/src/constants/mg_sizes.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/widgets/base_network_image.dart';
 
 class StoreImageSection extends ConsumerWidget {
@@ -23,7 +25,7 @@ class StoreImageSection extends ConsumerWidget {
             imageUrl: image,
             width: imagesize,
             height: imagesize,
-          );
+          ).margin(right: MgSizes.xs);
         },
       ),
     );

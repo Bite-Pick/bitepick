@@ -38,10 +38,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(
-                  'assets/logo/logo_text.svg',
-                  width: 168.w,
-                ),
+                SvgPicture.asset('assets/logo/logo_text.svg', width: 168.w),
                 Gaps.h4,
                 Text("오늘의 한 입을 PICK! 하다").medium(),
               ],

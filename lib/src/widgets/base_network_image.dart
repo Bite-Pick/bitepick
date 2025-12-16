@@ -9,6 +9,7 @@ class BaseNetworkImage extends ConsumerWidget {
     required this.imageUrl,
     this.width=100,
     this.height=100,
+    this.borderRadius = MgRadius.sm,
     this.imageBuilder,
     this.placeholderBuilder,
     this.errorWidgetBuilder,
@@ -16,6 +17,7 @@ class BaseNetworkImage extends ConsumerWidget {
   final String imageUrl;
   final double width;
   final double height;
+  final double borderRadius;
   final ImageWidgetBuilder? imageBuilder;
   final PlaceholderWidgetBuilder? placeholderBuilder;
   final LoadingErrorWidgetBuilder? errorWidgetBuilder;
@@ -30,7 +32,7 @@ class BaseNetworkImage extends ConsumerWidget {
               height: width,
               width: height,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(MgRadius.sm),
+                borderRadius: BorderRadius.circular(borderRadius),
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
