@@ -6,7 +6,29 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$loginRoute, $defaultRoute];
+List<RouteBase> get $appRoutes => [$splashRoute, $loginRoute, $defaultRoute];
+
+RouteBase get $splashRoute => GoRouteData.$route(
+  path: '/splash',
+  name: 'SplashRoute',
+
+  factory: $SplashRouteExtension._fromState,
+);
+
+extension $SplashRouteExtension on SplashRoute {
+  static SplashRoute _fromState(GoRouterState state) => const SplashRoute();
+
+  String get location => GoRouteData.$location('/splash');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $loginRoute => GoRouteData.$route(
   path: '/auth',
@@ -185,12 +207,6 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       name: 'SearchRoute',
 
       factory: $SearchRouteExtension._fromState,
-    ),
-    GoRouteData.$route(
-      path: 'address/search',
-      name: 'SearchAddressRoute',
-
-      factory: $SearchAddressRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'order/caution',
@@ -393,22 +409,6 @@ extension $SearchRouteExtension on SearchRoute {
   static SearchRoute _fromState(GoRouterState state) => const SearchRoute();
 
   String get location => GoRouteData.$location('/search');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $SearchAddressRouteExtension on SearchAddressRoute {
-  static SearchAddressRoute _fromState(GoRouterState state) =>
-      const SearchAddressRoute();
-
-  String get location => GoRouteData.$location('/address/search');
 
   void go(BuildContext context) => context.go(location);
 

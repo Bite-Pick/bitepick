@@ -21,9 +21,9 @@ class ToastPresentor {
           return FlashBar(
             controller: controller,
             title: subtitle != null
-                ? Text(subtitle).sm().regular().textColor(MgColorScheme.text)
+                ? Text(subtitle).sm().regular().textColor(MgColorScheme.gray1)
                 : null,
-            content: Text(message).md().regular().textColor(MgColorScheme.text),
+            content: Text(message).md().regular().textColor(MgColorScheme.gray1),
             primaryAction: action,
             backgroundColor: MgColorScheme.primary,
             position: FlashPosition.top,
@@ -57,7 +57,7 @@ class ToastPresentor {
                 : null,
             content: Text(message).md().regular().textColor(Colors.white),
             primaryAction: action,
-            backgroundColor: MgColorScheme.subpointGreen,
+            backgroundColor: MgColorScheme.systemSuccess,
             position: FlashPosition.top,
             behavior: FlashBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -89,7 +89,7 @@ class ToastPresentor {
                 : null,
             content: Text(message).md().regular().textColor(Colors.white),
             primaryAction: action,
-            backgroundColor: MgColorScheme.subpointRed,
+            backgroundColor: MgColorScheme.systemError,
             position: FlashPosition.top,
             behavior: FlashBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -116,10 +116,10 @@ class ToastPresentor {
           return FlashBar(
             controller: controller,
             title: subtitle != null
-                ? Text(subtitle).sm().regular().textColor(MgColorScheme.text)
+                ? Text(subtitle).sm().regular().textColor(MgColorScheme.gray1)
                 : null,
-            content: Text(message).md().regular().textColor(MgColorScheme.text),
-            backgroundColor: MgColorScheme.lightest,
+            content: Text(message).md().regular().textColor(MgColorScheme.gray1),
+            backgroundColor: MgColorScheme.primaryLightest,
             position: FlashPosition.bottom,
             behavior: FlashBehavior.floating,
             shape: RoundedRectangleBorder(

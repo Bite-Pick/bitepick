@@ -57,7 +57,7 @@ class MgFormItem<T> extends ReactiveFormField<T, T> {
                            Text(
                              field.errorText ?? "",
                              style: MgTheme.getInstance().textTheme.bodySmall!
-                                 .copyWith(color: MgColorScheme.subpointRed),
+                                 .copyWith(color: MgColorScheme.systemError),
                            ),
                          ],
                        )

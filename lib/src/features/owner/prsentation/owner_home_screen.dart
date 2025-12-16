@@ -75,7 +75,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
             bottom: TabBar(
               dividerColor: Colors.transparent,
               controller: _tabController,
-              labelColor: MgColorScheme.text,
+              labelColor: MgColorScheme.gray1,
               unselectedLabelColor: MgColorScheme.gray5,
               indicatorSize: TabBarIndicatorSize.tab,
               indicator: UnderlineTabIndicator(
@@ -128,10 +128,10 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                   )
                 : changeSaleStatus(id, value);
           },
-          activeThumbColor: MgColorScheme.white,
-          activeTrackColor: MgColorScheme.subpointGreen, // 활성화(ON) 시 트랙 색상
-          inactiveThumbColor: MgColorScheme.white, // 비활성화 원 색
-          inactiveTrackColor: MgColorScheme.gray, // 비활성화(OFF) 시 트랙 색상
+          activeThumbColor: MgColorScheme.gray11,
+          activeTrackColor: MgColorScheme.systemSuccess, // 활성화(ON) 시 트랙 색상
+          inactiveThumbColor: MgColorScheme.gray11, // 비활성화 원 색
+          inactiveTrackColor: MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
           trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
         ),
       ],

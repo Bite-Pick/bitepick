@@ -136,7 +136,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
               )
               .margin(all: MgSizes.xs)
               .decorated(
-                color: MgColorScheme.lightest,
+                color: MgColorScheme.primaryLightest,
                 borderRadius: BorderRadius.circular(MgRadius.sm),
               ),
     );

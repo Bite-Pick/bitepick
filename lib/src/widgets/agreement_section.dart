@@ -93,7 +93,7 @@ class _AgreementSectionState extends State<AgreementSection> {
                 value: _allAgreed,
                 onChanged: (value) => _toggleAllAgreements(value ?? false),
                 activeColor: MgColorScheme.primary,
-                checkColor: MgColorScheme.white,
+                checkColor: MgColorScheme.gray11,
               ),
               Expanded(child: Text(widget.allAgreeText).md().bold()),
             ],
@@ -248,10 +248,10 @@ class _JoinAgreementSectionState extends State<JoinAgreementSection> {
       fillColor: WidgetStateProperty.resolveWith((states) {
         states.contains(WidgetState.selected)
             ? MgColorScheme.primary
-            : MgColorScheme.white; // 미체크 시 흰색
+            : MgColorScheme.gray11; // 미체크 시 흰색
       }),
       // 체크 아이콘 색
-      checkColor: MgColorScheme.white,
+      checkColor: MgColorScheme.gray11,
       // 테두리 색/두께
       side: BorderSide(
         color: isCheck ? MgColorScheme.primary : MgColorScheme.gray5,

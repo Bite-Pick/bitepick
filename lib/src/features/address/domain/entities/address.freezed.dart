@@ -21,6 +21,7 @@ Address _$AddressFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Address {
+  int get id => throw _privateConstructorUsedError;
   String get label => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
@@ -42,6 +43,7 @@ abstract class $AddressCopyWith<$Res> {
       _$AddressCopyWithImpl<$Res, Address>;
   @useResult
   $Res call({
+    int id,
     String label,
     String name,
     double latitude,
@@ -65,6 +67,7 @@ class _$AddressCopyWithImpl<$Res, $Val extends Address>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? label = null,
     Object? name = null,
     Object? latitude = null,
@@ -73,6 +76,10 @@ class _$AddressCopyWithImpl<$Res, $Val extends Address>
   }) {
     return _then(
       _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
             label: null == label
                 ? _value.label
                 : label // ignore: cast_nullable_to_non_nullable
@@ -108,6 +115,7 @@ abstract class _$$AddressImplCopyWith<$Res> implements $AddressCopyWith<$Res> {
   @override
   @useResult
   $Res call({
+    int id,
     String label,
     String name,
     double latitude,
@@ -130,6 +138,7 @@ class __$$AddressImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? label = null,
     Object? name = null,
     Object? latitude = null,
@@ -138,6 +147,10 @@ class __$$AddressImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$AddressImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
         label: null == label
             ? _value.label
             : label // ignore: cast_nullable_to_non_nullable
@@ -167,6 +180,7 @@ class __$$AddressImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AddressImpl implements _Address {
   const _$AddressImpl({
+    required this.id,
     required this.label,
     required this.name,
     required this.latitude,
@@ -177,6 +191,8 @@ class _$AddressImpl implements _Address {
   factory _$AddressImpl.fromJson(Map<String, dynamic> json) =>
       _$$AddressImplFromJson(json);
 
+  @override
+  final int id;
   @override
   final String label;
   @override
@@ -191,7 +207,7 @@ class _$AddressImpl implements _Address {
 
   @override
   String toString() {
-    return 'Address(label: $label, name: $name, latitude: $latitude, longitude: $longitude, isDefault: $isDefault)';
+    return 'Address(id: $id, label: $label, name: $name, latitude: $latitude, longitude: $longitude, isDefault: $isDefault)';
   }
 
   @override
@@ -199,6 +215,7 @@ class _$AddressImpl implements _Address {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AddressImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.latitude, latitude) ||
@@ -212,7 +229,7 @@ class _$AddressImpl implements _Address {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, label, name, latitude, longitude, isDefault);
+      Object.hash(runtimeType, id, label, name, latitude, longitude, isDefault);
 
   /// Create a copy of Address
   /// with the given fields replaced by the non-null parameter values.
@@ -230,6 +247,7 @@ class _$AddressImpl implements _Address {
 
 abstract class _Address implements Address {
   const factory _Address({
+    required final int id,
     required final String label,
     required final String name,
     required final double latitude,
@@ -239,6 +257,8 @@ abstract class _Address implements Address {
 
   factory _Address.fromJson(Map<String, dynamic> json) = _$AddressImpl.fromJson;
 
+  @override
+  int get id;
   @override
   String get label;
   @override

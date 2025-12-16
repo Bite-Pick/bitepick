@@ -74,7 +74,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
           //   child: const Text('임시완성'),
           // ),
         ),
-        backgroundColor: MgColorScheme.white,
+        backgroundColor: MgColorScheme.gray11,
         body: Column(
           children: [
             Expanded(
@@ -145,8 +145,8 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
               content: const Text('주소 찾기').bold(),
               borderRadius: MgRadius.md,
               borderColor: MgColorScheme.gray1,
-              backgroundColor: MgColorScheme.white,
-              textColor: MgColorScheme.text,
+              backgroundColor: MgColorScheme.gray11,
+              textColor: MgColorScheme.gray1,
             ),
           ],
         ),

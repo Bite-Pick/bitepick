@@ -25,7 +25,9 @@ mixin _$OrderInfo {
   int get totalPrice => throw _privateConstructorUsedError;
   int get salePrice => throw _privateConstructorUsedError;
   int get originalPrice => throw _privateConstructorUsedError;
-  String get pickupTime => throw _privateConstructorUsedError;
+  String? get pickupTime => throw _privateConstructorUsedError;
+  DateTime get startTime => throw _privateConstructorUsedError;
+  DateTime get endTime => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
   String? get merchantUid => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -51,7 +53,9 @@ abstract class $OrderInfoCopyWith<$Res> {
     int totalPrice,
     int salePrice,
     int originalPrice,
-    String pickupTime,
+    String? pickupTime,
+    DateTime startTime,
+    DateTime endTime,
     bool isSubmitting,
     String? merchantUid,
     String? error,
@@ -81,7 +85,9 @@ class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
     Object? totalPrice = null,
     Object? salePrice = null,
     Object? originalPrice = null,
-    Object? pickupTime = null,
+    Object? pickupTime = freezed,
+    Object? startTime = null,
+    Object? endTime = null,
     Object? isSubmitting = null,
     Object? merchantUid = freezed,
     Object? error = freezed,
@@ -120,10 +126,18 @@ class _$OrderInfoCopyWithImpl<$Res, $Val extends OrderInfo>
                 ? _value.originalPrice
                 : originalPrice // ignore: cast_nullable_to_non_nullable
                       as int,
-            pickupTime: null == pickupTime
+            pickupTime: freezed == pickupTime
                 ? _value.pickupTime
                 : pickupTime // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
+            startTime: null == startTime
+                ? _value.startTime
+                : startTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            endTime: null == endTime
+                ? _value.endTime
+                : endTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
             isSubmitting: null == isSubmitting
                 ? _value.isSubmitting
                 : isSubmitting // ignore: cast_nullable_to_non_nullable
@@ -160,7 +174,9 @@ abstract class _$$OrderInfoImplCopyWith<$Res>
     int totalPrice,
     int salePrice,
     int originalPrice,
-    String pickupTime,
+    String? pickupTime,
+    DateTime startTime,
+    DateTime endTime,
     bool isSubmitting,
     String? merchantUid,
     String? error,
@@ -189,7 +205,9 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
     Object? totalPrice = null,
     Object? salePrice = null,
     Object? originalPrice = null,
-    Object? pickupTime = null,
+    Object? pickupTime = freezed,
+    Object? startTime = null,
+    Object? endTime = null,
     Object? isSubmitting = null,
     Object? merchantUid = freezed,
     Object? error = freezed,
@@ -228,10 +246,18 @@ class __$$OrderInfoImplCopyWithImpl<$Res>
             ? _value.originalPrice
             : originalPrice // ignore: cast_nullable_to_non_nullable
                   as int,
-        pickupTime: null == pickupTime
+        pickupTime: freezed == pickupTime
             ? _value.pickupTime
             : pickupTime // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
+        startTime: null == startTime
+            ? _value.startTime
+            : startTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        endTime: null == endTime
+            ? _value.endTime
+            : endTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
         isSubmitting: null == isSubmitting
             ? _value.isSubmitting
             : isSubmitting // ignore: cast_nullable_to_non_nullable
@@ -262,6 +288,8 @@ class _$OrderInfoImpl extends _OrderInfo {
     required this.salePrice,
     required this.originalPrice,
     required this.pickupTime,
+    required this.startTime,
+    required this.endTime,
     this.isSubmitting = false,
     this.merchantUid,
     this.error,
@@ -284,7 +312,11 @@ class _$OrderInfoImpl extends _OrderInfo {
   @override
   final int originalPrice;
   @override
-  final String pickupTime;
+  final String? pickupTime;
+  @override
+  final DateTime startTime;
+  @override
+  final DateTime endTime;
   @override
   @JsonKey()
   final bool isSubmitting;
@@ -295,7 +327,7 @@ class _$OrderInfoImpl extends _OrderInfo {
 
   @override
   String toString() {
-    return 'OrderInfo(storeId: $storeId, goodsId: $goodsId, storeAddress: $storeAddress, storeName: $storeName, quantity: $quantity, totalPrice: $totalPrice, salePrice: $salePrice, originalPrice: $originalPrice, pickupTime: $pickupTime, isSubmitting: $isSubmitting, merchantUid: $merchantUid, error: $error)';
+    return 'OrderInfo(storeId: $storeId, goodsId: $goodsId, storeAddress: $storeAddress, storeName: $storeName, quantity: $quantity, totalPrice: $totalPrice, salePrice: $salePrice, originalPrice: $originalPrice, pickupTime: $pickupTime, startTime: $startTime, endTime: $endTime, isSubmitting: $isSubmitting, merchantUid: $merchantUid, error: $error)';
   }
 
   @override
@@ -319,6 +351,9 @@ class _$OrderInfoImpl extends _OrderInfo {
                 other.originalPrice == originalPrice) &&
             (identical(other.pickupTime, pickupTime) ||
                 other.pickupTime == pickupTime) &&
+            (identical(other.startTime, startTime) ||
+                other.startTime == startTime) &&
+            (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.isSubmitting, isSubmitting) ||
                 other.isSubmitting == isSubmitting) &&
             (identical(other.merchantUid, merchantUid) ||
@@ -338,6 +373,8 @@ class _$OrderInfoImpl extends _OrderInfo {
     salePrice,
     originalPrice,
     pickupTime,
+    startTime,
+    endTime,
     isSubmitting,
     merchantUid,
     error,
@@ -362,7 +399,9 @@ abstract class _OrderInfo extends OrderInfo {
     required final int totalPrice,
     required final int salePrice,
     required final int originalPrice,
-    required final String pickupTime,
+    required final String? pickupTime,
+    required final DateTime startTime,
+    required final DateTime endTime,
     final bool isSubmitting,
     final String? merchantUid,
     final String? error,
@@ -386,7 +425,11 @@ abstract class _OrderInfo extends OrderInfo {
   @override
   int get originalPrice;
   @override
-  String get pickupTime;
+  String? get pickupTime;
+  @override
+  DateTime get startTime;
+  @override
+  DateTime get endTime;
   @override
   bool get isSubmitting;
   @override

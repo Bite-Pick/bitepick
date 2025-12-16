@@ -57,7 +57,7 @@ class Step2TimeInfoView extends ConsumerWidget {
                     child: Text(
                       '픽업 종료 시간은 시작 시간보다 늦어야 합니다.',
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: MgColorScheme.subpointRed,
+                        color: MgColorScheme.systemError,
                       ),
                     ),
                   );
@@ -117,7 +117,7 @@ class Step2TimeInfoView extends ConsumerWidget {
                               : placeholder,
                         ).md().textColor(
                           control.value != null
-                              ? MgColorScheme.text
+                              ? MgColorScheme.gray1
                               : MgColorScheme.gray5,
                         ),
                   ),
@@ -130,7 +130,7 @@ class Step2TimeInfoView extends ConsumerWidget {
                 border: Border.all(
                   // TODO: 최초 값 기입전에는 error로 인식하지않도록
                   color: control.hasErrors && control.touched
-                      ? MgColorScheme.subpointRed
+                      ? MgColorScheme.systemError
                       : MgColorScheme.gray8,
                   width: 1,
                 ),

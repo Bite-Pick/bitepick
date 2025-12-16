@@ -57,7 +57,7 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
                  borderRadius: BorderRadius.circular(12),
                  border: Border.all(
                    color: field.errorText != null
-                       ? MgColorScheme.subpointRed
+                       ? MgColorScheme.systemError
                        : MgColorScheme.gray8,
                    width: 1,
                  ),
@@ -77,7 +77,7 @@ class MgSelect<T> extends ReactiveFormField<T, T> {
                          ).md().textColor(
                            value != null
                                ? MgColorScheme.gray1
-                               : MgColorScheme.text,
+                               : MgColorScheme.gray1,
                          ),
                    ),
                    BaseSvgIcon.down(size: 20),

@@ -56,7 +56,7 @@ class OrderRejectDialog extends StatelessWidget {
                       : null,
                   content: Text('주문 거절 완료').textColor(
                     selectedReason != null
-                        ? MgColorScheme.text
+                        ? MgColorScheme.gray1
                         : MgColorScheme.gray4,
                   ),
                   backgroundColor: selectedReason != null
@@ -89,7 +89,7 @@ class OrderRejectDialog extends StatelessWidget {
           vertical: MgSizes.md,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? MgColorScheme.lightest : Colors.white,
+          color: isSelected ? MgColorScheme.primaryLightest : Colors.white,
           borderRadius: BorderRadius.circular(MgRadius.sm),
           border: Border.all(
             color: isSelected ? MgColorScheme.primary : MgColorScheme.gray7,

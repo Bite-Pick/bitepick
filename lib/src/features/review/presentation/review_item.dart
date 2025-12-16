@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -10,6 +11,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
@@ -46,7 +48,7 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
       padding: const EdgeInsets.all(MgSizes.md),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: MgColorScheme.divider, width: 1),
+          bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
         ),
       ),
       child: Column(
@@ -82,11 +84,10 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
           Row(
             children: widget.review.imageUrls
                 .map(
-                  (imageUrl) => CachedNetworkImage(
-                    fit: BoxFit.cover,
+                  (imageUrl) => BaseNetworkImage(
                     imageUrl: imageUrl,
-                    height: 120,
-                    width: 120,
+                    height: 120.w,
+                    width: 120.w,
                   ),
                 )
                 .toList(),

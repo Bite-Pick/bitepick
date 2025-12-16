@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -77,8 +78,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BaseSvgIcon.homeLogo(size: MgSizes.xxxxl),
-            Gaps.h24,
+            Image.asset(R.ASSETS_LOGO_LOGO_LOGIN_PNG, width: 128.w),
+
+            Gaps.h52,
             if (isLoading) ...[const CircularProgressIndicator(), Gaps.h24],
             // MgButton(
             //   content: Text("dd"),
@@ -98,7 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   text: "카카오톡으로 로그인",
                   imagePath: R.ASSETS_IMAGES_KAKAO_LOGIN_PNG,
                   backgroundColor: MgColorScheme.primary,
-                  textColor: MgColorScheme.text,
+                  textColor: MgColorScheme.gray1,
                   isLoading: isLoading,
                 ),
                 _buildSocialLoginButton(

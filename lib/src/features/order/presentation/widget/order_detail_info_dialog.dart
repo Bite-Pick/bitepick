@@ -73,7 +73,7 @@ class OrderDetailInfoDialog extends ConsumerWidget {
                 "총 결제금액",
                 orderDetail.totalPrice.toPrice(),
                 style: MgTheme.getInstance().textTheme.bodyLarge!.copyWith(
-                  color: MgColorScheme.black,
+                  color: MgColorScheme.gray0,
                   fontWeight: FontWeight.bold,
                 ),
               ),

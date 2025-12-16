@@ -31,7 +31,7 @@ class StoreTags extends StatelessWidget {
         MgTag(
           prefix: BaseSvgIcon.time(
             size: MgSizes.md,
-            color: MgColorScheme.subpointRed,
+            color: MgColorScheme.systemError,
           ),
           child: Text('품절임박'),
         ).danger(light: true),

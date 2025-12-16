@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/widgets/base_network_image.dart';
 
 class StoreImageSection extends ConsumerWidget {
   const StoreImageSection(this.images, {super.key});
@@ -21,25 +21,11 @@ class StoreImageSection extends ConsumerWidget {
         itemBuilder: (context, index) {
           final image = images[index];
           if (image == "") return SizedBox.shrink();
-          return CachedNetworkImage(
+          return BaseNetworkImage(
             imageUrl: image,
-            imageBuilder: (context, imageProvider) => Container(
-              height: imagesize,
-              width: imagesize,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-              ),
-            ),
-            placeholder: (context, url) => Container(
-              height: imagesize,
-              width: imagesize,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ).margin(right: MgSizes.size8.w);
+            width: imagesize,
+            height: imagesize,
+          ).margin(right: MgSizes.xs);
         },
       ),
     );

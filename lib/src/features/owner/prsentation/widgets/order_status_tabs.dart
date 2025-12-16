@@ -68,7 +68,7 @@ class OrderStatusTabs extends ConsumerWidget {
           vertical: MgSizes.size10,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? MgColorScheme.text : Colors.transparent,
+          color: isSelected ? MgColorScheme.gray1 : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text('$label $count')

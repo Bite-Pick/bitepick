@@ -110,7 +110,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
                   height: MgSizes.size6,
                   width: maxWidth * (savedKg / maxKg),
                   decoration: BoxDecoration(
-                    color: MgColorScheme.subpointGreen,
+                    color: MgColorScheme.systemSuccess,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(MgRadius.md),
                       bottomLeft: Radius.circular(MgRadius.md),

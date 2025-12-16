@@ -115,7 +115,7 @@
 //         appBar: const BaseAppBar(
 //           title: Text("입점 매장정보 수정"),
 //         ),
-//         backgroundColor: MgColorScheme.white,
+//         backgroundColor: MgColorScheme.gray11,
 //         body: Column(
 //           children: [
 //             Expanded(

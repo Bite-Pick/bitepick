@@ -7,7 +7,7 @@ part of 'owner_join_info_screen.controller.dart';
 // **************************************************************************
 
 String _$ownerJoinInfoScreenControllerHash() =>
-    r'2307be0d425423d63f18dbf4b44e3e1958bc800c';
+    r'627ee54ed6b127f4b1e1222394e9ad57c9fac806';
 
 /// See also [OwnerJoinInfoScreenController].
 @ProviderFor(OwnerJoinInfoScreenController)

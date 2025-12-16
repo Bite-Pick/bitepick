@@ -299,7 +299,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                       child: Text(_periods[index])
                           .textColor(
                             isSelected
-                                ? MgColorScheme.text
+                                ? MgColorScheme.gray1
                                 : MgColorScheme.gray5,
                           )
                           .lg(),
@@ -326,7 +326,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                       child: Text(hour.toString())
                           .textColor(
                             isSelected
-                                ? MgColorScheme.text
+                                ? MgColorScheme.gray1
                                 : MgColorScheme.gray5,
                           )
                           .xl(),
@@ -353,7 +353,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                       child: Text(minute.toString().padLeft(2, '0'))
                           .textColor(
                             isSelected
-                                ? MgColorScheme.text
+                                ? MgColorScheme.gray1
                                 : MgColorScheme.gray5,
                           )
                           .xl(),

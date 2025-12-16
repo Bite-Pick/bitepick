@@ -1,40 +1,102 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/utils/shared_preference_store.dart';
+import 'package:magambell/src/features/address/domain/entities/address.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_screen.controller.g.dart';
+part 'home_screen.controller.freezed.dart';
 
-class HomeScreenState {
-  final bool onlyAvailable;
-  final SortType sortType;
-
-  const HomeScreenState({
-    this.onlyAvailable = true,
-    this.sortType = SortType.recentDesc,
-  });
-
-  HomeScreenState copyWith({
-    bool? onlyAvailable,
-    SortType? sortType,
-  }) {
-    return HomeScreenState(
-      onlyAvailable: onlyAvailable ?? this.onlyAvailable,
-      sortType: sortType ?? this.sortType,
-    );
-  }
+@freezed
+class HomeScreenControllerState with _$HomeScreenControllerState {
+  const factory HomeScreenControllerState({
+    required bool onlyAvailable,
+    required SortType sortType,
+    required Address defaultAddress,
+    required List<StoreListDTO> storeGoodsList,
+  }) = _HomeScreenControllerState;
 }
 
 @riverpod
 class HomeScreenController extends _$HomeScreenController {
+  late final SharedPreferenceStore _localStorage;
   @override
-  HomeScreenState build() {
-    return const HomeScreenState();
+  Future<HomeScreenControllerState> build() async {
+    _localStorage = SharedPreferenceStore();
+    final defaultAddress = await loadFromStorage();
+
+    // 초기값으로 상점 목록 로드
+    final storeGoods = await ref.watch(
+      storeGoodsListProvider(
+        latitude: defaultAddress.latitude ?? 37.5185663,
+        longitude: defaultAddress.longitude ?? 127.0230599,
+        onlyAvailable: false, // 초기값
+        sortType: SortType.recentDesc, // 초기값
+      ).future,
+    );
+
+    return HomeScreenControllerState(
+      onlyAvailable: false,
+      sortType: SortType.recentDesc,
+      defaultAddress: defaultAddress,
+      storeGoodsList: storeGoods,
+    );
   }
 
-  void toggleOnlyAvailable() {
-    state = state.copyWith(onlyAvailable: !state.onlyAvailable);
+  Future<void> toggleOnlyAvailable() async {
+    final currentData = state.value;
+    if (currentData == null) return;
+
+    // UI 즉시 업데이트
+    state = AsyncData(
+      currentData.copyWith(onlyAvailable: !currentData.onlyAvailable),
+    );
+
+    // 데이터 재로딩
+    await _reloadStoreGoods();
   }
 
-  void setSortType(SortType sortType) {
-    state = state.copyWith(sortType: sortType);
+  Future<void> setSortType(SortType sortType) async {
+    final currentData = state.value;
+    if (currentData == null) return;
+
+    // UI 즉시 업데이트
+    state = AsyncData(currentData.copyWith(sortType: sortType));
+
+    // 데이터 재로딩
+    await _reloadStoreGoods();
   }
+
+  Future<void> _reloadStoreGoods() async {
+    final currentData = state.value;
+    if (currentData == null) return;
+
+    try {
+      final storeGoods = await ref.read(
+        storeGoodsListProvider(
+          latitude: currentData.defaultAddress.latitude ?? 37.5185663,
+          longitude: currentData.defaultAddress.longitude ?? 127.0230599,
+          onlyAvailable: currentData.onlyAvailable,
+          sortType: currentData.sortType,
+        ).future,
+      );
+
+      state = AsyncData(currentData.copyWith(storeGoodsList: storeGoods));
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
+  }
+
+  Future<Address> loadFromStorage() async {
+    final defaultAddressId = await _localStorage.getAddress();
+    return serviceAreas.firstWhere(
+      (address) => address.id.toString() == defaultAddressId,
+      orElse: () => serviceAreas.first,
+    );
+  }
+
+  Future<void> saveToStorage(Address address) async =>
+      await _localStorage.setAddress(address.id);
 }

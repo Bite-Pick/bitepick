@@ -52,52 +52,36 @@ extension MgStyledText on Text {
 
   Text secondary() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.secondary,
+      color: MgColorScheme.oldSecondary,
     ),
   );
 
   Text red() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointRed,
+      color: MgColorScheme.systemError,
     ),
   );
 
   Text subpointGreen() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointGreen,
-    ),
-  );
-
-  Text subpointPink() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointPink,
+      color: MgColorScheme.systemSuccess,
     ),
   );
 
   Text textMain() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.text),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray1),
   );
 
   Text textGray() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray),
-  );
-
-  Text textInactive() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.inactive),
-  );
-
-  Text textHeader() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.headerText,
-    ),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray5),
   );
 
   Text white() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.white),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray11),
   );
 
   Text black() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.black),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray0),
   );
 
   Text textColor(Color? color) =>
@@ -270,42 +254,36 @@ extension MgStyledTextSpan on TextSpan {
 
   TextSpan secondary() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.secondary,
+      color: MgColorScheme.oldSecondary,
     ),
   );
 
   TextSpan subpointRed() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointRed,
+      color: MgColorScheme.systemError,
     ),
   );
 
   TextSpan subpointGreen() => copyWith(
     style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointGreen,
-    ),
-  );
-
-  TextSpan subpointPink() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(
-      color: MgColorScheme.subpointPink,
+      color: MgColorScheme.systemSuccess,
     ),
   );
 
   TextSpan textMain() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.text),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray1),
   );
 
   TextSpan textGray() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray5),
   );
 
   TextSpan white() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.white),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray11),
   );
 
   TextSpan black() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.black),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray0),
   );
 
   TextSpan textColor(Color? color) =>
@@ -430,8 +408,9 @@ extension MgStyledTextSpan on TextSpan {
 
 TextTheme mgTextTheme(ColorScheme colorScheme) {
   const family = 'Pretendard';
-  const ls = 0.0;
   const h = 1.5;
+  // 자간 -2.5% = fontSize * -0.025
+  const lsPercent = -0.025;
 
   final textColor = colorScheme.onSurface;
 
@@ -443,7 +422,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 32,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 32 * lsPercent, // -0.8
       color: textColor,
     ),
     displayMedium: TextStyle(
@@ -452,7 +431,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 28,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 28 * lsPercent, // -0.7
       color: textColor,
     ),
     displaySmall: TextStyle(
@@ -461,7 +440,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 24,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 24 * lsPercent, // -0.6
       color: textColor,
     ),
     headlineMedium: TextStyle(
@@ -470,7 +449,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 20,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 20 * lsPercent, // -0.5
       color: textColor,
     ),
     headlineSmall: TextStyle(
@@ -479,7 +458,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 18,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 18 * lsPercent, // -0.45
       color: textColor,
     ),
 
@@ -490,7 +469,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 16,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 16 * lsPercent, // -0.4
       color: textColor,
     ),
     titleMedium: TextStyle(
@@ -499,7 +478,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 14,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 14 * lsPercent, // -0.35
       color: textColor,
     ),
     titleSmall: TextStyle(
@@ -508,7 +487,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 12,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 12 * lsPercent, // -0.3
       color: textColor,
     ),
 
@@ -519,7 +498,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 16,
       fontWeight: FontWeight.w400,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 16 * lsPercent, // -0.4
       color: textColor,
     ),
     bodyMedium: TextStyle(
@@ -528,7 +507,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 14,
       fontWeight: FontWeight.w400,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 14 * lsPercent, // -0.35
       color: textColor,
     ),
     bodySmall: TextStyle(
@@ -537,7 +516,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 12,
       fontWeight: FontWeight.w400,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 12 * lsPercent, // -0.3
       color: textColor,
     ),
 
@@ -548,7 +527,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 14,
       fontWeight: FontWeight.w500,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 14 * lsPercent, // -0.35
       color: textColor,
     ),
     labelMedium: TextStyle(
@@ -557,7 +536,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 12,
       fontWeight: FontWeight.w500,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 12 * lsPercent, // -0.3
       color: textColor,
     ),
     labelSmall: TextStyle(
@@ -566,7 +545,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 11,
       fontWeight: FontWeight.w500,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 11 * lsPercent, // -0.275
       color: textColor,
     ),
   );

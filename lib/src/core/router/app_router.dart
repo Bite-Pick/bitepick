@@ -29,6 +29,7 @@ import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
@@ -54,7 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final notifier = _UserStateNotifier(ref);
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     navigatorKey: GlobalVariable.navigatorKey,
     debugLogDiagnostics: true,
     routes: $appRoutes,
@@ -63,13 +64,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// 하위 호환성을 위한 기존 appRouter (deprecated)
-final appRouter = GoRouter(
-  initialLocation: '/',
-  navigatorKey: GlobalVariable.navigatorKey,
-  debugLogDiagnostics: true,
-  routes: $appRoutes,
-);
+@TypedGoRoute<SplashRoute>(name: 'SplashRoute', path: '/splash')
+class SplashRoute extends GoRouteData {
+  const SplashRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SplashScreen();
+  }
+}
 
 @TypedGoRoute<LoginRoute>(
   name: 'LoginRoute',
@@ -122,10 +125,10 @@ class LoginRoute extends GoRouteData {
       routes: [TypedGoRoute<StoreMapRoute>(name: 'StoreMapRoute', path: 'map')],
     ),
     TypedGoRoute<SearchRoute>(name: 'SearchRoute', path: 'search'),
-    TypedGoRoute<SearchAddressRoute>(
-      name: 'SearchAddressRoute',
-      path: 'address/search',
-    ),
+    // TypedGoRoute<SearchAddressRoute>(
+    //   name: 'SearchAddressRoute',
+    //   path: 'address/search',
+    // ),
     TypedGoRoute<OrderCautionRoute>(
       name: 'OrderCautionRoute',
       path: 'order/caution',

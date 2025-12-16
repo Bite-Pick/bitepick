@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// 저장할거 있을때마다 키 추가해서 세이브
 class SharedPreferenceKey {
   /// 저장된 주소 목록
-  static const storedAddresses = 'storedAddresses';
+  static const defaultAddress = 'defaultAddress';
 
   /// Visual Logger 표시 여부
   static const showVisualLogger = 'showVisualLogger';
@@ -32,11 +32,11 @@ class SharedPreferenceStore {
   }
 
   /// 저장된 주소 목록 저장
-  Future<void> setAddresses(String addressesJson) async {
+  Future<void> setAddress(int defaultAddressId) async {
     try {
-      await (await _sharedPreferences).setString(
-        SharedPreferenceKey.storedAddresses,
-        addressesJson,
+      await (await _sharedPreferences).setInt(
+        SharedPreferenceKey.defaultAddress,
+        defaultAddressId,
       );
     } catch (e) {
       log('Error saving addresses to storage: $e');
@@ -44,10 +44,10 @@ class SharedPreferenceStore {
   }
 
   /// 저장된 주소 목록 가져오기
-  Future<String?> getAddresses() async {
+  Future<int?> getAddress() async {
     try {
-      return (await _sharedPreferences).getString(
-        SharedPreferenceKey.storedAddresses,
+      return (await _sharedPreferences).getInt(
+        SharedPreferenceKey.defaultAddress,
       );
     } catch (e) {
       log('Error loading addresses from storage: $e');
@@ -55,16 +55,16 @@ class SharedPreferenceStore {
     }
   }
 
-  /// 로그아웃시 토큰 삭제ㅌ
-  Future<void> clearAddresses() async {
-    try {
-      await (await _sharedPreferences).remove(
-        SharedPreferenceKey.storedAddresses,
-      );
-    } catch (e) {
-      log('Error clearing addresses from storage: $e');
-    }
-  }
+  /// 주소 삭제
+  // Future<void> clearAddress() async {
+  //   try {
+  //     await (await _sharedPreferences).remove(
+  //       SharedPreferenceKey.defaultAddress,
+  //     );
+  //   } catch (e) {
+  //     log('Error clearing addresses from storage: $e');
+  //   }
+  // }
 
   /// 모든 데이터 삭제
   Future<void> clearAll() async {

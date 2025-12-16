@@ -216,8 +216,8 @@ extension BaseSvgIconExtension on BaseSvgIcon {
   }
 
   BaseSvgIcon primary() => copyWith(color: MgColorScheme.primary);
-  BaseSvgIcon secondary() => copyWith(color: MgColorScheme.secondary);
+  BaseSvgIcon secondary() => copyWith(color: MgColorScheme.oldSecondary);
   BaseSvgIcon gray() => copyWith(color: MgColorScheme.gray5);
-  BaseSvgIcon white() => copyWith(color: MgColorScheme.white);
-  BaseSvgIcon black() => copyWith(color: MgColorScheme.black);
+  BaseSvgIcon white() => copyWith(color: MgColorScheme.gray11);
+  BaseSvgIcon black() => copyWith(color: MgColorScheme.gray0);
 }

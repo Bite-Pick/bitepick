@@ -163,7 +163,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
               .decorated(
                 borderRadius: BorderRadius.circular(MgRadius.md),
                 color: isSelected
-                    ? MgColorScheme.lightest
+                    ? MgColorScheme.primaryLightest
                     : MgColorScheme.gray10,
               ),
     );
