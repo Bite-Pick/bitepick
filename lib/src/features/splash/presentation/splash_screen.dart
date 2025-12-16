@@ -1,26 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/src/widgets/base_appbar.dart';
-import 'package:magambell/src/widgets/base_scaffold.dart';
-import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_textfield.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:magambell/src/constants/assets.dart';
+import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 2), () {
+      DefaultRoute().go(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      appBar: BaseAppBar(title: const Text('Magambell')),
-      body: Center(
-        child: Column(
-          children: [
-            MgTextField(label: "이메일"),
-            MgButton(
-              onPressed: () {},
-              content: Text("홈으로 이동"),
-            ).primary(whiteBg: true),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: MgColorScheme.primary,
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/logo/logo_text.svg',
+                  width: 168.w,
+                ),
+                Gaps.h4,
+                Text("오늘의 한 입을 PICK! 하다").medium(),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 70,
+            right: 48,
+            child: Image.asset(R.ASSETS_LOGO_LOGO_SPLASH_PNG, width: 256.w),
+          ),
+        ],
       ),
     );
   }

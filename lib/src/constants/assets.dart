@@ -316,6 +316,13 @@ class R {
 
   static const String ASSETS_LOGO_LOGO_PNG = 'assets/logo/logo.png';
 
+  static const String ASSETS_LOGO_LOGO_LOGIN_PNG = 'assets/logo/logo_login.png';
+
+  static const String ASSETS_LOGO_LOGO_SPLASH_PNG =
+      'assets/logo/logo_splash.png';
+
+  static const String ASSETS_LOGO_LOGO_TEXT_SVG = 'assets/logo/logo_text.svg';
+
   static const String ASSETS_LOGO_TMP_LOGO_PNG = 'assets/logo/tmp_logo.png';
 
   static const String ASSETS_LOTTIE_SUCCESS_JSON = 'assets/lottie/success.json';

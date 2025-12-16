@@ -408,8 +408,9 @@ extension MgStyledTextSpan on TextSpan {
 
 TextTheme mgTextTheme(ColorScheme colorScheme) {
   const family = 'Pretendard';
-  const ls = 0.0;
   const h = 1.5;
+  // 자간 -2.5% = fontSize * -0.025
+  const lsPercent = -0.025;
 
   final textColor = colorScheme.onSurface;
 
@@ -421,7 +422,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 32,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 32 * lsPercent, // -0.8
       color: textColor,
     ),
     displayMedium: TextStyle(
@@ -430,7 +431,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 28,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 28 * lsPercent, // -0.7
       color: textColor,
     ),
     displaySmall: TextStyle(
@@ -439,7 +440,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 24,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 24 * lsPercent, // -0.6
       color: textColor,
     ),
     headlineMedium: TextStyle(
@@ -448,7 +449,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 20,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 20 * lsPercent, // -0.5
       color: textColor,
     ),
     headlineSmall: TextStyle(
@@ -457,7 +458,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 18,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 18 * lsPercent, // -0.45
       color: textColor,
     ),
 
@@ -468,7 +469,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 16,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 16 * lsPercent, // -0.4
       color: textColor,
     ),
     titleMedium: TextStyle(
@@ -477,7 +478,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 14,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 14 * lsPercent, // -0.35
       color: textColor,
     ),
     titleSmall: TextStyle(
@@ -486,7 +487,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 12,
       fontWeight: FontWeight.w700,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 12 * lsPercent, // -0.3
       color: textColor,
     ),
 
@@ -497,7 +498,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 16,
       fontWeight: FontWeight.w400,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 16 * lsPercent, // -0.4
       color: textColor,
     ),
     bodyMedium: TextStyle(
@@ -506,7 +507,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 14,
       fontWeight: FontWeight.w400,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 14 * lsPercent, // -0.35
       color: textColor,
     ),
     bodySmall: TextStyle(
@@ -515,7 +516,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 12,
       fontWeight: FontWeight.w400,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 12 * lsPercent, // -0.3
       color: textColor,
     ),
 
@@ -526,7 +527,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 14,
       fontWeight: FontWeight.w500,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 14 * lsPercent, // -0.35
       color: textColor,
     ),
     labelMedium: TextStyle(
@@ -535,7 +536,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 12,
       fontWeight: FontWeight.w500,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 12 * lsPercent, // -0.3
       color: textColor,
     ),
     labelSmall: TextStyle(
@@ -544,7 +545,7 @@ TextTheme mgTextTheme(ColorScheme colorScheme) {
       fontSize: 11,
       fontWeight: FontWeight.w500,
       height: h,
-      letterSpacing: ls,
+      letterSpacing: 11 * lsPercent, // -0.275
       color: textColor,
     ),
   );

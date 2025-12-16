@@ -6,7 +6,29 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$loginRoute, $defaultRoute];
+List<RouteBase> get $appRoutes => [$splashRoute, $loginRoute, $defaultRoute];
+
+RouteBase get $splashRoute => GoRouteData.$route(
+  path: '/splash',
+  name: 'SplashRoute',
+
+  factory: $SplashRouteExtension._fromState,
+);
+
+extension $SplashRouteExtension on SplashRoute {
+  static SplashRoute _fromState(GoRouterState state) => const SplashRoute();
+
+  String get location => GoRouteData.$location('/splash');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $loginRoute => GoRouteData.$route(
   path: '/auth',
