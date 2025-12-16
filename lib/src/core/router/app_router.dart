@@ -125,10 +125,10 @@ class LoginRoute extends GoRouteData {
       routes: [TypedGoRoute<StoreMapRoute>(name: 'StoreMapRoute', path: 'map')],
     ),
     TypedGoRoute<SearchRoute>(name: 'SearchRoute', path: 'search'),
-    TypedGoRoute<SearchAddressRoute>(
-      name: 'SearchAddressRoute',
-      path: 'address/search',
-    ),
+    // TypedGoRoute<SearchAddressRoute>(
+    //   name: 'SearchAddressRoute',
+    //   path: 'address/search',
+    // ),
     TypedGoRoute<OrderCautionRoute>(
       name: 'OrderCautionRoute',
       path: 'order/caution',

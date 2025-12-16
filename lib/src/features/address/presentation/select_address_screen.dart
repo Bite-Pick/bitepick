@@ -10,6 +10,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -72,8 +73,8 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
             onTap: () async {
               setState(() => _selectedIndex = index);
               await ref
-                  .read(searchAddressScreenControllerProvider.notifier)
-                  .selectFromSaved(address);
+                  .read(homeScreenControllerProvider.notifier)
+                  .saveToStorage(address);
             },
             child:
                 Row(

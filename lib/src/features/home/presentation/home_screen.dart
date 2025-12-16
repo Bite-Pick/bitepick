@@ -35,71 +35,53 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final HomeScreenState(:onlyAvailable, :sortType) = ref.watch(
-      homeScreenControllerProvider,
-    );
-    final defaultAddress = ref
-        .watch(searchAddressScreenControllerProvider)
-        .addresses
-        .where((a) => a.isDefault)
-        .firstOrNull;
+    final controllerStateAsync = ref.watch(homeScreenControllerProvider);
 
-    final storeGoodsAsync = ref.watch(
-      storeGoodsListProvider(
-        // latitude: 37.321021, // TODO: 기본 위치 설정 필요
-        // longitude: 127.1098513,
-        latitude: defaultAddress?.latitude ?? 37.5185663,
-        longitude: defaultAddress?.longitude ?? 127.0230599,
-        onlyAvailable: onlyAvailable,
-        sortType: sortType,
-      ),
-    );
-    return SafeArea(
-      // TODO: BaseCustomScrollView refact
-      child: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            floating: true,
-            delegate: _HomeAppBar(serviceAreas, defaultAddress),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              MgAsyncAnimatedSwitcher<List<StoreListDTO>>(
-                asyncValue: storeGoodsAsync,
-                builder: (goods) => Column(
-                  children: [
-                    HomeBannersView(),
-                    HomeUpdateBanner(),
-                    _buildFilterSection(onlyAvailable, sortType),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: goods.length,
-                      separatorBuilder: (context, index) => Gaps.h16,
-                      itemBuilder: (context, index) {
-                        final item = goods[index];
-                        return HomeGoodsItem(goods: item.toHomeGoodsItem())
-                            .margin(bottom: MgSizes.xs)
-                            .margin(horizontal: MgSizes.md);
-                      },
-                    ),
-                  ],
+    return MgAsyncAnimatedSwitcher(
+      asyncValue: controllerStateAsync,
+      builder: (controllerState) {
+        return SafeArea(
+          // TODO: BaseCustomScrollView refact
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                floating: true,
+                delegate: _HomeAppBar(
+                  serviceAreas,
+                  controllerState.defaultAddress,
                 ),
-                emptyBuilder: () => HomeUnsupportedAreaView.openRequest(
-                  onPressed: () {
-                    ref
-                        .read(storeRepositoryProvider)
-                        .requestOpenRegion(region: defaultAddress?.label ?? "");
-                  },
-                ), // TODO[open]: flag에 따라 다른 화면
-                loadingBuilder: () =>
-                    const Center(child: CircularProgressIndicator()),
               ),
-            ]),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Column(
+                    children: [
+                      HomeBannersView(),
+                      HomeUpdateBanner(),
+                      _buildFilterSection(
+                        controllerState.onlyAvailable,
+                        controllerState.sortType,
+                      ),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controllerState.storeGoodsList.length,
+                        separatorBuilder: (context, index) => Gaps.h16,
+                        itemBuilder: (context, index) {
+                          final item = controllerState.storeGoodsList[index];
+                          return HomeGoodsItem(goods: item.toHomeGoodsItem())
+                              .margin(bottom: MgSizes.xs)
+                              .margin(horizontal: MgSizes.md);
+                        },
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -214,14 +196,17 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
-        _buildAddress(),
-        // TODO: 런칭 이후 추가
-        //  _buildSearch(),
-      ],
-    ).margin(vertical: MgSizes.md).margin(horizontal: MgSizes.md).colored(MgColorScheme.gray11);
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
+            _buildAddress(),
+            // TODO: 런칭 이후 추가
+            //  _buildSearch(),
+          ],
+        )
+        .margin(vertical: MgSizes.md)
+        .margin(horizontal: MgSizes.md)
+        .colored(MgColorScheme.gray11);
   }
 
   // TODO[tooltip]: 주소 변경시 tooltip 표시
@@ -263,7 +248,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
             content: Text("주소 직접 설정하기").sm().textGray().regular(),
             onPressed: () {
               context.pop();
-              SearchAddressRoute().push(context);
+              // SearchAddressRoute().push(context);
             },
           ).transparent(),
         ],
@@ -277,11 +262,8 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   }) {
     return GestureDetector(
       onTap: () {
-        // 서비스 가능 지역: 임시 적용만 (저장하지 않음)
-        ref
-            .read(searchAddressScreenControllerProvider.notifier)
-            .selectTemporaryAddress(address);
-        Navigator.of(context).pop();
+        ref.read(homeScreenControllerProvider.notifier).saveToStorage(address);
+        context.pop();
       },
       child:
           Row(

@@ -209,12 +209,6 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $SearchRouteExtension._fromState,
     ),
     GoRouteData.$route(
-      path: 'address/search',
-      name: 'SearchAddressRoute',
-
-      factory: $SearchAddressRouteExtension._fromState,
-    ),
-    GoRouteData.$route(
       path: 'order/caution',
       name: 'OrderCautionRoute',
 
@@ -415,22 +409,6 @@ extension $SearchRouteExtension on SearchRoute {
   static SearchRoute _fromState(GoRouterState state) => const SearchRoute();
 
   String get location => GoRouteData.$location('/search');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $SearchAddressRouteExtension on SearchAddressRoute {
-  static SearchAddressRoute _fromState(GoRouterState state) =>
-      const SearchAddressRoute();
-
-  String get location => GoRouteData.$location('/address/search');
 
   void go(BuildContext context) => context.go(location);
 
