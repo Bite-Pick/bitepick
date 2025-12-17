@@ -85,9 +85,9 @@ class PreSignedImageRepository {
     void Function(int currentIndex, int total, int sent, int totalBytes)?
     onProgress,
   }) async {
-    // 이미 업로드된 이미지(uploadedUrl이 있고 file이 null인 경우)는 제외
     final imagesToUpload = localImages
-        .where((img) => img.file != null && img.uploadedUrl == null)
+        .whereType<LocalImage>()
+        .where((img) => img.file != null)
         .toList();
 
     if (imagesToUpload.isEmpty) {
@@ -100,8 +100,7 @@ class PreSignedImageRepository {
     for (var i = 0; i < imagesToUpload.length; i++) {
       final localImage = imagesToUpload[i];
       final presignedUrl = presignedUrls.firstWhere(
-        (url) =>
-            url.id == localImage.id + 1, // TODO[image]:저장할때부터 0번째 Index로 넣기
+        (url) => url.id == localImage.id,
         orElse: () =>
             throw Exception('Presigned URL not found for ${localImage.key}'),
       );
