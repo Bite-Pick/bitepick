@@ -21,6 +21,7 @@ mixin _$HomeScreenControllerState {
   SortType get sortType => throw _privateConstructorUsedError;
   Address get defaultAddress => throw _privateConstructorUsedError;
   List<StoreListDTO> get storeGoodsList => throw _privateConstructorUsedError;
+  List<Address> get serviceAddresses => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
@@ -41,6 +42,7 @@ abstract class $HomeScreenControllerStateCopyWith<$Res> {
     SortType sortType,
     Address defaultAddress,
     List<StoreListDTO> storeGoodsList,
+    List<Address> serviceAddresses,
   });
 
   $AddressCopyWith<$Res> get defaultAddress;
@@ -68,6 +70,7 @@ class _$HomeScreenControllerStateCopyWithImpl<
     Object? sortType = null,
     Object? defaultAddress = null,
     Object? storeGoodsList = null,
+    Object? serviceAddresses = null,
   }) {
     return _then(
       _value.copyWith(
@@ -87,6 +90,10 @@ class _$HomeScreenControllerStateCopyWithImpl<
                 ? _value.storeGoodsList
                 : storeGoodsList // ignore: cast_nullable_to_non_nullable
                       as List<StoreListDTO>,
+            serviceAddresses: null == serviceAddresses
+                ? _value.serviceAddresses
+                : serviceAddresses // ignore: cast_nullable_to_non_nullable
+                      as List<Address>,
           )
           as $Val,
     );
@@ -117,6 +124,7 @@ abstract class _$$HomeScreenControllerStateImplCopyWith<$Res>
     SortType sortType,
     Address defaultAddress,
     List<StoreListDTO> storeGoodsList,
+    List<Address> serviceAddresses,
   });
 
   @override
@@ -145,6 +153,7 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
     Object? sortType = null,
     Object? defaultAddress = null,
     Object? storeGoodsList = null,
+    Object? serviceAddresses = null,
   }) {
     return _then(
       _$HomeScreenControllerStateImpl(
@@ -164,6 +173,10 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
             ? _value._storeGoodsList
             : storeGoodsList // ignore: cast_nullable_to_non_nullable
                   as List<StoreListDTO>,
+        serviceAddresses: null == serviceAddresses
+            ? _value._serviceAddresses
+            : serviceAddresses // ignore: cast_nullable_to_non_nullable
+                  as List<Address>,
       ),
     );
   }
@@ -177,7 +190,9 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     required this.sortType,
     required this.defaultAddress,
     required final List<StoreListDTO> storeGoodsList,
-  }) : _storeGoodsList = storeGoodsList;
+    required final List<Address> serviceAddresses,
+  }) : _storeGoodsList = storeGoodsList,
+       _serviceAddresses = serviceAddresses;
 
   @override
   final bool onlyAvailable;
@@ -193,9 +208,18 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     return EqualUnmodifiableListView(_storeGoodsList);
   }
 
+  final List<Address> _serviceAddresses;
+  @override
+  List<Address> get serviceAddresses {
+    if (_serviceAddresses is EqualUnmodifiableListView)
+      return _serviceAddresses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_serviceAddresses);
+  }
+
   @override
   String toString() {
-    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, defaultAddress: $defaultAddress, storeGoodsList: $storeGoodsList)';
+    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, defaultAddress: $defaultAddress, storeGoodsList: $storeGoodsList, serviceAddresses: $serviceAddresses)';
   }
 
   @override
@@ -212,6 +236,10 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
             const DeepCollectionEquality().equals(
               other._storeGoodsList,
               _storeGoodsList,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._serviceAddresses,
+              _serviceAddresses,
             ));
   }
 
@@ -222,6 +250,7 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     sortType,
     defaultAddress,
     const DeepCollectionEquality().hash(_storeGoodsList),
+    const DeepCollectionEquality().hash(_serviceAddresses),
   );
 
   /// Create a copy of HomeScreenControllerState
@@ -242,6 +271,7 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
     required final SortType sortType,
     required final Address defaultAddress,
     required final List<StoreListDTO> storeGoodsList,
+    required final List<Address> serviceAddresses,
   }) = _$HomeScreenControllerStateImpl;
 
   @override
@@ -252,6 +282,8 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
   Address get defaultAddress;
   @override
   List<StoreListDTO> get storeGoodsList;
+  @override
+  List<Address> get serviceAddresses;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.

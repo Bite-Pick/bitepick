@@ -8,13 +8,13 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/address/domain/entities/address.dart';
-import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
+import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class SelectAddressRoute extends GoRouteData {
@@ -37,6 +37,7 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final serviceAddressesAsync = ref.watch(serviceAddressesProvider);
     return BaseScaffold(
       appBar: BaseAppBar(leading: SizedBox.shrink()),
       body: Column(
@@ -46,8 +47,31 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
           Gaps.h12,
           Text("서비스중인 지역을 먼저보여드릴게요!\n조금씩 매장이 늘어날 예정이니까 조금만 기다려주세요").textGray(),
           Gaps.h40,
+          MgAsyncAnimatedSwitcher(
+            asyncValue: serviceAddressesAsync,
+            builder: (serviceAddresses) {
+              return Column(
+                children: serviceAddresses
+                    .mapIndexed((index, address) {
+                      final isSelect = _selectedIndex == index;
 
-          ..._buildServiceAreas(),
+                      return GestureDetector(
+                        onTap: () async {
+                          setState(() => _selectedIndex = index);
+                          await ref
+                              .read(homeScreenControllerProvider.notifier)
+                              .saveToStorage(address);
+                        },
+                        child: _buildServiceAddressItem(
+                          address.label,
+                          isSelect,
+                        ),
+                      );
+                    })
+                    .joinWithWidget(Gaps.h12),
+              );
+            },
+          ),
           const Spacer(),
           MgButton(
             // 주소를 선택해야만 확인 버튼 활성화
@@ -64,44 +88,22 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
     );
   }
 
-  List<Widget> _buildServiceAreas() {
-    return serviceAreas
-        .mapIndexed((index, address) {
-          final isSelect = _selectedIndex == index;
-
-          return GestureDetector(
-            onTap: () async {
-              setState(() => _selectedIndex = index);
-              await ref
-                  .read(homeScreenControllerProvider.notifier)
-                  .saveToStorage(address);
-            },
-            child:
-                Row(
-                      children: [
-                        BaseSvgIcon.mapPin(size: 20),
-                        Text(
-                          address.label,
-                        ).md().margin(left: MgSizes.sm, right: MgSizes.xs),
-                        if (isSelect) ...[
-                          const Spacer(),
-                          BaseSvgIcon.check(size: 20),
-                        ],
-                      ],
-                    )
-                    .margin(all: MgSizes.md)
-                    .decorated(
-                      border: Border.all(
-                        color: isSelect
-                            ? MgColorScheme.gray4
-                            : MgColorScheme.gray7,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      color: isSelect ? MgColorScheme.gray10 : null,
-                    ),
-          );
-        })
-        .joinWithWidget(Gaps.h12);
+  Widget _buildServiceAddressItem(String label, bool isSelect) {
+    return Row(
+          children: [
+            BaseSvgIcon.mapPin(size: 20),
+            Text(label).md().margin(left: MgSizes.sm, right: MgSizes.xs),
+            if (isSelect) ...[const Spacer(), BaseSvgIcon.check(size: 20)],
+          ],
+        )
+        .margin(all: MgSizes.md)
+        .decorated(
+          border: Border.all(
+            color: isSelect ? MgColorScheme.gray4 : MgColorScheme.gray7,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          color: isSelect ? MgColorScheme.gray10 : null,
+        );
   }
 }
