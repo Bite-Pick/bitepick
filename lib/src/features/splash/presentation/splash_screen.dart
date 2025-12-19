@@ -7,6 +7,8 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/splash/presentation/widgets/version_update_alert_dialog.dart';
+import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -19,6 +21,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // 강제업데이트 dialog
+    showDialog(
+      context: context,
+      builder: (context) {
+        return VersionUpdateAlertDialog();
+      },
+    );
     Future.delayed(const Duration(seconds: 2), () {
       DefaultRoute().go(context);
     });
