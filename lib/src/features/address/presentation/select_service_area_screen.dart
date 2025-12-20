@@ -34,7 +34,10 @@ class _SelectServiceAreaScreenState
     return BaseScaffold(
       appBar: BaseAppBar(title: Text("서비스 지역 요청")),
       body: Column(
-        children: [_buildTopInfoSection(), _buildAreaTableSection()],
+        children: [
+          _buildTopInfoSection(),
+          Expanded(child: _buildAreaTableSection()),
+        ],
       ),
       bottomNavigationBar: MgButton(
         // disabled: // TODO 지역 선택 여부에 따라 비활성화,
@@ -43,7 +46,7 @@ class _SelectServiceAreaScreenState
           // TODO: dialog 추가(카카오톡 공유하기 있는)
         },
         content: Text("서비스 지역 요청하기"),
-      ).primary().margin(vertical: MgSizes.lg),
+      ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md),
     );
   }
 
@@ -71,34 +74,26 @@ class _SelectServiceAreaScreenState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 1, child: _buildTableColumn('시 ∙ 도', ['서울', '경기도'])),
-          Expanded(flex: 2, child: _buildTableColumn('시 ∙ 군 ∙ 구', ['서울 전체'])),
           Expanded(
-            flex: 2,
-            child: _buildTableColumn('동 ∙ 읍 ∙ 면', [], hasRightBorder: false),
-          ),
+            flex: 1,
+            child: _buildTableColumn('시 ∙ 도', ['서울', '경기도']),
+          ), // TODO: datasource api로 변경
+          VerticalDivider(width: 1, thickness: 1, color: MgColorScheme.gray8),
+          Expanded(flex: 2, child: _buildTableColumn('시 ∙ 군 ∙ 구', ['서울 전체'])),
+          VerticalDivider(width: 1, thickness: 1, color: MgColorScheme.gray8),
+          Expanded(flex: 2, child: _buildTableColumn('동 ∙ 읍 ∙ 면', [])),
         ],
       ),
     );
   }
 
-  Widget _buildTableColumn(
-    String title,
-    List<String> contents, {
-    bool hasRightBorder = true,
-  }) {
+  Widget _buildTableColumn(String title, List<String> contents) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildTableTitle(title),
         ...contents.map((e) => _buildTableCell(e)),
       ],
-    ).decorated(
-      border: Border(
-        right: hasRightBorder
-            ? BorderSide(color: MgColorScheme.gray8, width: 1)
-            : BorderSide.none,
-      ),
     );
   }
 
