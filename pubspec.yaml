@@ -90,7 +90,7 @@ flutter:
     - .env
     - shorebird.yaml
     - assets/images/
-    - assets/images/character
+    - assets/images/character/
     - assets/icons/
     - assets/icons/svg/
     - assets/icons/svg/filled/
