@@ -17,11 +17,9 @@ class AppVersionPolicyRepository {
   }
 
   Future<AppVersionPolicy?> getAppVersionPolicy() async {
-    final res = await _dio.post(
-      '/v1/admin/app-version-policies',
-      data: {
-        'platform': Platform.operatingSystem, // TODO: 실제 값 확인 필요
-      },
+    final res = await _dio.get(
+      '/v1/app-version',
+      queryParameters: {'platform': Platform.isIOS ? "IOS" : "ANDROID"},
     );
     final data = res.data['data'] as Map<String, dynamic>?;
     if (res.data['status'] != 'OK' || data == null) return null;
@@ -32,4 +30,11 @@ class AppVersionPolicyRepository {
 @riverpod
 AppVersionPolicyRepository appVersionPolicyRepository(Ref ref) {
   return AppVersionPolicyRepository(ref);
+}
+
+@riverpod
+Future<AppVersionPolicy?> appVersionPolicy(Ref ref) async {
+  return await ref
+      .watch(appVersionPolicyRepositoryProvider)
+      .getAppVersionPolicy();
 }

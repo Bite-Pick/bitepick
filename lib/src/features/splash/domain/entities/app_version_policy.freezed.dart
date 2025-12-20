@@ -21,6 +21,7 @@ AppVersionPolicy _$AppVersionPolicyFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AppVersionPolicy {
+  @JsonKey(name: 'minSupportedVersion')
   String get version => throw _privateConstructorUsedError;
   String? get releaseNotes => throw _privateConstructorUsedError;
 
@@ -41,7 +42,10 @@ abstract class $AppVersionPolicyCopyWith<$Res> {
     $Res Function(AppVersionPolicy) then,
   ) = _$AppVersionPolicyCopyWithImpl<$Res, AppVersionPolicy>;
   @useResult
-  $Res call({String version, String? releaseNotes});
+  $Res call({
+    @JsonKey(name: 'minSupportedVersion') String version,
+    String? releaseNotes,
+  });
 }
 
 /// @nodoc
@@ -84,7 +88,10 @@ abstract class _$$AppVersionPolicyImplCopyWith<$Res>
   ) = __$$AppVersionPolicyImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String version, String? releaseNotes});
+  $Res call({
+    @JsonKey(name: 'minSupportedVersion') String version,
+    String? releaseNotes,
+  });
 }
 
 /// @nodoc
@@ -119,12 +126,16 @@ class __$$AppVersionPolicyImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AppVersionPolicyImpl implements _AppVersionPolicy {
-  const _$AppVersionPolicyImpl({required this.version, this.releaseNotes});
+  const _$AppVersionPolicyImpl({
+    @JsonKey(name: 'minSupportedVersion') required this.version,
+    this.releaseNotes,
+  });
 
   factory _$AppVersionPolicyImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppVersionPolicyImplFromJson(json);
 
   @override
+  @JsonKey(name: 'minSupportedVersion')
   final String version;
   @override
   final String? releaseNotes;
@@ -167,7 +178,7 @@ class _$AppVersionPolicyImpl implements _AppVersionPolicy {
 
 abstract class _AppVersionPolicy implements AppVersionPolicy {
   const factory _AppVersionPolicy({
-    required final String version,
+    @JsonKey(name: 'minSupportedVersion') required final String version,
     final String? releaseNotes,
   }) = _$AppVersionPolicyImpl;
 
@@ -175,6 +186,7 @@ abstract class _AppVersionPolicy implements AppVersionPolicy {
       _$AppVersionPolicyImpl.fromJson;
 
   @override
+  @JsonKey(name: 'minSupportedVersion')
   String get version;
   @override
   String? get releaseNotes;

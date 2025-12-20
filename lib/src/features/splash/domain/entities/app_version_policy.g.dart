@@ -9,13 +9,13 @@ part of 'app_version_policy.dart';
 _$AppVersionPolicyImpl _$$AppVersionPolicyImplFromJson(
   Map<String, dynamic> json,
 ) => _$AppVersionPolicyImpl(
-  version: json['version'] as String,
+  version: json['minSupportedVersion'] as String,
   releaseNotes: json['releaseNotes'] as String?,
 );
 
 Map<String, dynamic> _$$AppVersionPolicyImplToJson(
   _$AppVersionPolicyImpl instance,
 ) => <String, dynamic>{
-  'version': instance.version,
+  'minSupportedVersion': instance.version,
   'releaseNotes': instance.releaseNotes,
 };
