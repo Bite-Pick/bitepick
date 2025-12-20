@@ -279,9 +279,6 @@ class R {
   static const String ASSETS_IMAGES_CHARACTER_USER_PNG =
       'assets/images/character/user.png';
 
-  static const String ASSETS_IMAGES_CHARACTER_1_PNG =
-      'assets/images/character_1.png';
-
   static const String ASSETS_IMAGES_HOME_OPEN_AFTER_PNG =
       'assets/images/home_open_after.png';
 

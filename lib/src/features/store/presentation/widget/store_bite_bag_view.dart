@@ -51,7 +51,7 @@ class StoreBiteBagView extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(R.ASSETS_IMAGES_CHARACTER_1_PNG, width: 160.w),
+          Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
           Gaps.h12,
           Text("앗! 아직 등록된 메뉴소개가 없어요.").bold(),
         ],
