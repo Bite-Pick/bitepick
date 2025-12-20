@@ -55,7 +55,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
             children: [
               Expanded(
                 child: _buildUserTypeButton(
-                  imagePath: R.ASSETS_IMAGES_USER_PNG,
+                  imagePath: R.ASSETS_IMAGES_CHARACTER_USER_PNG,
                   userRole: UserRole.customer,
                   isSelected: selectedUserRole == UserRole.customer,
                   onPressed: () {
@@ -63,10 +63,10 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
                   },
                 ),
               ),
-              Gaps.w12,
+              Gaps.w(11),
               Expanded(
                 child: _buildUserTypeButton(
-                  imagePath: R.ASSETS_IMAGES_OWNER_PNG,
+                  imagePath: R.ASSETS_IMAGES_CHARACTER_OWNER_PNG,
                   userRole: UserRole.owner,
                   isSelected: selectedUserRole == UserRole.owner,
                   onPressed: () {
@@ -90,7 +90,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
           ).primary(),
           Gaps.h16,
         ],
-      ).margin(horizontal: MgSizes.xl),
+      ).margin(horizontal: MgSizes.md),
     );
   }
 
@@ -153,18 +153,20 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
       child:
           Column(
                 children: [
-                  Image.asset(
-                    imagePath,
-                  ).margin(top: MgSizes.size16, bottom: MgSizes.size20),
+                  Image.asset(imagePath),
+                  Gaps.h(28),
                   Text(userRole.label).md().bold(),
                 ],
               )
-              .padding(horizontal: MgSizes.size28, vertical: MgSizes.md)
+              .padding(horizontal: MgSizes.size28, top: 42, bottom: 21)
               .decorated(
                 borderRadius: BorderRadius.circular(MgRadius.md),
                 color: isSelected
                     ? MgColorScheme.primaryLightest
                     : MgColorScheme.gray10,
+                border: isSelected
+                    ? Border.all(color: MgColorScheme.primary, width: 1)
+                    : null,
               ),
     );
   }
