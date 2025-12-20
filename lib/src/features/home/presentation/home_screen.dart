@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
+import 'package:magambell/src/features/address/presentation/select_service_area_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -15,6 +17,7 @@ import 'package:magambell/src/features/home/presentation/widgets/home_goods_item
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
+import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -221,15 +224,24 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
                   ),
                 ),
 
-                // Gaps.h16,
-                // MgButton(
-                // TODO: 서비스 지역 요청 추가 필요
-                //   content: Text("원하는 지역이 없어요").sm().textGray().regular(),
-                //   onPressed: () {
-                //     context.pop();
-                //     // SearchAddressRoute().push(context);
-                //   },
-                // ).transparent(),
+                Gaps.h16,
+                MgButton(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BaseSvgIcon.info(
+                        color: MgColorScheme.gray5,
+                        size: MgSizes.lg,
+                      ),
+                      Gaps.w4,
+                      Text("원하는 지역이 없어요").sm().textGray().regular(),
+                    ],
+                  ),
+                  onPressed: () {
+                    context.pop();
+                    SelectServiceAreaRoute().push(context);
+                  },
+                ).transparent(),
               ],
             ).margin(all: MgSizes.md),
           ),
