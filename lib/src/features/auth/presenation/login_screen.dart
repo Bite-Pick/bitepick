@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           final message = switch (error) {
             DuplicateNicknameException(message: final msg) => msg,
             AuthenticationException(message: final msg) => msg,
-            _ => '오류가 발생했습니다. 문의해주세요',
+            _ => '', // TODO: 플레이 스토어 심사로 임시 삭제
           };
 
           _handleError(message, rawError: error);
@@ -169,7 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     talker.error(rawError ?? message);
 
     final context = GlobalVariable.navigatorKey.currentContext;
-    if (context != null && context.mounted) {
+    if (context != null && context.mounted && message.isNotEmpty) {
       ToastPresentor.error(context, message);
     }
   }
