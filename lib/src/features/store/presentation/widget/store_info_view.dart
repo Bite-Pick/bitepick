@@ -16,6 +16,7 @@ import 'package:magambell/src/features/map/presentation/widget/store_location_in
 import 'package:magambell/src/features/store/domain/entities/store_info_ui_data.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_favorite_icon.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_tags.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
@@ -75,6 +76,8 @@ class StoreInfoView extends ConsumerWidget {
   }
 
   Widget _buildStoreDescriptionSection(BuildContext context, WidgetRef ref) {
+    final user = ref.read(userStateProvider).asData!.value;
+    final isLogin = user != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,7 +89,7 @@ class StoreInfoView extends ConsumerWidget {
             ),
             // TODO[review]: 리뷰영역으로 스크롤내리는 버튼 추가
             const Spacer(),
-            if (hasFavorite) StoreFavoriteIcon(storeInfo.storeId),
+            if (hasFavorite && isLogin) StoreFavoriteIcon(storeInfo.storeId),
           ],
         ),
         Gaps.h12,
