@@ -235,24 +235,23 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
                 ),
 
                 Gaps.h16,
-                // TODO: 임시 주석 처리; API 연동 필요
-                // MgButton(
-                //   content: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       BaseSvgIcon.info(
-                //         color: MgColorScheme.gray5,
-                //         size: MgSizes.lg,
-                //       ),
-                //       Gaps.w4,
-                //       Text("원하는 지역이 없어요").sm().textGray().regular(),
-                //     ],
-                //   ),
-                //   onPressed: () {
-                //     context.pop();
-                //     SelectServiceAreaRoute().push(context);
-                //   },
-                // ).transparent(),
+                MgButton(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BaseSvgIcon.info(
+                        color: MgColorScheme.gray5,
+                        size: MgSizes.lg,
+                      ),
+                      Gaps.w4,
+                      Text("원하는 지역이 없어요").sm().textGray().regular(),
+                    ],
+                  ),
+                  onPressed: () {
+                    context.pop();
+                    SelectServiceAreaRoute().push(context);
+                  },
+                ).transparent(),
               ],
             ).margin(all: MgSizes.md),
           ),

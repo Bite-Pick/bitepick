@@ -24,6 +24,33 @@ class AddressRepository {
         .map((json) => Address.fromJson(json as Map<String, dynamic>))
         .toList();
   }
+
+  Future<List<String>> getRegionCity() async {
+    final res = await _dio.get('/v1/store/region/city');
+    if (res.data['status'] != 'OK') return [];
+    final cities = res.data['data']['sidoList'] as List?;
+    if (cities == null) return [];
+    return cities.map((json) => json as String).toList();
+  }
+
+  Future<List<String>> getRegionDistrict(String city) async {
+    final res = await _dio.get('/v1/store/region/district');
+    if (res.data['status'] != 'OK') return [];
+    final cities = res.data['data']['sigunguList'] as List?;
+    if (cities == null) return [];
+    return cities.map((json) => json as String).toList();
+  }
+
+  Future<List<String>> getRegionTown({
+    required String city,
+    required String district,
+  }) async {
+    final res = await _dio.get('/v1/store/region/town');
+    if (res.data['status'] != 'OK') return [];
+    final cities = res.data['data']['eupmyeondongList'] as List?;
+    if (cities == null) return [];
+    return cities.map((json) => json as String).toList();
+  }
 }
 
 @riverpod
