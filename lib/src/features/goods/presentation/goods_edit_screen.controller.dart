@@ -1,3 +1,4 @@
+import 'package:magambell/src/core/utils/talker_instance.dart';
 // goods_edit_screen.controller.dart
 import 'dart:io';
 
@@ -103,7 +104,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       // 서버에서 받은 이미지는 이미 업로드된 상태이므로 uploadedUrl에 저장
       return GoodsDetailItem(
         localImage: LocalImage(
-          id: imageItem.id ?? index,
+          id: imageItem.id ?? index+1,
           key: imageItem.imageUrl?.split('/').last ?? '',
           file: null, // 이미 업로드된 이미지는 file이 없음
           uploadedUrl: imageItem.imageUrl,
@@ -258,7 +259,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       final imageUploads = state.goodsDetails.mapIndexed((index, goodsDetail) {
         return {
           'key': goodsDetail.localImage.key,
-          'id': index + 1,
+          'id': goodsDetail.localImage.id,
           'goodsName': goodsDetail.name,
         };
       }).toList();

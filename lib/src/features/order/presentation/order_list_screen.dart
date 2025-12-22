@@ -49,7 +49,7 @@ class OrderListScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(R.ASSETS_IMAGES_CHARACTER_1_PNG, height: 165.h),
+          Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, height: 165.h),
           Gaps.h12,
           Text("앗! 아직 주문내역이 없어요").bold(),
         ],

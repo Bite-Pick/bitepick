@@ -34,9 +34,9 @@ class OwnerGoodsEmptyScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Image.asset(
-              R.ASSETS_IMAGES_CHARACTER_1_PNG,
+              R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG,
             ).constrained(height: 160.h),
-            Gaps.h12,
+            Gaps.h16,
             Text("앗! 등록된 메뉴가 없어요").bold(),
             Gaps.h24,
             MgButton(

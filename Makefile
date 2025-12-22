@@ -1,4 +1,5 @@
 .PHONY: gen clean help
+FLUTTER := $(shell which flutter)
 
 help:
 	@echo "Available commands:"
@@ -42,3 +43,7 @@ encrypt:
 
 	@echo "✅ 암호화 완료 → $(SECRETS_DIR)/$$(basename $(input)).gpg"
 
+
+iosCacheClean:
+	@echo "╠ Cleaning caches of the app"
+	@rm -rf build && rm -rf ios/Pods && rm -rf ios/Podfile.lock && pod cache clean --all && ${FLUTTER} clean && ${FLUTTER} pub get && cd ios && pod repo update && pod install

@@ -5,6 +5,7 @@ import 'package:magambell/src/core/utils/talker_route_observer.dart';
 import 'package:magambell/src/core/utils/talker_screen.dart';
 import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
+import 'package:magambell/src/features/address/presentation/select_service_area_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_home_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_pending_store_detail_screen.dart';
@@ -114,6 +115,10 @@ class LoginRoute extends GoRouteData {
   path: '/',
   routes: [
     TypedGoRoute<MainRoute>(name: 'MainRoute', path: 'main'),
+    TypedGoRoute<SelectServiceAreaRoute>(
+      name: 'SelectServiceAreaRoute',
+      path: 'service-area/select',
+    ),
     TypedGoRoute<OwnerHomeRoute>(name: 'OwnerHomeRoute', path: 'owner/home'),
     TypedGoRoute<GoodsRegisterRoute>(
       name: 'GoodsRegisterRoute',

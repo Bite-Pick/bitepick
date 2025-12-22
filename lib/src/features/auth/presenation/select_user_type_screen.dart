@@ -55,7 +55,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
             children: [
               Expanded(
                 child: _buildUserTypeButton(
-                  imagePath: R.ASSETS_IMAGES_USER_PNG,
+                  imagePath: R.ASSETS_IMAGES_CHARACTER_USER_PNG,
                   userRole: UserRole.customer,
                   isSelected: selectedUserRole == UserRole.customer,
                   onPressed: () {
@@ -63,10 +63,10 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
                   },
                 ),
               ),
-              Gaps.w12,
+              Gaps.w(11),
               Expanded(
                 child: _buildUserTypeButton(
-                  imagePath: R.ASSETS_IMAGES_OWNER_PNG,
+                  imagePath: R.ASSETS_IMAGES_CHARACTER_OWNER_PNG,
                   userRole: UserRole.owner,
                   isSelected: selectedUserRole == UserRole.owner,
                   onPressed: () {
@@ -90,7 +90,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
           ).primary(),
           Gaps.h16,
         ],
-      ).margin(horizontal: MgSizes.xl),
+      ).margin(horizontal: MgSizes.md),
     );
   }
 
@@ -101,16 +101,16 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
         children: [
           Text("이용 약관").md().bold().margin(bottom: MgSizes.md),
           JoinAgreementSection(
-            allAgreeText: '전체 동의',
+            allAgreeText: '약관 전체 동의',
             items: [
-              AgreementItem(text: '개인정보 수집 및 이용 동의 (필수)', link: PRIAVCY_POLICY),
+              AgreementItem(text: '(필수) 개인정보 처리방침', link: PRIAVCY_POLICY),
               selectedUserRole == UserRole.customer
                   ? AgreementItem(
-                      text: '이용약관(일반 회원용)',
+                      text: '(필수) 서비스 이용약관 (사용자)',
                       link: GUEST_SERVICE_TERM,
                     )
                   : AgreementItem(
-                      text: '이용약관(공급자 회원용)',
+                      text: '(필수) 서비스 이용약관 (공급자)',
                       link: OWNER_SERVICE_TERM,
                     ),
             ],
@@ -153,18 +153,20 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
       child:
           Column(
                 children: [
-                  Image.asset(
-                    imagePath,
-                  ).margin(top: MgSizes.size16, bottom: MgSizes.size20),
+                  Image.asset(imagePath),
+                  Gaps.h(28),
                   Text(userRole.label).md().bold(),
                 ],
               )
-              .padding(horizontal: MgSizes.size28, vertical: MgSizes.md)
+              .padding(horizontal: MgSizes.size28, top: 42, bottom: 21)
               .decorated(
                 borderRadius: BorderRadius.circular(MgRadius.md),
                 color: isSelected
                     ? MgColorScheme.primaryLightest
                     : MgColorScheme.gray10,
+                border: isSelected
+                    ? Border.all(color: MgColorScheme.primary, width: 1)
+                    : null,
               ),
     );
   }

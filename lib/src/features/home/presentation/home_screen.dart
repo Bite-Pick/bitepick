@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,18 +9,15 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/core/utils/debug_text.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
-import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
-import 'package:magambell/src/features/address/presentation/search_address_screen.controller.dart';
-import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
+import 'package:magambell/src/features/address/presentation/select_service_area_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
-import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
+import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
-import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -48,7 +47,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 pinned: true,
                 floating: true,
                 delegate: _HomeAppBar(
-                  serviceAreas,
+                  controllerState.serviceAddresses,
                   controllerState.defaultAddress,
                 ),
               ),
@@ -153,10 +152,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class _HomeAppBar extends SliverPersistentHeaderDelegate {
-  _HomeAppBar(this.addresses, this.defaultAddress);
+  _HomeAppBar(this.serviceAddresses, this.defaultAddress);
 
-  final List<Address> addresses;
   final Address? defaultAddress;
+  final List<Address> serviceAddresses;
 
   @override
   Widget build(
@@ -165,8 +164,8 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return _HomeAppBarContent(
-      addresses: addresses,
       defaultAddress: defaultAddress,
+      serviceAddresses: serviceAddresses,
     );
   }
 
@@ -181,11 +180,11 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
 
 class _HomeAppBarContent extends ConsumerStatefulWidget {
   const _HomeAppBarContent({
-    required this.addresses,
     required this.defaultAddress,
+    required this.serviceAddresses,
   });
 
-  final List<Address> addresses;
+  final List<Address> serviceAddresses;
   final Address? defaultAddress;
 
   @override
@@ -199,7 +198,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
-            _buildAddress(),
+            _buildAddress(widget.serviceAddresses),
             // TODO: 런칭 이후 추가
             //  _buildSearch(),
           ],
@@ -210,12 +209,52 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   }
 
   // TODO[tooltip]: 주소 변경시 tooltip 표시
-  Widget _buildAddress() {
+  Widget _buildAddress(List<Address> serviceAreas) {
     return GestureDetector(
       onTap: () async {
+        final user = ref.read(userStateProvider).asData!.value;
+        final isLogin = user != null;
+        if (!isLogin) {
+          unawaited(showLoginAlerDialog(context));
+          return;
+        }
         await MgBottomsheet.show(
           context,
-          (context, bottomState) => _buildAddressBottomSheet(),
+          (context, bottomState) => MgBottomsheet(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("픽업 가능한 지역").md().bold().margin(vertical: MgSizes.xl),
+
+                // 서비스 가능 지역만 표시
+                ...serviceAreas.map(
+                  (address) => _buildAddressBottomSheetItem(
+                    address,
+                    isSelect: widget.defaultAddress?.label == address.label,
+                  ),
+                ),
+
+                Gaps.h16,
+                MgButton(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BaseSvgIcon.info(
+                        color: MgColorScheme.gray5,
+                        size: MgSizes.lg,
+                      ),
+                      Gaps.w4,
+                      Text("원하는 지역이 없어요").sm().textGray().regular(),
+                    ],
+                  ),
+                  onPressed: () {
+                    context.pop();
+                    SelectServiceAreaRoute().push(context);
+                  },
+                ).transparent(),
+              ],
+            ).margin(all: MgSizes.md),
+          ),
         );
       },
       child: Row(
@@ -225,35 +264,6 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
           Text(widget.defaultAddress?.name ?? '주소를 설정해주세요'),
         ],
       ),
-    );
-  }
-
-  Widget _buildAddressBottomSheet() {
-    return MgBottomsheet(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text("픽업 가능한 지역").md().bold().margin(vertical: MgSizes.xl),
-
-          // 서비스 가능 지역만 표시
-          ...serviceAreas.map(
-            (address) => _buildAddressBottomSheetItem(
-              address,
-              isSelect: widget.defaultAddress?.label == address.label,
-            ),
-          ),
-
-          // Gaps.h16,
-          // MgButton(
-          // TODO: 서비스 지역 요청 추가 필요
-          //   content: Text("원하는 지역이 없어요").sm().textGray().regular(),
-          //   onPressed: () {
-          //     context.pop();
-          //     // SearchAddressRoute().push(context);
-          //   },
-          // ).transparent(),
-        ],
-      ).margin(all: MgSizes.md),
     );
   }
 

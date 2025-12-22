@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +9,9 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/splash/data/repositories/app_version_policy_repository.dart';
+import 'package:magambell/src/features/splash/presentation/widgets/version_update_alert_dialog.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -19,8 +24,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      DefaultRoute().go(context);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final isVersionAvailable = await checkAppVersion();
+      if (isVersionAvailable) DefaultRoute().go(context);
     });
   }
 
@@ -53,5 +60,40 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         ],
       ),
     );
+  }
+
+  Future<bool> checkAppVersion() async {
+    final appVersion = await ref.read(appVersionPolicyProvider.future);
+    if (appVersion == null) return true;
+
+    final isSupportedVersion = await _isUpdateRequired(appVersion.version);
+    if (!isSupportedVersion) {
+      await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return VersionUpdateAlertDialog(appVersion);
+        },
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> _isUpdateRequired(String appVersion) async {
+    List<int> parseVersion(String target) {
+      final targets = target.split('.');
+      return targets.map((e) => int.parse(e)).toList();
+    }
+
+    final currentAppVersion = (await PackageInfo.fromPlatform()).version;
+    final currentAppVersionParts = parseVersion(currentAppVersion);
+    final minimumAppVersionParts = parseVersion(appVersion);
+
+    for (var i = 0; i < 3; i++) {
+      if (currentAppVersionParts[i] < minimumAppVersionParts[i]) return false;
+    }
+    return true;
   }
 }

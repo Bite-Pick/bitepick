@@ -53,6 +53,7 @@ class OrderRepository {
       '/v1/order',
       queryParameters: {'page': page, 'size': size},
     );
+    if (res.data['status'] != 'OK') return [];
 
     final list = res.data['data']['orderListDTOList'] as List<dynamic>?;
     if (res.data['status'] != 'OK' || list == null) return [];

@@ -11,6 +11,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -44,6 +45,8 @@ class ReviewItem extends ConsumerStatefulWidget {
 class _ReviewItemState extends ConsumerState<ReviewItem> {
   @override
   Widget build(BuildContext context) {
+    final user = ref.read(userStateProvider).asData!.value;
+    final isLogin = user != null;
     return Container(
       padding: const EdgeInsets.all(MgSizes.md),
       decoration: BoxDecoration(
@@ -75,7 +78,7 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
                   ],
                 ),
               ),
-              _buildActionButton(),
+              if (isLogin) _buildActionButton(),
             ],
           ),
           Gaps.h12,

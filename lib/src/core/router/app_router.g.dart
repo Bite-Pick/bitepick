@@ -177,6 +177,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $MainRouteExtension._fromState,
     ),
     GoRouteData.$route(
+      path: 'service-area/select',
+      name: 'SelectServiceAreaRoute',
+
+      factory: $SelectServiceAreaRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
       path: 'owner/home',
       name: 'OwnerHomeRoute',
 
@@ -324,6 +330,22 @@ extension $MainRouteExtension on MainRoute {
   static MainRoute _fromState(GoRouterState state) => const MainRoute();
 
   String get location => GoRouteData.$location('/main');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $SelectServiceAreaRouteExtension on SelectServiceAreaRoute {
+  static SelectServiceAreaRoute _fromState(GoRouterState state) =>
+      SelectServiceAreaRoute();
+
+  String get location => GoRouteData.$location('/service-area/select');
 
   void go(BuildContext context) => context.go(location);
 
