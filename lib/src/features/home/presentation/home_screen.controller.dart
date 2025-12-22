@@ -97,7 +97,7 @@ class HomeScreenController extends _$HomeScreenController {
     final defaultAddressId = await _localStorage.getAddress();
     return serviceAreas.firstWhere(
       (address) => address.id.toString() == defaultAddressId,
-      orElse: () => serviceAreas.first,
+      orElse: () => serviceAreas.isNotEmpty ? serviceAreas.first : mockAddress,
     );
   }
 

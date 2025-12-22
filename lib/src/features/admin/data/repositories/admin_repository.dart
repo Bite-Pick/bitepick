@@ -80,6 +80,7 @@ class AdminRepository {
   }
 
   /// 배너 리스트 조회
+  // TODO: banner 도메인으로 분리
   Future<List<BannerImage>> getBannerImages() async {
     final response = await _dio.get('/v1/banner/images');
 

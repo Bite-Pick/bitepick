@@ -19,3 +19,10 @@ class Address with _$Address {
       _$AddressFromJson(json);
 }
 
+final mockAddress = Address(
+  id: 2,
+  label: '경기도 용인시 기흥구 보정동',
+  name: '경기도 용인시 기흥구 보정동',
+  latitude: 37.320165,
+  longitude: 127.112962,
+);
