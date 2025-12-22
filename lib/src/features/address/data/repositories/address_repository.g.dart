@@ -24,7 +24,7 @@ final addressRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AddressRepositoryRef = AutoDisposeProviderRef<AddressRepository>;
-String _$serviceAddressesHash() => r'4bf66e5955bff72de2b60ca3b2fbd2e09dd25e31';
+String _$serviceAddressesHash() => r'1d21b25f8cae0e7f3f6732dc2b5518b0d6dd4159';
 
 /// See also [serviceAddresses].
 @ProviderFor(serviceAddresses)
@@ -42,5 +42,22 @@ final serviceAddressesProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ServiceAddressesRef = AutoDisposeFutureProviderRef<List<Address>>;
+String _$regionCitiesHash() => r'853b4fd97ceee3dadafe1dfa9072cd879e1701dc';
+
+/// See also [regionCities].
+@ProviderFor(regionCities)
+final regionCitiesProvider = AutoDisposeFutureProvider<List<String>>.internal(
+  regionCities,
+  name: r'regionCitiesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$regionCitiesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RegionCitiesRef = AutoDisposeFutureProviderRef<List<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

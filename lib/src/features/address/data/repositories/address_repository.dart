@@ -34,7 +34,10 @@ class AddressRepository {
   }
 
   Future<List<String>> getRegionDistrict(String city) async {
-    final res = await _dio.get('/v1/store/region/district');
+    final res = await _dio.get(
+      '/v1/store/region/district',
+      queryParameters: {'sido': city},
+    );
     if (res.data['status'] != 'OK') return [];
     final cities = res.data['data']['sigunguList'] as List?;
     if (cities == null) return [];
@@ -45,7 +48,10 @@ class AddressRepository {
     required String city,
     required String district,
   }) async {
-    final res = await _dio.get('/v1/store/region/town');
+    final res = await _dio.get(
+      '/v1/store/region/town',
+      queryParameters: {'sido': city, 'sigungu': district},
+    );
     if (res.data['status'] != 'OK') return [];
     final cities = res.data['data']['eupmyeondongList'] as List?;
     if (cities == null) return [];
@@ -60,5 +66,10 @@ AddressRepository addressRepository(Ref ref) {
 
 @riverpod
 Future<List<Address>> serviceAddresses(Ref ref) {
-  return ref.read(addressRepositoryProvider).getServiceAddresses();
+  return ref.watch(addressRepositoryProvider).getServiceAddresses();
+}
+
+@riverpod
+Future<List<String>> regionCities(Ref ref) {
+  return ref.watch(addressRepositoryProvider).getRegionCity();
 }

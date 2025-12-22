@@ -7,8 +7,11 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
+import 'package:magambell/src/features/address/presentation/select_service_area_screen.controller.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class SelectServiceAreaRoute extends GoRouteData {
@@ -39,14 +42,24 @@ class _SelectServiceAreaScreenState
           Expanded(child: _buildAreaTableSection()),
         ],
       ),
-      bottomNavigationBar: MgButton(
-        // disabled: // TODO 지역 선택 여부에 따라 비활성화,
-        onPressed: () {
-          // TODO: api 호출
-          // TODO: dialog 추가(카카오톡 공유하기 있는)
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          final controllerState =
+              ref.watch(selectServiceAreaScreenControllerProvider);
+          final isComplete = controllerState.selectedCity != null &&
+              controllerState.selectedDistrict != null &&
+              controllerState.selectedTown != null;
+
+          return MgButton(
+            disabled: !isComplete,
+            onPressed: () {
+              // TODO: api 호출
+              // TODO: dialog 추가(카카오톡 공유하기 있는)
+            },
+            content: Text("서비스 지역 요청하기"),
+          ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md);
         },
-        content: Text("서비스 지역 요청하기"),
-      ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md),
+      ),
     );
   }
 
@@ -70,29 +83,104 @@ class _SelectServiceAreaScreenState
   }
 
   Widget _buildAreaTableSection() {
+    final citiesAsync = ref.watch(regionCitiesProvider);
+    final controllerState =
+        ref.watch(selectServiceAreaScreenControllerProvider);
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 시·도 컬럼
           Expanded(
             flex: 1,
-            child: _buildTableColumn('시 ∙ 도', ['서울', '경기도']),
-          ), // TODO: datasource api로 변경
-          VerticalDivider(width: 1, thickness: 1, color: MgColorScheme.gray8),
-          Expanded(flex: 2, child: _buildTableColumn('시 ∙ 군 ∙ 구', ['서울 전체'])),
-          VerticalDivider(width: 1, thickness: 1, color: MgColorScheme.gray8),
-          Expanded(flex: 2, child: _buildTableColumn('동 ∙ 읍 ∙ 면', [])),
+            child: MgAsyncAnimatedSwitcher(
+              asyncValue: citiesAsync,
+              builder: (cities) {
+                return _buildTableColumn(
+                  '시 ∙ 도',
+                  cities,
+                  onTap: (city) {
+                    ref
+                        .read(selectServiceAreaScreenControllerProvider.notifier)
+                        .selectCity(city);
+                  },
+                  selected: controllerState.selectedCity,
+                );
+              },
+            ),
+          ),
+          VerticalDivider(
+            width: 1,
+            thickness: 1,
+            color: MgColorScheme.gray8,
+          ),
+
+          // 시·군·구 컬럼
+          Expanded(
+            flex: 2,
+            child: _buildTableColumn(
+              '시 ∙ 군 ∙ 구',
+              controllerState.districts,
+              onTap: (district) {
+                ref
+                    .read(selectServiceAreaScreenControllerProvider.notifier)
+                    .selectDistrict(district);
+              },
+              selected: controllerState.selectedDistrict,
+            ),
+          ),
+          VerticalDivider(
+            width: 1,
+            thickness: 1,
+            color: MgColorScheme.gray8,
+          ),
+
+          // 동·읍·면 컬럼
+          Expanded(
+            flex: 2,
+            child: _buildTableColumn(
+              '동 ∙ 읍 ∙ 면',
+              controllerState.towns,
+              onTap: (town) {
+                ref
+                    .read(selectServiceAreaScreenControllerProvider.notifier)
+                    .selectTown(town);
+              },
+              selected: controllerState.selectedTown,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTableColumn(String title, List<String> contents) {
+
+
+  Widget _buildTableColumn(
+    String title,
+    List<String> contents, {
+    required Function(String) onTap,
+    String? selected,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildTableTitle(title),
-        ...contents.map((e) => _buildTableCell(e)),
+        Expanded(
+          child: ListView(
+            children: contents
+                .map(
+                  (e) => GestureDetector(
+                    onTap: () {
+                      onTap(e);
+                    },
+                    child: _buildTableCell(e, isSelected: selected == e),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
       ],
     );
   }
