@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart' hide NavigatorState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,8 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_list_screen.dart';
 import 'package:magambell/src/features/user/presentation/mypage_screen.dart';
+import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 
@@ -46,8 +50,17 @@ class MainScreen extends ConsumerWidget {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: navState.tabIndex,
-      onTap: (index) =>
-          ref.read(navigatorControllerProvider.notifier).changeTabIndex(index),
+      onTap: (index) {
+        // TODO: user domain 로직으로 분리
+        final user = ref.read(userStateProvider).asData!.value;
+        final isLogin = user != null;
+        if (!isLogin && index != 0) {
+          unawaited(showLoginAlerDialog(context));
+          return;
+        }
+
+        ref.read(navigatorControllerProvider.notifier).changeTabIndex(index);
+      },
       selectedItemColor: MgColorScheme.gray0,
       unselectedItemColor: MgColorScheme.gray5,
       selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
@@ -88,10 +101,7 @@ class MainScreen extends ConsumerWidget {
     final assetName = isSelected ? iconName : '${iconName}_gray';
 
     return BottomNavigationBarItem(
-      icon: BaseSvgIcon(
-        assetName: 'filled/$assetName.svg',
-        size: MgSizes.xxl,
-      ),
+      icon: BaseSvgIcon(assetName: 'filled/$assetName.svg', size: MgSizes.xxl),
       label: label,
     );
   }

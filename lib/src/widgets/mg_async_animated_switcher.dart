@@ -43,7 +43,7 @@ class MgAsyncAnimatedSwitcher<T> extends ConsumerWidget {
             if (emptyBuilder != null) return emptyBuilder!();
 
             return Environment.instance.isDev
-                ? Center(child: Text('데이터가 없습니다'))
+                ? Center(child: Text('데이터가 없습니다(DEV에서만 보이는 텍스트)'))
                 : SizedBox.shrink();
           }
           return builder(data);

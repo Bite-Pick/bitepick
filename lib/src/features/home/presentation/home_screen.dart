@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +13,8 @@ import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/select_service_area_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
+import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
@@ -208,6 +212,12 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   Widget _buildAddress(List<Address> serviceAreas) {
     return GestureDetector(
       onTap: () async {
+        final user = ref.read(userStateProvider).asData!.value;
+        final isLogin = user != null;
+        if (!isLogin) {
+          unawaited(showLoginAlerDialog(context));
+          return;
+        }
         await MgBottomsheet.show(
           context,
           (context, bottomState) => MgBottomsheet(

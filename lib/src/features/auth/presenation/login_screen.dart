@@ -126,7 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 MgButton(
                   onPressed: () => MainRoute().go(context),
-                  content: Text("로그인 없이 둘러보기").underline(),
+                  content: Text("로그인 없이 둘러보기").textGray(),
                 ),
               ],
             ),
