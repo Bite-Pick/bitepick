@@ -126,7 +126,14 @@ class _SelectServiceRegionScreenState
             flex: 2,
             child: _buildTableColumn(
               '시 ∙ 군 ∙ 구',
-              controllerState.districts,
+              controllerState.districts
+                  .map(
+                    (district) => district.replaceAllMapped(
+                      RegExp(r'(시)([^ ])'),
+                      (match) => '${match.group(1)} ${match.group(2)}',
+                    ),
+                  )
+                  .toList(),
               onTap: (district) {
                 ref
                     .read(selectServiceRegionScreenControllerProvider.notifier)
