@@ -105,7 +105,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               ],
             ),
           ),
-          // bottomNavigationBar: _buildBottomButton(store),
+          bottomNavigationBar: _buildBottomButton(store),
         );
       },
     );

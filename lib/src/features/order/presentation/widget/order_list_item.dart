@@ -116,6 +116,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
                 ref
                     .read(orderRepositoryProvider)
                     .cancelOrder(widget.order.orderId);
+                ref.invalidate(userOrdersProvider());
               },
 
               // TODO: +)주문내역 리스트 리로드
