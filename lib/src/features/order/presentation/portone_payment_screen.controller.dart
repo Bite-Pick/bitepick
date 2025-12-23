@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
@@ -37,8 +38,9 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
   /// ✔︎ 1) data 생성 함수
   PaymentData buildPaymentData() {
     final orderForm = ref.read(orderPayScreenControllerProvider);
+    
     return PaymentData(
-      pg: PaymentCompany.toss.pgProvider,
+      pg: Environment.portonePG, // 환경별 MID 포함
       payMethod: 'card', // V1 API: 간편결제도 'card'로 처리
       merchantUid: state.merchantUid,
       amount: state.amount,

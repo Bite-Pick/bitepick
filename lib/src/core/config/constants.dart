@@ -30,6 +30,9 @@ final String PORTONE_STORE_ID = dotenv.env['PORTONE_STORE_ID']!;
 final String PORTONE_TEST_CHANNEL_KEY = dotenv.env['PORTONE_TEST_CHANNEL_KEY']!;
 final String PORTONE_CHANNEL_KEY = dotenv.env['PORTONE_CHANNEL_KEY']!;
 final String PORTONE_IMP_CODE = dotenv.env['PORTONE_IMP_CODE']!;
+// MID (Merchant ID) - 각 채널의 가맹점 ID
+final String PORTONE_TEST_MID = dotenv.env['PORTONE_TEST_MID']!;
+final String PORTONE_MID = dotenv.env['PORTONE_MID']!;
 
 // kakao
 final String KAKAO_NATIVE_PROD_APP_KEY = dotenv.env['KAKAO_NATIVE_PROD_APP_KEY']!;
