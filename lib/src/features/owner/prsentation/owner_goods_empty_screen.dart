@@ -37,10 +37,10 @@ class OwnerGoodsEmptyScreen extends ConsumerWidget {
               R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG,
             ).constrained(height: 160.h),
             Gaps.h16,
-            Text("앗! 등록된 메뉴가 없어요").bold(),
+            Text("아직 등록된 상품이 없어요").bold(),
             Gaps.h24,
             MgButton(
-              content: Text("바이트백 등록하러가기"),
+              content: Text("바이트백 등록하기"),
               onPressed: () async => GoodsRegisterRoute().push(context),
             ).primary().constrained(width: 200.w),
           ],

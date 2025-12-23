@@ -49,7 +49,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "환영해요!\n사용자 유형을 선택해주세요",
+            "안녕하세요!\n어떤 사용자로 이용하시나요?",
           ).xl().bold().margin(top: MgSizes.size32, bottom: MgSizes.size64),
           Row(
             children: [

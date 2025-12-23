@@ -45,7 +45,9 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
         children: [
           Text("바이트픽\n어느지역에서 만나볼까요?").bold().xl(),
           Gaps.h12,
-          Text("서비스중인 지역을 먼저보여드릴게요!\n조금씩 매장이 늘어날 예정이니까 조금만 기다려주세요").textGray(),
+          Text(
+            "서비스중인 지역을 먼저보여드릴게요\n더 많은 지역에서 곧 만나볼 수 있으니, 조금만 기다려주세요",
+          ).textGray(),
           Gaps.h40,
           MgAsyncAnimatedSwitcher(
             asyncValue: serviceAddressesAsync,
