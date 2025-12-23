@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
@@ -130,7 +131,7 @@ class MgButton extends StatelessWidget {
               color: effectiveTextColor,
               fontSize: MgFontSize.md,
               fontWeight: FontWeight.bold,
-              height: 1.5,
+              height: 1.5.h,
             ),
             child: content,
           ),

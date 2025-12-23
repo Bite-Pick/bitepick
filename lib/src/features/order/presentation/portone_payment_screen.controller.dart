@@ -4,7 +4,6 @@ import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
-import 'package:magambell/src/features/order/domain/entities/payment_method.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:portone_flutter/model/payment_data.dart';
@@ -38,7 +37,7 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
   /// ✔︎ 1) data 생성 함수
   PaymentData buildPaymentData() {
     final orderForm = ref.read(orderPayScreenControllerProvider);
-    
+
     return PaymentData(
       pg: Environment.portonePG, // 환경별 MID 포함
       payMethod: 'card', // V1 API: 간편결제도 'card'로 처리
