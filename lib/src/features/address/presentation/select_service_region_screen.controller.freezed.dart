@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'select_service_area_screen.controller.dart';
+part of 'select_service_region_screen.controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,26 +16,26 @@ final _privateConstructorUsedError = UnsupportedError(
 );
 
 /// @nodoc
-mixin _$SelectServiceAreaState {
+mixin _$SelectServiceRegionState {
   String? get selectedCity => throw _privateConstructorUsedError;
   String? get selectedDistrict => throw _privateConstructorUsedError;
   String? get selectedTown => throw _privateConstructorUsedError;
   List<String> get districts => throw _privateConstructorUsedError;
   List<String> get towns => throw _privateConstructorUsedError;
 
-  /// Create a copy of SelectServiceAreaState
+  /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $SelectServiceAreaStateCopyWith<SelectServiceAreaState> get copyWith =>
+  $SelectServiceRegionStateCopyWith<SelectServiceRegionState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SelectServiceAreaStateCopyWith<$Res> {
-  factory $SelectServiceAreaStateCopyWith(
-    SelectServiceAreaState value,
-    $Res Function(SelectServiceAreaState) then,
-  ) = _$SelectServiceAreaStateCopyWithImpl<$Res, SelectServiceAreaState>;
+abstract class $SelectServiceRegionStateCopyWith<$Res> {
+  factory $SelectServiceRegionStateCopyWith(
+    SelectServiceRegionState value,
+    $Res Function(SelectServiceRegionState) then,
+  ) = _$SelectServiceRegionStateCopyWithImpl<$Res, SelectServiceRegionState>;
   @useResult
   $Res call({
     String? selectedCity,
@@ -47,19 +47,19 @@ abstract class $SelectServiceAreaStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$SelectServiceAreaStateCopyWithImpl<
+class _$SelectServiceRegionStateCopyWithImpl<
   $Res,
-  $Val extends SelectServiceAreaState
+  $Val extends SelectServiceRegionState
 >
-    implements $SelectServiceAreaStateCopyWith<$Res> {
-  _$SelectServiceAreaStateCopyWithImpl(this._value, this._then);
+    implements $SelectServiceRegionStateCopyWith<$Res> {
+  _$SelectServiceRegionStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of SelectServiceAreaState
+  /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -99,12 +99,12 @@ class _$SelectServiceAreaStateCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$SelectServiceAreaStateImplCopyWith<$Res>
-    implements $SelectServiceAreaStateCopyWith<$Res> {
-  factory _$$SelectServiceAreaStateImplCopyWith(
-    _$SelectServiceAreaStateImpl value,
-    $Res Function(_$SelectServiceAreaStateImpl) then,
-  ) = __$$SelectServiceAreaStateImplCopyWithImpl<$Res>;
+abstract class _$$SelectServiceRegionStateImplCopyWith<$Res>
+    implements $SelectServiceRegionStateCopyWith<$Res> {
+  factory _$$SelectServiceRegionStateImplCopyWith(
+    _$SelectServiceRegionStateImpl value,
+    $Res Function(_$SelectServiceRegionStateImpl) then,
+  ) = __$$SelectServiceRegionStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -117,16 +117,19 @@ abstract class _$$SelectServiceAreaStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$SelectServiceAreaStateImplCopyWithImpl<$Res>
+class __$$SelectServiceRegionStateImplCopyWithImpl<$Res>
     extends
-        _$SelectServiceAreaStateCopyWithImpl<$Res, _$SelectServiceAreaStateImpl>
-    implements _$$SelectServiceAreaStateImplCopyWith<$Res> {
-  __$$SelectServiceAreaStateImplCopyWithImpl(
-    _$SelectServiceAreaStateImpl _value,
-    $Res Function(_$SelectServiceAreaStateImpl) _then,
+        _$SelectServiceRegionStateCopyWithImpl<
+          $Res,
+          _$SelectServiceRegionStateImpl
+        >
+    implements _$$SelectServiceRegionStateImplCopyWith<$Res> {
+  __$$SelectServiceRegionStateImplCopyWithImpl(
+    _$SelectServiceRegionStateImpl _value,
+    $Res Function(_$SelectServiceRegionStateImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of SelectServiceAreaState
+  /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -138,7 +141,7 @@ class __$$SelectServiceAreaStateImplCopyWithImpl<$Res>
     Object? towns = null,
   }) {
     return _then(
-      _$SelectServiceAreaStateImpl(
+      _$SelectServiceRegionStateImpl(
         selectedCity: freezed == selectedCity
             ? _value.selectedCity
             : selectedCity // ignore: cast_nullable_to_non_nullable
@@ -166,8 +169,8 @@ class __$$SelectServiceAreaStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SelectServiceAreaStateImpl implements _SelectServiceAreaState {
-  const _$SelectServiceAreaStateImpl({
+class _$SelectServiceRegionStateImpl implements _SelectServiceRegionState {
+  const _$SelectServiceRegionStateImpl({
     this.selectedCity,
     this.selectedDistrict,
     this.selectedTown,
@@ -202,14 +205,14 @@ class _$SelectServiceAreaStateImpl implements _SelectServiceAreaState {
 
   @override
   String toString() {
-    return 'SelectServiceAreaState(selectedCity: $selectedCity, selectedDistrict: $selectedDistrict, selectedTown: $selectedTown, districts: $districts, towns: $towns)';
+    return 'SelectServiceRegionState(selectedCity: $selectedCity, selectedDistrict: $selectedDistrict, selectedTown: $selectedTown, districts: $districts, towns: $towns)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SelectServiceAreaStateImpl &&
+            other is _$SelectServiceRegionStateImpl &&
             (identical(other.selectedCity, selectedCity) ||
                 other.selectedCity == selectedCity) &&
             (identical(other.selectedDistrict, selectedDistrict) ||
@@ -233,27 +236,26 @@ class _$SelectServiceAreaStateImpl implements _SelectServiceAreaState {
     const DeepCollectionEquality().hash(_towns),
   );
 
-  /// Create a copy of SelectServiceAreaState
+  /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SelectServiceAreaStateImplCopyWith<_$SelectServiceAreaStateImpl>
+  _$$SelectServiceRegionStateImplCopyWith<_$SelectServiceRegionStateImpl>
   get copyWith =>
-      __$$SelectServiceAreaStateImplCopyWithImpl<_$SelectServiceAreaStateImpl>(
-        this,
-        _$identity,
-      );
+      __$$SelectServiceRegionStateImplCopyWithImpl<
+        _$SelectServiceRegionStateImpl
+      >(this, _$identity);
 }
 
-abstract class _SelectServiceAreaState implements SelectServiceAreaState {
-  const factory _SelectServiceAreaState({
+abstract class _SelectServiceRegionState implements SelectServiceRegionState {
+  const factory _SelectServiceRegionState({
     final String? selectedCity,
     final String? selectedDistrict,
     final String? selectedTown,
     final List<String> districts,
     final List<String> towns,
-  }) = _$SelectServiceAreaStateImpl;
+  }) = _$SelectServiceRegionStateImpl;
 
   @override
   String? get selectedCity;
@@ -266,10 +268,10 @@ abstract class _SelectServiceAreaState implements SelectServiceAreaState {
   @override
   List<String> get towns;
 
-  /// Create a copy of SelectServiceAreaState
+  /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SelectServiceAreaStateImplCopyWith<_$SelectServiceAreaStateImpl>
+  _$$SelectServiceRegionStateImplCopyWith<_$SelectServiceRegionStateImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

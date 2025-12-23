@@ -177,10 +177,10 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       factory: $MainRouteExtension._fromState,
     ),
     GoRouteData.$route(
-      path: 'service-area/select',
-      name: 'SelectServiceAreaRoute',
+      path: 'service-region/select',
+      name: 'SelectServiceRegionRoute',
 
-      factory: $SelectServiceAreaRouteExtension._fromState,
+      factory: $SelectServiceRegionRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'owner/home',
@@ -341,11 +341,11 @@ extension $MainRouteExtension on MainRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $SelectServiceAreaRouteExtension on SelectServiceAreaRoute {
-  static SelectServiceAreaRoute _fromState(GoRouterState state) =>
-      SelectServiceAreaRoute();
+extension $SelectServiceRegionRouteExtension on SelectServiceRegionRoute {
+  static SelectServiceRegionRoute _fromState(GoRouterState state) =>
+      SelectServiceRegionRoute();
 
-  String get location => GoRouteData.$location('/service-area/select');
+  String get location => GoRouteData.$location('/service-region/select');
 
   void go(BuildContext context) => context.go(location);
 

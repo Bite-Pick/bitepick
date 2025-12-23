@@ -10,7 +10,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
-import 'package:magambell/src/features/address/presentation/select_service_area_screen.dart';
+import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
@@ -249,7 +249,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
                   ),
                   onPressed: () {
                     context.pop();
-                    SelectServiceAreaRoute().push(context);
+                    SelectServiceRegionRoute().push(context);
                   },
                 ).transparent(),
               ],

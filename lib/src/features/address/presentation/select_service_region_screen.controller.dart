@@ -3,26 +3,26 @@ import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'select_service_area_screen.controller.freezed.dart';
-part 'select_service_area_screen.controller.g.dart';
+part 'select_service_region_screen.controller.freezed.dart';
+part 'select_service_region_screen.controller.g.dart';
 
 @freezed
-class SelectServiceAreaState with _$SelectServiceAreaState {
-  const factory SelectServiceAreaState({
+class SelectServiceRegionState with _$SelectServiceRegionState {
+  const factory SelectServiceRegionState({
     String? selectedCity,
     String? selectedDistrict,
     String? selectedTown,
     @Default([]) List<String> districts,
     @Default([]) List<String> towns,
-  }) = _SelectServiceAreaState;
+  }) = _SelectServiceRegionState;
 }
 
 @riverpod
-class SelectServiceAreaScreenController
-    extends _$SelectServiceAreaScreenController {
+class SelectServiceRegionScreenController
+    extends _$SelectServiceRegionScreenController {
   @override
-  SelectServiceAreaState build() {
-    return const SelectServiceAreaState();
+  SelectServiceRegionState build() {
+    return const SelectServiceRegionState();
   }
 
   Future<void> selectCity(String city) async {
