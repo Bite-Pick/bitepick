@@ -47,8 +47,8 @@ class _SelectServiceRegionScreenState
           Expanded(child: _buildRegionTableSection()),
         ],
       ),
-      bottomNavigationBar: Builder(
-        builder: (context) {
+      bottomNavigationBar: Consumer(
+        builder: (context, ref, child) {
           final controllerState = ref.watch(
             selectServiceRegionScreenControllerProvider,
           );
@@ -126,14 +126,15 @@ class _SelectServiceRegionScreenState
             flex: 2,
             child: _buildTableColumn(
               '시 ∙ 군 ∙ 구',
-              controllerState.districts
-                  .map(
-                    (district) => district.replaceAllMapped(
-                      RegExp(r'(시)([^ ])'),
-                      (match) => '${match.group(1)} ${match.group(2)}',
-                    ),
-                  )
-                  .toList(),
+              [
+                "${controllerState.selectedCity} 전체",
+                ...controllerState.districts.map(
+                  (district) => district.replaceAllMapped(
+                    RegExp(r'(시)([^ ])'),
+                    (match) => '${match.group(1)} ${match.group(2)}',
+                  ),
+                ),
+              ],
               onTap: (district) {
                 ref
                     .read(selectServiceRegionScreenControllerProvider.notifier)
@@ -149,7 +150,10 @@ class _SelectServiceRegionScreenState
             flex: 2,
             child: _buildTableColumn(
               '동 ∙ 읍 ∙ 면',
-              controllerState.towns,
+              [
+                "${controllerState.selectedDistrict} 전체",
+                ...controllerState.towns,
+              ],
               onTap: (town) {
                 ref
                     .read(selectServiceRegionScreenControllerProvider.notifier)
@@ -207,6 +211,7 @@ class _SelectServiceRegionScreenState
 
   Widget _buildTableTitle(String text) {
     return Text(text)
+        .sm()
         .center()
         .bold()
         .margin(vertical: MgSizes.sm)

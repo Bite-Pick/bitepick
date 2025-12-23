@@ -41,6 +41,7 @@ class SelectServiceRegionScreenController
   }
 
   Future<void> selectDistrict(String district) async {
+    // if(town.contains('전체')) selectedDisctict
     if (state.selectedCity == null) return;
 
     final city = state.selectedCity!;
@@ -59,6 +60,7 @@ class SelectServiceRegionScreenController
   }
 
   void selectTown(String town) {
+    // if(town.contains('전체')) selectedTown
     talker.debug('🏡 [selectTown] 시작: $town');
     state = state.copyWith(selectedTown: town);
     talker.debug('🏡 [selectTown] 상태 업데이트 완료: selectedTown=$town');
