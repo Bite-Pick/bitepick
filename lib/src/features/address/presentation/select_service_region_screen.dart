@@ -152,7 +152,7 @@ class _SelectServiceRegionScreenState
               '동 ∙ 읍 ∙ 면',
               [
                 "${controllerState.selectedDistrict} 전체",
-                ...controllerState.towns,
+                ...controllerState.towns.map((town) => town.townName),
               ],
               onTap: (town) {
                 ref

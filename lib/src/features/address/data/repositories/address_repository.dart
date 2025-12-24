@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
+import 'package:magambell/src/features/address/domain/entities/town.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'address_repository.g.dart';
@@ -44,7 +45,7 @@ class AddressRepository {
     return cities.map((json) => json as String).toList();
   }
 
-  Future<List<String>> getRegionTown({
+  Future<List<Town>> getRegionTown({
     required String city,
     required String district,
   }) async {
@@ -55,7 +56,9 @@ class AddressRepository {
     if (res.data['status'] != 'OK') return [];
     final cities = res.data['data']['eupmyeondongList'] as List?;
     if (cities == null) return [];
-    return cities.map((json) => json as String).toList();
+    return cities
+        .map((json) => Town.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }
 

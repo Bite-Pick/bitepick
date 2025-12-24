@@ -21,7 +21,7 @@ mixin _$SelectServiceRegionState {
   String? get selectedDistrict => throw _privateConstructorUsedError;
   String? get selectedTown => throw _privateConstructorUsedError;
   List<String> get districts => throw _privateConstructorUsedError;
-  List<String> get towns => throw _privateConstructorUsedError;
+  List<Town> get towns => throw _privateConstructorUsedError;
 
   /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
@@ -42,7 +42,7 @@ abstract class $SelectServiceRegionStateCopyWith<$Res> {
     String? selectedDistrict,
     String? selectedTown,
     List<String> districts,
-    List<String> towns,
+    List<Town> towns,
   });
 }
 
@@ -91,7 +91,7 @@ class _$SelectServiceRegionStateCopyWithImpl<
             towns: null == towns
                 ? _value.towns
                 : towns // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+                      as List<Town>,
           )
           as $Val,
     );
@@ -112,7 +112,7 @@ abstract class _$$SelectServiceRegionStateImplCopyWith<$Res>
     String? selectedDistrict,
     String? selectedTown,
     List<String> districts,
-    List<String> towns,
+    List<Town> towns,
   });
 }
 
@@ -161,7 +161,7 @@ class __$$SelectServiceRegionStateImplCopyWithImpl<$Res>
         towns: null == towns
             ? _value._towns
             : towns // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+                  as List<Town>,
       ),
     );
   }
@@ -175,7 +175,7 @@ class _$SelectServiceRegionStateImpl implements _SelectServiceRegionState {
     this.selectedDistrict,
     this.selectedTown,
     final List<String> districts = const [],
-    final List<String> towns = const [],
+    final List<Town> towns = const [],
   }) : _districts = districts,
        _towns = towns;
 
@@ -194,10 +194,10 @@ class _$SelectServiceRegionStateImpl implements _SelectServiceRegionState {
     return EqualUnmodifiableListView(_districts);
   }
 
-  final List<String> _towns;
+  final List<Town> _towns;
   @override
   @JsonKey()
-  List<String> get towns {
+  List<Town> get towns {
     if (_towns is EqualUnmodifiableListView) return _towns;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_towns);
@@ -254,7 +254,7 @@ abstract class _SelectServiceRegionState implements SelectServiceRegionState {
     final String? selectedDistrict,
     final String? selectedTown,
     final List<String> districts,
-    final List<String> towns,
+    final List<Town> towns,
   }) = _$SelectServiceRegionStateImpl;
 
   @override
@@ -266,7 +266,7 @@ abstract class _SelectServiceRegionState implements SelectServiceRegionState {
   @override
   List<String> get districts;
   @override
-  List<String> get towns;
+  List<Town> get towns;
 
   /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.

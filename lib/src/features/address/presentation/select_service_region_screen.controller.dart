@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
+import 'package:magambell/src/features/address/domain/entities/town.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'select_service_region_screen.controller.freezed.dart';
@@ -13,7 +14,7 @@ class SelectServiceRegionState with _$SelectServiceRegionState {
     String? selectedDistrict,
     String? selectedTown,
     @Default([]) List<String> districts,
-    @Default([]) List<String> towns,
+    @Default([]) List<Town> towns,
   }) = _SelectServiceRegionState;
 }
 
