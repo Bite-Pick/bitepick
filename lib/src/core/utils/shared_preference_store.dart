@@ -101,9 +101,10 @@ class SharedPreferenceStore {
   }
 
   /// 오픈 요청한 지역 저장
-  Future<void> setRequestedRegion(String region) async {
+  // TODO: 삭제 검토
+  Future<void> setRequestedRegion(int region) async {
     try {
-      await (await _sharedPreferences).setString(
+      await (await _sharedPreferences).setInt(
         SharedPreferenceKey.requestedRegion,
         region,
       );

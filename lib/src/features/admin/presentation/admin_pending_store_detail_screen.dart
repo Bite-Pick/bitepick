@@ -204,7 +204,7 @@ class _AdminPendingStoreDetailScreenState
   void _handleApprove() {
     showDialog(
       context: context,
-      builder: (dialogContext) => MgAlertDialog(
+      builder: (dialogContext) => MgAlertDialog.basic(
         title: '가게를 승인하시겠습니까?',
         content: const Text('승인 시 가게에서 판매 등록이 가능합니다.'),
         confirmText: '승인',

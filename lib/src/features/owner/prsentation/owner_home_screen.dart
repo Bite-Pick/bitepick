@@ -139,7 +139,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   }
 
   MgAlertDialog _buildAlertDialog(String id, bool saleStatus) {
-    return MgAlertDialog(
+    return MgAlertDialog.basic(
       title: "영업을 종료하시겠어요?",
       content: Text("다시 영업재개를 위해서는 영업중으로\n전환해주셔야해요!").center(),
       onConfirm: () async => changeSaleStatus(id, saleStatus),

@@ -7,9 +7,11 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/address/data/repositories/region_repository.dart';
 import 'package:magambell/src/features/address/domain/entities/region.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.controller.dart';
 import 'package:magambell/src/features/address/providers/region.provider.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -60,15 +62,30 @@ class _SelectServiceRegionScreenState
 
           return MgButton(
             disabled: !isComplete,
-            onPressed: () {
-              // TODO: api 호출
-              // TODO: dialog 추가(카카오톡 공유하기 있는)
-            },
+            onPressed: () => requestOpenRegion(controllerState),
             content: Text("서비스 지역 요청하기"),
           ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md);
         },
       ),
     );
+  }
+
+  Future<void> requestOpenRegion(
+    SelectServiceRegionState controllerState,
+  ) async {
+    final regionId =
+        controllerState.selectedTown?.id ??
+        controllerState.selectedDistrict?.id;
+    final res = await ref
+        .read(regionRepositoryProvider)
+        .requestOpenRegion(regionId: regionId!);
+    if (res) {
+      // context.pop();
+      await showDialog(
+        context: context,
+        builder: (context) => HomeUnsupportedAreaView.share(onPressed: () {}),
+      );
+    }
   }
 
   Widget _buildTopInfoSection() {
@@ -181,7 +198,8 @@ class _SelectServiceRegionScreenState
                   child: _RegionTableCell(
                     '${allRegion.displayName} 전체',
                     isSelected: allRegion.id == selectedId,
-                    level: RegionSelectionLevel.town, // NOTE: 마지막 선택지는 check 표시로 선택
+                    level: RegionSelectionLevel
+                        .town, // NOTE: 마지막 선택지는 check 표시로 선택
                   ),
                 ),
               ...contents.map(

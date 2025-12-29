@@ -16,7 +16,7 @@ Future<void> logout(
     bool ok = false;
     await showDialog(
       context: context,
-      builder: (context) => MgAlertDialog(
+      builder: (context) => MgAlertDialog.basic(
         title: "로그아웃 하시겠어요?",
         content: Text("다음에 또 만나요!"),
         onConfirm: () => ok = true,

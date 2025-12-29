@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/utils/talker_route_observer.dart';
 import 'package:magambell/src/core/utils/talker_screen.dart';
-import 'package:magambell/src/features/address/presentation/search_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_home_screen.dart';

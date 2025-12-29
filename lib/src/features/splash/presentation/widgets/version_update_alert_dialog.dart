@@ -13,7 +13,7 @@ class VersionUpdateAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MgAlertDialog(
+    return MgAlertDialog.basic(
       title: "버전 업데이트 안내",
       content: Text(
         appVersionPolicy.releaseNotes ?? "현재 이용중인 버전이 낮아\n 업데이트가 필요합니다",

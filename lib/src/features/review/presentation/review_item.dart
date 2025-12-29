@@ -120,7 +120,7 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
   Future<void> _showReportDialog() async {
     await showDialog(
       context: context,
-      builder: (context) => MgAlertDialog(
+      builder: (context) => MgAlertDialog.basic(
         title: '이 리뷰를 신고할까요?',
         content: Text('신고하면 리뷰가 보이지 않아요.'),
         onConfirm: () async => ref
@@ -133,7 +133,7 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
   Future<void> _showDeleteDialog() async {
     await showDialog(
       context: context,
-      builder: (context) => MgAlertDialog(
+      builder: (context) => MgAlertDialog.basic(
         title: '리뷰 삭제',
         content: Text('리뷰를 삭제하시겠습니까?'),
         onConfirm: () async {

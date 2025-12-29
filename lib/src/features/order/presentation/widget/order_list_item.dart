@@ -109,7 +109,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
         onPressed: () async {
           showDialog(
             context: context,
-            builder: (context) => MgAlertDialog(
+            builder: (context) => MgAlertDialog.basic(
               title: '주문 취소',
               content: Text('주문을 취소하시겠습니까?'),
               onConfirm: () {

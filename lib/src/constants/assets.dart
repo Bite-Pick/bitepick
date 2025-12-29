@@ -276,6 +276,9 @@ class R {
   static const String ASSETS_IMAGES_CHARACTER_STANDING_PNG =
       'assets/images/character/standing.png';
 
+  static const String ASSETS_IMAGES_CHARACTER_SUCCESS_PNG =
+      'assets/images/character/success.png';
+
   static const String ASSETS_IMAGES_CHARACTER_USER_PNG =
       'assets/images/character/user.png';
 
@@ -306,6 +309,12 @@ class R {
 
   static const String ASSETS_IMAGES_ORDER_CAUTION_2_PNG =
       'assets/images/order_caution_2.png';
+
+  static const String ASSETS_IMAGES_ORDER_COMPLETE_GREEN_PNG =
+      'assets/images/order_complete_green.png';
+
+  static const String ASSETS_IMAGES_ORDER_READY_PNG =
+      'assets/images/order_ready.png';
 
   static const String ASSETS_IMAGES_OWNER_PNG = 'assets/images/owner.png';
 

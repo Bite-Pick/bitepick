@@ -18,7 +18,7 @@ class WithdrawController extends _$WithdrawController {
     bool ok = false;
     await showDialog(
       context: context,
-      builder: (context) => MgAlertDialog(
+      builder: (context) => MgAlertDialog.basic(
         title: "정말로 탈퇴하시겠어요?",
         content: Text("다음에 또 만날 수 있으면 좋겠어요!"),
         onConfirm: () => ok = true,

@@ -14,7 +14,7 @@ class LoginUserAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MgAlertDialog(
+    return MgAlertDialog.basic(
       title: "로그인이 필요한 기능입니다",
       content: Text("로그인을 진행하시겠습니까?"),
       confirmText: "예",

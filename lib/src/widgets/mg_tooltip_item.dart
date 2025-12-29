@@ -51,7 +51,7 @@ class _MgTooltipItem extends StatelessWidget {
         DefaultTextStyle(
           style: const TextStyle(color: Color(0xff000000), fontSize: 12),
           child: Container(
-            padding: Gutter.xs,
+            padding: Gutter.xxs,
             decoration: BoxDecoration(
               color: getBackgroundColor(context),
               borderRadius: BorderRadius.circular(5),

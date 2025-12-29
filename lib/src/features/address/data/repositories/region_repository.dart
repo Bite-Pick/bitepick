@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/utils/shared_preference_store.dart';
 import 'package:magambell/src/features/address/data/dtos/region.dto.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -63,6 +64,25 @@ class RegionRepository {
     return towns
         .map((json) => TownDto.fromJson(json as Map<String, dynamic>))
         .toList();
+  }
+
+  // TODO: 서버 오류 수정 필요
+  Future<bool> requestOpenRegion({required int regionId}) async {
+    final res = await _dio.post(
+      "/v1/store/region",
+      data: {"regionId": regionId},
+    );
+
+    // API 공통 응답 형태 기준
+    if (res.data['status'] != 'OK') return false;
+
+    final data = res.data['data'];
+    if (data == null) return false;
+
+    // 성공 시 SharedPreferences에 지역 저장
+    await SharedPreferenceStore().setRequestedRegion(regionId);
+
+    return true;
   }
 }
 
