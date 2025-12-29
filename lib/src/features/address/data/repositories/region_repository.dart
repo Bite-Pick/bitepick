@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/features/address/data/dtos/region.dto.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
-import 'package:magambell/src/features/address/domain/entities/town.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'address_repository.g.dart';
+part 'region_repository.g.dart';
 
-class AddressRepository {
+class RegionRepository {
   final Ref ref;
   late final Dio _dio;
 
-  AddressRepository(this.ref) {
+  RegionRepository(this.ref) {
     _dio = ref.read(apiClientProvider);
   }
 
@@ -26,26 +26,30 @@ class AddressRepository {
         .toList();
   }
 
-  Future<List<String>> getRegionCity() async {
+  Future<List<CityDto>> getRegionCity() async {
     final res = await _dio.get('/v1/store/region/city');
     if (res.data['status'] != 'OK') return [];
     final cities = res.data['data']['sidoList'] as List?;
     if (cities == null) return [];
-    return cities.map((json) => json as String).toList();
+    return cities
+        .map((json) => CityDto.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<List<String>> getRegionDistrict(String city) async {
+  Future<List<DistrictDto>> getRegionDistrict(String city) async {
     final res = await _dio.get(
       '/v1/store/region/district',
       queryParameters: {'sido': city},
     );
     if (res.data['status'] != 'OK') return [];
-    final cities = res.data['data']['sigunguList'] as List?;
-    if (cities == null) return [];
-    return cities.map((json) => json as String).toList();
+    final districts = res.data['data']['sigunguList'] as List?;
+    if (districts == null) return [];
+    return districts
+        .map((json) => DistrictDto.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<List<Town>> getRegionTown({
+  Future<List<TownDto>> getRegionTown({
     required String city,
     required String district,
   }) async {
@@ -54,25 +58,25 @@ class AddressRepository {
       queryParameters: {'sido': city, 'sigungu': district},
     );
     if (res.data['status'] != 'OK') return [];
-    final cities = res.data['data']['eupmyeondongList'] as List?;
-    if (cities == null) return [];
-    return cities
-        .map((json) => Town.fromJson(json as Map<String, dynamic>))
+    final towns = res.data['data']['eupmyeondongList'] as List?;
+    if (towns == null) return [];
+    return towns
+        .map((json) => TownDto.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 }
 
 @riverpod
-AddressRepository addressRepository(Ref ref) {
-  return AddressRepository(ref);
+RegionRepository regionRepository(Ref ref) {
+  return RegionRepository(ref);
 }
 
 @riverpod
 Future<List<Address>> serviceAddresses(Ref ref) {
-  return ref.watch(addressRepositoryProvider).getServiceAddresses();
+  return ref.watch(regionRepositoryProvider).getServiceAddresses();
 }
 
 @riverpod
-Future<List<String>> regionCities(Ref ref) {
-  return ref.watch(addressRepositoryProvider).getRegionCity();
+Future<List<CityDto>> regionCities(Ref ref) {
+  return ref.watch(regionRepositoryProvider).getRegionCity();
 }
