@@ -5,6 +5,8 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
+import 'package:magambell/src/features/order/presentation/widget/order_complete_bottom_sheet.dart';
+import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:portone_flutter/model/payment_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -88,6 +90,14 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
       ref.invalidate(userOrdersProvider());
       ref.read(navigatorControllerProvider.notifier).changeTabIndex(1);
       DefaultRoute().go(context);
+      // TODO: 에러 수정 필요
+      //  showBottomSheet(
+      //   context: context,
+      //   builder: (context) {
+      //     return OrderCompleteBottomSheet();
+      //   },
+      // );
+      
     } catch (e, st) {
       talker.error("결제 오류: $e\n$st");
       ToastPresentor.error(context, "결제 검증 실패");
