@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/utils/shared_preference_store.dart';
-import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
+import 'package:magambell/src/features/address/data/repositories/region_repository.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';

@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
-import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
-import 'package:magambell/src/features/address/domain/entities/town.dart';
+import 'package:magambell/src/features/address/domain/entities/region.dart';
+import 'package:magambell/src/features/address/providers/region.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'select_service_region_screen.controller.freezed.dart';
@@ -10,11 +10,11 @@ part 'select_service_region_screen.controller.g.dart';
 @freezed
 class SelectServiceRegionState with _$SelectServiceRegionState {
   const factory SelectServiceRegionState({
-    String? selectedCity,
-    String? selectedDistrict,
-    String? selectedTown,
-    @Default([]) List<String> districts,
-    @Default([]) List<Town> towns,
+    Region? selectedCity,
+    Region? selectedDistrict,
+    Region? selectedTown,
+    @Default([]) List<Region> districts,
+    @Default([]) List<Region> towns,
   }) = _SelectServiceRegionState;
 }
 
@@ -26,7 +26,7 @@ class SelectServiceRegionScreenController
     return const SelectServiceRegionState();
   }
 
-  Future<void> selectCity(String city) async {
+  Future<void> selectCity(Region city) async {
     state = state.copyWith(
       selectedCity: city,
       selectedDistrict: null,
@@ -34,15 +34,12 @@ class SelectServiceRegionScreenController
       districts: [],
       towns: [],
     );
-    final districts = await ref
-        .read(addressRepositoryProvider)
-        .getRegionDistrict(city);
+    final districts = await ref.read(regionDistrictsProvider(city.name).future);
 
     state = state.copyWith(districts: districts);
   }
 
-  Future<void> selectDistrict(String district) async {
-    // if(town.contains('전체')) selectedDisctict
+  Future<void> selectDistrict(Region district) async {
     if (state.selectedCity == null) return;
 
     final city = state.selectedCity!;
@@ -53,17 +50,20 @@ class SelectServiceRegionScreenController
       towns: [],
     );
 
-    final towns = await ref
-        .read(addressRepositoryProvider)
-        .getRegionTown(city: city, district: district);
+    if (district == state.selectedCity) {
+      state = state.copyWith(towns: []);
+      return;
+    }
+
+    final towns = await ref.read(
+      regionTownsProvider(
+        cityName: city.name,
+        districtName: district.name,
+      ).future,
+    );
 
     state = state.copyWith(towns: towns);
   }
 
-  void selectTown(String town) {
-    // if(town.contains('전체')) selectedTown
-    talker.debug('🏡 [selectTown] 시작: $town');
-    state = state.copyWith(selectedTown: town);
-    talker.debug('🏡 [selectTown] 상태 업데이트 완료: selectedTown=$town');
-  }
+  void selectTown(Region town) => state = state.copyWith(selectedTown: town);
 }

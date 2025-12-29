@@ -7,8 +7,9 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/address/data/repositories/address_repository.dart';
+import 'package:magambell/src/features/address/domain/entities/region.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.controller.dart';
+import 'package:magambell/src/features/address/providers/region.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -114,7 +115,7 @@ class _SelectServiceRegionScreenState
                         )
                         .selectCity(city);
                   },
-                  selected: controllerState.selectedCity,
+                  selectedId: controllerState.selectedCity?.id,
                   level: RegionSelectionLevel.city,
                 );
               },
@@ -126,22 +127,15 @@ class _SelectServiceRegionScreenState
             flex: 2,
             child: _buildTableColumn(
               '시 ∙ 군 ∙ 구',
-              [
-                "${controllerState.selectedCity} 전체",
-                ...controllerState.districts.map(
-                  (district) => district.replaceAllMapped(
-                    RegExp(r'(시)([^ ])'),
-                    (match) => '${match.group(1)} ${match.group(2)}',
-                  ),
-                ),
-              ],
+              controllerState.districts,
               onTap: (district) {
                 ref
                     .read(selectServiceRegionScreenControllerProvider.notifier)
                     .selectDistrict(district);
               },
-              selected: controllerState.selectedDistrict,
+              selectedId: controllerState.selectedDistrict?.id,
               level: RegionSelectionLevel.district,
+              allRegion: controllerState.selectedCity,
             ),
           ),
           VerticalDivider(width: 1, thickness: 1, color: MgColorScheme.gray8),
@@ -150,17 +144,15 @@ class _SelectServiceRegionScreenState
             flex: 2,
             child: _buildTableColumn(
               '동 ∙ 읍 ∙ 면',
-              [
-                "${controllerState.selectedDistrict} 전체",
-                ...controllerState.towns.map((town) => town.townName),
-              ],
+              controllerState.towns,
               onTap: (town) {
                 ref
                     .read(selectServiceRegionScreenControllerProvider.notifier)
                     .selectTown(town);
               },
-              selected: controllerState.selectedTown,
+              selectedId: controllerState.selectedTown?.id,
               level: RegionSelectionLevel.town,
+              allRegion: controllerState.selectedDistrict,
             ),
           ),
         ],
@@ -170,10 +162,11 @@ class _SelectServiceRegionScreenState
 
   Widget _buildTableColumn(
     String title,
-    List<String> contents, {
-    required Function(String) onTap,
-    String? selected,
+    List<Region> contents, {
+    required Function(Region) onTap,
     required RegionSelectionLevel level,
+    int? selectedId,
+    Region? allRegion,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -181,28 +174,36 @@ class _SelectServiceRegionScreenState
         _buildTableTitle(title),
         Expanded(
           child: ListView(
-            children: contents
-                .map(
-                  (content) => GestureDetector(
-                    onTap: () => onTap(content),
-                    child: switch (level) {
-                      RegionSelectionLevel.city => _RegionTableCell.city(
-                        content,
-                        isSelected: selected == content,
-                      ),
-                      RegionSelectionLevel.district =>
-                        _RegionTableCell.district(
-                          content,
-                          isSelected: selected == content,
-                        ),
-                      RegionSelectionLevel.town => _RegionTableCell.town(
-                        content,
-                        isSelected: selected == content,
-                      ),
-                    },
+            children: [
+              if (contents.isNotEmpty && allRegion != null)
+                GestureDetector(
+                  onTap: () => onTap(allRegion),
+                  child: _RegionTableCell(
+                    '${allRegion.displayName} 전체',
+                    isSelected: allRegion.id == selectedId,
+                    level: RegionSelectionLevel.town, // NOTE: 마지막 선택지는 check 표시로 선택
                   ),
-                )
-                .toList(),
+                ),
+              ...contents.map(
+                (region) => GestureDetector(
+                  onTap: () => onTap(region),
+                  child: switch (level) {
+                    RegionSelectionLevel.city => _RegionTableCell.city(
+                      region.name,
+                      isSelected: selectedId == region.id,
+                    ),
+                    RegionSelectionLevel.district => _RegionTableCell.district(
+                      region.displayName, // 00시 00구 띄어쓰기 정규표현식 적용
+                      isSelected: selectedId == region.id,
+                    ),
+                    RegionSelectionLevel.town => _RegionTableCell.town(
+                      region.name,
+                      isSelected: selectedId == region.id,
+                    ),
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ],

@@ -7,7 +7,7 @@ part of 'select_service_region_screen.controller.dart';
 // **************************************************************************
 
 String _$selectServiceRegionScreenControllerHash() =>
-    r'a31ebf8497f8da0f7381a30c703da9600327c069';
+    r'164dd9420f6146629fbda38c68f056a377e028b9';
 
 /// See also [SelectServiceRegionScreenController].
 @ProviderFor(SelectServiceRegionScreenController)

@@ -17,11 +17,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SelectServiceRegionState {
-  String? get selectedCity => throw _privateConstructorUsedError;
-  String? get selectedDistrict => throw _privateConstructorUsedError;
-  String? get selectedTown => throw _privateConstructorUsedError;
-  List<String> get districts => throw _privateConstructorUsedError;
-  List<Town> get towns => throw _privateConstructorUsedError;
+  Region? get selectedCity => throw _privateConstructorUsedError;
+  Region? get selectedDistrict => throw _privateConstructorUsedError;
+  Region? get selectedTown => throw _privateConstructorUsedError;
+  List<Region> get districts => throw _privateConstructorUsedError;
+  List<Region> get towns => throw _privateConstructorUsedError;
 
   /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.
@@ -38,12 +38,16 @@ abstract class $SelectServiceRegionStateCopyWith<$Res> {
   ) = _$SelectServiceRegionStateCopyWithImpl<$Res, SelectServiceRegionState>;
   @useResult
   $Res call({
-    String? selectedCity,
-    String? selectedDistrict,
-    String? selectedTown,
-    List<String> districts,
-    List<Town> towns,
+    Region? selectedCity,
+    Region? selectedDistrict,
+    Region? selectedTown,
+    List<Region> districts,
+    List<Region> towns,
   });
+
+  $RegionCopyWith<$Res>? get selectedCity;
+  $RegionCopyWith<$Res>? get selectedDistrict;
+  $RegionCopyWith<$Res>? get selectedTown;
 }
 
 /// @nodoc
@@ -75,26 +79,68 @@ class _$SelectServiceRegionStateCopyWithImpl<
             selectedCity: freezed == selectedCity
                 ? _value.selectedCity
                 : selectedCity // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as Region?,
             selectedDistrict: freezed == selectedDistrict
                 ? _value.selectedDistrict
                 : selectedDistrict // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as Region?,
             selectedTown: freezed == selectedTown
                 ? _value.selectedTown
                 : selectedTown // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as Region?,
             districts: null == districts
                 ? _value.districts
                 : districts // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+                      as List<Region>,
             towns: null == towns
                 ? _value.towns
                 : towns // ignore: cast_nullable_to_non_nullable
-                      as List<Town>,
+                      as List<Region>,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of SelectServiceRegionState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $RegionCopyWith<$Res>? get selectedCity {
+    if (_value.selectedCity == null) {
+      return null;
+    }
+
+    return $RegionCopyWith<$Res>(_value.selectedCity!, (value) {
+      return _then(_value.copyWith(selectedCity: value) as $Val);
+    });
+  }
+
+  /// Create a copy of SelectServiceRegionState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $RegionCopyWith<$Res>? get selectedDistrict {
+    if (_value.selectedDistrict == null) {
+      return null;
+    }
+
+    return $RegionCopyWith<$Res>(_value.selectedDistrict!, (value) {
+      return _then(_value.copyWith(selectedDistrict: value) as $Val);
+    });
+  }
+
+  /// Create a copy of SelectServiceRegionState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $RegionCopyWith<$Res>? get selectedTown {
+    if (_value.selectedTown == null) {
+      return null;
+    }
+
+    return $RegionCopyWith<$Res>(_value.selectedTown!, (value) {
+      return _then(_value.copyWith(selectedTown: value) as $Val);
+    });
   }
 }
 
@@ -108,12 +154,19 @@ abstract class _$$SelectServiceRegionStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String? selectedCity,
-    String? selectedDistrict,
-    String? selectedTown,
-    List<String> districts,
-    List<Town> towns,
+    Region? selectedCity,
+    Region? selectedDistrict,
+    Region? selectedTown,
+    List<Region> districts,
+    List<Region> towns,
   });
+
+  @override
+  $RegionCopyWith<$Res>? get selectedCity;
+  @override
+  $RegionCopyWith<$Res>? get selectedDistrict;
+  @override
+  $RegionCopyWith<$Res>? get selectedTown;
 }
 
 /// @nodoc
@@ -145,23 +198,23 @@ class __$$SelectServiceRegionStateImplCopyWithImpl<$Res>
         selectedCity: freezed == selectedCity
             ? _value.selectedCity
             : selectedCity // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as Region?,
         selectedDistrict: freezed == selectedDistrict
             ? _value.selectedDistrict
             : selectedDistrict // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as Region?,
         selectedTown: freezed == selectedTown
             ? _value.selectedTown
             : selectedTown // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as Region?,
         districts: null == districts
             ? _value._districts
             : districts // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+                  as List<Region>,
         towns: null == towns
             ? _value._towns
             : towns // ignore: cast_nullable_to_non_nullable
-                  as List<Town>,
+                  as List<Region>,
       ),
     );
   }
@@ -174,30 +227,30 @@ class _$SelectServiceRegionStateImpl implements _SelectServiceRegionState {
     this.selectedCity,
     this.selectedDistrict,
     this.selectedTown,
-    final List<String> districts = const [],
-    final List<Town> towns = const [],
+    final List<Region> districts = const [],
+    final List<Region> towns = const [],
   }) : _districts = districts,
        _towns = towns;
 
   @override
-  final String? selectedCity;
+  final Region? selectedCity;
   @override
-  final String? selectedDistrict;
+  final Region? selectedDistrict;
   @override
-  final String? selectedTown;
-  final List<String> _districts;
+  final Region? selectedTown;
+  final List<Region> _districts;
   @override
   @JsonKey()
-  List<String> get districts {
+  List<Region> get districts {
     if (_districts is EqualUnmodifiableListView) return _districts;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_districts);
   }
 
-  final List<Town> _towns;
+  final List<Region> _towns;
   @override
   @JsonKey()
-  List<Town> get towns {
+  List<Region> get towns {
     if (_towns is EqualUnmodifiableListView) return _towns;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_towns);
@@ -250,23 +303,23 @@ class _$SelectServiceRegionStateImpl implements _SelectServiceRegionState {
 
 abstract class _SelectServiceRegionState implements SelectServiceRegionState {
   const factory _SelectServiceRegionState({
-    final String? selectedCity,
-    final String? selectedDistrict,
-    final String? selectedTown,
-    final List<String> districts,
-    final List<Town> towns,
+    final Region? selectedCity,
+    final Region? selectedDistrict,
+    final Region? selectedTown,
+    final List<Region> districts,
+    final List<Region> towns,
   }) = _$SelectServiceRegionStateImpl;
 
   @override
-  String? get selectedCity;
+  Region? get selectedCity;
   @override
-  String? get selectedDistrict;
+  Region? get selectedDistrict;
   @override
-  String? get selectedTown;
+  Region? get selectedTown;
   @override
-  List<String> get districts;
+  List<Region> get districts;
   @override
-  List<Town> get towns;
+  List<Region> get towns;
 
   /// Create a copy of SelectServiceRegionState
   /// with the given fields replaced by the non-null parameter values.

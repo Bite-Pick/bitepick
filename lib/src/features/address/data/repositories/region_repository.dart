@@ -29,7 +29,7 @@ class RegionRepository {
   Future<List<CityDto>> getRegionCity() async {
     final res = await _dio.get('/v1/store/region/city');
     if (res.data['status'] != 'OK') return [];
-    final cities = res.data['data']['sidoList'] as List?;
+    final cities = res.data['data']['cityList'] as List?;
     if (cities == null) return [];
     return cities
         .map((json) => CityDto.fromJson(json as Map<String, dynamic>))
@@ -39,10 +39,10 @@ class RegionRepository {
   Future<List<DistrictDto>> getRegionDistrict(String city) async {
     final res = await _dio.get(
       '/v1/store/region/district',
-      queryParameters: {'sido': city},
+      queryParameters: {'city': city},
     );
     if (res.data['status'] != 'OK') return [];
-    final districts = res.data['data']['sigunguList'] as List?;
+    final districts = res.data['data']['districtList'] as List?;
     if (districts == null) return [];
     return districts
         .map((json) => DistrictDto.fromJson(json as Map<String, dynamic>))
@@ -55,10 +55,10 @@ class RegionRepository {
   }) async {
     final res = await _dio.get(
       '/v1/store/region/town',
-      queryParameters: {'sido': city, 'sigungu': district},
+      queryParameters: {'city': city, 'district': district},
     );
     if (res.data['status'] != 'OK') return [];
-    final towns = res.data['data']['eupmyeondongList'] as List?;
+    final towns = res.data['data']['townList'] as List?;
     if (towns == null) return [];
     return towns
         .map((json) => TownDto.fromJson(json as Map<String, dynamic>))
@@ -74,9 +74,4 @@ RegionRepository regionRepository(Ref ref) {
 @riverpod
 Future<List<Address>> serviceAddresses(Ref ref) {
   return ref.watch(regionRepositoryProvider).getServiceAddresses();
-}
-
-@riverpod
-Future<List<CityDto>> regionCities(Ref ref) {
-  return ref.watch(regionRepositoryProvider).getRegionCity();
 }
