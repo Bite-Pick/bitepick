@@ -70,17 +70,15 @@ class _AgreementSectionState extends State<AgreementSection> {
               onTap: () => _toggleAllAgreements(!_allAgreed),
               child: Row(
                 children: [
-                  Checkbox(
-                    value: _allAgreed,
-                    onChanged: (value) => _toggleAllAgreements(value ?? false),
-                    activeColor: MgColorScheme.primary,
-                    checkColor: MgColorScheme.gray11,
-                  ),
+                  MgCheckbox(
+                    initialValue: _allAgreed,
+                    onChanged: (value) => _toggleAllAgreements(value),
+                  ).margin(all: MgSizes.xs),
                   Expanded(child: Text(widget.allAgreeText).md().bold()),
                 ],
               ),
             )
-            .margin(vertical: MgSizes.xs)
+            .margin(vertical: MgSizes.xs, horizontal: MgSizes.md)
             .decorated(
               color: MgColorScheme.gray9,
               borderRadius: BorderRadius.circular(MgRadius.md),

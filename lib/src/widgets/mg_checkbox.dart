@@ -12,7 +12,7 @@ class MgCheckbox extends StatefulWidget {
     this.size = 20,
     this.borderColor = MgColorScheme.gray7,
     this.checkedColor = MgColorScheme.primary,
-    this.uncheckedColor = Colors.transparent,
+    this.uncheckedColor = MgColorScheme.gray11,
     this.borderRadius = MgRadius.xs,
     this.borderWidth = 1,
   });

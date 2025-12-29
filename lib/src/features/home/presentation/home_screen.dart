@@ -22,6 +22,7 @@ import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/mg_checkbox.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -88,12 +89,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Row(
       children: [
         // TODO: icon padding 조정 필요
-        Checkbox(
-          value: onlyAvailable,
+        MgCheckbox(
+          initialValue: onlyAvailable,
           onChanged: (value) => ref
               .read(homeScreenControllerProvider.notifier)
               .toggleOnlyAvailable(),
-        ),
+        ).margin(all:MgSizes.xs),
         Text("예약가능").sm(),
         Spacer(),
         GestureDetector(
