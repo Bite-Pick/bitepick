@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -23,8 +24,10 @@ class OrderAcceptDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Gaps.h8,
-            // TODO: 주문수락 dialog icon 교체
-            Icon(Icons.notifications, size: 80, color: Colors.amber),
+            Image.asset(
+              R.ASSETS_IMAGES_ORDER_READY_PNG,
+              width: MgSizes.size128,
+            ),
             Gaps.h16,
             // 제목
             Text('주문 수락이 완료되었어요').lg().bold(),
