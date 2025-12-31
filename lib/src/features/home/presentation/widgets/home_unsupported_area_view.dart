@@ -87,7 +87,8 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
                 onPressed: () {
                   context.pop();
                   // TODO: 카카오 공유 배포후 테스트 필요
-                  shareKakao();
+                  onPressed();
+                
                 },
                 content: Text("공유"),
               ).primary(),
@@ -98,33 +99,4 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
     );
   }
 
-  Future<void> shareKakao() async {
-    final bool isKakaoTalkSharingAvailable = await ShareClient.instance
-        .isKakaoTalkSharingAvailable();
-    final feedTemplate = FeedTemplate(
-      content: Content(
-        link: Link(mobileWebUrl: Uri(path: '/service-region/select')),
-      ),
-    );
-    if (isKakaoTalkSharingAvailable) {
-      try {
-        Uri uri = await ShareClient.instance.shareDefault(
-          template: feedTemplate,
-        );
-        await ShareClient.instance.launchKakaoTalk(uri);
-        talker.info('카카오톡 공유 완료');
-      } catch (error) {
-        talker.error('카카오톡 공유 실패 $error');
-      }
-    } else {
-      try {
-        Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(
-          template: feedTemplate,
-        );
-        await launchBrowserTab(shareUrl, popupOpen: true);
-      } catch (error) {
-        talker.error('카카오톡 공유 실패 $error');
-      }
-    }
-  }
 }

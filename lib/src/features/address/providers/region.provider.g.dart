@@ -8,9 +8,7 @@ part of 'region.provider.dart';
 
 String _$regionCitiesHash() => r'3abc7f4c5f82a20b734676039ebccc0ac54b6de5';
 
-/// City DTO를 Region으로 변환
-///
-/// Copied from [regionCities].
+/// See also [regionCities].
 @ProviderFor(regionCities)
 final regionCitiesProvider = AutoDisposeFutureProvider<List<Region>>.internal(
   regionCities,
@@ -48,24 +46,16 @@ class _SystemHash {
   }
 }
 
-/// District DTO를 Region으로 변환
-///
-/// Copied from [regionDistricts].
+/// See also [regionDistricts].
 @ProviderFor(regionDistricts)
 const regionDistrictsProvider = RegionDistrictsFamily();
 
-/// District DTO를 Region으로 변환
-///
-/// Copied from [regionDistricts].
+/// See also [regionDistricts].
 class RegionDistrictsFamily extends Family<AsyncValue<List<Region>>> {
-  /// District DTO를 Region으로 변환
-  ///
-  /// Copied from [regionDistricts].
+  /// See also [regionDistricts].
   const RegionDistrictsFamily();
 
-  /// District DTO를 Region으로 변환
-  ///
-  /// Copied from [regionDistricts].
+  /// See also [regionDistricts].
   RegionDistrictsProvider call(String cityName) {
     return RegionDistrictsProvider(cityName);
   }
@@ -92,13 +82,9 @@ class RegionDistrictsFamily extends Family<AsyncValue<List<Region>>> {
   String? get name => r'regionDistrictsProvider';
 }
 
-/// District DTO를 Region으로 변환
-///
-/// Copied from [regionDistricts].
+/// See also [regionDistricts].
 class RegionDistrictsProvider extends AutoDisposeFutureProvider<List<Region>> {
-  /// District DTO를 Region으로 변환
-  ///
-  /// Copied from [regionDistricts].
+  /// See also [regionDistricts].
   RegionDistrictsProvider(String cityName)
     : this._internal(
         (ref) => regionDistricts(ref as RegionDistrictsRef, cityName),
@@ -180,24 +166,16 @@ class _RegionDistrictsProviderElement
 
 String _$regionTownsHash() => r'6fbe03c05c3f0d962d6882a752fa408cd7d15d38';
 
-/// Town DTO를 Region으로 변환
-///
-/// Copied from [regionTowns].
+/// See also [regionTowns].
 @ProviderFor(regionTowns)
 const regionTownsProvider = RegionTownsFamily();
 
-/// Town DTO를 Region으로 변환
-///
-/// Copied from [regionTowns].
+/// See also [regionTowns].
 class RegionTownsFamily extends Family<AsyncValue<List<Region>>> {
-  /// Town DTO를 Region으로 변환
-  ///
-  /// Copied from [regionTowns].
+  /// See also [regionTowns].
   const RegionTownsFamily();
 
-  /// Town DTO를 Region으로 변환
-  ///
-  /// Copied from [regionTowns].
+  /// See also [regionTowns].
   RegionTownsProvider call({
     required String cityName,
     required String districtName,
@@ -230,13 +208,9 @@ class RegionTownsFamily extends Family<AsyncValue<List<Region>>> {
   String? get name => r'regionTownsProvider';
 }
 
-/// Town DTO를 Region으로 변환
-///
-/// Copied from [regionTowns].
+/// See also [regionTowns].
 class RegionTownsProvider extends AutoDisposeFutureProvider<List<Region>> {
-  /// Town DTO를 Region으로 변환
-  ///
-  /// Copied from [regionTowns].
+  /// See also [regionTowns].
   RegionTownsProvider({required String cityName, required String districtName})
     : this._internal(
         (ref) => regionTowns(
