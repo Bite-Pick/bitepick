@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -91,15 +92,11 @@ class _SelectServiceRegionScreenState
               final bool isKakaoTalkSharingAvailable = await ShareClient
                   .instance
                   .isKakaoTalkSharingAvailable();
-              final feedTemplate = FeedTemplate(
-                content: Content(
-                  link: Link(mobileWebUrl: Uri(path: '/service-region/select')),
-                ),
-              );
+
               if (isKakaoTalkSharingAvailable) {
                 try {
-                  Uri uri = await ShareClient.instance.shareDefault(
-                    template: feedTemplate,
+                  Uri uri = await ShareClient.instance.shareCustom(
+                    templateId: Environment.kakaoShareTemplateId,
                   );
                   await ShareClient.instance.launchKakaoTalk(uri);
                   talker.info('카카오톡 공유 완료');
@@ -108,8 +105,8 @@ class _SelectServiceRegionScreenState
                 }
               } else {
                 try {
-                  Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(
-                    template: feedTemplate,
+                  Uri shareUrl = await WebSharerClient.instance.makeCustomUrl(
+                    templateId: Environment.kakaoShareTemplateId,
                   );
                   await launchBrowserTab(shareUrl, popupOpen: true);
                 } catch (error) {
