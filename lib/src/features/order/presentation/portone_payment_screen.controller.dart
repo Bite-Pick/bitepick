@@ -19,6 +19,7 @@ part 'portone_payment_screen.controller.g.dart';
 @freezed
 class PortOnePaymentState with _$PortOnePaymentState {
   const factory PortOnePaymentState({
+    required String storeId,
     required String merchantUid,
     required int amount,
     @Default(false) bool isProcessing,
@@ -30,15 +31,20 @@ class PortOnePaymentState with _$PortOnePaymentState {
 class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
   @override
   PortOnePaymentState build({
+    required String storeId,
     required String merchantUid,
     required int amount,
   }) {
-    return PortOnePaymentState(merchantUid: merchantUid, amount: amount);
+    return PortOnePaymentState(
+      storeId: storeId,
+      merchantUid: merchantUid,
+      amount: amount,
+    );
   }
 
   /// ✔︎ 1) data 생성 함수
   PaymentData buildPaymentData() {
-    final orderForm = ref.read(orderPayScreenControllerProvider);
+    final orderForm = ref.read(orderPayScreenControllerProvider(state.storeId));
 
     return PaymentData(
       pg: Environment.portonePG, // 환경별 MID 포함

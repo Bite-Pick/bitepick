@@ -444,9 +444,12 @@ extension $SearchRouteExtension on SearchRoute {
 
 extension $OrderCautionRouteExtension on OrderCautionRoute {
   static OrderCautionRoute _fromState(GoRouterState state) =>
-      const OrderCautionRoute();
+      OrderCautionRoute(storeId: state.uri.queryParameters['store-id']!);
 
-  String get location => GoRouteData.$location('/order/caution');
+  String get location => GoRouteData.$location(
+    '/order/caution',
+    queryParams: {'store-id': storeId},
+  );
 
   void go(BuildContext context) => context.go(location);
 
@@ -459,9 +462,11 @@ extension $OrderCautionRouteExtension on OrderCautionRoute {
 }
 
 extension $OrderPayRouteExtension on OrderPayRoute {
-  static OrderPayRoute _fromState(GoRouterState state) => const OrderPayRoute();
+  static OrderPayRoute _fromState(GoRouterState state) =>
+      OrderPayRoute(storeId: state.uri.queryParameters['store-id']!);
 
-  String get location => GoRouteData.$location('/order/pay');
+  String get location =>
+      GoRouteData.$location('/order/pay', queryParams: {'store-id': storeId});
 
   void go(BuildContext context) => context.go(location);
 
@@ -476,13 +481,18 @@ extension $OrderPayRouteExtension on OrderPayRoute {
 extension $PortOnePaymentRouteExtension on PortOnePaymentRoute {
   static PortOnePaymentRoute _fromState(GoRouterState state) =>
       PortOnePaymentRoute(
+        storeId: state.uri.queryParameters['store-id']!,
         merchantUid: state.uri.queryParameters['merchant-uid']!,
         amount: int.parse(state.uri.queryParameters['amount']!),
       );
 
   String get location => GoRouteData.$location(
     '/order/payment',
-    queryParams: {'merchant-uid': merchantUid, 'amount': amount.toString()},
+    queryParams: {
+      'store-id': storeId,
+      'merchant-uid': merchantUid,
+      'amount': amount.toString(),
+    },
   );
 
   void go(BuildContext context) => context.go(location);

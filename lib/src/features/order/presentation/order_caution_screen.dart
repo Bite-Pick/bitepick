@@ -13,15 +13,20 @@ import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class OrderCautionRoute extends GoRouteData {
-  const OrderCautionRoute();
+  const OrderCautionRoute({required this.storeId});
+
+  final String storeId;
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const OrderCautionScreen();
+    return OrderCautionScreen(storeId: storeId);
   }
 }
 
 class OrderCautionScreen extends StatelessWidget {
-  const OrderCautionScreen({super.key});
+  const OrderCautionScreen({super.key, required this.storeId});
+
+  final String storeId;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +55,7 @@ class OrderCautionScreen extends StatelessWidget {
           // Bottom button
           MgButton(
             onPressed: () async {
-              await const OrderPayRoute().push(context);
+              await OrderPayRoute(storeId: storeId).push(context);
             },
             content: Text('결제하기'),
           ).primary().margin(horizontal: MgSizes.md, bottom: MgSizes.xxl),

@@ -142,7 +142,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                     }
                     // 주문 정보 저장
                     ref
-                        .read(orderPayScreenControllerProvider.notifier)
+                        .read(orderPayScreenControllerProvider(goods.storeId).notifier)
                         .setOrderInfo(
                           storeName: goods.storeName,
                           storeAddress: goods.address,
@@ -156,7 +156,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                           endTime: endTime,
                         );
                     // 주문 확인 화면으로 이동
-                    await const OrderCautionRoute().push(context);
+                    await OrderCautionRoute(storeId: goods.storeId).push(context);
                   },
                   content: Text('구매하기'),
                 ).primary(),
