@@ -10,6 +10,7 @@ import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
+import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
@@ -63,6 +64,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   @override
   Widget build(BuildContext context) {
     final storeAsync = ref.watch(storeGoodsDetailProvider(widget.id));
+
     return MgAsyncAnimatedSwitcher<GoodsDetailDto?>(
       asyncValue: storeAsync,
       builder: (store) {
@@ -75,24 +77,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    dividerColor: Colors.transparent,
+                  _StoreTabBar(
+                    goodsId: store.goodsId,
                     controller: _tabController,
-                    labelColor: MgColorScheme.gray1,
-                    unselectedLabelColor: MgColorScheme.gray5,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: UnderlineTabIndicator(
-                      borderSide: BorderSide(
-                        color: MgColorScheme.gray1,
-                        width: 2,
-                      ),
-                    ),
-                    labelStyle: context.textTheme.titleLarge,
-                    unselectedLabelStyle: context.textTheme.bodyLarge,
-                    tabs: [
-                      Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
-                      Tab(text: '리뷰'),
-                    ],
                   ),
                 ),
               ),
@@ -142,7 +129,11 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                     }
                     // 주문 정보 저장
                     ref
-                        .read(orderPayScreenControllerProvider(goods.storeId).notifier)
+                        .read(
+                          orderPayScreenControllerProvider(
+                            goods.storeId,
+                          ).notifier,
+                        )
                         .setOrderInfo(
                           storeName: goods.storeName,
                           storeAddress: goods.address,
@@ -156,7 +147,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                           endTime: endTime,
                         );
                     // 주문 확인 화면으로 이동
-                    await OrderCautionRoute(storeId: goods.storeId).push(context);
+                    await OrderCautionRoute(
+                      storeId: goods.storeId,
+                    ).push(context);
                   },
                   content: Text('구매하기'),
                 ).primary(),
@@ -169,16 +162,52 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   }
 }
 
+class _StoreTabBar extends ConsumerWidget {
+  const _StoreTabBar({required this.goodsId, required this.controller});
+
+  final String goodsId;
+  final TabController controller;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reviewsAsync = ref.watch(
+      reviewsProvider(goodsId: goodsId, imageCheck: false),
+    );
+
+    return MgAsyncAnimatedSwitcher(
+      asyncValue: reviewsAsync,
+      builder: (reviews) {
+        return TabBar(
+          dividerColor: MgColorScheme.gray8,
+          controller: controller,
+          labelColor: MgColorScheme.gray1,
+          unselectedLabelColor: MgColorScheme.gray5,
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: UnderlineTabIndicator(
+            borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+          ),
+          labelStyle: context.textTheme.titleLarge,
+          unselectedLabelStyle: context.textTheme.bodyLarge,
+          tabs: [
+            Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
+            Tab(text: '리뷰 (${reviews.length}개)'),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
+  _SliverAppBarDelegate(this._child);
 
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
+  final Widget _child;
 
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get minExtent => 48.0;
+
+  @override
+  double get maxExtent => 48.0;
 
   @override
   Widget build(
@@ -186,11 +215,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(color: MgColorScheme.gray11, child: _tabBar);
+    return Container(color: MgColorScheme.gray11, child: _child);
   }
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }

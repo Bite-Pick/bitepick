@@ -57,33 +57,18 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(widget.review.nickName).sm(),
+          Gaps.h(6),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              UserProfileItem(size: 40),
-              Gaps.w12,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MgTag(child: Text(widget.review.ratingLabel)),
-                    Gaps.h4,
-                    Row(
-                      children: [
-                        Text(widget.review.nickName),
-                        Gaps.w8,
-                        Text(widget.review.createdAt.toDate()).textGray(),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              if (isLogin) _buildActionButton(),
+              MgTag(child: Text(widget.review.ratingLabel)),
+              Gaps.w8,
+              Text(widget.review.createdAt.toDate()).textGray().xs(),
+              if (isLogin) ...[Spacer(), _buildActionButton()],
             ],
           ),
-          Gaps.h12,
-          Text(widget.review.description).textGray(),
-          Gaps.h8,
+          Text(widget.review.description).sm().margin(vertical: MgSizes.sm),
           Row(
             children: widget.review.imageUrls
                 .map(
@@ -104,12 +89,12 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
     return switch (widget.buttonType) {
       ReviewItemButtonType.report => MgButton(
         onPressed: () async => _showReportDialog(),
-        content: Text("신고하기").sm(),
+        content: Text("신고하기").xs(),
         padding: EdgeInsets.symmetric(horizontal: MgSizes.sm),
       ),
       ReviewItemButtonType.delete => MgButton(
         onPressed: () async => _showDeleteDialog(),
-        content: Text("삭제").sm().textGray(),
+        content: Text("삭제").xs().textGray(),
         padding: EdgeInsets.symmetric(horizontal: MgSizes.sm),
       ),
       ReviewItemButtonType.none => const SizedBox.shrink(),
