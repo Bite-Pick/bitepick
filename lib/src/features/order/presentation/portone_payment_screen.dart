@@ -10,16 +10,19 @@ import 'package:portone_flutter/iamport_payment.dart' show IamportPayment;
 
 class PortOnePaymentRoute extends GoRouteData {
   const PortOnePaymentRoute({
+    required this.storeId,
     required this.merchantUid,
     required this.amount,
   });
 
+  final String storeId;
   final String merchantUid;
   final int amount;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return PortOnePaymentScreen(
+      storeId: storeId,
       merchantUid: merchantUid,
       amount: amount,
     );
@@ -29,10 +32,12 @@ class PortOnePaymentRoute extends GoRouteData {
 class PortOnePaymentScreen extends ConsumerStatefulWidget {
   const PortOnePaymentScreen({
     super.key,
+    required this.storeId,
     required this.merchantUid,
     required this.amount,
   });
 
+  final String storeId;
   final String merchantUid;
   final int amount;
 
@@ -47,6 +52,7 @@ class _PortOnePaymentScreenState extends ConsumerState<PortOnePaymentScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = portOnePaymentScreenControllerProvider(
+      storeId: widget.storeId,
       merchantUid: widget.merchantUid,
       amount: widget.amount,
     );

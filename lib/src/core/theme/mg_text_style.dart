@@ -73,7 +73,7 @@ extension MgStyledText on Text {
   );
 
   Text textGray() => copyWith(
-    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray5),
+    style: (style ?? const TextStyle()).copyWith(color: MgColorScheme.gray4),
   );
 
   Text white() => copyWith(

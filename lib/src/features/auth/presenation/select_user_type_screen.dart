@@ -49,7 +49,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "환영해요!\n사용자 유형을 선택해주세요",
+            "안녕하세요!\n어떤 사용자로 이용하시나요?",
           ).xl().bold().margin(top: MgSizes.size32, bottom: MgSizes.size64),
           Row(
             children: [
@@ -106,11 +106,11 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
               AgreementItem(text: '(필수) 개인정보 처리방침', link: PRIAVCY_POLICY),
               selectedUserRole == UserRole.customer
                   ? AgreementItem(
-                      text: '(필수) 서비스 이용약관 (사용자)',
+                      text: '(필수) 서비스 이용약관 (사용자용)',
                       link: GUEST_SERVICE_TERM,
                     )
                   : AgreementItem(
-                      text: '(필수) 서비스 이용약관 (공급자)',
+                      text: '(필수) 서비스 이용약관 (공급자용)',
                       link: OWNER_SERVICE_TERM,
                     ),
             ],

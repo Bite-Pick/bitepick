@@ -30,6 +30,9 @@ final String PORTONE_STORE_ID = dotenv.env['PORTONE_STORE_ID']!;
 final String PORTONE_TEST_CHANNEL_KEY = dotenv.env['PORTONE_TEST_CHANNEL_KEY']!;
 final String PORTONE_CHANNEL_KEY = dotenv.env['PORTONE_CHANNEL_KEY']!;
 final String PORTONE_IMP_CODE = dotenv.env['PORTONE_IMP_CODE']!;
+// MID (Merchant ID) - 각 채널의 가맹점 ID
+final String PORTONE_TEST_MID = dotenv.env['PORTONE_TEST_MID']!;
+final String PORTONE_MID = dotenv.env['PORTONE_MID']!;
 
 // kakao
 final String KAKAO_NATIVE_PROD_APP_KEY = dotenv.env['KAKAO_NATIVE_PROD_APP_KEY']!;
@@ -49,3 +52,6 @@ final String FIREBASE_APP_ID_ANDROID_PROD = dotenv.env['FIREBASE_APP_ID_ANDROID_
 final String FIREBASE_API_KEY_ANDROID_PROD = dotenv.env['FIREBASE_API_KEY_ANDROID_PROD']!;
 final String FIREBASE_MESSAGING_SENDER_ID_ANDROID_PROD = dotenv.env['FIREBASE_MESSAGING_SENDER_ID_ANDROID_PROD']!;
 final String FIREBASE_PROJECT_ID_ANDROID_PROD = dotenv.env['FIREBASE_PROJECT_ID_ANDROID_PROD']!;
+
+final int KAKAO_SHARE_TEMPLATE_ID_PROD = int.parse(dotenv.env['KAKAO_SHARE_TEMPLATE_ID_PROD']!);
+final int KAKAO_SHARE_TEMPLATE_ID_DEV = int.parse(dotenv.env['KAKAO_SHARE_TEMPLATE_ID_DEV']!);

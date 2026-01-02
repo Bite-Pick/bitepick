@@ -4,6 +4,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/mg_checkbox.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 약관 항목
@@ -14,26 +15,6 @@ class AgreementItem {
   const AgreementItem({required this.text, required this.link});
 }
 
-/// 약관 동의 섹션
-///
-/// 사용 예시:
-/// ```dart
-/// AgreementSection(
-///   items: [
-///     AgreementItem(
-///       text: '개인정보 수집 및 이용 동의 (필수)',
-///       link: 'https://example.com/privacy',
-///     ),
-///     AgreementItem(
-///       text: '개인정보 제3자 정보 제공 동의 (필수)',
-///       link: 'https://example.com/third-party',
-///     ),
-///   ],
-///   onAllAgreedChanged: (allAgreed) {
-///     setState(() => _allAgreed = allAgreed);
-///   },
-/// )
-/// ```
 class AgreementSection extends StatefulWidget {
   const AgreementSection({
     super.key,
@@ -86,22 +67,22 @@ class _AgreementSectionState extends State<AgreementSection> {
       children: [
         // 전체 동의
         GestureDetector(
-          onTap: () => _toggleAllAgreements(!_allAgreed),
-          child: Row(
-            children: [
-              Checkbox(
-                value: _allAgreed,
-                onChanged: (value) => _toggleAllAgreements(value ?? false),
-                activeColor: MgColorScheme.primary,
-                checkColor: MgColorScheme.gray11,
+              onTap: () => _toggleAllAgreements(!_allAgreed),
+              child: Row(
+                children: [
+                  MgCheckbox(
+                    initialValue: _allAgreed,
+                    onChanged: (value) => _toggleAllAgreements(value),
+                  ).margin(all: MgSizes.xs),
+                  Expanded(child: Text(widget.allAgreeText).md().bold()),
+                ],
               ),
-              Expanded(child: Text(widget.allAgreeText).md().bold()),
-            ],
-          ),
-        ).margin().decorated(
-          color: MgColorScheme.gray9,
-          borderRadius: BorderRadius.circular(MgRadius.md),
-        ),
+            )
+            .margin(vertical: MgSizes.xs, horizontal: MgSizes.md)
+            .decorated(
+              color: MgColorScheme.gray9,
+              borderRadius: BorderRadius.circular(MgRadius.md),
+            ),
         Gaps.h12,
         // 동적으로 생성된 약관 항목들
         ...List.generate(
@@ -135,7 +116,7 @@ class _AgreementSectionState extends State<AgreementSection> {
             size: MgSizes.lg,
           ),
           Gaps.w8,
-          Expanded(child: Text(text).sm().textGray()),
+          Expanded(child: Text(text).sm().textColor(MgColorScheme.gray1)),
           GestureDetector(
             onTap: () async {
               if (link.isNotEmpty) {
@@ -234,34 +215,16 @@ class _JoinAgreementSectionState extends State<JoinAgreementSection> {
               setState(() => _agreements[index] = value);
               _checkAllAgreements();
             },
-          ).margin(vertical: MgSizes.xss, left: MgSizes.md),
+          ),
         ),
       ],
     );
   }
 
   Widget _buildCheckBox(bool isCheck) {
-    return Checkbox(
-      value: isCheck,
-      onChanged: (value) => _toggleAllAgreements(value ?? false),
-      // 체크됐을 때 안쪽 배경색
-      fillColor: WidgetStateProperty.resolveWith((states) {
-        states.contains(WidgetState.selected)
-            ? MgColorScheme.primary
-            : MgColorScheme.gray11; // 미체크 시 흰색
-      }),
-      // 체크 아이콘 색
-      checkColor: MgColorScheme.gray11,
-      // 테두리 색/두께
-      side: BorderSide(
-        color: isCheck ? MgColorScheme.primary : MgColorScheme.gray5,
-        width: 1.5,
-      ),
-      // 모서리 둥글게 (살짝 둥근 사각형)
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      // 체크박스 크기 조금 컴팩트하게
-      visualDensity: VisualDensity.compact,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    return MgCheckbox(
+      initialValue: isCheck,
+      onChanged: (value) => _toggleAllAgreements(value),
     );
   }
 
@@ -277,7 +240,7 @@ class _JoinAgreementSectionState extends State<JoinAgreementSection> {
         children: [
           _buildCheckBox(value),
           Gaps.w8,
-          Expanded(child: Text(text).sm().textGray()),
+          Expanded(child: Text(text).sm().textColor(MgColorScheme.gray1)),
           GestureDetector(
             onTap: () async {
               if (link.isNotEmpty) {
@@ -294,6 +257,6 @@ class _JoinAgreementSectionState extends State<JoinAgreementSection> {
           ),
         ],
       ),
-    );
+    ).margin(vertical: MgSizes.xs, left: MgSizes.md);
   }
 }

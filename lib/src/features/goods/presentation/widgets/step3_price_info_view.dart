@@ -31,9 +31,9 @@ class Step3PriceInfoView extends ConsumerWidget {
             GoodsRegisterFormTitle(
               title: "할인율 선택",
               subtitles: [
-                TextSpan(text: "잉여 음식이 소비되도록 하기 위해 "),
-                TextSpan(text: "정가의 50% 가격").bold(),
-                TextSpan(text: "으로 고객들에게 판매하기를 권장합니다."),
+                TextSpan(
+                  text: "합리적인 가격으로 더 많은 고객에게 판매할 수 있어요\n정가의 50% 할인을 추천드립니다",
+                ),
               ],
             ),
             MgSelect(

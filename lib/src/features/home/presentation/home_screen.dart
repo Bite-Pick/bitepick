@@ -9,9 +9,12 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/core/utils/kakao_share_util.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
-import 'package:magambell/src/features/address/presentation/select_service_area_screen.dart';
+import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
@@ -22,6 +25,7 @@ import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
+import 'package:magambell/src/widgets/mg_checkbox.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -88,12 +92,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Row(
       children: [
         // TODO: icon padding 조정 필요
-        Checkbox(
-          value: onlyAvailable,
+        MgCheckbox(
+          initialValue: onlyAvailable,
           onChanged: (value) => ref
               .read(homeScreenControllerProvider.notifier)
               .toggleOnlyAvailable(),
-        ),
+        ).margin(all: MgSizes.xs),
         Text("예약가능").sm(),
         Spacer(),
         GestureDetector(
@@ -211,53 +215,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   // TODO[tooltip]: 주소 변경시 tooltip 표시
   Widget _buildAddress(List<Address> serviceAreas) {
     return GestureDetector(
-      onTap: () async {
-        final user = ref.read(userStateProvider).asData!.value;
-        final isLogin = user != null;
-        if (!isLogin) {
-          unawaited(showLoginAlerDialog(context));
-          return;
-        }
-        await MgBottomsheet.show(
-          context,
-          (context, bottomState) => MgBottomsheet(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("픽업 가능한 지역").md().bold().margin(vertical: MgSizes.xl),
-
-                // 서비스 가능 지역만 표시
-                ...serviceAreas.map(
-                  (address) => _buildAddressBottomSheetItem(
-                    address,
-                    isSelect: widget.defaultAddress?.label == address.label,
-                  ),
-                ),
-
-                Gaps.h16,
-                // TODO: 임시 주석 처리; API 연동 필요
-                // MgButton(
-                //   content: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       BaseSvgIcon.info(
-                //         color: MgColorScheme.gray5,
-                //         size: MgSizes.lg,
-                //       ),
-                //       Gaps.w4,
-                //       Text("원하는 지역이 없어요").sm().textGray().regular(),
-                //     ],
-                //   ),
-                //   onPressed: () {
-                //     context.pop();
-                //     SelectServiceAreaRoute().push(context);
-                //   },
-                // ).transparent(),
-              ],
-            ).margin(all: MgSizes.md),
-          ),
-        );
-      },
+      onTap: () async => showAddressBottomSheet(serviceAreas),
       child: Row(
         children: [
           BaseSvgIcon.mapPin(size: 20),
@@ -265,6 +223,66 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
           Text(widget.defaultAddress?.name ?? '주소를 설정해주세요'),
         ],
       ),
+    );
+  }
+
+  Future<void> showAddressBottomSheet(List<Address> serviceAreas) async {
+    final user = ref.read(userStateProvider).asData!.value;
+    final isLogin = user != null;
+    if (!isLogin) {
+      unawaited(showLoginAlerDialog(context));
+      return;
+    }
+    final shouldOpenRegionRequest = await MgBottomsheet.show<bool>(
+      context,
+      (context, bottomState) => _buildAddressBottomSheet(serviceAreas),
+    );
+
+    if (shouldOpenRegionRequest == true && mounted) {
+      final result = await SelectServiceRegionRoute().push<bool>(context);
+      if (result == true && mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!mounted) return;
+          await showDialog(
+            context: context,
+            builder: (context) => HomeUnsupportedAreaView.share(
+              onPressed: KakaoShareUtil.shareOpenRegionRequest,
+            ),
+          );
+        });
+      }
+    }
+  }
+
+  Widget _buildAddressBottomSheet(List<Address> serviceAreas) {
+    return MgBottomsheet(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("픽업 가능한 지역").md().bold().margin(vertical: MgSizes.xl),
+
+          // 서비스 가능 지역만 표시
+          ...serviceAreas.map(
+            (address) => _buildAddressBottomSheetItem(
+              address,
+              isSelect: widget.defaultAddress?.label == address.label,
+            ),
+          ),
+
+          Gaps.h16,
+          MgButton(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BaseSvgIcon.info(color: MgColorScheme.gray5, size: MgSizes.lg),
+                Gaps.w4,
+                Text("원하는 지역이 없어요").sm().textGray().regular(),
+              ],
+            ),
+            onPressed: () => Navigator.pop(context, true),
+          ).transparent(),
+        ],
+      ).margin(all: MgSizes.md),
     );
   }
 

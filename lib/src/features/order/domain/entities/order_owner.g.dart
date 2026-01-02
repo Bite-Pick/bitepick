@@ -36,4 +36,5 @@ const _$OrderOwnerStatusEnumMap = {
   OrderOwnerStatus.PAID: 'PAID',
   OrderOwnerStatus.ACCEPTED: 'ACCEPTED',
   OrderOwnerStatus.COMPLETED: 'COMPLETED',
+  OrderOwnerStatus.CANCELED: 'CANCELED',
 };

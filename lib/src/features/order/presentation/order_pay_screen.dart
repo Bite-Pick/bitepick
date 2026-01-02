@@ -22,15 +22,20 @@ import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class OrderPayRoute extends GoRouteData {
-  const OrderPayRoute();
+  const OrderPayRoute({required this.storeId});
+
+  final String storeId;
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const OrderPayScreen();
+    return OrderPayScreen(storeId: storeId);
   }
 }
 
 class OrderPayScreen extends ConsumerStatefulWidget {
-  const OrderPayScreen({super.key});
+  const OrderPayScreen({super.key, required this.storeId});
+
+  final String storeId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _OrderPayScreenState();
@@ -42,7 +47,9 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   @override
   Widget build(BuildContext context) {
     // Controller에서 주문 정보 가져오기
-    final orderInfo = ref.watch(orderPayScreenControllerProvider);
+    final orderInfo = ref.watch(
+      orderPayScreenControllerProvider(widget.storeId),
+    );
 
     // TODO: 실제 상품 정보 가져오기 (goodsId로 조회)
     final int originalPrice = orderInfo.originalPrice;
@@ -53,6 +60,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     final storeAddress = orderInfo.storeAddress;
     final pickupTime = orderInfo.pickupTime;
     final storeName = orderInfo.storeName;
+    final startTime = orderInfo.startTime;
+    final endTime = orderInfo.endTime;
 
     return BaseScaffold(
       appBar: BaseAppBar(),
@@ -72,6 +81,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     quantity,
                     pickupTime,
                     (salePrice * 100 / originalPrice).toInt(),
+                    startTime,
+                    endTime,
                   ).margin(horizontal: MgSizes.md),
                   Divider(thickness: 6).margin(vertical: MgSizes.lg),
                   _buildPaySection().margin(horizontal: MgSizes.md),
@@ -104,7 +115,11 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
 
                     // 주문 등록 (결제 전)
                     final merchantUid = await ref
-                        .read(orderPayScreenControllerProvider.notifier)
+                        .read(
+                          orderPayScreenControllerProvider(
+                            widget.storeId,
+                          ).notifier,
+                        )
                         .submitOrder();
 
                     if (merchantUid == null) {
@@ -114,6 +129,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
 
                     // 결제 화면으로 이동
                     PortOnePaymentRoute(
+                      storeId: widget.storeId,
                       merchantUid: merchantUid,
                       // orderName: '${widget.storeId} test', // TODO: 실제 orderName 생성
                       amount: totalPrice,
@@ -150,6 +166,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     int quantity,
     String? pickupTime,
     int discount,
+    DateTime startTime,
+    DateTime endTime,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,6 +185,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
           price: salePrice * quantity,
           count: quantity,
           pickupTime: pickupTime,
+          startTime: startTime,
+          endTime: endTime,
         ),
       ],
     );
@@ -179,11 +199,20 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     required int price,
     required int count,
     String? pickupTime,
+    required DateTime startTime,
+    required DateTime endTime,
   }) {
-    return Column(
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: MgColorScheme.gray8),
+        borderRadius: BorderRadius.circular(MgRadius.md),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(MgRadius.md),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildPickupTimeSection(pickupTime),
+            _buildPickupTimeSection(pickupTime, startTime, endTime),
 
             OrderInfoItem(
               imageUrl: mockImage,
@@ -195,52 +224,65 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
               imageSize: 80,
             ).margin(all: MgSizes.md),
           ],
-        )
-        .margin(all: 2) //
-        .clipRRect()
-        .decorated(
-          border: Border.all(color: MgColorScheme.gray8),
-          borderRadius: BorderRadius.circular(MgRadius.md),
-        );
+        ),
+      ),
+    );
   }
 
-  Widget _buildPickupTimeSection(String? pickupTime) {
-    final orderInfo = ref.watch(orderPayScreenControllerProvider);
-    final startTime = orderInfo.startTime;
-    final endTime = orderInfo.endTime;
-    return GestureDetector(
-      onTap: () async {
-        final selectedTime = await showTimeSelector(startTime, endTime);
-        if (selectedTime != null) {
-          ref
-              .read(orderPayScreenControllerProvider.notifier)
-              .updatePickupTime(selectedTime.toIso8601String());
-        }
-      },
-      child: pickupTime == null
-          ? Row(
-              children: [
-                Expanded(child: Text('픽업시간 설정').sm().textGray()),
-                BaseSvgIcon.down(),
-              ],
-            ).padding(horizontal: MgSizes.lg, vertical: MgSizes.sm)
-          : Text('${pickupTime.convertTime()} 픽업 예정')
-                .md()
-                .bold()
-                .margin(vertical: MgSizes.size10, horizontal: MgSizes.md)
-                .constrained(width: double.infinity)
-                .colored(MgColorScheme.primaryLightest),
+  Widget _buildPickupTimeSection(
+    String? pickupTime,
+    DateTime startTime,
+    DateTime endTime,
+  ) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: pickupTime != null ? MgColorScheme.primaryLightest : null,
+        border: Border(
+          bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () async {
+          // 이미 선택된 시간이 있으면 그것을 초기값으로 사용
+          final initialTime = pickupTime != null
+              ? DateTime.parse(pickupTime)
+              : DateTime.now();
+          final selectedTime = await showTimeSelector(
+            startTime,
+            endTime,
+            initialTime,
+          );
+          if (selectedTime != null) {
+            ref
+                .read(orderPayScreenControllerProvider(widget.storeId).notifier)
+                .updatePickupTime(selectedTime.toIso8601String());
+          }
+        },
+        child: pickupTime == null
+            ? Row(
+                children: [
+                  Expanded(child: Text('픽업시간 설정').sm().textGray()),
+                  BaseSvgIcon.down(),
+                ],
+              ).padding(horizontal: MgSizes.md, vertical: MgSizes.sm)
+            : Text('${pickupTime.convertTime()} 픽업 예정')
+                  .md()
+                  .bold()
+                  .constrained(width: double.infinity)
+                  .padding(vertical: MgSizes.sm, horizontal: MgSizes.md),
+      ),
     );
   }
 
   Future<DateTime?> showTimeSelector(
     DateTime startTime,
     DateTime endTime,
+    DateTime initialTime,
   ) async {
     DateTime? _time;
     await TimePickerBottomSheet.show(
       context,
-      initialTime: DateTime.now(),
+      initialTime: initialTime,
       startTime: startTime,
       endTime: endTime,
       onTimeSelected: (selected, error) {

@@ -57,7 +57,7 @@ class Step4GoodsInfoView extends ConsumerWidget {
         return StoreRegisterViewWrapper(
           children: [
             GoodsRegisterFormTitle(
-              title: "바이트백 상세설명",
+              title: "바이트백 메뉴 구성",
               subtitles: [TextSpan(text: "상세설명은 나중에도 추가 가능해요")],
             ),
             Gaps.h16,

@@ -112,21 +112,6 @@ class StoreRepository {
 
     return Store.fromJson(data as Map<String, dynamic>);
   }
-
-  Future<bool> requestOpenRegion({required String region}) async {
-    final res = await _dio.post("/v1/store/region", data: {"region": region});
-
-    // API 공통 응답 형태 기준
-    if (res.data['status'] != 'OK') return false;
-
-    final data = res.data['data'];
-    if (data == null) return false;
-
-    // 성공 시 SharedPreferences에 지역 저장
-    await SharedPreferenceStore().setRequestedRegion(region);
-
-    return true;
-  }
   
 }
 

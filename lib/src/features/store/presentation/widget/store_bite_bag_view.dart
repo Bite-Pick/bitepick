@@ -32,7 +32,7 @@ class StoreBiteBagView extends StatelessWidget {
           children: [
             BaseSvgIcon.speakerFilled(color: MgColorScheme.systemError),
             Gaps.w8,
-            Text("아래의 상품 중 랜덤으로 구성됩니다!"),
+            Text("바이트백은 랜덤으로 구성됩니다"),
           ],
         )
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md)

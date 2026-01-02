@@ -181,7 +181,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
   void _showCompleteDialog() {
     showDialog(
       context: context,
-      builder: (context) => MgAlertDialog(
+      builder: (context) => MgAlertDialog.basic(
         title: '준비 완료',
         content: Text('준비 완료 처리하시겠습니까?'),
         onConfirm: () => ref

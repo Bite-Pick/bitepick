@@ -1,30 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'address_repository.dart';
+part of 'region_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$addressRepositoryHash() => r'd727148e8c6ef44dd49d49fb9c0a8dbb55a893b3';
+String _$regionRepositoryHash() => r'2c61fe4d317779abff202d8570de89e5f897dedf';
 
-/// See also [addressRepository].
-@ProviderFor(addressRepository)
-final addressRepositoryProvider =
-    AutoDisposeProvider<AddressRepository>.internal(
-      addressRepository,
-      name: r'addressRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$addressRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+/// See also [regionRepository].
+@ProviderFor(regionRepository)
+final regionRepositoryProvider = AutoDisposeProvider<RegionRepository>.internal(
+  regionRepository,
+  name: r'regionRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$regionRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AddressRepositoryRef = AutoDisposeProviderRef<AddressRepository>;
-String _$serviceAddressesHash() => r'4bf66e5955bff72de2b60ca3b2fbd2e09dd25e31';
+typedef RegionRepositoryRef = AutoDisposeProviderRef<RegionRepository>;
+String _$serviceAddressesHash() => r'8ed202b61f89fc96a92d2b9d079d9921382adb32';
 
 /// See also [serviceAddresses].
 @ProviderFor(serviceAddresses)

@@ -3,8 +3,6 @@ import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
-import 'package:magambell/src/features/order/domain/entities/order_form.dart';
-import 'package:magambell/src/features/order/domain/entities/payment_method.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,10 +36,10 @@ class OrderInfo with _$OrderInfo {
 @Riverpod(keepAlive: true)
 class OrderPayScreenController extends _$OrderPayScreenController {
   @override
-  OrderInfo build() {
+  OrderInfo build(String storeId) {
     final now = DateTime.now();
     return OrderInfo(
-      storeId: '',
+      storeId: storeId,
       goodsId: '',
       storeAddress: '',
       quantity: 0,
@@ -91,6 +89,11 @@ class OrderPayScreenController extends _$OrderPayScreenController {
       quantity: quantity,
       totalPrice: state.salePrice * quantity,
     );
+  }
+
+  // 결제 실패 시 merchantUid 초기화
+  void resetMerchantUid() {
+    state = state.copyWith(merchantUid: null, isSubmitting: false);
   }
 
   // 결제전 주문등록

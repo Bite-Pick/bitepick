@@ -7,6 +7,7 @@ import 'package:magambell/src/features/review/data/repositories/review_repositor
 import 'package:magambell/src/features/review/presentation/review_item.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
+import 'package:magambell/src/widgets/mg_checkbox.dart';
 
 class StoreReviewListView extends ConsumerStatefulWidget {
   const StoreReviewListView(this.goodsId, {super.key});
@@ -36,23 +37,16 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
           padding: EdgeInsets.zero,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("이 상품의 모든 리뷰(${reviews.length}개)")
-                    .textGray()
-                    .bold()
-                    .md()
-                    .margin(top: MgSizes.md, left: MgSizes.md),
-              ),
               Row(
                 children: [
-                  Checkbox(
-                    value: _imageCheckOnly,
+                  MgCheckbox(
+                    initialValue: _imageCheckOnly,
                     onChanged: (value) => _toggleImageCheck(),
                   ),
-                  Text("포토리뷰만 보기").sm(),
+                  Gaps.w8,
+                  Text("포토리뷰").sm(),
                 ],
-              ),
+              ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
               ...reviews.map((review) {
                 // TODO: review에 userId가 내려오거나, 본인 리뷰 여부를 판별할 수 있는 flag가 추가되어야함
                 return review.nickName ==

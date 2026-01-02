@@ -39,7 +39,7 @@ class Environment {
   static String get ncpApiKey => X_NCP_APIGW_API_KEY;
 
   // Kakao
-  static String get kakaoNativeAppKey =>  switch (instance._buildType) {
+  static String get kakaoNativeAppKey => switch (instance._buildType) {
     BuildType.dev => KAKAO_NATIVE_DEV_APP_KEY,
     BuildType.prod => KAKAO_NATIVE_PROD_APP_KEY,
   };
@@ -74,6 +74,18 @@ class Environment {
     BuildType.prod => PORTONE_CHANNEL_KEY,
   };
   static String get portoneIMPCode => PORTONE_IMP_CODE;
+
+  // V1 API: pg 파라미터 (PG사.MID 형식)
+  static String get portonePG => switch (instance._buildType) {
+    BuildType.dev => 'tosspayments.$PORTONE_TEST_MID',
+    BuildType.prod => 'tosspayments.$PORTONE_MID',
+  };
+
+  // kakao share
+  static int get kakaoShareTemplateId => switch (instance._buildType) {
+    BuildType.dev => KAKAO_SHARE_TEMPLATE_ID_DEV,
+    BuildType.prod => KAKAO_SHARE_TEMPLATE_ID_PROD,
+  };
 
   Future<void> run() async {
     await main_app.runMagamBellApp();

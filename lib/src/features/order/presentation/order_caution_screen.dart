@@ -13,15 +13,20 @@ import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class OrderCautionRoute extends GoRouteData {
-  const OrderCautionRoute();
+  const OrderCautionRoute({required this.storeId});
+
+  final String storeId;
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const OrderCautionScreen();
+    return OrderCautionScreen(storeId: storeId);
   }
 }
 
 class OrderCautionScreen extends StatelessWidget {
-  const OrderCautionScreen({super.key});
+  const OrderCautionScreen({super.key, required this.storeId});
+
+  final String storeId;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,7 @@ class OrderCautionScreen extends StatelessWidget {
           _buildCautionCard(
             number: '01',
             title: '바이트백은 랜덤으로 구성되어있어요',
-            subtitle: '랜덤하게 드리는 특별한 선물을 기대해보세요',
+            subtitle: '오늘의 랜덤 PICK을 기대해주세요',
             imagePath: R.ASSETS_IMAGES_ORDER_CAUTION_1_PNG,
           ),
           Gaps.h20,
@@ -50,7 +55,7 @@ class OrderCautionScreen extends StatelessWidget {
           // Bottom button
           MgButton(
             onPressed: () async {
-              await const OrderPayRoute().push(context);
+              await OrderPayRoute(storeId: storeId).push(context);
             },
             content: Text('결제하기'),
           ).primary().margin(horizontal: MgSizes.md, bottom: MgSizes.xxl),
@@ -70,9 +75,9 @@ class OrderCautionScreen extends StatelessWidget {
             Text(number)
                 .textColor(MgColorScheme.gray11)
                 .bold()
-                .margin(horizontal: MgSizes.md, vertical: MgSizes.xs)
+                .margin(horizontal: MgSizes.xs)
                 .decorated(
-                  color: MgColorScheme.systemSuccess,
+                  color: Color(0xff282F44),
                   borderRadius: BorderRadius.circular(1000),
                 ),
             Gaps.h8,

@@ -7,22 +7,70 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class MgAlertDialog extends StatelessWidget {
-  final String title;
+  final String? title;
   final Widget content;
-  final VoidCallback onConfirm;
-  final String? confirmText;
-  final String? cancelText;
-  final bool hasCancel;
+  final Widget actions;
 
   const MgAlertDialog({
     super.key,
-    required this.title,
     required this.content,
-    required this.onConfirm,
-    this.confirmText = '예',
-    this.cancelText = '아니오',
-    this.hasCancel = true,
+    required this.actions,
+    this.title,
   });
+
+  /// 기본 AlertDialog (기존 동작)
+  factory MgAlertDialog.basic({
+    Key? key,
+    required Widget content,
+    required VoidCallback onConfirm,
+    String? title,
+    String confirmText = '예',
+    String cancelText = '아니오',
+    bool hasCancel = true,
+  }) {
+    return MgAlertDialog(
+      key: key,
+      title: title,
+      content: content,
+      actions: _buildBasicActions(
+        onConfirm: onConfirm,
+        confirmText: confirmText,
+        cancelText: cancelText,
+        hasCancel: hasCancel,
+      ),
+    );
+  }
+
+  static Widget _buildBasicActions({
+    required VoidCallback onConfirm,
+    required String confirmText,
+    required String cancelText,
+    required bool hasCancel,
+  }) {
+    return Builder(
+      builder: (context) => Row(
+        children: [
+          if (hasCancel)
+            Expanded(
+              child: MgButton(
+                onPressed: context.pop,
+                content: Text(cancelText).textColor(MgColorScheme.gray4),
+              ).gray(),
+            ),
+          if (hasCancel) Gaps.w8,
+          Expanded(
+            child: MgButton(
+              onPressed: () {
+                context.pop();
+                onConfirm();
+              },
+              content: Text(confirmText),
+            ).primary(),
+          ),
+        ],
+      ).margin(top: MgSizes.size32),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,32 +78,12 @@ class MgAlertDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(MgRadius.md),
       ),
-      title: Text(title).lg().bold().center(),
+      title: title != null ? Text(title!).lg().bold().center() : null,
       content: Wrap(
         alignment: WrapAlignment.center,
         children: [
           content,
-          Row(
-            children: [
-              if (hasCancel)
-                Expanded(
-                  child: MgButton(
-                    onPressed: context.pop,
-                    content: Text(cancelText!).textColor(MgColorScheme.gray4),
-                  ).gray(),
-                ),
-              Gaps.w8,
-              Expanded(
-                child: MgButton(
-                  onPressed: () {
-                    context.pop();
-                    onConfirm();
-                  },
-                  content: Text(confirmText!),
-                ).primary(),
-              ),
-            ],
-          ).margin(top: MgSizes.size32),
+          actions,
         ],
       ),
     );
