@@ -7,7 +7,6 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
-import 'package:magambell/src/features/goods/presentation/widgets/time_picker_bottomsheet.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
@@ -15,7 +14,6 @@ import 'package:magambell/src/features/store/data/repositories/store_repository.
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
-import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -176,24 +174,27 @@ class _StoreTabBar extends ConsumerWidget {
 
     return MgAsyncAnimatedSwitcher(
       asyncValue: reviewsAsync,
-      builder: (reviews) {
-        return TabBar(
-          dividerColor: MgColorScheme.gray8,
-          controller: controller,
-          labelColor: MgColorScheme.gray1,
-          unselectedLabelColor: MgColorScheme.gray5,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicator: UnderlineTabIndicator(
-            borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
-          ),
-          labelStyle: context.textTheme.titleLarge,
-          unselectedLabelStyle: context.textTheme.bodyLarge,
-          tabs: [
-            Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
-            Tab(text: '리뷰 (${reviews.length}개)'),
-          ],
-        );
-      },
+      emptyBuilder: () => _buildTabBar(context, 0),
+      builder: (reviews) => _buildTabBar(context, reviews.length),
+    );
+  }
+
+  Widget _buildTabBar(BuildContext context, int reviewCount) {
+    return TabBar(
+      dividerColor: MgColorScheme.gray8,
+      controller: controller,
+      labelColor: MgColorScheme.gray1,
+      unselectedLabelColor: MgColorScheme.gray5,
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicator: UnderlineTabIndicator(
+        borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+      ),
+      labelStyle: context.textTheme.titleLarge,
+      unselectedLabelStyle: context.textTheme.bodyLarge,
+      tabs: [
+        Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
+        Tab(text: '리뷰 ($reviewCount개)'),
+      ],
     );
   }
 }
