@@ -8,7 +8,9 @@ import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 
 class OrderCompleteBottomSheet extends StatelessWidget {
-  const OrderCompleteBottomSheet({super.key});
+  const OrderCompleteBottomSheet({super.key, this.onConfirm});
+
+  final VoidCallback? onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +21,20 @@ class OrderCompleteBottomSheet extends StatelessWidget {
             children: [
               Text('주문 성공').md().bold().margin(vertical: MgSizes.md),
               Image.asset(R.ASSETS_IMAGES_ORDER_COMPLETE_GREEN_PNG),
-              Text("주문이 완료되었어요").md(),
+              Gaps.h16,
+              Text("주문이 완료되었어요").md().bold(),
               Gaps.h4,
               Text(
-                "이번 주문으로 환경 보호에 동참하셨어요!\n지정된 픽업 시간에 맞춰 방문해 주세요.",
+                "이번 주문으로 환경 보호에 동참하셨어요\n지정된 픽업 시간에 맞춰 방문해 주세요.",
               ).md().textGray(),
-              MgButton(onPressed: context.pop, content: Text("확인")).primary(),
+              Gaps.h16,
+              MgButton(
+                onPressed: () {
+                  context.pop();
+                  onConfirm?.call();
+                },
+                content: Text("확인"),
+              ).primary(),
             ],
           ).margin(all: MgSizes.md),
         ],

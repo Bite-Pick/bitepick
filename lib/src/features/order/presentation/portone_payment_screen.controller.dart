@@ -65,9 +65,19 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
     Map<String, String> result,
   ) async {
     talker.info("결제 결과: $result");
-    if (result["error_code"] == "F400") {
-      ToastPresentor.error(context, "결제를 취소했습니다");
-      context.pop(); // TODO: 상품 화면 바깥으로 이동하면 될지?
+
+    // 에러가 있는 경우
+    if (result["error_code"] != null) {
+      final errorMsg = result["error_msg"] ?? "결제에 실패했습니다";
+      talker.error("결제 실패: $result");
+      ToastPresentor.error(context, errorMsg);
+
+      // 결제 실패 시 주문 상태 초기화
+      ref
+          .read(orderPayScreenControllerProvider(state.storeId).notifier)
+          .resetMerchantUid();
+
+      context.pop();
       return;
     }
 
@@ -78,8 +88,14 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
       final impUid = result["imp_uid"];
 
       if (impUid == null) {
-        talker.error("결제 실패: $result");
-        ToastPresentor.error(context, result["error_msg"] ?? "결제 실패");
+        talker.error("결제 실패 - imp_uid 없음: $result");
+        ToastPresentor.error(context, "결제 정보를 찾을 수 없습니다");
+
+        // 결제 실패 시 주문 상태 초기화
+        ref
+            .read(orderPayScreenControllerProvider(state.storeId).notifier)
+            .resetMerchantUid();
+
         context.pop();
         return;
       }
@@ -91,22 +107,35 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
           .read(orderRepositoryProvider)
           .completePayment(paymentId: state.merchantUid);
 
-      ToastPresentor.success(context, "결제가 완료되었습니다.");
-
       ref.invalidate(userOrdersProvider());
+
+      // 결제 성공 시 화면 전환
       ref.read(navigatorControllerProvider.notifier).changeTabIndex(1);
       DefaultRoute().go(context);
-      // TODO: 에러 수정 필요
-      //  showBottomSheet(
-      //   context: context,
-      //   builder: (context) {
-      //     return OrderCompleteBottomSheet();
-      //   },
-      // );
-      
+
+      // 화면 전환 후 bottomSheet 표시
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final currentContext = GlobalVariable.navigatorKey.currentContext;
+        if (currentContext != null) {
+          showModalBottomSheet(
+            context: currentContext,
+            builder: (bottomSheetContext) {
+              return OrderCompleteBottomSheet(
+                onConfirm: () => Navigator.pop(bottomSheetContext),
+              );
+            },
+          );
+        }
+      });
     } catch (e, st) {
       talker.error("결제 오류: $e\n$st");
       ToastPresentor.error(context, "결제 검증 실패");
+
+      // 결제 검증 실패 시 주문 상태 초기화
+      ref
+          .read(orderPayScreenControllerProvider(state.storeId).notifier)
+          .resetMerchantUid();
+
       context.pop();
     } finally {
       state = state.copyWith(isProcessing: false);

@@ -91,6 +91,11 @@ class OrderPayScreenController extends _$OrderPayScreenController {
     );
   }
 
+  // 결제 실패 시 merchantUid 초기화
+  void resetMerchantUid() {
+    state = state.copyWith(merchantUid: null, isSubmitting: false);
+  }
+
   // 결제전 주문등록
   Future<String?> submitOrder() async {
     try {

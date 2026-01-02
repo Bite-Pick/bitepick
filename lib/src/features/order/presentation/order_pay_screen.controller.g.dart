@@ -7,7 +7,7 @@ part of 'order_pay_screen.controller.dart';
 // **************************************************************************
 
 String _$orderPayScreenControllerHash() =>
-    r'f750a141f018fc4da3e777bb896161a4c2598883';
+    r'b93aa75845d21417358ea5f19f5843d97b93c79c';
 
 /// Copied from Dart SDK
 class _SystemHash {
