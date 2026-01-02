@@ -79,45 +79,12 @@ class _SelectServiceRegionScreenState
     final regionId =
         controllerState.selectedTown?.id ??
         controllerState.selectedDistrict?.id;
+
     final res = await ref
         .read(regionRepositoryProvider)
         .requestOpenRegion(regionId: regionId!);
-    if (res) {
-      // context.pop();
-      await showDialog(
-        context: context,
-        builder: (context) => HomeUnsupportedAreaView.share(
-          onPressed: () {
-            Future<void> shareKakao() async {
-              final bool isKakaoTalkSharingAvailable = await ShareClient
-                  .instance
-                  .isKakaoTalkSharingAvailable();
 
-              if (isKakaoTalkSharingAvailable) {
-                try {
-                  Uri uri = await ShareClient.instance.shareCustom(
-                    templateId: Environment.kakaoShareTemplateId,
-                  );
-                  await ShareClient.instance.launchKakaoTalk(uri);
-                  talker.info('카카오톡 공유 완료');
-                } catch (error) {
-                  talker.error('카카오톡 공유 실패 $error');
-                }
-              } else {
-                try {
-                  Uri shareUrl = await WebSharerClient.instance.makeCustomUrl(
-                    templateId: Environment.kakaoShareTemplateId,
-                  );
-                  await launchBrowserTab(shareUrl, popupOpen: true);
-                } catch (error) {
-                  talker.error('카카오톡 공유 실패 $error');
-                }
-              }
-            }
-          },
-        ),
-      );
-    }
+    if (res) context.pop(true);
   }
 
   Widget _buildTopInfoSection() {
@@ -181,6 +148,15 @@ class _SelectServiceRegionScreenState
                 ref
                     .read(selectServiceRegionScreenControllerProvider.notifier)
                     .selectDistrict(district);
+
+                // NOTE: district 전체도 CTA를 활성화하기 위한 로직; 가독성 증진 필요
+                if (controllerState.selectedCity == district) {
+                  ref
+                      .read(
+                        selectServiceRegionScreenControllerProvider.notifier,
+                      )
+                      .selectTown(district);
+                }
               },
               selectedId: controllerState.selectedDistrict?.id,
               level: RegionSelectionLevel.district,
