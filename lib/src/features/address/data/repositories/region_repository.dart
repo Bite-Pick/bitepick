@@ -66,7 +66,6 @@ class RegionRepository {
         .toList();
   }
 
-  // TODO: 서버 오류 수정 필요
   Future<bool> requestOpenRegion({required int regionId}) async {
     final res = await _dio.post(
       "/v1/store/region",

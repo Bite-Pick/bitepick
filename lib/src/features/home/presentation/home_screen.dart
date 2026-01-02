@@ -215,7 +215,7 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
   // TODO[tooltip]: 주소 변경시 tooltip 표시
   Widget _buildAddress(List<Address> serviceAreas) {
     return GestureDetector(
-      onTap: () async {},
+      onTap: () async => showAddressBottomSheet(serviceAreas),
       child: Row(
         children: [
           BaseSvgIcon.mapPin(size: 20),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/config/environment.dart';
@@ -96,28 +97,21 @@ class AppInterceptor extends Interceptor {
       final code = data['statusCode'] ?? statusCode ?? -1;
       final message = data['message'] as String? ?? '알 수 없는 오류가 발생했습니다.';
 
+      // 특별한 액션이 필요한 에러 코드 처리
       switch (data['code']) {
         case 'STORE_NOT_FOUND':
+          _showErrorMessage(message);
           return _navigateToRegisterStore();
       }
 
       switch (code) {
-        case 400:
-          _showErrorMessage(message);
-          return handler.resolve(
-            Response(
-              requestOptions: err.requestOptions,
-              data: data,
-              statusCode: statusCode,
-            ),
-          );
-
-        case 401: // Unauthorized - 토큰 갱신 시도
+        case 401: // Unauthorized - 토큰 갱신 시도 (Toast 표시 안 함)
           await refreshTokenAndRetry(err, handler);
           return;
 
         default:
-          // 기본 에러 응답 반환
+          // 모든 에러에 Toast 표시
+          _showErrorMessage(message);
           return handler.resolve(
             Response(
               requestOptions: err.requestOptions,
@@ -373,13 +367,20 @@ class AppInterceptor extends Interceptor {
   }
 
   /// 에러 메시지 표시
-  ///
-  /// TODO: Toast, SnackBar 등으로 메시지 표시 구현
   void _showErrorMessage(String message) {
-    // 예시: Fluttertoast 사용
-    // Fluttertoast.showToast(msg: message);
-
     talker.debug('❌ Error: $message');
+
+    final context = GlobalVariable.navigatorKey.currentContext;
+    if (context == null) {
+      talker.debug('⚠️ Context is null, cannot show toast');
+      return;
+    }
+
+    // PostFrameCallback으로 다음 프레임에 Toast 표시
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentContext = GlobalVariable.navigatorKey.currentContext;
+      if (currentContext != null) ToastPresentor.error(currentContext, message);
+    });
   }
 
   /// 로그인 화면으로 이동
