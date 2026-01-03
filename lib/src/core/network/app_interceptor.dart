@@ -109,9 +109,16 @@ class AppInterceptor extends Interceptor {
           await refreshTokenAndRetry(err, handler);
           return;
 
-        default:
-          // 모든 에러에 Toast 표시
+        case 400:
           _showErrorMessage(message);
+          return handler.resolve(
+            Response(
+              requestOptions: err.requestOptions,
+              data: data,
+              statusCode: statusCode ?? -1,
+            ),
+          );
+        default:
           return handler.resolve(
             Response(
               requestOptions: err.requestOptions,
