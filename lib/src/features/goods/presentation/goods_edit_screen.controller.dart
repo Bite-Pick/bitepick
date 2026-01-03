@@ -181,7 +181,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     final fileName = file.path.split('/').last;
     final newDetail = GoodsDetailItem(
       localImage: LocalImage(
-        id: state.goodsDetails.length,
+        id: state.goodsDetails.length + 1, // 1부터 시작 (서버와 매칭)
         key: fileName,
         file: file,
       ),

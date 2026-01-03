@@ -80,7 +80,7 @@ class AppInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     final res = err.response;
-    talker.debug(
+    talker.error(
       "[${res?.data['path']}] ${res?.statusCode} \n ${res?.data['name']} ${res?.data['code']} ${res?.data['message']}",
     );
     final statusCode = res?.statusCode;

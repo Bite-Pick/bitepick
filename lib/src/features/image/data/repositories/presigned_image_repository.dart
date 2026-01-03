@@ -85,10 +85,26 @@ class PreSignedImageRepository {
     void Function(int currentIndex, int total, int sent, int totalBytes)?
     onProgress,
   }) async {
+    talker.debug('[S3] ========== uploadImagesToS3 시작 ==========');
+    talker.debug('[S3] localImages 개수: ${localImages.length}');
+    talker.debug('[S3] presignedUrls 개수: ${presignedUrls.length}');
+
+    // localImages의 id 출력
+    for (var i = 0; i < localImages.length; i++) {
+      talker.debug('[S3] localImage[$i] - id: ${localImages[i].id}, key: ${localImages[i].key}, file: ${localImages[i].file != null ? "exists" : "null"}');
+    }
+
+    // presignedUrls의 id 출력
+    for (var i = 0; i < presignedUrls.length; i++) {
+      talker.debug('[S3] presignedUrl[$i] - id: ${presignedUrls[i].id}, url: ${presignedUrls[i].url != null ? "exists" : "null"}');
+    }
+
     final imagesToUpload = localImages
         .whereType<LocalImage>()
         .where((img) => img.file != null)
         .toList();
+
+    talker.debug('[S3] 필터링 후 업로드할 이미지: ${imagesToUpload.length}개');
 
     if (imagesToUpload.isEmpty) {
       talker.info('[S3] No new images to upload');
@@ -99,26 +115,41 @@ class PreSignedImageRepository {
 
     for (var i = 0; i < imagesToUpload.length; i++) {
       final localImage = imagesToUpload[i];
-      final presignedUrl = presignedUrls.firstWhere(
-        (url) => url.id == localImage.id,
-        orElse: () =>
-            throw Exception('Presigned URL not found for ${localImage.key}'),
-      );
-      if (presignedUrl.url == null) {
-        talker.error(
-          '[S3] Presigned URL is null for image id: ${presignedUrl.id}',
-        );
-        return;
-      }
+      talker.debug('[S3] [$i] localImage.id로 presignedUrl 찾는 중: ${localImage.id}');
 
-      await uploadToS3WithPresignedUrl(
-        presignedUrl: presignedUrl.url!,
-        file: localImage.file!,
-        onProgress: onProgress != null
-            ? (sent, total) => onProgress(i, imagesToUpload.length, sent, total)
-            : null,
-      );
+      try {
+        final presignedUrl = presignedUrls.firstWhere(
+          (url) => url.id == localImage.id,
+          orElse: () {
+            talker.error('[S3] ❌ Presigned URL not found for image id: ${localImage.id}, key: ${localImage.key}');
+            talker.error('[S3] 사용 가능한 presignedUrl ids: ${presignedUrls.map((u) => u.id).toList()}');
+            throw Exception('Presigned URL not found for ${localImage.key}');
+          },
+        );
+
+        if (presignedUrl.url == null) {
+          talker.error(
+            '[S3] Presigned URL is null for image id: ${presignedUrl.id}',
+          );
+          return;
+        }
+
+        talker.debug('[S3] ✅ [$i] 매칭 성공 - localImage.id: ${localImage.id}, presignedUrl.id: ${presignedUrl.id}');
+
+        await uploadToS3WithPresignedUrl(
+          presignedUrl: presignedUrl.url!,
+          file: localImage.file!,
+          onProgress: onProgress != null
+              ? (sent, total) => onProgress(i, imagesToUpload.length, sent, total)
+              : null,
+        );
+      } catch (e, stackTrace) {
+        talker.error('[S3] ❌ 이미지 업로드 중 오류', e, stackTrace);
+        rethrow;
+      }
     }
+
+    talker.debug('[S3] ========== uploadImagesToS3 종료 ==========');
   }
 }
 

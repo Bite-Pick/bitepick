@@ -151,7 +151,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
     final fileName = file.path.split('/').last;
     final newDetail = GoodsDetailItem(
       localImage: LocalImage(
-        id: state.goodsDetails.length,
+        id: state.goodsDetails.length + 1, // 1부터 시작 (서버와 매칭)
         key: fileName,
         file: file,
       ),
@@ -203,8 +203,11 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
   // 최종 제출
   Future<bool> submit() async {
+    talker.debug('========== [GOODS_REGISTER] Submit 시작 ==========');
+
     // Form validation 체크 - TextField에 인라인 에러 표시
     if (!state.form.valid) {
+      talker.warning('[GOODS_REGISTER] Form validation 실패');
       state.form.markAllAsTouched();
       return false;
     }
@@ -217,6 +220,14 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       );
 
       final formValue = state.form.value;
+      talker.debug('[GOODS_REGISTER] Form values: ${formValue.keys.toList()}');
+
+      // 1. goodsDetails 상태 확인
+      talker.debug('[GOODS_REGISTER] goodsDetails 개수: ${state.goodsDetails.length}');
+      for (var i = 0; i < state.goodsDetails.length; i++) {
+        final detail = state.goodsDetails[i];
+        talker.debug('[GOODS_REGISTER] [$i] name: ${detail.name}, key: ${detail.localImage.key}, file exists: ${detail.localImage.file != null}');
+      }
 
       final imageUploads = state.goodsDetails.mapIndexed((index, goodsDetail) {
         return {
@@ -225,6 +236,9 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
           'goodsName': goodsDetail.name,
         };
       }).toList();
+
+      talker.debug('[GOODS_REGISTER] imageUploads 생성 완료: ${imageUploads.length}개');
+      talker.debug('[GOODS_REGISTER] imageUploads 내용: $imageUploads');
 
       // TODO: 추가해야함
       // if (imageUploads.isEmpty) {
@@ -236,6 +250,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       // }
 
       // 2. Goods 등록 API 호출 (presigned URL 받기)
+      talker.info('[GOODS_REGISTER] API 요청 시작 - createGoods');
       final presignedUrls = await ref
           .read(goodsRepositoryProvider)
           .createGoods(
@@ -247,35 +262,55 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
             endTime: formValue['endTime'] as DateTime,
             goodsImagesRegisters: imageUploads,
           );
+
       if (presignedUrls == null) {
-        talker.error('바이트백 등록 실패');
+        talker.error('[GOODS_REGISTER] ❌ API 응답 null - 바이트백 등록 실패');
+        state = state.copyWith(isSubmitting: false);
         return false;
       } else {
-        talker.info('바이트백 등록 성공');
+        talker.info('[GOODS_REGISTER] ✅ API 응답 성공 - presignedUrls 개수: ${presignedUrls.length}');
+        for (var i = 0; i < presignedUrls.length; i++) {
+          talker.debug('[GOODS_REGISTER] presignedUrl[$i] - id: ${presignedUrls[i].id}, url: ${presignedUrls[i].url?.substring(0, 50)}...');
+        }
       }
+
       // 임시처리
       if (presignedUrls.isEmpty) {
+        talker.warning('[GOODS_REGISTER] ⚠️ presignedUrls가 비어있음 - 이미지 업로드 없이 완료');
         state = state.copyWith(isSubmitting: false);
         return true;
       }
+
       // 3. Presigned URL로 S3에 이미지 업로드
+      final localImagesToUpload = state.goodsDetails
+          .map((goodsDetail) => goodsDetail.localImage)
+          .toList();
+
+      talker.info('[GOODS_REGISTER] S3 업로드 시작 - 파일 개수: ${localImagesToUpload.length}');
+      for (var i = 0; i < localImagesToUpload.length; i++) {
+        final img = localImagesToUpload[i];
+        talker.debug('[GOODS_REGISTER] 업로드 파일[$i] - id: ${img.id}, key: ${img.key}, file: ${img.file?.path}');
+      }
+
       await ref
           .read(presignedImageRepositoryProvider)
           .uploadImagesToS3(
-            localImages: state.goodsDetails
-                .map((goodsDetail) => goodsDetail.localImage)
-                .toList(),
+            localImages: localImagesToUpload,
             presignedUrls: presignedUrls,
             onProgress: (currentIndex, total, sent, totalBytes) {
               final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;
               final overallProgress = (currentIndex + fileProgress) / total;
+              talker.debug('[GOODS_REGISTER] 업로드 진행률: ${(overallProgress * 100).toStringAsFixed(1)}% ($currentIndex/$total)');
               state = state.copyWith(uploadProgress: overallProgress);
             },
           );
+
       state = state.copyWith(isSubmitting: false);
-      talker.debug('바이트백 등록 및 이미지 업로드 완료');
+      talker.info('[GOODS_REGISTER] ✅ 바이트백 등록 및 이미지 업로드 완료');
+      talker.debug('========== [GOODS_REGISTER] Submit 종료 ==========');
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      talker.error('[GOODS_REGISTER] ❌ Submit 중 오류 발생', e, stackTrace);
       state = state.copyWith(isSubmitting: false, error: e.toString());
       return false;
     }

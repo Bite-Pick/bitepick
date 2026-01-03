@@ -71,7 +71,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
   void addLocalImages(List<File> files) {
     talker.info('[Image] Adding ${files.length} images');
     final newImages = <LocalImage>[];
-    var currentId = localImages.length;
+    var currentId = localImages.length + 1; // 1부터 시작 (서버와 매칭)
 
     for (final file in files) {
       final fileName = file.path.split('/').last;
