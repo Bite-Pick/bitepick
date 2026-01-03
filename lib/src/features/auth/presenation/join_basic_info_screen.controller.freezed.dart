@@ -23,6 +23,8 @@ mixin _$JoinBasicInfoState {
   String get nickname => throw _privateConstructorUsedError;
   String get phone => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get submitted =>
+      throw _privateConstructorUsedError; // submit 버튼을 눌렀는지 여부
   String? get error => throw _privateConstructorUsedError;
   String? get nicknameError => throw _privateConstructorUsedError;
   String? get phoneError => throw _privateConstructorUsedError;
@@ -48,6 +50,7 @@ abstract class $JoinBasicInfoStateCopyWith<$Res> {
     String nickname,
     String phone,
     bool isLoading,
+    bool submitted,
     String? error,
     String? nicknameError,
     String? phoneError,
@@ -75,6 +78,7 @@ class _$JoinBasicInfoStateCopyWithImpl<$Res, $Val extends JoinBasicInfoState>
     Object? nickname = null,
     Object? phone = null,
     Object? isLoading = null,
+    Object? submitted = null,
     Object? error = freezed,
     Object? nicknameError = freezed,
     Object? phoneError = freezed,
@@ -104,6 +108,10 @@ class _$JoinBasicInfoStateCopyWithImpl<$Res, $Val extends JoinBasicInfoState>
             isLoading: null == isLoading
                 ? _value.isLoading
                 : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            submitted: null == submitted
+                ? _value.submitted
+                : submitted // ignore: cast_nullable_to_non_nullable
                       as bool,
             error: freezed == error
                 ? _value.error
@@ -139,6 +147,7 @@ abstract class _$$JoinBasicInfoStateImplCopyWith<$Res>
     String nickname,
     String phone,
     bool isLoading,
+    bool submitted,
     String? error,
     String? nicknameError,
     String? phoneError,
@@ -165,6 +174,7 @@ class __$$JoinBasicInfoStateImplCopyWithImpl<$Res>
     Object? nickname = null,
     Object? phone = null,
     Object? isLoading = null,
+    Object? submitted = null,
     Object? error = freezed,
     Object? nicknameError = freezed,
     Object? phoneError = freezed,
@@ -195,6 +205,10 @@ class __$$JoinBasicInfoStateImplCopyWithImpl<$Res>
             ? _value.isLoading
             : isLoading // ignore: cast_nullable_to_non_nullable
                   as bool,
+        submitted: null == submitted
+            ? _value.submitted
+            : submitted // ignore: cast_nullable_to_non_nullable
+                  as bool,
         error: freezed == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
@@ -222,6 +236,7 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
     this.nickname = '',
     this.phone = '',
     this.isLoading = false,
+    this.submitted = false,
     this.error,
     this.nicknameError,
     this.phoneError,
@@ -246,6 +261,10 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
   @JsonKey()
   final bool isLoading;
   @override
+  @JsonKey()
+  final bool submitted;
+  // submit 버튼을 눌렀는지 여부
+  @override
   final String? error;
   @override
   final String? nicknameError;
@@ -254,7 +273,7 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
 
   @override
   String toString() {
-    return 'JoinBasicInfoState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, error: $error, nicknameError: $nicknameError, phoneError: $phoneError)';
+    return 'JoinBasicInfoState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, submitted: $submitted, error: $error, nicknameError: $nicknameError, phoneError: $phoneError)';
   }
 
   @override
@@ -273,6 +292,8 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.submitted, submitted) ||
+                other.submitted == submitted) &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.nicknameError, nicknameError) ||
                 other.nicknameError == nicknameError) &&
@@ -289,6 +310,7 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
     nickname,
     phone,
     isLoading,
+    submitted,
     error,
     nicknameError,
     phoneError,
@@ -314,6 +336,7 @@ abstract class _JoinBasicInfoState implements JoinBasicInfoState {
     final String nickname,
     final String phone,
     final bool isLoading,
+    final bool submitted,
     final String? error,
     final String? nicknameError,
     final String? phoneError,
@@ -331,6 +354,8 @@ abstract class _JoinBasicInfoState implements JoinBasicInfoState {
   String get phone;
   @override
   bool get isLoading;
+  @override
+  bool get submitted; // submit 버튼을 눌렀는지 여부
   @override
   String? get error;
   @override

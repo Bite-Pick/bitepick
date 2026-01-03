@@ -19,6 +19,7 @@ class JoinBasicInfoState with _$JoinBasicInfoState {
     @Default('') String nickname,
     @Default('') String phone,
     @Default(false) bool isLoading,
+    @Default(false) bool submitted, // submit 버튼을 눌렀는지 여부
     String? error,
     String? nicknameError,
     String? phoneError,
@@ -46,14 +47,23 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
   }
 
   // 2단계: 닉네임 입력
-  void setNickname(String nickname) =>
-      state = state.copyWith(nickname: nickname);
+  void setNickname(String nickname) {
+    state = state.copyWith(nickname: nickname);
+    // submitted가 true일 때만 실시간 검증
+    if (state.submitted) {
+      validateInputs();
+    }
+  }
 
   // 3단계: 전화번호 입력
   void setPhone(String phone) {
     // 숫자만 추출 (하이픈 등 제거)
     final digitsOnly = phone.replaceAll(RegExp(r'[^0-9]'), '');
     state = state.copyWith(phone: digitsOnly);
+    // submitted가 true일 때만 실시간 검증
+    if (state.submitted) {
+      validateInputs();
+    }
   }
 
   // 전화번호 포맷팅 (UI 표시용)
@@ -77,6 +87,14 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
   // 최종 회원가입 API 호출
   Future<bool> completeSignup() async {
+    // Submit 상태로 변경 (이후 실시간 검증 활성화)
+    state = state.copyWith(submitted: true);
+
+    // Validation 실행
+    if (!validateInputs()) {
+      return false;
+    }
+
     if (state.userRole == null) {
       state = state.copyWith(error: '사용자 유형을 선택해주세요', isLoading: false);
       return false;
@@ -84,16 +102,6 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
     if (state.providerType == null || state.socialToken == null) {
       state = state.copyWith(error: '소셜 로그인 정보가 없습니다', isLoading: false);
-      return false;
-    }
-
-    if (state.nickname.trim().isEmpty) {
-      state = state.copyWith(error: '닉네임을 입력해주세요', isLoading: false);
-      return false;
-    }
-
-    if (state.phone.trim().isEmpty) {
-      state = state.copyWith(error: '전화번호를 입력해주세요', isLoading: false);
       return false;
     }
 
@@ -131,6 +139,9 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
   // 입력값 검증
   bool validateInputs() {
+    // submitted가 false면 에러 표시 안함 (submit 전)
+    if (!state.submitted) return true;
+
     // 에러 초기화
     state = state.copyWith(nicknameError: null, phoneError: null);
 

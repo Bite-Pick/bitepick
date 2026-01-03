@@ -27,7 +27,7 @@ class GoodsRegisterState with _$GoodsRegisterState {
   }) = _GoodsRegisterState;
 }
 
-const _minDuration = Duration(minutes: 10);
+const _minDuration = Duration(minutes: 30);
 
 @riverpod
 class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
@@ -86,7 +86,7 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
   }
 
   FormGroup _createForm() {
-    return FormGroup({
+    final form = FormGroup({
       'quantity': FormControl<int>(
         value: 1,
         validators: [Validators.required, Validators.min(1)],
@@ -108,6 +108,10 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       ),
       'salePrice': FormControl<int>(),
     });
+
+    // 초기 상태에서는 에러 표시 안함
+    form.markAsUntouched();
+    return form;
   }
 
   void _calculateSalePrice() {
@@ -199,22 +203,9 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
 
   // 최종 제출
   Future<bool> submit() async {
+    // Form validation 체크 - TextField에 인라인 에러 표시
     if (!state.form.valid) {
       state.form.markAllAsTouched();
-
-      // 각 필드의 에러를 한글로 출력
-      final invalidFieldNames = state.form.controls.entries
-          .where((entry) => entry.value.invalid)
-          .map((entry) => _fieldNameMap[entry.key] ?? entry.key)
-          .join(', ');
-
-      if (invalidFieldNames.isNotEmpty) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        if (context != null) {
-          ToastPresentor.error(context, '다음 항목을 확인해주세요 : $invalidFieldNames');
-        }
-      }
-
       return false;
     }
 

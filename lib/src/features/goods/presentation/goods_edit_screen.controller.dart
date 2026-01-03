@@ -86,6 +86,9 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     // 서버에서 받은 Goods로 초기값 채우기
     form.patchValue(_initialFormValueFrom(goods), updateParent: true);
 
+    // patchValue 후에도 초기 상태에서는 에러 표시 안함
+    form.markAsUntouched();
+
     // goodsImageList를 goodsDetails로 변환하여 초기값 설정
     final initialGoodsDetails = _convertGoodsImageListToDetails(goodsImageList);
 
@@ -138,7 +141,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
   }
 
   FormGroup _createForm() {
-    return FormGroup({
+    final form = FormGroup({
       'name': FormControl<String>(),
       'goodsId': FormControl<String>(),
       'description': FormControl<String>(),
@@ -160,6 +163,10 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       ),
       'salePrice': FormControl<int>(validators: [Validators.required]),
     });
+
+    // 초기 상태에서는 에러 표시 안함
+    form.markAsUntouched();
+    return form;
   }
 
   void _calculateSalePrice(FormGroup form) {

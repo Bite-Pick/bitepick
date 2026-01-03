@@ -58,6 +58,9 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       ),
     });
 
+    // 초기 상태에서는 에러 표시 안함
+    form.markAsUntouched();
+
     // form 상태 변경을 감지하여 UI 업데이트
     form.statusChanged.listen((_) {
       state = AsyncValue.data(null);
@@ -138,22 +141,21 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
   };
 
   Future<bool> submit() async {
+    // 1. Form validation 체크
     if (!form.valid) {
+      // 모든 필드를 터치 상태로 변경하여 각 TextField에 에러 표시
       form.markAllAsTouched();
+      return false;
+    }
 
-      // 각 필드의 에러를 한글로 출력
-      final invalidFieldNames = form.controls.entries
-          .where((entry) => entry.value.invalid)
-          .map((entry) => _fieldNameMap[entry.key] ?? entry.key)
-          .join(', ');
-
-      if (invalidFieldNames.isNotEmpty) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        if (context != null) {
-          ToastPresentor.error(context, '다음 항목을 확인해주세요 : $invalidFieldNames');
-        }
+    // 2. 이미지 업로드 체크 (Toast로 표시)
+    if (localImages.isEmpty) {
+      final context = GlobalVariable.navigatorKey.currentContext;
+      if (context != null) {
+        ToastPresentor.error(context, "이미지는 최소 1장 이상 업로드해주세요");
+      } else {
+        talker.error("이미지는 최소 1장 이상 업로드해주세요");
       }
-
       return false;
     }
 
@@ -174,19 +176,10 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
       // if (latitude == null || longitude == null)
       //   throw Exception('위치 정보가 없습니다. 주소 찾기를 다시 시도해주세요.');
 
-      // TODO: 이미지 업로드 구현
+      // 이미지 업로드 처리
       final imageUploads = localImages.mapIndexed((index, localImage) {
-        // This is where you would handle file upload and get back a key or URL
-        // For now, we'll just use the local file name as a placeholder key.
-        return {'key': localImage.key, 'id': index + 1}; // TODO: id 규칙 만들기
+        return {'key': localImage.key, 'id': index + 1};
       }).toList();
-      if (imageUploads.isEmpty) {
-        final context = GlobalVariable.navigatorKey.currentContext;
-        context != null
-            ? ToastPresentor.error(context, "이미지는 최소 1장이상 업로드해주세요")
-            : talker.error("이미지는 최소 1장이상 업로드해주세요");
-        return false;
-      }
 
       talker.info('[Store] Creating store with ${imageUploads.length} images');
 
@@ -195,7 +188,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
           .createStore(
             name: formValue['storeName'] as String,
             address: fullAddress,
-            description: formValue['description'] as String,
+            description: (formValue['description'] as String?) ?? '',
             latitude:
                 latitude ??
                 37.3182127917921, // TODO: dev 카카오 API 심사동안 기본값 마북동에서 조회되도록 수정
@@ -206,17 +199,30 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
             bankName: formValue['bankName'] as String,
             bankAccount: formValue['accountNumber'] as String,
             storeImagesRegisters: imageUploads,
-            parkingDescription: formValue['parkingDescription'] as String,
+            parkingDescription: formValue['parkingDescription'] as String?,
           );
 
       talker.info('[S3] Starting upload for ${localImages.length} images');
       talker.debug('[S3] Presigned URLs count: ${result.length}');
+
       if (result.isEmpty) return false;
+
+      // localImages의 id를 서버에서 받은 presigned URL의 id로 업데이트
+      final updatedLocalImages = localImages.mapIndexed((index, localImage) {
+        if (index < result.length) {
+          return localImage.copyWith(id: result[index].id);
+        }
+        return localImage;
+      }).toList();
+
+      talker.debug('[S3] Updated local images IDs: ${updatedLocalImages.map((img) => img.id).toList()}');
+      talker.debug('[S3] Presigned URL IDs: ${result.map((url) => url.id).toList()}');
+
       bool isSuccess = false;
       await ref
           .read(presignedImageRepositoryProvider)
           .uploadImagesToS3(
-            localImages: localImages,
+            localImages: updatedLocalImages,
             presignedUrls: result,
             onProgress: (currentIndex, total, sent, totalBytes) {
               final fileProgress = totalBytes > 0 ? sent / totalBytes : 0;

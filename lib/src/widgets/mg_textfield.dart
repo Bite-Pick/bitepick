@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -183,18 +184,8 @@ class _MgTextFieldState extends State<MgTextField> {
             ),
           ),
 
-          // Error Message
           if (widget.error != null && widget.error!.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 4),
-              child: Text(
-                widget.error!,
-                style: const TextStyle(
-                  color: MgColorScheme.systemError,
-                  fontSize: fontSizeSm,
-                ),
-              ),
-            ),
+            Text(widget.error!).sm().red().margin(top: MgSizes.xs),
           ],
         ],
       ),
