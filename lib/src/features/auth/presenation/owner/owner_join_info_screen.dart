@@ -121,11 +121,14 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         // 1. 매장 이름
         _buildSectionTitle('매장 이름', subtitle: '체인점일 경우, 지점명까지 해주세요'),
         Gaps.h8,
-        MgReactiveTextField(formControlName: 'storeName', hintText: '매장 이름 '),
-        // _buildSectionTitle('매장 설명'),
+        MgReactiveTextField(
+          formControlName: 'storeName',
+          hintText: '매장 이름 ',
+        ),
+        _buildSectionTitle('매장 설명'),
         MgReactiveTextField(
           formControlName: 'description',
-          hintText: '매장에 대한 설명을 입력해주세요',
+          // hintText: '매장에 대한 설명을 입력해주세요',
         ),
         // 2. 매장 주소
         _buildSectionTitle('매장 주소'),
@@ -161,7 +164,9 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         ),
 
         _buildSectionTitle("주차안내"),
-        MgReactiveTextField(formControlName: 'parkingDescription'),
+        MgReactiveTextField(
+          formControlName: 'parkingDescription',
+        ),
 
         _buildSectionTitle("대표 이미지"),
         ImageUploadSection(

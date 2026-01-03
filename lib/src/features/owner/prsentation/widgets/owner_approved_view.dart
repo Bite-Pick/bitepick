@@ -48,7 +48,7 @@ class OwnerApprovedView extends ConsumerWidget {
   final OwnerWaitingButtonType buttonType;
 
   factory OwnerApprovedView.completed() => const OwnerApprovedView(
-    title: '매장 등록 완료!',
+    title: '매장 등록 완료',
     subtitle: '24시간 내에 승인이 완료됩니다.\n승인 이후 고객의 앱에서 사장님 가게를\n볼 수 있으며 판매가 시작됩니다.',
     assetName: R.ASSETS_IMAGES_STORE_REGISTER_SUCCESS_PNG,
     buttonType: OwnerWaitingButtonType.HOME,
@@ -75,7 +75,8 @@ class OwnerApprovedView extends ConsumerWidget {
           Text(
             subtitle,
           ).md().center().margin(top: MgSizes.xs, bottom: MgSizes.xl),
-          Image.asset(assetName).constrained(height: 225.h),
+          Gaps.h32,
+          Image.asset(assetName).constrained(height: 165.h),
           Spacer(),
           _buildButton(
             context,

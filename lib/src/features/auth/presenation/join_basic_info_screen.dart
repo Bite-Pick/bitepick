@@ -124,9 +124,9 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
 
     if (!controller.validateInputs()) {
       final state = ref.read(joinBasicInfoScreenControllerProvider);
-      if (state.nicknameError != null || state.phoneError != null) {
-        ToastPresentor.error(context, state.nicknameError ?? state.phoneError!);
-      }
+      // if (state.nicknameError != null || state.phoneError != null) {
+      //   ToastPresentor.error(context, state.nicknameError ?? state.phoneError!);
+      // }
       return;
     }
 

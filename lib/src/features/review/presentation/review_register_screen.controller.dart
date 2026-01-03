@@ -44,7 +44,7 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
     final newImages = files.mapIndexed((index, file) {
       final currentLength = state.images.length;
       return LocalImage(
-        id: currentLength + index,
+        id: currentLength + index + 1, // 1부터 시작 (서버와 매칭)
         key: file.path.split('/').last,
         file: file,
       );

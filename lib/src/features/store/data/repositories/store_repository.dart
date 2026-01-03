@@ -71,7 +71,7 @@ class StoreRepository {
     required String businessNumber,
     required String bankName,
     required String bankAccount,
-    required String parkingDescription,
+    String? parkingDescription,
     required List<Map<String, dynamic>> storeImagesRegisters,
   }) async {
     final res = await _dio.post(

@@ -80,7 +80,7 @@ class AppInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     final res = err.response;
-    talker.debug(
+    talker.error(
       "[${res?.data['path']}] ${res?.statusCode} \n ${res?.data['name']} ${res?.data['code']} ${res?.data['message']}",
     );
     final statusCode = res?.statusCode;
@@ -109,9 +109,16 @@ class AppInterceptor extends Interceptor {
           await refreshTokenAndRetry(err, handler);
           return;
 
-        default:
-          // 모든 에러에 Toast 표시
+        case 400:
           _showErrorMessage(message);
+          return handler.resolve(
+            Response(
+              requestOptions: err.requestOptions,
+              data: data,
+              statusCode: statusCode ?? -1,
+            ),
+          );
+        default:
           return handler.resolve(
             Response(
               requestOptions: err.requestOptions,

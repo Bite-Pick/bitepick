@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:magambell/src/core/utils/mg_validation_message.dart';
 import 'package:magambell/src/widgets/mg_textfield.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -7,6 +8,7 @@ class MgReactiveTextField<T> extends ReactiveFormField<T, T> {
   MgReactiveTextField({
     super.key,
     super.formControlName,
+    this.label,
     this.hintText,
     this.obscureText = false,
     this.enabled = true,
@@ -24,7 +26,9 @@ class MgReactiveTextField<T> extends ReactiveFormField<T, T> {
            return MgTextField(
              controller: state._textEditingController,
              focusNode: state._focusNode,
+             label: label,
              hintText: hintText,
+             error: state._getErrorMessage(),
              obscureText: obscureText,
              enabled: enabled,
              keyboardType: keyboardType,
@@ -38,6 +42,7 @@ class MgReactiveTextField<T> extends ReactiveFormField<T, T> {
          },
        );
 
+  final String? label;
   final String? hintText;
   final bool obscureText;
   final bool enabled;
@@ -65,6 +70,20 @@ class _MgReactiveTextFieldState<T> extends ReactiveFormFieldState<T, T> {
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
     _textEditingController.text = _valueToString(value);
+  }
+
+  /// ReactiveForm의 validation error를 한글 메시지로 변환
+  /// touched 상태: submit 후에는 항상 에러 표시, 입력 시마다 실시간 유효성 검사
+  String? _getErrorMessage() {
+    if (control == null) return null;
+
+    // touched가 false면 에러 표시 안함 (submit 전)
+    if (!control.touched) return null;
+
+    // touched가 true면 valid 여부와 관계없이 실시간으로 에러 표시/숨김
+    if (control.valid) return null;
+
+    return MgValidationMessage.getErrorMessage(control.errors);
   }
 
   @override

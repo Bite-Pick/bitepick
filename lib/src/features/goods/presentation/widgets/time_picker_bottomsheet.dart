@@ -175,7 +175,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('픽업 시간 설정').lg().bold().margin(bottom: MgSizes.md),
+            Text('픽업 시간 설정').md().bold().margin(bottom: MgSizes.md),
             Gaps.h16,
             _buildTimePicker(),
             Gaps.h24,
@@ -216,12 +216,10 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
             child: ListWheelScrollView.useDelegate(
               controller: _timeController,
               itemExtent: 48,
-              diameterRatio: 1.5,
+              diameterRatio: 3,
               physics: const FixedExtentScrollPhysics(),
               onSelectedItemChanged: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
+                setState(() => _selectedIndex = index);
                 _notifySelectionChanged();
               },
               childDelegate: ListWheelChildBuilderDelegate(
@@ -238,7 +236,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                               ? MgColorScheme.gray1
                               : MgColorScheme.gray5,
                         )
-                        .xl(),
+                        .fontSize(isSelected ? MgFontSize.lg : MgFontSize.md),
                   );
                 },
                 childCount: _timeOptions.length,
