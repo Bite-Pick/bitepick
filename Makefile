@@ -1,10 +1,12 @@
-.PHONY: gen clean help
+.PHONY: gen clean help encrypt decrypt
 FLUTTER := $(shell which flutter)
 
 help:
 	@echo "Available commands:"
-	@echo "  make gen    - Generate assets"
-	@echo "  make clean  - Clean generated files"
+	@echo "  make gen                              - Generate assets"
+	@echo "  make clean                            - Clean generated files"
+	@echo "  make encrypt input=path/to/file       - Encrypt file with GPG"
+	@echo "  make decrypt input=file.gpg [output=] - Decrypt GPG file"
 
 gen:
 	@echo "Generating assets..."
@@ -42,6 +44,29 @@ encrypt:
 		$(input)
 
 	@echo "✅ 암호화 완료 → $(SECRETS_DIR)/$$(basename $(input)).gpg"
+
+# make decrypt input=.github/secrets/file.gpg output=path/to/output
+# output을 지정하지 않으면 .gpg 확장자를 제거한 파일명으로 현재 디렉토리에 저장
+decrypt:
+	@if [ -z "$(input)" ]; then \
+		echo "❌ input 파일을 지정해야 합니다. 예: make decrypt input=.github/secrets/file.gpg"; \
+		exit 1; \
+	fi
+	@if [ ! -f "$(input)" ]; then \
+		echo "❌ 파일을 찾을 수 없습니다: $(input)"; \
+		exit 1; \
+	fi
+	@if [ -z "$(output)" ]; then \
+		OUTPUT_FILE=$$(basename $(input) .gpg); \
+	else \
+		OUTPUT_FILE="$(output)"; \
+		mkdir -p $$(dirname $(output)); \
+	fi; \
+	gpg --decrypt --cipher-algo AES256 --batch --yes \
+		--passphrase "$(GPG_PASSPHRASE)" \
+		--output $$OUTPUT_FILE \
+		$(input); \
+	echo "✅ 복호화 완료 → $$OUTPUT_FILE"
 
 
 iosCacheClean:
