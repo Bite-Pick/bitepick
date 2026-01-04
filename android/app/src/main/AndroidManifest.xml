@@ -108,6 +108,10 @@
         <package android:name="com.nhn.android.search" />
         <package android:name="com.kakaobank.channel" />
 
+        <!-- 지도 앱 -->
+        <package android:name="com.nhn.android.nmap" />
+        <package android:name="net.daum.android.map" />
+
         <!-- 기타 결제 관련 -->
         <package android:name="com.samsung.android.spay" />
         <package android:name="com.eg.android.AlipayGphone" />

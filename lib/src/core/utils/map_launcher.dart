@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 // NOTE: AI GENERATE 검토 필요(네이밍, 로직)
 class MapLauncher {
@@ -68,10 +69,8 @@ class MapLauncher {
     required String androidStoreUrl,
     required String iosStoreUrl,
   }) async {
-    final uri = Uri.parse(url);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url, mode: LaunchMode.externalApplication);
     } else {
       // 앱이 설치되지 않은 경우 스토어로 이동
       final storeUrl = Platform.isAndroid ? androidStoreUrl : iosStoreUrl;
