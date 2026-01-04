@@ -21,7 +21,7 @@ class NotificationRepository {
   /// - DUPLICATE_NOTIFICATION_STORE 코드면 [DuplicateNotificationStoreException] throw
   /// - 그 외 에러는 그대로 rethrow(DioException 포함)
   Future<bool> registerStoreNotification({required String storeId}) async {
-    final token = ref.read(pushNotificationProvider).getToken();
+    final token = await ref.read(pushNotificationProvider).getToken();
     final res = await _dio.post(
       '/v1/notification/store',
       data: {'storeId': storeId, 'fcmToken': token},
