@@ -15,6 +15,7 @@ class MgCheckbox extends StatefulWidget {
     this.uncheckedColor = MgColorScheme.gray11,
     this.borderRadius = MgRadius.xs,
     this.borderWidth = 1,
+    this.trailing,
   });
 
   final bool? initialValue;
@@ -25,6 +26,7 @@ class MgCheckbox extends StatefulWidget {
   final Color uncheckedColor;
   final double borderRadius;
   final double borderWidth;
+  final Widget? trailing;
 
   @override
   State<MgCheckbox> createState() => _MgCheckboxState();
@@ -58,14 +60,19 @@ class _MgCheckboxState extends State<MgCheckbox> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _handleTap,
-      child: _CheckboxContainer(
-        checked: _checked,
-        size: widget.size,
-        borderColor: widget.borderColor,
-        checkedColor: widget.checkedColor,
-        uncheckedColor: widget.uncheckedColor,
-        borderRadius: widget.borderRadius,
-        borderWidth: widget.borderWidth,
+      child: Row(
+        children: [
+          _CheckboxContainer(
+            checked: _checked,
+            size: widget.size,
+            borderColor: widget.borderColor,
+            checkedColor: widget.checkedColor,
+            uncheckedColor: widget.uncheckedColor,
+            borderRadius: widget.borderRadius,
+            borderWidth: widget.borderWidth,
+          ),
+          if (widget.trailing != null) widget.trailing!,
+        ],
       ),
     );
   }
