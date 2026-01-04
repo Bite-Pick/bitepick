@@ -85,8 +85,8 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     endTime,
                   ).margin(horizontal: MgSizes.md),
                   Divider(thickness: 6).margin(vertical: MgSizes.lg),
-                  _buildPaySection().margin(horizontal: MgSizes.md),
-                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+                  // _buildPaySection().margin(horizontal: MgSizes.md),
+                  // Divider(thickness: 6).margin(vertical: MgSizes.lg),
                   _buildPriceInfoSection(
                     originalPrice,
                     discount,
