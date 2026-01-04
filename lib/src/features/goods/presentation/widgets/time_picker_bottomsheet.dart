@@ -14,7 +14,6 @@ class TimeOption {
   TimeOption({required this.displayText, required this.dateTime});
 }
 
-// TODO: 엽업 외 시간에는 다음날의 예약을 미리 할 수 있도록 설정
 class TimePickerBottomSheet extends StatefulWidget {
   const TimePickerBottomSheet({
     super.key,
@@ -63,6 +62,8 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
   late FixedExtentScrollController _timeController;
   late List<TimeOption> _timeOptions;
   late int _selectedIndex;
+  late bool _isPickupToday; // 오늘 픽업 여부
+  late DateTime _pickupDate; // 픽업 날짜 (오늘 또는 내일)
 
   @override
   void initState() {
@@ -90,31 +91,74 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
   }
 
   /// 30분 단위로 시간 옵션 생성
+  /// 현재 시간 기준으로 픽업 날짜(오늘/내일)와 선택 가능한 시간 범위를 자동 결정
   List<TimeOption> _generateTimeOptions() {
     final options = <TimeOption>[];
     final now = DateTime.now();
 
-    // 시작/종료 시간 (분 단위)
-    int startMinute = 0;
-    int endMinute = 24 * 60 - 30; // 23:30
+    // 기본값 설정
+    final startTime =
+        widget.startTime ?? DateTime(now.year, now.month, now.day, 0, 0);
+    final endTime =
+        widget.endTime ?? DateTime(now.year, now.month, now.day, 23, 30);
 
-    if (widget.startTime != null) {
-      startMinute = widget.startTime!.hour * 60 + widget.startTime!.minute;
-    }
-    if (widget.endTime != null) {
-      endMinute = widget.endTime!.hour * 60 + widget.endTime!.minute;
+    // 시간만 추출 (날짜 무시)
+    final nowTimeInMinutes = now.hour * 60 + now.minute;
+    final startTimeInMinutes = startTime.hour * 60 + startTime.minute;
+    final endTimeInMinutes = endTime.hour * 60 + endTime.minute;
+
+    // 픽업 날짜와 선택 가능한 시간 범위 결정
+    DateTime pickupDate;
+    int rangeStartMinute;
+    int rangeEndMinute;
+
+    if (nowTimeInMinutes >= startTimeInMinutes &&
+        nowTimeInMinutes <= endTimeInMinutes) {
+      // 케이스 1: 현재 시간이 영업 시간 내 (startTime <= now <= endTime)
+      // → 픽업 날짜: 오늘, 선택 범위: now ~ endTime
+      _isPickupToday = true;
+      pickupDate = DateTime(now.year, now.month, now.day);
+      rangeStartMinute = nowTimeInMinutes;
+      rangeEndMinute = endTimeInMinutes;
+    } else if (nowTimeInMinutes > endTimeInMinutes) {
+      // 케이스 2: 현재 시간이 영업 종료 이후 (now > endTime)
+      // → 픽업 날짜: 내일, 선택 범위: startTime ~ endTime
+      _isPickupToday = false;
+      pickupDate = DateTime(now.year, now.month, now.day + 1);
+      rangeStartMinute = startTimeInMinutes;
+      rangeEndMinute = endTimeInMinutes;
+    } else {
+      // 케이스 3: 현재 시간이 영업 시작 전 (now < startTime)
+      // → 픽업 날짜: 오늘, 선택 범위: startTime ~ endTime
+      _isPickupToday = true;
+      pickupDate = DateTime(now.year, now.month, now.day);
+      rangeStartMinute = startTimeInMinutes;
+      rangeEndMinute = endTimeInMinutes;
     }
 
-    // 30분 단위로 반올림
-    startMinute = ((startMinute + 14) ~/ 30) * 30; // 반올림
-    endMinute = (endMinute ~/ 30) * 30; // 내림
+    _pickupDate = pickupDate;
+
+    // 30분 단위로 반올림/내림
+    rangeStartMinute = ((rangeStartMinute + 14) ~/ 30) * 30; // 반올림
+    rangeEndMinute = (rangeEndMinute ~/ 30) * 30; // 내림
 
     // 30분 단위로 시간 생성
-    for (int minute = startMinute; minute <= endMinute; minute += 30) {
+    for (
+      int minute = rangeStartMinute;
+      minute <= rangeEndMinute;
+      minute += 30
+    ) {
       final hour = minute ~/ 60;
       final min = minute % 60;
 
-      final dateTime = DateTime(now.year, now.month, now.day, hour, min);
+      // 픽업 날짜 + 선택된 시간으로 DateTime 생성
+      final dateTime = DateTime(
+        pickupDate.year,
+        pickupDate.month,
+        pickupDate.day,
+        hour,
+        min,
+      );
       final displayText = _formatTime(hour, min);
 
       options.add(TimeOption(displayText: displayText, dateTime: dateTime));
@@ -167,6 +211,19 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     }
   }
 
+  /// 버튼 텍스트 생성: "(오늘/내일)(날짜) (시간)"
+  String _buildButtonText() {
+    if (_selectedIndex < 0 || _selectedIndex >= _timeOptions.length) {
+      return '설정하기';
+    }
+
+    final selectedOption = _timeOptions[_selectedIndex];
+    final dayLabel = _isPickupToday ? '오늘' : '내일';
+    final dateLabel = '${_pickupDate.month}/${_pickupDate.day}';
+
+    return '$dayLabel($dateLabel) ${selectedOption.displayText}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return MgBottomsheet(
@@ -175,7 +232,8 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('픽업 시간 설정').md().bold().margin(bottom: MgSizes.md),
+            // 타이틀과 날짜 정보 표시
+            Text('픽업 시간 설정').md().bold(),
             Gaps.h16,
             _buildTimePicker(),
             Gaps.h24,
@@ -188,7 +246,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                   context.pop();
                 }
               },
-              content: Text('설정하기').md().bold(),
+              content: Text(_buildButtonText()).md().bold(),
             ).primary().constrained(height: 56),
           ],
         ),
