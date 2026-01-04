@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
@@ -23,6 +24,7 @@ import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_text_rich.dart';
+import 'package:magambell/src/widgets/mg_tooltip.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class MypageScreen extends ConsumerStatefulWidget {
@@ -94,15 +96,39 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text("탄소절감량").bold().md(),
-                Gaps.w4,
-                BaseSvgIcon.helpCircle(
-                  color: MgColorScheme.gray4,
-                  size: MgSizes.lg,
-                ),
-              ],
+            MgTooltip(
+              showItemArrow: false,
+              itemAlignment: Alignment.bottomCenter,
+              timeoutDuration: Duration(seconds: 4),
+              item:
+                  Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "탄소 절감량",
+                          ).xs().textColor(MgColorScheme.gray11).bold(),
+                          Gaps.h8,
+                          Text(
+                            "탄소 절감량이란, 버려질 뻔 했던 음식을 구매함으로써\n폐기 과정에서 발생했을 탄소를 얼마나 줄였는지를\n추정한 지표입니다.",
+                          ).xs().textColor(MgColorScheme.gray11),
+                        ],
+                      )
+                      .margin(horizontal: MgSizes.md, vertical: MgSizes.sm)
+                      .decorated(
+                        borderRadius: BorderRadius.circular(MgRadius.sm),
+                      )
+                      .constrained(width: 300.w),
+
+              child: Row(
+                children: [
+                  Text("탄소절감량").bold().md(),
+                  Gaps.w4,
+                  BaseSvgIcon.helpCircle(
+                    color: MgColorScheme.gray4,
+                    size: MgSizes.lg,
+                  ),
+                ],
+              ),
             ),
             Stack(
               children: [
