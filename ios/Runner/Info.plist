@@ -53,6 +53,10 @@
 			<string>kakaolink</string>
 			<string>kakaotalk</string>
 
+			<!-- 지도 앱 -->
+			<string>nmap</string>
+			<string>kakaomap</string>
+
 			<!-- 은행 앱 -->
 			<string>kftc-bankpay</string>
 			<string>ispmobile</string>
