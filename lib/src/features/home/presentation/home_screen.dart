@@ -91,14 +91,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
-        // TODO: icon padding 조정 필요
         MgCheckbox(
           initialValue: onlyAvailable,
           onChanged: (value) => ref
               .read(homeScreenControllerProvider.notifier)
               .toggleOnlyAvailable(),
-        ).margin(all: MgSizes.xs),
-        Text("예약가능").sm(),
+          trailing: Text("예약가능").sm().margin(left: MgSizes.xs),
+        ).margin(all: MgSizes.md),
+
         Spacer(),
         GestureDetector(
           onTap: () async {
