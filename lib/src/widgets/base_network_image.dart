@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/mg_sizes.dart';
+import 'package:magambell/src/core/theme/mg_color.dart';
 
 class BaseNetworkImage extends ConsumerWidget {
   const BaseNetworkImage({
@@ -53,7 +54,7 @@ class BaseNetworkImage extends ConsumerWidget {
               height: width,
               width: height,
               decoration: BoxDecoration(
-                color: Colors.red, // TODO: shimmer로 변경
+                color: MgColorScheme.gray10, // TODO: shimmer로 변경
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
