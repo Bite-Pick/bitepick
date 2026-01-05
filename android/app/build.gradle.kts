@@ -90,6 +90,14 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
             // else: keystore 없으면 기본 signing 설정 사용
+
+            // ProGuard 활성화
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
