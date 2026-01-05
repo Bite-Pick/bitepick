@@ -1,1 +1,5 @@
-package_name(ENV["PACKAGE_NAME"] || "com.trendflow.bitepick")
+# MODE에 따라 package_name 동적 설정
+mode = ENV["MODE"] || "prod"
+base_package = "com.trendflow.bitepick"
+package_suffix = mode == "dev" ? ".dev" : ""
+package_name(ENV["PACKAGE_NAME"] || "#{base_package}#{package_suffix}")

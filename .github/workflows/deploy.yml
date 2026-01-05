@@ -52,8 +52,8 @@ jobs:
             FLAVOR="both"
           fi
 
-          # 패치 태그인 경우 -patch 부분 제거
-          VERSION=$(echo "$TAG_NAME" | sed -E 's/-patch[0-9]*$//')
+          # 패치 태그인 경우 -patch 부분 제거, 'v' 접두사도 제거
+          VERSION=$(echo "$TAG_NAME" | sed -E 's/-patch[0-9]*$//' | sed 's/^v//')
 
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "FLAVOR=$FLAVOR" >> $GITHUB_OUTPUT

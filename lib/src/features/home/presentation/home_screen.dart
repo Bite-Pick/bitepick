@@ -91,14 +91,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
-        // TODO: icon padding 조정 필요
         MgCheckbox(
           initialValue: onlyAvailable,
           onChanged: (value) => ref
               .read(homeScreenControllerProvider.notifier)
               .toggleOnlyAvailable(),
-        ).margin(all: MgSizes.xs),
-        Text("예약가능").sm(),
+          trailing: Text("예약가능").sm().margin(left: MgSizes.xs),
+        ).margin(all: MgSizes.md),
+
         Spacer(),
         GestureDetector(
           onTap: () async {
@@ -121,15 +121,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<String> sorts = SortType.values.map((e) => e.name).toList();
     return MgBottomsheet(
       Column(
-        children: sorts
-            .map(
-              (e) => _buildSortBottomSheetItem(
-                e,
-                isSelect: currentSortType.name == e,
-              ),
-            )
-            .toList()
-            .joinWithWidget(Divider()),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("정렬").md().bold().margin(vertical: MgSizes.md),
+          ...sorts
+              .map(
+                (e) => _buildSortBottomSheetItem(
+                  e,
+                  isSelect: currentSortType.name == e,
+                ),
+              )
+              .joinWithWidget(Divider()),
+        ],
       ),
     );
   }
@@ -142,15 +145,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             .setSortType(SortType.values.firstWhere((e) => e.name == title));
         Navigator.of(context).pop();
       },
-      // TODO: 터치영역 확장 필요
-      child: Center(
-        child: Row(
-          children: [
-            Text(title).md(),
-            if (isSelect) ...[Spacer(), BaseSvgIcon.check(size: 20)],
-          ],
-        ).margin(vertical: MgSizes.sm, horizontal: MgSizes.md),
-      ).padding(all: MgSizes.md),
+      child: Stack(
+        children: [
+          Center(child: Text(title).sm()),
+          if (isSelect)
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: BaseSvgIcon.check(size: 20),
+            ),
+        ],
+      ).margin(vertical: MgSizes.sm, horizontal: MgSizes.md),
     );
   }
 }

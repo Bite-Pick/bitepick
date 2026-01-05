@@ -85,8 +85,9 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     endTime,
                   ).margin(horizontal: MgSizes.md),
                   Divider(thickness: 6).margin(vertical: MgSizes.lg),
-                  _buildPaySection().margin(horizontal: MgSizes.md),
-                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+                  // NOTE: 결제 수단이 1개밖에 없어서 임시 주석 처리
+                  // _buildPaySection().margin(horizontal: MgSizes.md),
+                  // Divider(thickness: 6).margin(vertical: MgSizes.lg),
                   _buildPriceInfoSection(
                     originalPrice,
                     discount,
@@ -177,7 +178,6 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         Gaps.h4,
         Text('픽업 예정 시간을 꼭 지켜서 와주세요').sm().textGray(),
         Gaps.h16,
-        // TODO: 픽업시간 드롭다운 추가
         _buildOrderItemCard(
           storeName: storeName,
           address: storeAddress,
@@ -243,14 +243,14 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
       ),
       child: GestureDetector(
         onTap: () async {
-          // 이미 선택된 시간이 있으면 그것을 초기값으로 사용
-          final initialTime = pickupTime != null
-              ? DateTime.parse(pickupTime)
-              : DateTime.now();
+          // // 이미 선택된 시간이 있으면 그것을 초기값으로 사용
+          // final initialTime = pickupTime != null
+          //     ? DateTime.parse(pickupTime)
+          //     : DateTime.now();
           final selectedTime = await showTimeSelector(
             startTime,
             endTime,
-            initialTime,
+            // initialTime,
           );
           if (selectedTime != null) {
             ref
@@ -277,12 +277,12 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   Future<DateTime?> showTimeSelector(
     DateTime startTime,
     DateTime endTime,
-    DateTime initialTime,
+    // DateTime initialTime,
   ) async {
     DateTime? _time;
     await TimePickerBottomSheet.show(
       context,
-      initialTime: initialTime,
+      // initialTime: initialTime,
       startTime: startTime,
       endTime: endTime,
       onTimeSelected: (selected, error) {

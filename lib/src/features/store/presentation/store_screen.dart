@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
+import 'package:magambell/src/features/notification/data/repositories/notification_repository.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
@@ -14,6 +17,8 @@ import 'package:magambell/src/features/store/data/repositories/store_repository.
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
+import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -119,37 +124,47 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               Gaps.w10,
               Expanded(
                 child: MgButton(
-                  disabled: isInvalidPickupTime,
                   onPressed: () async {
-                    if (isInvalidPickupTime) {
-                      ToastPresentor.error(context, "오늘 픽업시간이 종료되었습니다");
+                    final user = ref.read(userStateProvider).asData!.value;
+                    final isLogin = user != null;
+                    if (!isLogin) {
+                      unawaited(showLoginAlerDialog(context));
                       return;
                     }
-                    // 주문 정보 저장
-                    ref
-                        .read(
-                          orderPayScreenControllerProvider(
-                            goods.storeId,
-                          ).notifier,
-                        )
-                        .setOrderInfo(
-                          storeName: goods.storeName,
-                          storeAddress: goods.address,
-                          storeId: goods.storeId,
-                          goodsId: goods.goodsId,
-                          quantity: count,
-                          totalPrice: goods.salePrice * count,
-                          salePrice: goods.salePrice,
-                          originalPrice: goods.originalPrice,
-                          startTime: startTime,
-                          endTime: endTime,
-                        );
-                    // 주문 확인 화면으로 이동
-                    await OrderCautionRoute(
-                      storeId: goods.storeId,
-                    ).push(context);
+
+                    if (isInvalidPickupTime) {
+                      final res = await ref
+                          .read(notificationRepositoryProvider)
+                          .registerStoreNotification(storeId: widget.id);
+                      if (res) ToastPresentor.success(context, "알림 신청 성공");
+                      return;
+                    } else {
+                      // 주문 정보 저장
+                      ref
+                          .read(
+                            orderPayScreenControllerProvider(
+                              goods.storeId,
+                            ).notifier,
+                          )
+                          .setOrderInfo(
+                            storeName: goods.storeName,
+                            storeAddress: goods.address,
+                            storeId: goods.storeId,
+                            goodsId: goods.goodsId,
+                            quantity: count,
+                            totalPrice: goods.salePrice * count,
+                            salePrice: goods.salePrice,
+                            originalPrice: goods.originalPrice,
+                            startTime: startTime,
+                            endTime: endTime,
+                          );
+                      // 주문 확인 화면으로 이동
+                      await OrderCautionRoute(
+                        storeId: goods.storeId,
+                      ).push(context);
+                    }
                   },
-                  content: Text('구매하기'),
+                  content: Text(isInvalidPickupTime ? '오픈 알림신청하기' : '구매하기'),
                 ).primary(),
               ),
             ],
@@ -193,7 +208,7 @@ class _StoreTabBar extends ConsumerWidget {
       unselectedLabelStyle: context.textTheme.bodyLarge,
       tabs: [
         Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
-        Tab(text: '리뷰 ($reviewCount개)'),
+        Tab(text: '리뷰 $reviewCount'),
       ],
     );
   }

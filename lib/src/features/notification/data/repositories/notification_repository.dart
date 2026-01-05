@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/network/api_exception.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_repository.g.dart';
@@ -19,15 +20,11 @@ class NotificationRepository {
   /// 성공하면 true
   /// - DUPLICATE_NOTIFICATION_STORE 코드면 [DuplicateNotificationStoreException] throw
   /// - 그 외 에러는 그대로 rethrow(DioException 포함)
-  Future<bool> registerStoreNotification({
-    required String storeId,
-    required String fcmToken,
-  }) async {
-    // baseUrl이 이미 `/api/v1` 라고 가정하고 path만 적음
-    // (FavoriteRepository도 `/v1/favorite` 쓰니까, 여기도 `/v1/notification/...` 맞춰도 됨)
+  Future<bool> registerStoreNotification({required String storeId}) async {
+    final token = await ref.read(pushNotificationProvider).getToken();
     final res = await _dio.post(
       '/v1/notification/store',
-      data: {'storeId': storeId, 'fcmToken': fcmToken},
+      data: {'storeId': storeId, 'fcmToken': token},
     );
 
     // 서버 공통 응답 포맷이 { status, data, code, message } 라고 가정
