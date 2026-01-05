@@ -139,6 +139,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheetItem(String title, {bool isSelect = false}) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         ref
             .read(homeScreenControllerProvider.notifier)
