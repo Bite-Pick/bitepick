@@ -59,9 +59,12 @@ platform :android do
     # dev는 APK, prod는 AAB (기본값)
     artifact_arg = ENV["MODE"] == "dev" ? "--artifact apk" : ""
 
+    # VERSION에서 'v' 접두사 제거 (안전장치)
+    version = ENV["VERSION"].to_s.sub(/^v/, '')
+
     shorebird_release(
       platform: "android",
-      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{ENV["VERSION"]} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]} #{artifact_arg}"
+      args: "--flutter-version=#{ENV["FLUTTER_VERSION"]} --build-name=#{version} --build-number=#{ENV["BUILD_NUMBER"]} -t #{entry_point} --flavor #{ENV["MODE"]} #{artifact_arg}"
     )
 
     rescue => exception
@@ -81,8 +84,11 @@ platform :android do
       "lib/src/main_dev.dart"
     end
 
+    # VERSION에서 'v' 접두사 제거 (안전장치)
+    version = ENV["VERSION"].to_s.sub(/^v/, '')
+
     # 기본 args 설정
-    patch_args = "-t #{entry_point} --release-version #{ENV["VERSION"]}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
+    patch_args = "-t #{entry_point} --release-version #{version}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
 
     shorebird_patch(
       platform: "android",
@@ -146,11 +152,14 @@ platform :android do
       raise "Firebase App ID is not set. Please check FIREBASE_APP_ID_ANDROID or FIREBASE_APP_ID_ANDROID_DEV environment variable."
     end
 
+    # VERSION에서 'v' 접두사 제거 (안전장치)
+    version = ENV["VERSION"].to_s.sub(/^v/, '')
+
     firebase_app_distribution(
       app: firebase_app_id,
       android_artifact_path: apk_path,
       android_artifact_type: "APK",
-      release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{ENV["VERSION"]}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
+      release_notes: "Shorebird Release Build #{ENV["BUILD_NUMBER"]} - #{version}\n배포 시간: #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}\nFlavor: #{flavor}\n🐦 Shorebird 코드 푸시 지원"
     )
 
     puts "✅ Shorebird Firebase App Distribution 배포 완료!"
