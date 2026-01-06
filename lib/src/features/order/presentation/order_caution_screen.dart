@@ -41,14 +41,14 @@ class OrderCautionScreen extends StatelessWidget {
           _buildCautionCard(
             number: '01',
             title: '바이트백은 랜덤으로 구성되어있어요',
-            subtitle: '오늘의 랜덤 PICK을 기대해주세요',
+            subtitle: '랜덤하게 드리는 특별한 선물을 기대해보세요',
             imagePath: R.ASSETS_IMAGES_ORDER_CAUTION_1_PNG,
           ),
           Gaps.h20,
           _buildCautionCard(
             number: '02',
             title: '픽업시간을 지켜주세요',
-            subtitle: '픽업시간은 사장님과의 약속이에요',
+            subtitle: '픽업 시간은 사장님과의 약속이에요',
             imagePath: R.ASSETS_IMAGES_ORDER_CAUTION_2_PNG,
           ),
           Spacer(),
@@ -74,24 +74,24 @@ class OrderCautionScreen extends StatelessWidget {
           children: [
             Text(number)
                 .textColor(MgColorScheme.gray11)
+                .xs()
                 .bold()
-                .margin(horizontal: MgSizes.xs)
+                .margin(horizontal: MgSizes.xs,vertical: 1)
                 .decorated(
                   color: Color(0xff282F44),
                   borderRadius: BorderRadius.circular(1000),
                 ),
             Gaps.h8,
-            Text(title).md().bold(),
-            Gaps.h4,
+            Text(title).md().bold(),  
             Text(subtitle).sm().textGray(),
-            Gaps.h20,
-            Image.asset(imagePath).constrained(height: 130.h),
+            Gaps.h16,
+            Image.asset(imagePath).constrained(height: 132.h),
           ],
         )
         .margin(top: MgSizes.lg)
         .decorated(
-          color: MgColorScheme.gray9,
-          borderRadius: BorderRadius.circular(MgRadius.lg),
+          color: MgColorScheme.gray10,
+          borderRadius: BorderRadius.circular(MgRadius.sm),
         )
         .constrained(width: double.infinity)
         .margin(horizontal: MgSizes.xxl);
