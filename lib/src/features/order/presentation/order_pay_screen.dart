@@ -84,7 +84,10 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     startTime,
                     endTime,
                   ).margin(horizontal: MgSizes.md),
-                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+                  Divider(
+                    thickness: 6,
+                    color: MgColorScheme.gray10,
+                  ).margin(vertical: MgSizes.xl),
                   // NOTE: 결제 수단이 1개밖에 없어서 임시 주석 처리
                   // _buildPaySection().margin(horizontal: MgSizes.md),
                   // Divider(thickness: 6).margin(vertical: MgSizes.lg),
@@ -94,7 +97,10 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     totalPrice,
                     quantity,
                   ).margin(horizontal: MgSizes.md),
-                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+                  Divider(
+                    thickness: 6,
+                    color: MgColorScheme.gray10,
+                  ).margin(vertical: MgSizes.xl),
                   _buildAgreementSection().margin(horizontal: MgSizes.md),
                 ],
               ),
@@ -260,11 +266,13 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         },
         child: pickupTime == null
             ? Row(
-                children: [
-                  Expanded(child: Text('픽업시간 설정').sm().textGray()),
-                  BaseSvgIcon.down(),
-                ],
-              ).padding(horizontal: MgSizes.md, vertical: MgSizes.sm)
+                    children: [
+                      Expanded(child: Text('픽업시간 설정').bold().md()),
+                      BaseSvgIcon.down(),
+                    ],
+                  )
+                  .padding(horizontal: MgSizes.md, vertical: MgSizes.sm)
+                  .colored(MgColorScheme.primaryLightest)
             : Text('${pickupTime.convertTime()} 픽업 예정')
                   .md()
                   .bold()
