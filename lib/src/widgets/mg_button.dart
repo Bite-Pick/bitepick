@@ -66,7 +66,9 @@ class MgButton extends StatelessWidget {
   );
 
   MgButton secondary({bool whiteBg = false}) => copyWith(
-    backgroundColor: whiteBg ? MgColorScheme.gray11 : MgColorScheme.oldSecondary,
+    backgroundColor: whiteBg
+        ? MgColorScheme.gray11
+        : MgColorScheme.oldSecondary,
     textColor: whiteBg ? MgColorScheme.oldSecondary : MgColorScheme.gray11,
     borderColor: whiteBg ? MgColorScheme.oldSecondary : null,
   );
@@ -112,6 +114,7 @@ class MgButton extends StatelessWidget {
         onTap: onPressed,
         borderRadius: BorderRadius.circular(borderRadius),
         child: Container(
+          constraints: BoxConstraints(minHeight: height ?? 48.h),
           padding:
               padding ??
               const EdgeInsets.symmetric(
@@ -131,7 +134,7 @@ class MgButton extends StatelessWidget {
               color: effectiveTextColor,
               fontSize: MgFontSize.md,
               fontWeight: FontWeight.bold,
-              height: 1.5.h,
+              // height: 1.5,
             ),
             child: content,
           ),
@@ -149,25 +152,5 @@ class MgButton extends StatelessWidget {
     }
 
     return child;
-  }
-
-  /// 텍스트 버튼 (기존 MgButton.text 호환용)
-  factory MgButton.text({
-    String text = '다음',
-    required VoidCallback onPressed,
-    bool isActive = true,
-  }) {
-    return MgButton(
-      onPressed: onPressed,
-      content: Text(text).md().bold(),
-      backgroundColor: isActive
-          ? MgColorScheme.primary
-          : MgColorScheme.primaryLightest,
-      textColor: const Color(0xFF212121),
-      height: 52,
-      padding: const EdgeInsets.symmetric(vertical: 17),
-      fullWidth: true,
-      disabled: !isActive,
-    );
   }
 }

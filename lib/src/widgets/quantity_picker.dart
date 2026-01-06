@@ -49,7 +49,7 @@ class QuantityPicker extends StatelessWidget {
             ),
           ],
         )
-        .margin(all: MgSizes.sm)
+        .margin(all: MgSizes.sm,vertical: MgSizes.md)
         .decorated(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(8),

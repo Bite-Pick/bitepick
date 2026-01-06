@@ -69,6 +69,7 @@ class StoreLocationInfoView extends StatelessWidget {
           },
           content: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               BaseSvgIcon.mapPin(size: MgSizes.lg),
               Gaps.w4,

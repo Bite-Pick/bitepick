@@ -170,7 +170,6 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
             ],
           ),
         )
-        .constrained(height: 85)
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md);
   }
 }
