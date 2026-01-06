@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
+import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
@@ -37,7 +38,10 @@ class StoreTags extends StatelessWidget {
         ).danger(light: true),
       );
     }
+    if (tags.isEmpty) return SizedBox.shrink();
 
-    return Row(children: tags.joinWithWidget(Gaps.w6));
+    return Row(
+      children: tags.joinWithWidget(Gaps.w6),
+    ).margin(bottom: MgSizes.sm);
   }
 }

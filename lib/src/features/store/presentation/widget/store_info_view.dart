@@ -78,46 +78,46 @@ class StoreInfoView extends ConsumerWidget {
   Widget _buildStoreDescriptionSection(BuildContext context, WidgetRef ref) {
     final user = ref.read(userStateProvider).asData!.value;
     final isLogin = user != null;
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StoreTags(
               quantity: storeInfo.stockQuantity,
               saleStatus: storeInfo.saleStatus,
             ),
-            // TODO[review]: 리뷰영역으로 스크롤내리는 버튼 추가
-            const Spacer(),
-            if (hasFavorite && isLogin) StoreFavoriteIcon(storeInfo.storeId),
+            
+            Text(storeInfo.storeName).md().bold(),
+            if (storeInfo.description.isNotEmpty)
+              Text(storeInfo.description).regular().textGray().margin(
+                top: MgSizes.size4,
+                bottom: MgSizes.size8,
+              ), //description
+            DefaultTextStyle(
+              style: context.textTheme.titleLarge!,
+              child: Row(
+                children: [
+                  Text('${storeInfo.discount}%').red(),
+                  Text(
+                    '${storeInfo.salePrice.toPrice()}원',
+                  ).margin(left: MgSizes.size4, right: MgSizes.size8),
+                  Text(
+                    '${storeInfo.originPrice.toPrice()}원',
+                    style: TextStyle(
+                      decoration: TextDecoration.lineThrough,
+                      decorationColor: MgColorScheme.gray6,
+                      color: MgColorScheme.gray6,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-        Gaps.h12,
-        Text(storeInfo.storeName).md().bold(),
-        // TODO: 가게 등록시 descritpion을 입력하는 란이 없음..
-        // Text(storeInfo.description).regular().textGray().margin(
-        //   top: MgSizes.size4,
-        //   bottom: MgSizes.size8,
-        // ), //description
-        DefaultTextStyle(
-          style: context.textTheme.titleLarge!,
-          child: Row(
-            children: [
-              Text('${storeInfo.discount}%').red(),
-              Text(
-                '${storeInfo.salePrice.toPrice()}원',
-              ).margin(left: MgSizes.size4, right: MgSizes.size8),
-              Text(
-                '${storeInfo.originPrice.toPrice()}원',
-                style: TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                  decorationColor: MgColorScheme.gray6,
-                  color: MgColorScheme.gray6,
-                ),
-              ),
-            ],
-          ),
-        ),
+        Spacer(),
+        if (hasFavorite && isLogin) StoreFavoriteIcon(storeInfo.storeId),
       ],
     ).margin(all: MgSizes.md, bottom: 0);
   }
