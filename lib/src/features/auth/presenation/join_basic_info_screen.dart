@@ -65,28 +65,31 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Column(
-              children: [
-                Text(
-                  "시작을 위해\n간단한 정보를 입력해주세요",
-                ).bold().xl().margin(top: MgSizes.size32, bottom: MgSizes.sm),
-                // Text("마이페이지에서 언제든지 수정 가능해요").sm().textGray(),
-                Gaps.h40,
-                MgTextField(
-                  label: "닉네임",
-                  controller: _nicknameController,
-                  prefixIcon: SizedBox.shrink(),
-                  error: joinState.nicknameError,
-                ),
-                Gaps.h32,
-                MgTextField(
-                  label: "전화번호",
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  prefixIcon: SizedBox.shrink(),
-                  error: joinState.phoneError,
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "시작을 위해\n간단한 정보를 입력해주세요",
+                  ).bold().xl().margin(top: MgSizes.size32, bottom: MgSizes.sm),
+                  // Text("마이페이지에서 언제든지 수정 가능해요").sm().textGray(),
+                  Gaps.h40,
+                  MgTextField(
+                    label: "닉네임",
+                    controller: _nicknameController,
+                    prefixIcon: SizedBox.shrink(),
+                    error: joinState.nicknameError,
+                  ),
+                  Gaps.h32,
+                  MgTextField(
+                    label: "전화번호",
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    prefixIcon: SizedBox.shrink(),
+                    error: joinState.phoneError,
+                  ),
+                ],
+              ),
             ),
           ),
           MgButton(

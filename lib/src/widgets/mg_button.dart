@@ -114,7 +114,7 @@ class MgButton extends StatelessWidget {
         onTap: onPressed,
         borderRadius: BorderRadius.circular(borderRadius),
         child: Container(
-          constraints: BoxConstraints(minHeight: height ?? 48.h),
+          constraints: BoxConstraints(minHeight: height ?? 48),
           padding:
               padding ??
               const EdgeInsets.symmetric(

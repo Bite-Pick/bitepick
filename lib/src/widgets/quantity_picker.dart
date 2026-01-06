@@ -33,26 +33,32 @@ class QuantityPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-          mainAxisAlignment: alignment,
-          children: [
-            GestureDetector(
-              onTap: count > 0 ? () => onCountChanged(count - 1) : null,
-              child: BaseSvgIcon.minus(),
-            ),
-            Text('$count').md().margin(
-              horizontal: MgSizes.xxl,
-            ), // NOTE: 다량 구매 고객 많을시 숫자 선택 bottomSheet 나오도록
-            GestureDetector(
-              child: BaseSvgIcon.plus(),
-              onTap: () => onCountChanged(count + 1),
-            ),
-          ],
-        )
-        .margin(all: MgSizes.sm,vertical: MgSizes.md)
-        .decorated(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-        );
+    return Container(
+      constraints: BoxConstraints(minHeight: 48),
+      padding: EdgeInsets.symmetric(
+        horizontal: MgSizes.md,
+        vertical: MgSizes.sm,
+      ),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: alignment,
+        children: [
+          GestureDetector(
+            onTap: count > 0 ? () => onCountChanged(count - 1) : null,
+            child: BaseSvgIcon.minus(),
+          ),
+          Text('$count').md().margin(
+            horizontal: MgSizes.xxl,
+          ), // NOTE: 다량 구매 고객 많을시 숫자 선택 bottomSheet 나오도록
+          GestureDetector(
+            child: BaseSvgIcon.plus(),
+            onTap: () => onCountChanged(count + 1),
+          ),
+        ],
+      ),
+    );
   }
 }
