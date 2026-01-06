@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -31,7 +33,16 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
     );
     return MgAsyncAnimatedSwitcher(
       asyncValue: reviewsAsync,
-      emptyBuilder: () => Center(child: Text("리뷰가 없습니다")),
+      emptyBuilder: () => Center(
+        child: Column(
+          children: [
+            Gaps.h(80.h),
+            Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
+            Gaps.h12,
+            Text("아직 등록된 리뷰가 없어요").bold(),
+          ],
+        ),
+      ),
       builder: (reviews) {
         return SingleChildScrollView(
           padding: EdgeInsets.zero,
