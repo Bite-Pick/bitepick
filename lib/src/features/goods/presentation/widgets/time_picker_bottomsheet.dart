@@ -294,7 +294,8 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                               ? MgColorScheme.gray1
                               : MgColorScheme.gray5,
                         )
-                        .fontSize(isSelected ? MgFontSize.lg : MgFontSize.md),
+                        .fontSize(isSelected ? MgFontSize.lg : MgFontSize.md)
+                        .fontWeight(isSelected ? FontWeight.bold : FontWeight.normal),
                   );
                 },
                 childCount: _timeOptions.length,
