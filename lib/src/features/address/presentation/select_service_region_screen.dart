@@ -244,7 +244,7 @@ class _SelectServiceRegionScreenState
             bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
           ),
         )
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 }
 
@@ -292,7 +292,7 @@ class _RegionTableCell extends StatelessWidget {
           .fontWeight(FontWeight.w400)
           .margin(left: MgSizes.md, vertical: MgSizes.sm)
           .colored(MgColorScheme.gray11)
-          .constrained(height: _cellHeight, width: double.infinity);
+          .constrained(minHeight: _cellHeight, width: double.infinity);
     }
 
     return switch (level) {
@@ -309,7 +309,7 @@ class _RegionTableCell extends StatelessWidget {
     return _buildCellText()
         .margin(left: MgSizes.md, vertical: MgSizes.sm)
         .colored(MgColorScheme.primary) // 노란색 배경
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 
   Widget _buildDistrictStyle() {
@@ -317,7 +317,7 @@ class _RegionTableCell extends StatelessWidget {
     return _buildCellText()
         .margin(left: MgSizes.md, vertical: MgSizes.sm)
         .colored(MgColorScheme.primaryLightest)
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 
   Widget _buildTownStyle() {
@@ -329,6 +329,6 @@ class _RegionTableCell extends StatelessWidget {
           ],
         )
         .margin(horizontal: MgSizes.md, vertical: MgSizes.sm)
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 }
