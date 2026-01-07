@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
@@ -67,6 +69,7 @@ class StoreLocationInfoView extends StatelessWidget {
           },
           content: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               BaseSvgIcon.mapPin(size: MgSizes.lg),
               Gaps.w4,
@@ -85,21 +88,22 @@ class StoreLocationInfoView extends StatelessWidget {
         alignment: WrapAlignment.center,
         children: [
           Text("길찾기").md().bold().margin(vertical: MgSizes.md),
-          // TODO: ios만..
-          _buildBottomSheetItem(
-            context,
-            "애플 지도",
-            R.ASSETS_IMAGES_APPLE_PNG,
-            () async {
-              await MapLauncher.openAppleMapRoute(
-                latitude: latitude!,
-                longitude: longitude!,
-                destinationName: storeName,
-              );
-              if (context.mounted) Navigator.of(context).pop();
-            },
-          ),
-          Divider(),
+          if (Platform.isIOS) ...[
+            _buildBottomSheetItem(
+              context,
+              "애플 지도",
+              R.ASSETS_IMAGES_APPLE_PNG,
+              () async {
+                await MapLauncher.openAppleMapRoute(
+                  latitude: latitude!,
+                  longitude: longitude!,
+                  destinationName: storeName,
+                );
+                if (context.mounted) Navigator.of(context).pop();
+              },
+            ),
+            Divider(),
+          ],
           _buildBottomSheetItem(
             context,
             "네이버지도",
@@ -140,6 +144,7 @@ class StoreLocationInfoView extends StatelessWidget {
     VoidCallback onTap,
   ) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Row(
         mainAxisSize: MainAxisSize.max,

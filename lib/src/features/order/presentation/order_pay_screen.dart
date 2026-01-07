@@ -74,17 +74,22 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Gaps.h12,
-                  _buildOrderItemInfoCard(
-                    storeName,
-                    storeAddress,
-                    salePrice,
-                    quantity,
-                    pickupTime,
-                    (salePrice * 100 / originalPrice).toInt(),
-                    startTime,
-                    endTime,
+                  _buildOrderItemInfoCard().margin(horizontal: MgSizes.md),
+                  _buildOrderItemCard(
+                    storeName: storeName,
+                    address: storeAddress,
+                    discount: (salePrice * 100 / originalPrice).toInt(),
+                    price: salePrice * quantity,
+                    count: quantity,
+                    pickupTime: pickupTime,
+                    startTime: startTime,
+                    endTime: endTime,
                   ).margin(horizontal: MgSizes.md),
-                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+
+                  Divider(
+                    thickness: 6,
+                    color: MgColorScheme.gray10,
+                  ).margin(vertical: MgSizes.xl),
                   // NOTE: 결제 수단이 1개밖에 없어서 임시 주석 처리
                   // _buildPaySection().margin(horizontal: MgSizes.md),
                   // Divider(thickness: 6).margin(vertical: MgSizes.lg),
@@ -94,7 +99,10 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     totalPrice,
                     quantity,
                   ).margin(horizontal: MgSizes.md),
-                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+                  Divider(
+                    thickness: 6,
+                    color: MgColorScheme.gray10,
+                  ).margin(vertical: MgSizes.xl),
                   _buildAgreementSection().margin(horizontal: MgSizes.md),
                 ],
               ),
@@ -156,20 +164,9 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Text(title).md().bold();
-  }
+  Widget _buildSectionTitle(String title) => Text(title).md().bold();
 
-  Widget _buildOrderItemInfoCard(
-    String storeName,
-    String storeAddress,
-    int salePrice,
-    int quantity,
-    String? pickupTime,
-    int discount,
-    DateTime startTime,
-    DateTime endTime,
-  ) {
+  Widget _buildOrderItemInfoCard() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -178,16 +175,6 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         Gaps.h4,
         Text('픽업 예정 시간을 꼭 지켜서 와주세요').sm().textGray(),
         Gaps.h16,
-        _buildOrderItemCard(
-          storeName: storeName,
-          address: storeAddress,
-          discount: discount,
-          price: salePrice * quantity,
-          count: quantity,
-          pickupTime: pickupTime,
-          startTime: startTime,
-          endTime: endTime,
-        ),
       ],
     );
   }
@@ -236,7 +223,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   ) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: pickupTime != null ? MgColorScheme.primaryLightest : null,
+        color: MgColorScheme.primaryLightest,
         border: Border(
           bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
         ),
@@ -261,7 +248,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
         child: pickupTime == null
             ? Row(
                 children: [
-                  Expanded(child: Text('픽업시간 설정').sm().textGray()),
+                  Expanded(child: Text('픽업시간 설정').bold().md()),
                   BaseSvgIcon.down(),
                 ],
               ).padding(horizontal: MgSizes.md, vertical: MgSizes.sm)
@@ -303,12 +290,11 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
   }
 
   Widget _buildPriceRow(String label, int price) {
-    final isDiscount = price < 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label).md().textGray(),
-        Text('${price.toPrice()}원').md().textGray(),
+        Text(label).textGray(),
+        Text('${price.toPrice()}원').textGray(),
       ],
     );
   }

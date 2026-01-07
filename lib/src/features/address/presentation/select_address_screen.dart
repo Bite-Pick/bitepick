@@ -85,6 +85,7 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
                 : null,
             content: const Text("확인"),
           ).primary(),
+          Gaps.h16, 
         ],
       ).margin(horizontal: MgSizes.md),
     );

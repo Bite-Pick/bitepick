@@ -55,6 +55,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="bitepick" />
             </intent-filter>
+
+            <!-- AppsFlyer Deep Link -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="magambell" />
+            </intent-filter>
         </activity>
 
         <!-- 카카오 로그인 커스텀 URL 스킴 설정 -->

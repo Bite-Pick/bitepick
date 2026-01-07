@@ -2,19 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/address/data/repositories/region_repository.dart';
 import 'package:magambell/src/features/address/domain/entities/region.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.controller.dart';
 import 'package:magambell/src/features/address/providers/region.provider.dart';
-import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -248,7 +244,7 @@ class _SelectServiceRegionScreenState
             bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
           ),
         )
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 }
 
@@ -296,7 +292,7 @@ class _RegionTableCell extends StatelessWidget {
           .fontWeight(FontWeight.w400)
           .margin(left: MgSizes.md, vertical: MgSizes.sm)
           .colored(MgColorScheme.gray11)
-          .constrained(height: _cellHeight, width: double.infinity);
+          .constrained(minHeight: _cellHeight, width: double.infinity);
     }
 
     return switch (level) {
@@ -313,7 +309,7 @@ class _RegionTableCell extends StatelessWidget {
     return _buildCellText()
         .margin(left: MgSizes.md, vertical: MgSizes.sm)
         .colored(MgColorScheme.primary) // 노란색 배경
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 
   Widget _buildDistrictStyle() {
@@ -321,7 +317,7 @@ class _RegionTableCell extends StatelessWidget {
     return _buildCellText()
         .margin(left: MgSizes.md, vertical: MgSizes.sm)
         .colored(MgColorScheme.primaryLightest)
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 
   Widget _buildTownStyle() {
@@ -333,6 +329,6 @@ class _RegionTableCell extends StatelessWidget {
           ],
         )
         .margin(horizontal: MgSizes.md, vertical: MgSizes.sm)
-        .constrained(height: _cellHeight, width: double.infinity);
+        .constrained(minHeight: _cellHeight, width: double.infinity);
   }
 }

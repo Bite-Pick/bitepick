@@ -102,12 +102,14 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
   }
 
   Widget _buildBottomButton(GoodsDetailDto goods) {
+    final saleStatus = goods.saleStatus == "ON";
     final now = DateTime.now();
     final endTime = goods.endTime;
     final goodsStartTime = goods.startTime;
-    final isInvalidPickupTime =
-        (now.hour * 3600 + now.minute * 60 + now.second) >
-        (endTime.hour * 3600 + endTime.minute * 60 + endTime.second);
+    // NOTE: invalidPickUpTime일 경우 서버에서 ON/OFF를 업데이트
+    // final isInvalidPickupTime =
+    //     (now.hour * 3600 + now.minute * 60 + now.second) >
+    //     (endTime.hour * 3600 + endTime.minute * 60 + endTime.second);
     final startTime =
         (now.hour * 3600 + now.minute * 60 + now.second) >
             (goodsStartTime.hour * 3600 +
@@ -115,63 +117,60 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                 goodsStartTime.second)
         ? now
         : goodsStartTime;
-    return SafeArea(
-          child: Row(
-            children: [
-              Expanded(
-                child: QuantityPicker(count: count, onCountChanged: setCount),
-              ),
-              Gaps.w10,
-              Expanded(
-                child: MgButton(
-                  onPressed: () async {
-                    final user = ref.read(userStateProvider).asData!.value;
-                    final isLogin = user != null;
-                    if (!isLogin) {
-                      unawaited(showLoginAlerDialog(context));
-                      return;
-                    }
 
-                    if (isInvalidPickupTime) {
-                      final res = await ref
-                          .read(notificationRepositoryProvider)
-                          .registerStoreNotification(storeId: widget.id);
-                      if (res) ToastPresentor.success(context, "알림 신청 성공");
-                      return;
-                    } else {
-                      // 주문 정보 저장
-                      ref
-                          .read(
-                            orderPayScreenControllerProvider(
-                              goods.storeId,
-                            ).notifier,
-                          )
-                          .setOrderInfo(
-                            storeName: goods.storeName,
-                            storeAddress: goods.address,
-                            storeId: goods.storeId,
-                            goodsId: goods.goodsId,
-                            quantity: count,
-                            totalPrice: goods.salePrice * count,
-                            salePrice: goods.salePrice,
-                            originalPrice: goods.originalPrice,
-                            startTime: startTime,
-                            endTime: endTime,
-                          );
-                      // 주문 확인 화면으로 이동
-                      await OrderCautionRoute(
-                        storeId: goods.storeId,
-                      ).push(context);
-                    }
-                  },
-                  content: Text(isInvalidPickupTime ? '오픈 알림신청하기' : '구매하기'),
-                ).primary(),
-              ),
-            ],
+    return SafeArea(
+      child: Row(
+        children: [
+          Expanded(
+            child: QuantityPicker(count: count, onCountChanged: setCount),
           ),
-        )
-        .constrained(height: 85)
-        .margin(horizontal: MgSizes.md, vertical: MgSizes.md);
+          Gaps.w10,
+          Expanded(
+            child: MgButton(
+              onPressed: () async {
+                final user = ref.read(userStateProvider).asData!.value;
+                final isLogin = user != null;
+                if (!isLogin) {
+                  unawaited(showLoginAlerDialog(context));
+                  return;
+                }
+
+                if (!saleStatus) {
+                  final res = await ref
+                      .read(notificationRepositoryProvider)
+                      .registerStoreNotification(storeId: widget.id);
+                  if (res) ToastPresentor.success(context, "알림 신청 성공");
+                  return;
+                } else {
+                  // 주문 정보 저장
+                  ref
+                      .read(
+                        orderPayScreenControllerProvider(
+                          goods.storeId,
+                        ).notifier,
+                      )
+                      .setOrderInfo(
+                        storeName: goods.storeName,
+                        storeAddress: goods.address,
+                        storeId: goods.storeId,
+                        goodsId: goods.goodsId,
+                        quantity: count,
+                        totalPrice: goods.salePrice * count,
+                        salePrice: goods.salePrice,
+                        originalPrice: goods.originalPrice,
+                        startTime: startTime,
+                        endTime: endTime,
+                      );
+                  // 주문 확인 화면으로 이동
+                  await OrderCautionRoute(storeId: goods.storeId).push(context);
+                }
+              },
+              content: Text(!saleStatus ? '오픈 알림신청하기' : '구매하기'),
+            ).primary(),
+          ),
+        ],
+      ),
+    ).margin(horizontal: MgSizes.md, vertical: MgSizes.md);
   }
 }
 

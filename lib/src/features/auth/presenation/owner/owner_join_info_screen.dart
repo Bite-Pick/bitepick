@@ -88,6 +88,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                 ),
               ),
             ),
+            Gaps.h16,
             // 확인 버튼
             MgButton(
               onPressed: () async {
@@ -102,11 +103,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
               },
               content: const Text('확인'),
               disabled: form.invalid,
-            ).primary().margin(
-              horizontal: MgSizes.md,
-              bottom: MgSizes.xxl,
-              top: MgSizes.md,
-            ),
+            ).primary().margin(horizontal: MgSizes.md, bottom: MgSizes.xl),
           ],
         ),
       ),
@@ -121,10 +118,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         // 1. 매장 이름
         _buildSectionTitle('매장 이름', subtitle: '체인점일 경우, 지점명까지 해주세요'),
         Gaps.h8,
-        MgReactiveTextField(
-          formControlName: 'storeName',
-          hintText: '매장 이름 ',
-        ),
+        MgReactiveTextField(formControlName: 'storeName', hintText: '매장 이름 '),
         _buildSectionTitle('매장 설명'),
         MgReactiveTextField(
           formControlName: 'description',
@@ -164,9 +158,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
         ),
 
         _buildSectionTitle("주차안내"),
-        MgReactiveTextField(
-          formControlName: 'parkingDescription',
-        ),
+        MgReactiveTextField(formControlName: 'parkingDescription'),
 
         _buildSectionTitle("대표 이미지"),
         ImageUploadSection(

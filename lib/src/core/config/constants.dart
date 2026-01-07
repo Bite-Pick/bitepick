@@ -55,3 +55,7 @@ final String FIREBASE_PROJECT_ID_ANDROID_PROD = dotenv.env['FIREBASE_PROJECT_ID_
 
 final int KAKAO_SHARE_TEMPLATE_ID_PROD = int.parse(dotenv.env['KAKAO_SHARE_TEMPLATE_ID_PROD']!);
 final int KAKAO_SHARE_TEMPLATE_ID_DEV = int.parse(dotenv.env['KAKAO_SHARE_TEMPLATE_ID_DEV']!);
+
+// AppsFlyer
+final String APPSFLYER_DEV_KEY = dotenv.env['APPSFLYER_DEV_KEY']!;
+final String APPSFLYER_APP_ID_IOS = dotenv.env['APPSFLYER_APP_ID_IOS']!;

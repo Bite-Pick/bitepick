@@ -1,9 +1,26 @@
 part of 'mg_tooltip.dart';
 
+/// 화살표 위치를 지정하는 클래스
+/// top, bottom, left, right 중 원하는 값만 지정 가능
+class ArrowPosition {
+  const ArrowPosition({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+  });
+
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? right;
+}
+
 class _MgTooltipItem extends StatelessWidget {
   const _MgTooltipItem(
     this.content, {
     this.alignment,
+    this.arrowAlignment,
     Color? backgroundColor,
     bool? showArrow,
   }) : _backgroundColor = backgroundColor,
@@ -11,6 +28,7 @@ class _MgTooltipItem extends StatelessWidget {
 
   final Widget? content;
   final Alignment? alignment;
+  final ArrowPosition? arrowAlignment;
   final Color? _backgroundColor;
   final bool _hasArrow;
 
@@ -20,9 +38,7 @@ class _MgTooltipItem extends StatelessWidget {
 
   /// alignment가 수직 방향인지 확인
   /// * (Alignment.topCenter, Alignment.bottomCenter)등
-  bool get isVertical {
-    return alignment?.y != 0;
-  }
+  bool get isVertical => alignment?.y != 0;
 
   /// alignment 값에 따라 화살표가 앞에 올지 결정
   bool get isLeadingArrow {
@@ -32,35 +48,53 @@ class _MgTooltipItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = <Widget>[];
-
-    if (_hasArrow) {
-      children.add(
-        CustomPaint(
-          size: isVertical ? const Size(12, 8) : const Size(8, 12),
-          painter: _ArrowPainter(
-            color: getBackgroundColor(context),
-            isVertical: isVertical,
-            isLeadingArrow: isLeadingArrow,
-          ),
-        ),
-      );
-    }
-    if (content != null) {
-      children.add(
-        DefaultTextStyle(
-          style: const TextStyle(color: Color(0xff000000), fontSize: 12),
-          child: Container(
-            padding: Gutter.xxs,
-            decoration: BoxDecoration(
+    final arrow = _hasArrow
+        ? CustomPaint(
+            size: isVertical ? const Size(12, 8) : const Size(8, 12),
+            painter: _ArrowPainter(
               color: getBackgroundColor(context),
-              borderRadius: BorderRadius.circular(5),
+              isVertical: isVertical,
+              isLeadingArrow: isLeadingArrow,
             ),
-            child: content,
-          ),
-        ),
+          )
+        : null;
+
+    final body = content != null
+        ? DefaultTextStyle(
+            style: const TextStyle(color: Color(0xff000000), fontSize: 12),
+            child: Container(
+              padding: Gutter.xxs,
+              decoration: BoxDecoration(
+                color: getBackgroundColor(context),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: content,
+            ),
+          )
+        : null;
+
+    // arrowAlignment이 있으면 Stack + Positioned로 자유 배치
+    if (arrowAlignment != null && body != null) {
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          body,
+          if (arrow != null)
+            Positioned(
+              top: arrowAlignment!.top,
+              bottom: arrowAlignment!.bottom,
+              left: arrowAlignment!.left,
+              right: arrowAlignment!.right,
+              child: arrow,
+            ),
+        ],
       );
     }
+
+    // 기존 방식: isVertical에 따라 Stack 또는 Row
+    final children = <Widget>[];
+    if (arrow != null) children.add(arrow);
+    if (body != null) children.add(body);
 
     return isVertical
         ? Column(

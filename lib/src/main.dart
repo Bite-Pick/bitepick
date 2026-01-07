@@ -14,6 +14,7 @@ import 'package:magambell/src/core/utils/global_error_handler.dart';
 import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/core/deeplink/deep_link_manager.dart';
 import 'package:magambell/src/main_app.dart';
 
 /// Background Message Handler (Top-level function 필수)
@@ -78,6 +79,12 @@ Future<void> runMagamBellApp() async {
         onAuthFailed: (ex) {
           log('Naver Map authentication failed: $ex');
         },
+      );
+
+      // Initialize AppsFlyer Deep Link
+      await DeepLinkManager.instance.initialize(
+        devKey: Environment.appsflyerDevKey,
+        appId: Environment.appsflyerAppIdIos,
       );
 
       // Shorebird 자동 업데이트 확인

@@ -116,7 +116,7 @@ class _AgreementSectionState extends State<AgreementSection> {
             size: MgSizes.lg,
           ),
           Gaps.w8,
-          Expanded(child: Text(text).sm().textColor(MgColorScheme.gray1)),
+          Expanded(child: Text(text).sm().textGray()),
           GestureDetector(
             onTap: () async {
               if (link.isNotEmpty) {

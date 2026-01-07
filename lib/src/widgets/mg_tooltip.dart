@@ -19,6 +19,7 @@ class MgTooltip extends StatefulWidget {
     this.backgroundColor,
     this.showItemArrow,
     this.itemAlignment = Alignment.topCenter,
+    this.arrowAlignment,
     this.disabled = false,
   });
 
@@ -56,6 +57,12 @@ class MgTooltip extends StatefulWidget {
 
   ///* default: true
   final bool? showItemArrow;
+
+  ///* tooltip item 내부에서 화살표의 위치를 자유롭게 배치
+  ///* ArrowPosition(top: -10, right: 20): 위에서 10px, 오른쪽에서 20px
+  ///* ArrowPosition(bottom: 0, left: 50): 아래에서 0px, 왼쪽에서 50px
+  ///* null이면 기존 alignment 방식 사용
+  final ArrowPosition? arrowAlignment;
 
   //=========================================================
   ///* tooltip child를 클릭했을때 tooltip이 뜨지 않는 상태로 만들어준다.
@@ -165,6 +172,7 @@ class _MgTooltipState extends State<MgTooltip>
                     -widget.itemAlignment.x,
                     -widget.itemAlignment.y,
                   ),
+                  arrowAlignment: widget.arrowAlignment,
                 ),
               ),
             ),

@@ -139,6 +139,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheetItem(String title, {bool isSelect = false}) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         ref
             .read(homeScreenControllerProvider.notifier)
@@ -280,7 +281,10 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BaseSvgIcon.info(color: MgColorScheme.gray5, size: MgSizes.lg),
+                BaseSvgIcon.helpCirlce(
+                  color: MgColorScheme.gray5,
+                  size: MgSizes.lg,
+                ),
                 Gaps.w4,
                 Text("원하는 지역이 없어요").sm().textGray().regular(),
               ],
