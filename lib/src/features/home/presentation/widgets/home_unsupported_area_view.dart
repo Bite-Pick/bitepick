@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_tooltip.dart';
@@ -79,10 +77,12 @@ class HomeUnsupportedAreaView extends ConsumerWidget {
           Gaps.w8,
           Expanded(
             child: MgTooltip(
+              arrowAlignment: ArrowPosition(right: 30, bottom: -8),
               item: Text(tooltipText).xs().white(),
               defaultVisible: true,
               closable: false,
               itemAlignment: Alignment.topCenter,
+              offset: const Offset(-20, -8-4),
               child: MgButton(
                 onPressed: () {
                   context.pop();
