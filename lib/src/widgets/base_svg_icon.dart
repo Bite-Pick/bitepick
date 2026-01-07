@@ -162,7 +162,7 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.homeLogo({double? size, Color? color}) =>
       _makeIcon('home_logo.svg', size, color);
         factory BaseSvgIcon.helpCirlce({double? size, Color? color}) =>
-      _makeIcon('help_circle.svg', size, color);
+      _makeIcon('help-circle.svg', size, color);
 
   BaseSvgIcon copyWith({Color? color, double? size, bool? hasColorFilter}) {
     return BaseSvgIcon(
