@@ -121,10 +121,12 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
     return SafeArea(
       child: Row(
         children: [
-          Expanded(
-            child: QuantityPicker(count: count, onCountChanged: setCount),
-          ),
-          Gaps.w10,
+          if (saleStatus) ...[
+            Expanded(
+              child: QuantityPicker(count: count, onCountChanged: setCount),
+            ),
+            Gaps.w10,
+          ],
           Expanded(
             child: MgButton(
               onPressed: () async {

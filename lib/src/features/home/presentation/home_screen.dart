@@ -10,7 +10,6 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/utils/kakao_share_util.dart';
-import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
