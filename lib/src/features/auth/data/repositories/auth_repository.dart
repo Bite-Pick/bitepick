@@ -87,6 +87,16 @@ class AuthRepository {
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
   }
+
+  Future<bool> checkDuplicateNickname({required String nickName}) async {
+    final res = await _dio.post(
+      '/v1/verify/nickname/register',
+      data: {"nickName": nickName},
+    );
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return false;
+    return true;
+  }
 }
 
 @riverpod

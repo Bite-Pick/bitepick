@@ -91,7 +91,7 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     state = state.copyWith(submitted: true);
 
     // Validation 실행
-    if (!validateInputs()) {
+    if (!await validateInputs()) {
       return false;
     }
 
@@ -138,7 +138,7 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
   }
 
   // 입력값 검증
-  bool validateInputs() {
+  Future<bool> validateInputs() async {
     // submitted가 false면 에러 표시 안함 (submit 전)
     if (!state.submitted) return true;
 
@@ -151,6 +151,17 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     if (state.nickname.trim().isEmpty) {
       state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
       isValid = false;
+    }
+    // 닉네임 중복 검증
+    // NOTE:에러메세지 통일 목적으로 submit이전에 체크
+    else {
+      final isDuplicate = await ref
+          .read(authRepositoryProvider)
+          .checkDuplicateNickname(nickName: state.nickname.trim());
+      if (isDuplicate) {
+        state = state.copyWith(nicknameError: '이미 사용 중인 닉네임입니다');
+        isValid = false;
+      }
     }
 
     // 전화번호 검증

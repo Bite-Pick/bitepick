@@ -131,13 +131,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   Future<void> _handleSubmit() async {
     final controller = ref.read(joinBasicInfoScreenControllerProvider.notifier);
 
-    if (!controller.validateInputs()) {
-      final state = ref.read(joinBasicInfoScreenControllerProvider);
-      // if (state.nicknameError != null || state.phoneError != null) {
-      //   ToastPresentor.error(context, state.nicknameError ?? state.phoneError!);
-      // }
-      return;
-    }
+    if (!await controller.validateInputs()) return;
 
     // 회원가입 API 호출
     final success = await controller.completeSignup();
