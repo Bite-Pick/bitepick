@@ -110,6 +110,10 @@ class AppInterceptor extends Interceptor {
           return;
 
         case 400:
+          // NOTE: 텍스트필드 검증시 에러 방식 통일을 위해 추가한 방식
+          if (err.requestOptions.extra['skipErrorToast'] != true) {
+            _showErrorMessage(message);
+          }
           _showErrorMessage(message);
           return handler.resolve(
             Response(

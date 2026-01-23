@@ -88,13 +88,15 @@ class AuthRepository {
     return true;
   }
 
+  // true 반환시 닉네임 중복0
   Future<bool> checkDuplicateNickname({required String nickName}) async {
     final res = await _dio.post(
       '/v1/verify/nickname/register',
       data: {"nickName": nickName},
+      options: Options(extra: {'skipErrorToast': true}),
     );
-    final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return false;
+    final data = res.data['name'] as String?;
+    if (res.data['status'] != 'OK' || data == "DuplicateException") return true;
     return true;
   }
 }
