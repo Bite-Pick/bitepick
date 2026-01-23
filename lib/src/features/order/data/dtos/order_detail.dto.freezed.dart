@@ -32,8 +32,8 @@ mixin _$OrderDetailDTO {
   String get pickupTime => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
-  String get payType => throw _privateConstructorUsedError;
-  String get easyPayProvider => throw _privateConstructorUsedError;
+  String? get payType => throw _privateConstructorUsedError;
+  String? get easyPayProvider => throw _privateConstructorUsedError;
   String? get reviewId => throw _privateConstructorUsedError;
   String? get memo => throw _privateConstructorUsedError;
 
@@ -66,8 +66,8 @@ abstract class $OrderDetailDTOCopyWith<$Res> {
     String pickupTime,
     String createdAt,
     String storeId,
-    String payType,
-    String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? reviewId,
     String? memo,
   });
@@ -99,8 +99,8 @@ class _$OrderDetailDTOCopyWithImpl<$Res, $Val extends OrderDetailDTO>
     Object? pickupTime = null,
     Object? createdAt = null,
     Object? storeId = null,
-    Object? payType = null,
-    Object? easyPayProvider = null,
+    Object? payType = freezed,
+    Object? easyPayProvider = freezed,
     Object? reviewId = freezed,
     Object? memo = freezed,
   }) {
@@ -150,14 +150,14 @@ class _$OrderDetailDTOCopyWithImpl<$Res, $Val extends OrderDetailDTO>
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
                       as String,
-            payType: null == payType
+            payType: freezed == payType
                 ? _value.payType
                 : payType // ignore: cast_nullable_to_non_nullable
-                      as String,
-            easyPayProvider: null == easyPayProvider
+                      as String?,
+            easyPayProvider: freezed == easyPayProvider
                 ? _value.easyPayProvider
                 : easyPayProvider // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             reviewId: freezed == reviewId
                 ? _value.reviewId
                 : reviewId // ignore: cast_nullable_to_non_nullable
@@ -193,8 +193,8 @@ abstract class _$$OrderDetailDTOImplCopyWith<$Res>
     String pickupTime,
     String createdAt,
     String storeId,
-    String payType,
-    String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? reviewId,
     String? memo,
   });
@@ -225,8 +225,8 @@ class __$$OrderDetailDTOImplCopyWithImpl<$Res>
     Object? pickupTime = null,
     Object? createdAt = null,
     Object? storeId = null,
-    Object? payType = null,
-    Object? easyPayProvider = null,
+    Object? payType = freezed,
+    Object? easyPayProvider = freezed,
     Object? reviewId = freezed,
     Object? memo = freezed,
   }) {
@@ -276,14 +276,14 @@ class __$$OrderDetailDTOImplCopyWithImpl<$Res>
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
                   as String,
-        payType: null == payType
+        payType: freezed == payType
             ? _value.payType
             : payType // ignore: cast_nullable_to_non_nullable
-                  as String,
-        easyPayProvider: null == easyPayProvider
+                  as String?,
+        easyPayProvider: freezed == easyPayProvider
             ? _value.easyPayProvider
             : easyPayProvider // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         reviewId: freezed == reviewId
             ? _value.reviewId
             : reviewId // ignore: cast_nullable_to_non_nullable
@@ -312,8 +312,8 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
     required this.pickupTime,
     required this.createdAt,
     required this.storeId,
-    required this.payType,
-    required this.easyPayProvider,
+    this.payType,
+    this.easyPayProvider,
     this.reviewId,
     this.memo,
   });
@@ -344,9 +344,9 @@ class _$OrderDetailDTOImpl implements _OrderDetailDTO {
   @override
   final String storeId;
   @override
-  final String payType;
+  final String? payType;
   @override
-  final String easyPayProvider;
+  final String? easyPayProvider;
   @override
   final String? reviewId;
   @override
@@ -441,8 +441,8 @@ abstract class _OrderDetailDTO implements OrderDetailDTO {
     required final String pickupTime,
     required final String createdAt,
     required final String storeId,
-    required final String payType,
-    required final String easyPayProvider,
+    final String? payType,
+    final String? easyPayProvider,
     final String? reviewId,
     final String? memo,
   }) = _$OrderDetailDTOImpl;
@@ -473,9 +473,9 @@ abstract class _OrderDetailDTO implements OrderDetailDTO {
   @override
   String get storeId;
   @override
-  String get payType;
+  String? get payType;
   @override
-  String get easyPayProvider;
+  String? get easyPayProvider;
   @override
   String? get reviewId;
   @override

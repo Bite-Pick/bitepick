@@ -18,8 +18,8 @@ class OrderDetailDTO with _$OrderDetailDTO {
     required String pickupTime,
     required String createdAt,
     required String storeId,
-    required String payType,
-    required String easyPayProvider,
+    String? payType,
+    String? easyPayProvider,
     String? reviewId,
     String? memo,
     // TODO: discount 추가

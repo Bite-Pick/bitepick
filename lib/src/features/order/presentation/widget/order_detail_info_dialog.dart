@@ -120,10 +120,10 @@ class OrderDetailInfoDialog extends ConsumerWidget {
   }
 
   // TODO: 전체 결제 수단 확인및 entity로 이동
-  String _getPaymentMethodText(String payType, String easyPayProvider) {
+  String _getPaymentMethodText(String? payType, String? easyPayProvider) {
     // payType: "PaymentMethodEasyPay", "PaymentMethodCard" 등
     // easyPayProvider: "TOSS", "KAKAO", "NAVER", "PAYCO" 등
-
+    if (payType == null || easyPayProvider == null) return "알수없음";
     if (payType.contains("EasyPay")) {
       switch (easyPayProvider.toUpperCase()) {
         case "TOSS":
