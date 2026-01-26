@@ -79,6 +79,9 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                     controller: _nicknameController,
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.nicknameError,
+                    onEditingComplete: () => ref
+                        .read(joinBasicInfoScreenControllerProvider.notifier)
+                        .validateNickname(),
                   ),
                   Gaps.h32,
                   MgTextField(

@@ -16,6 +16,7 @@ class MgTextField extends StatefulWidget {
     this.focusNode,
     this.onChanged,
     this.onSubmitted,
+    this.onEditingComplete,
     this.keyboardType,
     this.obscureText = false,
     this.enabled = true,
@@ -34,6 +35,7 @@ class MgTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onEditingComplete;
   final TextInputType? keyboardType;
   final bool obscureText;
   final bool enabled;
@@ -135,6 +137,7 @@ class _MgTextFieldState extends State<MgTextField> {
               focusNode: _focusNode,
               onChanged: widget.onChanged,
               onSubmitted: widget.onSubmitted,
+              onEditingComplete: widget.onEditingComplete,
               keyboardType: widget.keyboardType,
               obscureText: widget.obscureText,
               enabled: widget.enabled,
@@ -184,9 +187,16 @@ class _MgTextFieldState extends State<MgTextField> {
             ),
           ),
 
-          if (widget.error != null && widget.error!.isNotEmpty) ...[
-            Text(widget.error!).sm().red().margin(top: MgSizes.xs),
-          ],
+          // 에러 영역 항상 고정 높이로 유지 (레이아웃 점프 방지)
+          SizedBox(
+            height: 20,
+            child: widget.error != null && widget.error!.isNotEmpty
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(widget.error!).sm().red(),
+                  )
+                : null,
+          ),
         ],
       ),
     );

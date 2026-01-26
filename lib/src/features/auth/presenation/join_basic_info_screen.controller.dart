@@ -48,22 +48,14 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
   // 2단계: 닉네임 입력
   void setNickname(String nickname) {
-    state = state.copyWith(nickname: nickname);
-    // submitted가 true일 때만 실시간 검증
-    if (state.submitted) {
-      validateInputs();
-    }
+    state = state.copyWith(nickname: nickname, nicknameError: null);
   }
 
   // 3단계: 전화번호 입력
   void setPhone(String phone) {
     // 숫자만 추출 (하이픈 등 제거)
     final digitsOnly = phone.replaceAll(RegExp(r'[^0-9]'), '');
-    state = state.copyWith(phone: digitsOnly);
-    // submitted가 true일 때만 실시간 검증
-    if (state.submitted) {
-      validateInputs();
-    }
+    state = state.copyWith(phone: digitsOnly, phoneError: null);
   }
 
   // 전화번호 포맷팅 (UI 표시용)
@@ -137,24 +129,30 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     }
   }
 
+  // 닉네임만 검증 (onEditingComplete에서 호출)
+  Future<void> validateNickname() async {
+    if (state.nickname.trim().isEmpty) {
+      state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
+      return;
+    }
+
+    final isDuplicate = await ref
+        .read(authRepositoryProvider)
+        .checkDuplicateNickname(nickName: state.nickname.trim());
+    if (isDuplicate) {
+      state = state.copyWith(nicknameError: '이미 사용 중인 닉네임입니다');
+    }
+  }
+
   // 입력값 검증
   Future<bool> validateInputs() async {
-    // submitted가 false면 에러 표시 안함 (submit 전)
-    if (!state.submitted) return true;
-
-    // 에러 초기화
-    state = state.copyWith(nicknameError: null, phoneError: null);
-
     bool isValid = true;
 
     // 닉네임 검증
     if (state.nickname.trim().isEmpty) {
       state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
       isValid = false;
-    }
-    // 닉네임 중복 검증
-    // NOTE:에러메세지 통일 목적으로 submit이전에 체크
-    else {
+    } else {
       final isDuplicate = await ref
           .read(authRepositoryProvider)
           .checkDuplicateNickname(nickName: state.nickname.trim());
