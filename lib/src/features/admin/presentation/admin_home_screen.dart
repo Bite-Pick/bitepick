@@ -9,6 +9,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
+import 'package:magambell/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_pending_store_list_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
@@ -32,6 +33,7 @@ class AdminHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pendingStoreListAsync = ref.watch(pendingStoreListProvider());
+    final adminStatsAsync = ref.watch(adminStatsProvider);
     return BaseScaffold(
       canSwipeBack: false,
       appBar: BaseAppBar(
@@ -53,7 +55,8 @@ class AdminHomeScreen extends ConsumerWidget {
         spacing: MgSizes.sm,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        // TODO: 가입 유g저수, 가입 매장 수
+          _buildStats(adminStatsAsync),
+          Gaps.h8,
           Text("매장관리").bold().md(),
           MgAsyncAnimatedSwitcher(
             asyncValue: pendingStoreListAsync,
@@ -87,6 +90,47 @@ class AdminHomeScreen extends ConsumerWidget {
         ],
       ).margin(horizontal: MgSizes.lg),
     );
+  }
+
+  Widget _buildStats(AsyncValue<AdminStats?> adminStatsAsync) {
+    return MgAsyncAnimatedSwitcher(
+      asyncValue: adminStatsAsync,
+      builder: (stats) {
+        if (stats == null) return const SizedBox.shrink();
+        return Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                title: "가입 유저수",
+                count: stats.totalUserCount,
+              ),
+            ),
+            Gaps.w12,
+            Expanded(
+              child: _buildStatCard(
+                title: "가입 매장수",
+                count: stats.totalStoreCount,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildStatCard({required String title, required int count}) {
+    return Column(
+          children: [
+            Text(title).sm().textGray(),
+            Gaps.h4,
+            Text(count.toString()).bold().xl(),
+          ],
+        )
+        .margin(vertical: MgSizes.md)
+        .decorated(
+          borderRadius: BorderRadius.circular(MgSizes.sm),
+          border: Border.all(color: MgColorScheme.gray8),
+        );
   }
 
   Widget _buildMenu({

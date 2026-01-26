@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/admin/data/dtos/pending_store.dto.dart';
+import 'package:magambell/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -155,6 +156,17 @@ class AdminRepository {
     if (data == null) return false;
     return true;
   }
+  /// 관리자 통계 조회
+  Future<AdminStats?> getAdminStats() async {
+    final response = await _dio.get('/v1/admin/stats');
+
+    if (response.data['status'] != 'OK') return null;
+
+    final data = response.data['data'];
+    if (data == null) return null;
+
+    return AdminStats.fromJson(data as Map<String, dynamic>);
+  }
 }
 
 @riverpod
@@ -176,4 +188,9 @@ Future<List<PendingStoreDto>> pendingStoreList(
 @riverpod
 Future<List<BannerImage>> bannerImages(Ref ref) async {
   return ref.read(adminRepositoryProvider).getBannerImages();
+}
+
+@riverpod
+Future<AdminStats?> adminStats(Ref ref) async {
+  return ref.read(adminRepositoryProvider).getAdminStats();
 }

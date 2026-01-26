@@ -19,8 +19,8 @@ _$OrderDetailDTOImpl _$$OrderDetailDTOImplFromJson(Map<String, dynamic> json) =>
       pickupTime: json['pickupTime'] as String,
       createdAt: json['createdAt'] as String,
       storeId: json['storeId'] as String,
-      payType: json['payType'] as String,
-      easyPayProvider: json['easyPayProvider'] as String,
+      payType: json['payType'] as String?,
+      easyPayProvider: json['easyPayProvider'] as String?,
       reviewId: json['reviewId'] as String?,
       memo: json['memo'] as String?,
     );

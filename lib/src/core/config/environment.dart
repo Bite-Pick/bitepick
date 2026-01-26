@@ -87,10 +87,6 @@ class Environment {
     BuildType.prod => KAKAO_SHARE_TEMPLATE_ID_PROD,
   };
 
-  // AppsFlyer
-  static String get appsflyerDevKey => APPSFLYER_DEV_KEY;
-  static String get appsflyerAppIdIos => APPSFLYER_APP_ID_IOS;
-
   Future<void> run() async {
     await main_app.runMagamBellApp();
   }
