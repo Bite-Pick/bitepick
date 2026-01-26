@@ -98,23 +98,10 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
           ),
         ],
       ),
-      OrderOwnerStatus.ACCEPTED => Row(
-        children: [
-          Expanded(
-            child: MgButton(
-              onPressed: _showRejectDialog,
-              content: Text("주문 취소").textColor(MgColorScheme.gray2),
-            ).gray(),
-          ),
-          Gaps.w8,
-          Expanded(
-            child: MgButton(
-              onPressed: _showCompleteDialog,
-              content: const Text("완료"), // TODO: 유저가 픽업하면 완료를 누르는건지...?
-            ).primary(),
-          ),
-        ],
-      ),
+      OrderOwnerStatus.ACCEPTED => MgButton(
+        onPressed: _showCompleteDialog,
+        content: const Text("픽업 완료"),
+      ).primary(),
       _ => null,
     };
   }
@@ -149,8 +136,7 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
 
   String _getPaymentStatusText() {
     return switch (widget.order.orderStatus) {
-      // OrderStatus.canceled => '결제 취소',
-      // OrderStatus.failed => '결제 실패',
+      OrderOwnerStatus.CANCELED => '결제취소',
       _ => '결제완료',
     };
   }
