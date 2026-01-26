@@ -141,21 +141,16 @@ class OrderRepository {
   /// 결제 완료 처리
   /// [paymentId]는 주문 생성 시 받은 merchantUid (PortOne에서 반환)
   Future<bool> completePayment({required String paymentId}) async {
-    try {
-      final res = await _dio.post(
-        '/v1/payment/complete',
-        data: {'paymentId': paymentId},
-      );
-
-      if (res.data['status'] != 'OK') {
-        throw Exception('Payment verification failed');
-      }
-
-      return true;
-    } catch (e) {
-      talker.error('결제 완료 처리 실패: $e');
-      rethrow;
-    }
+    final res = await _dio.post(
+      '/v1/payment/complete',
+      data: {'paymentId': paymentId},
+    );
+    final data = res.data['data'] as String?;
+    if (res.data['status'] != 'OK' || data == null) return false;
+    // if (res.data['status'] != 'OK') {
+    //   throw Exception('Payment verification failed');
+    // }
+    return true;
   }
 }
 
