@@ -72,13 +72,15 @@ class _PortOnePaymentScreenState extends ConsumerState<PortOnePaymentScreen> {
       talker.info('💳 AppLink received: $uri');
 
       if (uri.scheme == 'bitepick') {
-        // 외부 앱에서 딥링크로 돌아옴 - 결제 완료 처리
-        final provider = portOnePaymentScreenControllerProvider(
-          storeId: widget.storeId,
-          merchantUid: widget.merchantUid,
-          amount: widget.amount,
-        );
-        ref.read(provider.notifier).handlePaymentCallback(context, uri.queryParameters);
+        ref
+            .read(
+              portOnePaymentScreenControllerProvider(
+                storeId: widget.storeId,
+                merchantUid: widget.merchantUid,
+                amount: widget.amount,
+              ).notifier,
+            )
+            .handlePaymentCallback(context, uri.queryParameters);
       }
     });
   }

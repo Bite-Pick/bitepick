@@ -103,10 +103,18 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
       talker.info("결제 서버 검증 시작");
 
       // PortOne에서 반환받은 paymentId는 우리가 보낸 merchantUid
-      await ref
+      final res = await ref
           .read(orderRepositoryProvider)
-          .completePayment(paymentId: state.merchantUid);
+          .completePayment(paymentId: impUid);
+      if (!res) {
+        // 결제 실패 시 주문 상태 초기화
+        ref
+            .read(orderPayScreenControllerProvider(state.storeId).notifier)
+            .resetMerchantUid();
 
+        context.pop();
+        return;
+      }
       ref.invalidate(userOrdersProvider());
 
       // 결제 성공 시 화면 전환
