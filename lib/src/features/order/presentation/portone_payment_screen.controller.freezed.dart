@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PortOnePaymentState {
   String get storeId => throw _privateConstructorUsedError;
-  String get merchantUid => throw _privateConstructorUsedError;
+  String get paymentId => throw _privateConstructorUsedError;
   int get amount => throw _privateConstructorUsedError;
   bool get isProcessing => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $PortOnePaymentStateCopyWith<$Res> {
   @useResult
   $Res call({
     String storeId,
-    String merchantUid,
+    String paymentId,
     int amount,
     bool isProcessing,
     String? error,
@@ -62,7 +62,7 @@ class _$PortOnePaymentStateCopyWithImpl<$Res, $Val extends PortOnePaymentState>
   @override
   $Res call({
     Object? storeId = null,
-    Object? merchantUid = null,
+    Object? paymentId = null,
     Object? amount = null,
     Object? isProcessing = null,
     Object? error = freezed,
@@ -73,9 +73,9 @@ class _$PortOnePaymentStateCopyWithImpl<$Res, $Val extends PortOnePaymentState>
                 ? _value.storeId
                 : storeId // ignore: cast_nullable_to_non_nullable
                       as String,
-            merchantUid: null == merchantUid
-                ? _value.merchantUid
-                : merchantUid // ignore: cast_nullable_to_non_nullable
+            paymentId: null == paymentId
+                ? _value.paymentId
+                : paymentId // ignore: cast_nullable_to_non_nullable
                       as String,
             amount: null == amount
                 ? _value.amount
@@ -106,7 +106,7 @@ abstract class _$$PortOnePaymentStateImplCopyWith<$Res>
   @useResult
   $Res call({
     String storeId,
-    String merchantUid,
+    String paymentId,
     int amount,
     bool isProcessing,
     String? error,
@@ -128,7 +128,7 @@ class __$$PortOnePaymentStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? storeId = null,
-    Object? merchantUid = null,
+    Object? paymentId = null,
     Object? amount = null,
     Object? isProcessing = null,
     Object? error = freezed,
@@ -139,9 +139,9 @@ class __$$PortOnePaymentStateImplCopyWithImpl<$Res>
             ? _value.storeId
             : storeId // ignore: cast_nullable_to_non_nullable
                   as String,
-        merchantUid: null == merchantUid
-            ? _value.merchantUid
-            : merchantUid // ignore: cast_nullable_to_non_nullable
+        paymentId: null == paymentId
+            ? _value.paymentId
+            : paymentId // ignore: cast_nullable_to_non_nullable
                   as String,
         amount: null == amount
             ? _value.amount
@@ -165,7 +165,7 @@ class __$$PortOnePaymentStateImplCopyWithImpl<$Res>
 class _$PortOnePaymentStateImpl implements _PortOnePaymentState {
   const _$PortOnePaymentStateImpl({
     required this.storeId,
-    required this.merchantUid,
+    required this.paymentId,
     required this.amount,
     this.isProcessing = false,
     this.error,
@@ -174,7 +174,7 @@ class _$PortOnePaymentStateImpl implements _PortOnePaymentState {
   @override
   final String storeId;
   @override
-  final String merchantUid;
+  final String paymentId;
   @override
   final int amount;
   @override
@@ -185,7 +185,7 @@ class _$PortOnePaymentStateImpl implements _PortOnePaymentState {
 
   @override
   String toString() {
-    return 'PortOnePaymentState(storeId: $storeId, merchantUid: $merchantUid, amount: $amount, isProcessing: $isProcessing, error: $error)';
+    return 'PortOnePaymentState(storeId: $storeId, paymentId: $paymentId, amount: $amount, isProcessing: $isProcessing, error: $error)';
   }
 
   @override
@@ -194,8 +194,8 @@ class _$PortOnePaymentStateImpl implements _PortOnePaymentState {
         (other.runtimeType == runtimeType &&
             other is _$PortOnePaymentStateImpl &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
-            (identical(other.merchantUid, merchantUid) ||
-                other.merchantUid == merchantUid) &&
+            (identical(other.paymentId, paymentId) ||
+                other.paymentId == paymentId) &&
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.isProcessing, isProcessing) ||
                 other.isProcessing == isProcessing) &&
@@ -203,14 +203,8 @@ class _$PortOnePaymentStateImpl implements _PortOnePaymentState {
   }
 
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    storeId,
-    merchantUid,
-    amount,
-    isProcessing,
-    error,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, storeId, paymentId, amount, isProcessing, error);
 
   /// Create a copy of PortOnePaymentState
   /// with the given fields replaced by the non-null parameter values.
@@ -227,7 +221,7 @@ class _$PortOnePaymentStateImpl implements _PortOnePaymentState {
 abstract class _PortOnePaymentState implements PortOnePaymentState {
   const factory _PortOnePaymentState({
     required final String storeId,
-    required final String merchantUid,
+    required final String paymentId,
     required final int amount,
     final bool isProcessing,
     final String? error,
@@ -236,7 +230,7 @@ abstract class _PortOnePaymentState implements PortOnePaymentState {
   @override
   String get storeId;
   @override
-  String get merchantUid;
+  String get paymentId;
   @override
   int get amount;
   @override

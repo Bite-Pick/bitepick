@@ -123,7 +123,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     }
 
                     // 주문 등록 (결제 전)
-                    final merchantUid = await ref
+                    final paymentId = await ref
                         .read(
                           orderPayScreenControllerProvider(
                             widget.storeId,
@@ -131,16 +131,15 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                         )
                         .submitOrder();
 
-                    if (merchantUid == null) {
+                    if (paymentId == null) {
                       ToastPresentor.error(context, '주문 정보를 불러오는데 실패했습니다.');
                       return;
                     }
 
-                    // 결제 화면으로 이동
+                    // 결제 화면으로 이동 (V2 SDK)
                     PortOnePaymentRoute(
                       storeId: widget.storeId,
-                      merchantUid: merchantUid,
-                      // orderName: '${widget.storeId} test', // TODO: 실제 orderName 생성
+                      paymentId: paymentId,
                       amount: totalPrice,
                     ).push(context);
                   },

@@ -52,14 +52,12 @@ class _VisualElements extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          VisualLoggerVisibleBuilder(
-            builder: (context, visible) {
-              return visible ? const VisualLogger() : const SizedBox.shrink();
-            },
-          ),
-          if (MgTalker.isEnabled) ...[
-            const SizedBox(height: 8),
-          ],
+          // VisualLoggerVisibleBuilder(
+          //   builder: (context, visible) {
+          const VisualLogger(),
+          // },
+          // ),
+          if (MgTalker.isEnabled) ...[const SizedBox(height: 8)],
         ],
       ),
     );

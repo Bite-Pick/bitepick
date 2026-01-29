@@ -5,6 +5,8 @@ help:
 	@echo "Available commands:"
 	@echo "  make gen                              - Generate assets"
 	@echo "  make clean                            - Clean generated files"
+	@echo "  make build_runner                     - Run build_runner"
+	@echo "  make androidBuild                     - Build Android AAB (prod)"
 	@echo "  make encrypt input=path/to/file       - Encrypt file with GPG"
 	@echo "  make decrypt input=file.gpg [output=] - Decrypt GPG file"
 
@@ -72,3 +74,8 @@ decrypt:
 iosCacheClean:
 	@echo "╠ Cleaning caches of the app"
 	@rm -rf build && rm -rf ios/Pods && rm -rf ios/Podfile.lock && pod cache clean --all && ${FLUTTER} clean && ${FLUTTER} pub get && cd ios && pod repo update && pod install
+
+androidBuild:
+	@echo "Building Android AAB (prod)..."
+	@flutter build appbundle --flavor prod -t lib/src/main_prod.dart --release
+	@echo "✅ AAB 빌드 완료 → build/app/outputs/bundle/prodRelease/app-prod-release.aab"

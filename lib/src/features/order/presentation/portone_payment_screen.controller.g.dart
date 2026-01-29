@@ -7,7 +7,7 @@ part of 'portone_payment_screen.controller.dart';
 // **************************************************************************
 
 String _$portOnePaymentScreenControllerHash() =>
-    r'ff61cb835773a54fafb73dbeadb7fd4c393199d0';
+    r'57edf586480ad08ddcd3a1e772595c213a9385bf';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,12 +33,12 @@ class _SystemHash {
 abstract class _$PortOnePaymentScreenController
     extends BuildlessAutoDisposeNotifier<PortOnePaymentState> {
   late final String storeId;
-  late final String merchantUid;
+  late final String paymentId;
   late final int amount;
 
   PortOnePaymentState build({
     required String storeId,
-    required String merchantUid,
+    required String paymentId,
     required int amount,
   });
 }
@@ -56,12 +56,12 @@ class PortOnePaymentScreenControllerFamily extends Family<PortOnePaymentState> {
   /// See also [PortOnePaymentScreenController].
   PortOnePaymentScreenControllerProvider call({
     required String storeId,
-    required String merchantUid,
+    required String paymentId,
     required int amount,
   }) {
     return PortOnePaymentScreenControllerProvider(
       storeId: storeId,
-      merchantUid: merchantUid,
+      paymentId: paymentId,
       amount: amount,
     );
   }
@@ -72,7 +72,7 @@ class PortOnePaymentScreenControllerFamily extends Family<PortOnePaymentState> {
   ) {
     return call(
       storeId: provider.storeId,
-      merchantUid: provider.merchantUid,
+      paymentId: provider.paymentId,
       amount: provider.amount,
     );
   }
@@ -102,12 +102,12 @@ class PortOnePaymentScreenControllerProvider
   /// See also [PortOnePaymentScreenController].
   PortOnePaymentScreenControllerProvider({
     required String storeId,
-    required String merchantUid,
+    required String paymentId,
     required int amount,
   }) : this._internal(
          () => PortOnePaymentScreenController()
            ..storeId = storeId
-           ..merchantUid = merchantUid
+           ..paymentId = paymentId
            ..amount = amount,
          from: portOnePaymentScreenControllerProvider,
          name: r'portOnePaymentScreenControllerProvider',
@@ -118,7 +118,7 @@ class PortOnePaymentScreenControllerProvider
          allTransitiveDependencies:
              PortOnePaymentScreenControllerFamily._allTransitiveDependencies,
          storeId: storeId,
-         merchantUid: merchantUid,
+         paymentId: paymentId,
          amount: amount,
        );
 
@@ -130,12 +130,12 @@ class PortOnePaymentScreenControllerProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.storeId,
-    required this.merchantUid,
+    required this.paymentId,
     required this.amount,
   }) : super.internal();
 
   final String storeId;
-  final String merchantUid;
+  final String paymentId;
   final int amount;
 
   @override
@@ -144,7 +144,7 @@ class PortOnePaymentScreenControllerProvider
   ) {
     return notifier.build(
       storeId: storeId,
-      merchantUid: merchantUid,
+      paymentId: paymentId,
       amount: amount,
     );
   }
@@ -156,7 +156,7 @@ class PortOnePaymentScreenControllerProvider
       override: PortOnePaymentScreenControllerProvider._internal(
         () => create()
           ..storeId = storeId
-          ..merchantUid = merchantUid
+          ..paymentId = paymentId
           ..amount = amount,
         from: from,
         name: null,
@@ -164,7 +164,7 @@ class PortOnePaymentScreenControllerProvider
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         storeId: storeId,
-        merchantUid: merchantUid,
+        paymentId: paymentId,
         amount: amount,
       ),
     );
@@ -183,7 +183,7 @@ class PortOnePaymentScreenControllerProvider
   bool operator ==(Object other) {
     return other is PortOnePaymentScreenControllerProvider &&
         other.storeId == storeId &&
-        other.merchantUid == merchantUid &&
+        other.paymentId == paymentId &&
         other.amount == amount;
   }
 
@@ -191,7 +191,7 @@ class PortOnePaymentScreenControllerProvider
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, storeId.hashCode);
-    hash = _SystemHash.combine(hash, merchantUid.hashCode);
+    hash = _SystemHash.combine(hash, paymentId.hashCode);
     hash = _SystemHash.combine(hash, amount.hashCode);
 
     return _SystemHash.finish(hash);
@@ -205,8 +205,8 @@ mixin PortOnePaymentScreenControllerRef
   /// The parameter `storeId` of this provider.
   String get storeId;
 
-  /// The parameter `merchantUid` of this provider.
-  String get merchantUid;
+  /// The parameter `paymentId` of this provider.
+  String get paymentId;
 
   /// The parameter `amount` of this provider.
   int get amount;
@@ -225,8 +225,8 @@ class _PortOnePaymentScreenControllerProviderElement
   String get storeId =>
       (origin as PortOnePaymentScreenControllerProvider).storeId;
   @override
-  String get merchantUid =>
-      (origin as PortOnePaymentScreenControllerProvider).merchantUid;
+  String get paymentId =>
+      (origin as PortOnePaymentScreenControllerProvider).paymentId;
   @override
   int get amount => (origin as PortOnePaymentScreenControllerProvider).amount;
 }
