@@ -41,38 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  app_links:
-    dependency: transitive
-    description:
-      name: app_links
-      sha256: "5f88447519add627fe1cbcab4fd1da3d4fed15b9baf29f28b22535c95ecee3e8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.4.1"
-  app_links_linux:
-    dependency: transitive
-    description:
-      name: app_links_linux
-      sha256: f5f7173a78609f3dfd4c2ff2c95bd559ab43c80a87dc6a095921d96c05688c81
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
-  app_links_platform_interface:
-    dependency: transitive
-    description:
-      name: app_links_platform_interface
-      sha256: "05f5379577c513b534a29ddea68176a4d4802c46180ee8e2e966257158772a3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
-  app_links_web:
-    dependency: transitive
-    description:
-      name: app_links_web
-      sha256: af060ed76183f9e2b87510a9480e56a5352b6c249778d07bd2c95fc35632a555
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   archive:
     dependency: transitive
     description:
@@ -829,14 +797,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.4"
-  gtk:
-    dependency: transitive
-    description:
-      name: gtk
-      sha256: e8ce9ca4b1df106e4d72dad201d345ea1a036cc12c360f1a7d5a758f78ffa42c
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   http:
     dependency: transitive
     description:
@@ -861,14 +821,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  iamport_webview_flutter:
-    dependency: transitive
-    description:
-      name: iamport_webview_flutter
-      sha256: "4034ec9ad126bbedd7c80c852f179aa559744c0683415393de041b7f7dca558d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -1269,14 +1221,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
-  portone_flutter:
+  portone_flutter_v2:
     dependency: "direct main"
     description:
-      name: portone_flutter
-      sha256: "41dce3e7bc98752e0e9ef5a5041b754ad7c7d6cc8dda0ee3b195c1055b61114a"
+      name: portone_flutter_v2
+      sha256: "2b6049fd5cd7401e44853d6e65fa21c0ebac6743757c350149bd7a82c2f329b9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.12.1"
+    version: "1.2.1"
   posix:
     dependency: transitive
     description:
@@ -1924,4 +1876,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.9.0 <4.0.0"
-  flutter: ">=3.35.0"
+  flutter: ">=3.35.1"

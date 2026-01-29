@@ -2,7 +2,7 @@ name: magambell
 description: "A new Flutter project."
 publish_to: 'none' 
 
-version: 1.0.0+1
+version: 1.19.2+117
 
 environment:
   sdk: ^3.9.0
@@ -65,9 +65,9 @@ dependencies:
   lottie: ^3.3.2
   geocoding: ^3.0.0
 
-  # PortOne Payment
+  # PortOne Payment V2
   webview_flutter: ^4.10.0
-  portone_flutter: ^0.12.1
+  portone_flutter_v2: ^1.2.1
 
 
 dev_dependencies:

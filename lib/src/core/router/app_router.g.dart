@@ -482,7 +482,7 @@ extension $PortOnePaymentRouteExtension on PortOnePaymentRoute {
   static PortOnePaymentRoute _fromState(GoRouterState state) =>
       PortOnePaymentRoute(
         storeId: state.uri.queryParameters['store-id']!,
-        merchantUid: state.uri.queryParameters['merchant-uid']!,
+        paymentId: state.uri.queryParameters['payment-id']!,
         amount: int.parse(state.uri.queryParameters['amount']!),
       );
 
@@ -490,7 +490,7 @@ extension $PortOnePaymentRouteExtension on PortOnePaymentRoute {
     '/order/payment',
     queryParams: {
       'store-id': storeId,
-      'merchant-uid': merchantUid,
+      'payment-id': paymentId,
       'amount': amount.toString(),
     },
   );
