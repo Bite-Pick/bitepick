@@ -30,7 +30,7 @@ class VisualLogger extends ConsumerWidget {
 class _ShowLogButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // if (Environment.instance.isProd) return SizedBox.shrink();
+    if (Environment.instance.isProd) return SizedBox.shrink();
     return _DecoratedContainer(
       child: Text(
         "Show\nLog",
