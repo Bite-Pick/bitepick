@@ -59,8 +59,12 @@ platform :android do
     # dev는 APK, prod는 AAB (기본값)
     artifact_arg = ENV["MODE"] == "dev" ? "--artifact apk" : ""
 
-    # VERSION에서 'v' 접두사 제거 (안전장치)
-    version = ENV["VERSION"].to_s.sub(/^v/, '')
+    # VERSION에서 'v' 접두사 및 flavor/platform 접미사 제거 (예: v1.19.8-prod-android → 1.19.8)
+    version = ENV["VERSION"].to_s
+      .sub(/^v/, '')
+      .sub(/-dev$/, '').sub(/-prod$/, '')
+      .sub(/-android$/, '').sub(/-ios$/, '')
+    puts "📦 Using clean version: #{version}"
 
     shorebird_release(
       platform: "android",
@@ -84,8 +88,11 @@ platform :android do
       "lib/src/main_dev.dart"
     end
 
-    # VERSION에서 'v' 접두사 제거 (안전장치)
-    version = ENV["VERSION"].to_s.sub(/^v/, '')
+    # VERSION에서 'v' 접두사 및 flavor/platform 접미사 제거 (예: v1.19.8-prod-android → 1.19.8)
+    version = ENV["VERSION"].to_s
+      .sub(/^v/, '')
+      .sub(/-dev$/, '').sub(/-prod$/, '')
+      .sub(/-android$/, '').sub(/-ios$/, '')
 
     # 기본 args 설정
     patch_args = "-t #{entry_point} --release-version #{version}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
