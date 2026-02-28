@@ -109,7 +109,7 @@ jobs:
           path: build_numbers.json
 
   android-dev:
-    timeout-minutes: 60
+    timeout-minutes: 90
     needs: set_env
     if: |
       (needs.set_env.outputs.FLAVOR == 'dev' || needs.set_env.outputs.FLAVOR == 'both')
@@ -124,6 +124,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache Android SDK components
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/android/sdk/ndk/27.0.12077973
+            /usr/local/lib/android/sdk/cmake/3.22.1
+            /usr/local/lib/android/sdk/platforms/android-33
+          key: android-sdk-ndk27-cmake3-platform33
 
       - name: Free up system disk space
         run: |
@@ -304,7 +313,7 @@ jobs:
             logs/*.md
 
   android-prod:
-    timeout-minutes: 60
+    timeout-minutes: 90
     needs: set_env
     if: |
       (needs.set_env.outputs.FLAVOR == 'prod' || needs.set_env.outputs.FLAVOR == 'both')
@@ -319,6 +328,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache Android SDK components
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/android/sdk/ndk/27.0.12077973
+            /usr/local/lib/android/sdk/cmake/3.22.1
+            /usr/local/lib/android/sdk/platforms/android-33
+          key: android-sdk-ndk27-cmake3-platform33
 
       - name: Free up system disk space
         run: |
