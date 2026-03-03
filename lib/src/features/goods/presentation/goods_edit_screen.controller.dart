@@ -1,4 +1,3 @@
-import 'package:magambell/src/core/utils/talker_instance.dart';
 // goods_edit_screen.controller.dart
 import 'dart:io';
 
@@ -103,7 +102,10 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       return [];
     }
 
-    return goodsImageList.mapIndexed((index, imageItem) {
+    return goodsImageList
+        .where((item) => item.imageUrl != null || item.goodsName != null)
+        .toList()
+        .mapIndexed((index, imageItem) {
       // 서버에서 받은 이미지는 이미 업로드된 상태이므로 uploadedUrl에 저장
       return GoodsDetailItem(
         localImage: LocalImage(
