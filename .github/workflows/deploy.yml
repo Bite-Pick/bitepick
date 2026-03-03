@@ -314,7 +314,7 @@ jobs:
 
   android-prod:
     timeout-minutes: 90
-    needs: set_env
+    needs: [set_env, android-dev]
     if: |
       (needs.set_env.outputs.FLAVOR == 'prod' || needs.set_env.outputs.FLAVOR == 'both')
       && (needs.set_env.outputs.PLATFORM == 'android' || needs.set_env.outputs.PLATFORM == 'both')
