@@ -47,21 +47,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
     form.control('discount').valueChanges.listen((_) {
       _calculateSalePrice();
     });
-    // 시간 강제: startTime 변경 시 endTime 자동 보정
-    form.control('startTime').valueChanges.listen((start) {
-      if (start is! DateTime) return;
-      final endCtrl = form.control('endTime');
-      final end = endCtrl.value as DateTime?;
-      final minEnd = start.add(_minDuration);
-
-      if (end == null || end.isBefore(minEnd)) {
-        // emitEvent: false로 순환 이벤트/밸리데이션 폭주 방지
-        endCtrl.updateValue(minEnd, emitEvent: false);
-        // 필요하면 markAsDirty/markAsTouched로 UI 반영
-        endCtrl.markAsDirty();
-      }
-    });
-
     form.control('endTime').valueChanges.listen((end) {
       if (end is! DateTime) return;
       final start = form.control('startTime').value as DateTime?;
@@ -190,16 +175,6 @@ class GoodsRegisterScreenController extends _$GoodsRegisterScreenController {
       state = state.copyWith(goodsDetails: updatedDetails);
     }
   }
-
-  // 필드명 한글 매핑
-  static const Map<String, String> _fieldNameMap = {
-    'quantity': '수량',
-    'startTime': '픽업 시작 시간',
-    'endTime': '픽업 마감 시간',
-    'originalPrice': '정가',
-    'discount': '할인율',
-    'salePrice': '판매가',
-  };
 
   // 최종 제출
   Future<bool> submit() async {

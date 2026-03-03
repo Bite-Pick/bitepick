@@ -20,6 +20,7 @@ class TimePickerBottomSheet extends StatefulWidget {
     this.initialTime,
     this.startTime,
     this.endTime,
+    this.disableNowFilter = false,
     required this.onTimeSelected,
     this.onSelectionChanged,
   });
@@ -27,6 +28,10 @@ class TimePickerBottomSheet extends StatefulWidget {
   final DateTime? initialTime;
   final DateTime? startTime;
   final DateTime? endTime;
+
+  /// true이면 현재 시간 기준 필터링 없이 startTime~endTime 전체를 표시
+  /// 사장님 운영 시간 설정 등에 사용
+  final bool disableNowFilter;
 
   final void Function(DateTime selected, String? errorMessage) onTimeSelected;
 
@@ -42,6 +47,7 @@ class TimePickerBottomSheet extends StatefulWidget {
     DateTime? initialTime,
     DateTime? startTime,
     DateTime? endTime,
+    bool disableNowFilter = false,
     required void Function(DateTime selected, String? errorMessage)
     onTimeSelected,
     void Function(DateTime selected, String? errorMessage)? onSelectionChanged,
@@ -51,6 +57,7 @@ class TimePickerBottomSheet extends StatefulWidget {
         initialTime: initialTime,
         startTime: startTime,
         endTime: endTime,
+        disableNowFilter: disableNowFilter,
         onTimeSelected: onTimeSelected,
         onSelectionChanged: onSelectionChanged,
       );
@@ -72,8 +79,13 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     _timeOptions = _generateTimeOptions();
 
     // 2. 초기 선택 인덱스 계산
-    final initialTime = widget.initialTime ?? DateTime.now();
-    _selectedIndex = _findClosestTimeIndex(initialTime);
+    // disableNowFilter이고 initialTime이 없으면 가장 이른 시간(인덱스 0)으로 설정
+    if (widget.disableNowFilter && widget.initialTime == null) {
+      _selectedIndex = 0;
+    } else {
+      final initialTime = widget.initialTime ?? DateTime.now();
+      _selectedIndex = _findClosestTimeIndex(initialTime);
+    }
 
     // 3. 컨트롤러 생성 (이제 _selectedIndex가 초기화된 상태)
     _timeController = FixedExtentScrollController(initialItem: _selectedIndex);
@@ -98,7 +110,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
     // 기본값 설정
     final startTime =
-        widget.startTime ?? DateTime(now.year, now.month, now.day, 0, 0);
+        widget.startTime ?? DateTime(now.year, now.month, now.day, 8, 0);
     final endTime =
         widget.endTime ?? DateTime(now.year, now.month, now.day, 23, 30);
 
@@ -112,7 +124,13 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     int rangeStartMinute;
     int rangeEndMinute;
 
-    if (nowTimeInMinutes >= startTimeInMinutes &&
+    if (widget.disableNowFilter) {
+      // 현재 시간 필터 없이 startTime~endTime 전체 표시 (사장님 운영 시간 설정용)
+      _isPickupToday = true;
+      pickupDate = DateTime(now.year, now.month, now.day);
+      rangeStartMinute = startTimeInMinutes;
+      rangeEndMinute = endTimeInMinutes;
+    } else if (nowTimeInMinutes >= startTimeInMinutes &&
         nowTimeInMinutes <= endTimeInMinutes) {
       // 케이스 1: 현재 시간이 영업 시간 내 (startTime <= now <= endTime)
       // → 픽업 날짜: 오늘, 선택 범위: now ~ endTime
@@ -218,6 +236,11 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     }
 
     final selectedOption = _timeOptions[_selectedIndex];
+
+    if (widget.disableNowFilter) {
+      return '${selectedOption.displayText} 설정하기';
+    }
+
     final dayLabel = _isPickupToday ? '오늘' : '내일';
     final dateLabel = '${_pickupDate.month}/${_pickupDate.day}';
 
