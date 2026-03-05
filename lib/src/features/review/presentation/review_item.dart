@@ -69,17 +69,18 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
             ],
           ),
           Text(widget.review.description).sm().margin(vertical: MgSizes.sm),
-          Row(
-            children: widget.review.imageUrls
-                .map(
-                  (imageUrl) => BaseNetworkImage(
-                    imageUrl: imageUrl,
-                    height: 120.w,
-                    width: 120.w,
-                  ),
-                )
-                .toList(),
-          ).constrained(height: 120),
+          if (widget.review.imageUrls.isNotEmpty)
+            Row(
+              children: widget.review.imageUrls
+                  .map(
+                    (imageUrl) => BaseNetworkImage(
+                      imageUrl: imageUrl,
+                      height: 120.w,
+                      width: 120.w,
+                    ),
+                  )
+                  .toList(),
+            ).constrained(height: 120),
         ],
       ),
     );
