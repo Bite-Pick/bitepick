@@ -206,7 +206,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
           leading: BaseSvgIcon.heart(),
           onTap: () => InquiryButton.showInquiryBottomSheet(context),
         ),
-      ].joinWithWidget(const Divider()),
+      ],
     );
   }
 
@@ -215,17 +215,23 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     required Widget leading,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          leading,
-          Gaps.w12,
-          Text(title).md().regular(),
-          const Spacer(),
-          BaseSvgIcon.right(color: MgColorScheme.gray6),
-        ],
-      ).margin(vertical: MgSizes.md, horizontal: MgSizes.sm),
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1, color: MgColorScheme.gray8),
+        ),
+      ),
+      child: ListTile(
+        leading: leading,
+        title: Text(title).md().regular(),
+        trailing: BaseSvgIcon.right(color: MgColorScheme.gray6),
+        onTap: onTap,
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 0, 
+          horizontal: MgSizes.md, 
+        ),
+      ),
     );
   }
 
