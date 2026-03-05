@@ -180,8 +180,9 @@ platform :ios do
       "lib/src/main_dev.dart"
     end
 
-    # 기본 args 설정
-    patch_args = "-t #{entry_point} --release-version #{ENV["VERSION"]}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
+    # 기본 args 설정 (release lane과 동일하게 suffix 제거)
+    clean_version = ENV["VERSION"].sub(/^v/, '').sub(/-dev$/, '').sub(/-prod$/, '').sub(/-ios$/, '')
+    patch_args = "-t #{entry_point} --release-version #{clean_version}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
 
     shorebird_patch(
       platform: "ios",

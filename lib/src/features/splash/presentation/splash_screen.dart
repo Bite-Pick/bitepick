@@ -10,6 +10,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/splash/data/repositories/app_version_policy_repository.dart';
+import 'package:magambell/src/features/splash/domain/entities/app_version_policy.dart';
 import 'package:magambell/src/features/splash/presentation/widgets/version_update_alert_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -63,16 +64,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<bool> checkAppVersion() async {
-    final appVersion = await ref.read(appVersionPolicyProvider.future);
+    final AppVersionPolicy? appVersion;
+    try {
+      appVersion = await ref.read(appVersionPolicyProvider.future);
+    } catch (_) {
+      // 버전 체크 실패 시 앱 진입 허용 (공개 API 오류로 앱이 멈추면 안 됨)
+      return true;
+    }
     if (appVersion == null) return true;
+    final policy = appVersion;
 
-    final isSupportedVersion = await _isUpdateRequired(appVersion.version);
+    final isSupportedVersion = await _isUpdateRequired(policy.version);
     if (!isSupportedVersion) {
       await showDialog(
         context: context,
         barrierDismissible: true,
         builder: (context) {
-          return VersionUpdateAlertDialog(appVersion);
+          return VersionUpdateAlertDialog(policy);
         },
       );
       return false;
