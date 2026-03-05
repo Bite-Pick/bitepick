@@ -136,6 +136,16 @@ jobs:
           restore-keys: |
             android-sdk-ndk27-cmake3-platform33
 
+      - name: Cache Gradle build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/pubspec.lock') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Free up system disk space
         run: |
           echo "=== Disk usage before cleanup ==="
@@ -192,7 +202,6 @@ jobs:
         with:
           java-version: "17.x"
           distribution: "zulu"
-          cache: gradle
 
       - name: Deploy Android
         env:
@@ -202,6 +211,7 @@ jobs:
           PATCH_BUILD_NUMBER: ${{ env.PATCH_BUILD_NUMBER }}
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
           MODE: ${{ env.FLAVOR }}
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
         working-directory: android
         run: |
           # Create logs directory
@@ -342,6 +352,16 @@ jobs:
           restore-keys: |
             android-sdk-ndk27-cmake3-platform33
 
+      - name: Cache Gradle build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/pubspec.lock') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Free up system disk space
         run: |
           echo "=== Disk usage before cleanup ==="
@@ -425,7 +445,6 @@ jobs:
         with:
           java-version: "17.x"
           distribution: "zulu"
-          cache: gradle
 
       - name: Deploy Android
         env:
@@ -435,6 +454,7 @@ jobs:
           PATCH_BUILD_NUMBER: ${{ env.PATCH_BUILD_NUMBER }}
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
           MODE: ${{ env.FLAVOR }}
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
         working-directory: android
         run: |
           # Create logs directory
