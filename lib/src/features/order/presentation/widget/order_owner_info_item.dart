@@ -168,8 +168,8 @@ class _OrderOwnerInfoItemState extends ConsumerState<OrderOwnerInfoItem> {
     showDialog(
       context: context,
       builder: (context) => MgAlertDialog.basic(
-        title: '준비 완료',
-        content: Text('준비 완료 처리하시겠습니까?'),
+        title: '픽업 완료',
+        content: Text('픽업 완료 처리하시겠습니까?'),
         onConfirm: () => ref
             .read(ownerOrderListControllerProvider.notifier)
             .completeOrder(widget.order.orderId),
