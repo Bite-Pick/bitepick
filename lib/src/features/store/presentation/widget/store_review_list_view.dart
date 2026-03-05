@@ -21,7 +21,7 @@ class StoreReviewListView extends ConsumerStatefulWidget {
 }
 
 class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
-  bool _imageCheckOnly = true;
+  bool _imageCheckOnly = false;
 
   void _toggleImageCheck() =>
       setState(() => _imageCheckOnly = !_imageCheckOnly);
