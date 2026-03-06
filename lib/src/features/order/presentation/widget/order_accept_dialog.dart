@@ -33,10 +33,10 @@ class OrderAcceptDialog extends StatelessWidget {
             Text('주문 수락이 완료되었어요').xl().bold(),
             Gaps.h4,
             MgTextRich(
-              text: '바이트백이 준비가 되면 ',
+              text: '손님이 바이트백을 픽업하면\n',
               children: [
-                TextSpan(text: '준비 완료').bold(),
-                TextSpan(text: '버튼을 눌러\n 손님에게 알려주세요'),
+                TextSpan(text: '픽업 완료').bold(),
+                TextSpan(text: '를 눌러 주문을 완료해주세요'),
               ],
             ).sm().textGray().center(),
             Gaps.h32,
