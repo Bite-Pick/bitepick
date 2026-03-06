@@ -25,7 +25,7 @@ platform :ios do
     sh('flutter pub get')
 
     # Clean version number (remove 'v' prefix and flavor suffix like '-dev', '-prod', '-ios')
-    clean_version = ENV["VERSION_NUMBER"].sub(/^v/, '').sub(/-dev$/, '').sub(/-prod$/, '').sub(/-ios$/, '')
+    clean_version = ENV["VERSION_NUMBER"].sub(/^v/, '').gsub(/-(dev|prod|ios|android)/, '')
     puts "📦 Using clean version: #{clean_version}"
 
     increment_build_number(build_number: ENV["BUILD_NUMBER"])
@@ -181,7 +181,7 @@ platform :ios do
     end
 
     # 기본 args 설정 (release lane과 동일하게 suffix 제거)
-    clean_version = ENV["VERSION"].sub(/^v/, '').sub(/-dev$/, '').sub(/-prod$/, '').sub(/-ios$/, '')
+    clean_version = ENV["VERSION"].sub(/^v/, '').gsub(/-(dev|prod|ios|android)/, '')
     patch_args = "-t #{entry_point} --release-version #{clean_version}+#{ENV["PATCH_BUILD_NUMBER"]} --flavor #{ENV["MODE"]}"
 
     shorebird_patch(
