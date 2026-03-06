@@ -67,10 +67,12 @@ class AuthRepository {
       'Authentication successful - Access Token: ${accessToken.substring(0, 10)}...',
     );
 
-    // 로그인 성공 후 FCM 토큰을 서버에 등록
-    ref.read(pushNotificationProvider).registerTokenToServer().catchError((e) {
+    // 로그인 성공 후 FCM 토큰을 서버에 등록하고 갱신 리스너 등록
+    final pushNotif = ref.read(pushNotificationProvider);
+    pushNotif.registerTokenToServer().catchError((e) {
       talker.error('[AUTH] Failed to register FCM token after login', e);
     });
+    pushNotif.listenToTokenRefresh(() => pushNotif.registerTokenToServer());
 
     return AuthTokens(accessToken: accessToken, refreshToken: refresh);
   }

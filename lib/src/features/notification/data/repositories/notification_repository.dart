@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/core/network/api_exception.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,6 +23,10 @@ class NotificationRepository {
   /// - 그 외 에러는 그대로 rethrow(DioException 포함)
   Future<bool> registerStoreNotification({required String storeId}) async {
     final token = await ref.read(pushNotificationProvider).getToken();
+    if (token == null) {
+      talker.warning('[Notification] FCM token is null, cannot register store notification');
+      return false;
+    }
     final res = await _dio.post(
       '/v1/notification/store',
       data: {'storeId': storeId, 'fcmToken': token},
@@ -84,9 +89,7 @@ class NotificationRepository {
       '/v1/notification',
       data: {'fcmToken': fcmToken},
     );
-    final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return false;
-    return true;
+    return res.statusCode == 200;
   }
 
   Future<bool> testNotification() async {

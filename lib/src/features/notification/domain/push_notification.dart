@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,14 +8,6 @@ import 'package:magambell/src/features/notification/data/repositories/notificati
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_notification.g.dart';
-
-/// 백그라운드 메시지 핸들러 (톱레벨 함수)
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // 백그라운드 핸들러는 별도 isolate에서 실행되므로 Firebase 초기화 필요
-  await Firebase.initializeApp();
-  talker.info('[FCM] Background message: ${message.notification?.title}');
-}
 
 class PushNotification {
   PushNotification(this.ref);
