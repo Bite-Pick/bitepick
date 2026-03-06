@@ -102,7 +102,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                 }
               },
               content: const Text('확인'),
-              disabled: form.invalid,
+              disabled: form.invalid || ref.watch(ownerJoinInfoScreenControllerProvider).isLoading,
             ).primary().margin(horizontal: MgSizes.md, bottom: MgSizes.xl),
           ],
         ),

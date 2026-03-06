@@ -115,27 +115,38 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   }
 
   Widget _buildServiceSwitch(String id, bool saleStatus) {
-    return Row(
-      children: [
-        Text("영업중").bold().md(),
-        Gaps.w8,
-        Switch(
-          value: saleStatus,
-          onChanged: (value) async {
-            !value
-                ? showDialog(
-                    context: context,
-                    builder: (context) => _buildAlertDialog(id, value),
-                  )
-                : changeSaleStatus(id, value);
-          },
-          activeThumbColor: MgColorScheme.gray11,
-          activeTrackColor: MgColorScheme.systemSuccess, // 활성화(ON) 시 트랙 색상
-          inactiveThumbColor: MgColorScheme.gray11, // 비활성화 원 색
-          inactiveTrackColor: MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
-          trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
-        ),
-      ],
+    void onToggle() {
+      final newValue = !saleStatus;
+      if (!newValue) {
+        showDialog(
+          context: context,
+          builder: (context) => _buildAlertDialog(id, newValue),
+        );
+      } else {
+        changeSaleStatus(id, newValue);
+      }
+    }
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onToggle,
+      child: Row(
+        children: [
+          Text("영업중").bold().md(),
+          Gaps.w8,
+          IgnorePointer(
+            child: Switch(
+              value: saleStatus,
+              onChanged: (_) {},
+              activeThumbColor: MgColorScheme.gray11,
+              activeTrackColor: MgColorScheme.systemSuccess, // 활성화(ON) 시 트랙 색상
+              inactiveThumbColor: MgColorScheme.gray11, // 비활성화 원 색
+              inactiveTrackColor: MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
+              trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

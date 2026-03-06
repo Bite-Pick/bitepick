@@ -40,7 +40,7 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
         if (localImages.length >= ImageUploadSection.MAX_IMAGE_COUNT)
           Padding(
             padding: const EdgeInsets.only(bottom: MgSizes.xs),
-            child: Text("이미지는 최대 5장까지 첨부가능해요").red(),
+            child: Text("이미지는 5장까지 첨부 가능합니다").textGray(),
           ),
         if (localImages.isEmpty) _buildImageUploadArea(),
         if (localImages.isNotEmpty) _buildImageList(),
@@ -68,7 +68,9 @@ class _ImageUploadSectionState extends ConsumerState<ImageUploadSection> {
                     "사진추가(${widget.images.length}/${ImageUploadSection.MAX_IMAGE_COUNT})",
                   )
                   .textColor(
-                    !canAddMore ? MgColorScheme.systemError : MgColorScheme.gray4,
+                    !canAddMore
+                        ? MgColorScheme.systemError
+                        : MgColorScheme.gray4,
                   )
                   .regular(),
             ],

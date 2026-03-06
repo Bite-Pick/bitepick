@@ -20,7 +20,7 @@ class WithdrawController extends _$WithdrawController {
       context: context,
       builder: (context) => MgAlertDialog.basic(
         title: "정말로 탈퇴하시겠어요?",
-        content: Text("탈퇴 시 계정 및 이용 기록은 모두 삭제되며삭제된 정보는 복구할 수 없습니다."),
+        content: Text("탈퇴 시 계정 및 이용 기록은 모두 삭제되며, 삭제된 정보는 복구할 수 없습니다."),
         onConfirm: () => ok = true,
       ),
     );

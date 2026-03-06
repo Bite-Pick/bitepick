@@ -26,6 +26,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
   }
 
   void _initializeForm() {
+    localImages = [];
     form = FormGroup({
       'storeName': FormControl<String>(
         validators: [Validators.required, Validators.minLength(1)],
@@ -125,21 +126,6 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
     }
   }
 
-  // 필드명 한글 매핑
-  static const Map<String, String> _fieldNameMap = {
-    'storeName': '매장 이름',
-    'description': '매장 설명',
-    'postalCode': '우편번호',
-    'address': '주소',
-    'addressDetail': '상세주소',
-    'parkingDescription': '주차안내',
-    'representativeName': '대표자 성함',
-    'representativePhone': '전화번호',
-    'businessNumber': '사업자 등록 번호',
-    'bankName': '은행',
-    'accountNumber': '계좌번호',
-  };
-
   Future<bool> submit() async {
     // 1. Form validation 체크
     if (!form.valid) {
@@ -215,8 +201,12 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         return localImage;
       }).toList();
 
-      talker.debug('[S3] Updated local images IDs: ${updatedLocalImages.map((img) => img.id).toList()}');
-      talker.debug('[S3] Presigned URL IDs: ${result.map((url) => url.id).toList()}');
+      talker.debug(
+        '[S3] Updated local images IDs: ${updatedLocalImages.map((img) => img.id).toList()}',
+      );
+      talker.debug(
+        '[S3] Presigned URL IDs: ${result.map((url) => url.id).toList()}',
+      );
 
       bool isSuccess = false;
       await ref
