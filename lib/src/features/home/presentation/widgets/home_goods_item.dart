@@ -29,6 +29,7 @@ class _HomeGoodsItemState extends State<HomeGoodsItem> {
     final goods = widget.goods;
     return GestureDetector(
       onTap: () => StoreRoute(id: goods.storeId!).push(context),
+      behavior: HitTestBehavior.opaque,
       child: Column(
         children: [
           StoreImageSection(goods.imageUrl ?? []),
