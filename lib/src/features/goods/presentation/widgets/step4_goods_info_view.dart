@@ -89,6 +89,7 @@ class Step4GoodsInfoView extends ConsumerWidget {
             // TODO[UI]: 버튼 터치 영역 horizontal 확장 필요
             GestureDetector(
               onTap: () => _addItem(context),
+              behavior: HitTestBehavior.opaque,
               child: DottedBorder(
                 options: RoundedRectDottedBorderOptions(
                   radius: Radius.circular(MgRadius.md),
@@ -96,10 +97,14 @@ class Step4GoodsInfoView extends ConsumerWidget {
                   color: MgColorScheme.gray5,
                   strokeWidth: 1.5,
                 ),
-                child: Center(
-                  child: BaseSvgIcon.plus().margin(vertical: MgSizes.sm),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: Center(
+                    child: BaseSvgIcon.plus().margin(vertical: MgSizes.sm),
+                  ),
                 ),
-              ).constrained(width: double.infinity),
+              ).constrained(width: double.infinity, height: 48),
             ),
           ],
         );
