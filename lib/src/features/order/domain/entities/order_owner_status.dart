@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 
-enum OrderOwnerStatus { PAID, ACCEPTED, COMPLETED, CANCELED }
+enum OrderOwnerStatus { PAID, ACCEPTED, COMPLETED, CANCELED, REJECTED }
 
 // TODO: CANCELED 상태 표시되는지 확인
 extension OrderOwnerStatusExt on OrderOwnerStatus {
@@ -14,6 +14,8 @@ extension OrderOwnerStatusExt on OrderOwnerStatus {
       case OrderOwnerStatus.COMPLETED:
         return '완료';
       case OrderOwnerStatus.CANCELED:
+        return '완료';
+      case OrderOwnerStatus.REJECTED:
         return '완료';
     }
   }
@@ -28,6 +30,8 @@ extension OrderOwnerStatusExt on OrderOwnerStatus {
         return '완료';
       case OrderOwnerStatus.CANCELED:
         return '취소';
+      case OrderOwnerStatus.REJECTED:
+        return '거절';
     }
   }
 
@@ -40,6 +44,8 @@ extension OrderOwnerStatusExt on OrderOwnerStatus {
       case OrderOwnerStatus.COMPLETED:
         return Color(0xff4CAF50);
       case OrderOwnerStatus.CANCELED:
+        return MgColorScheme.systemError;
+      case OrderOwnerStatus.REJECTED:
         return MgColorScheme.systemError;
     }
   }
