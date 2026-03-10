@@ -65,3 +65,5 @@ Makefile
 android/app/bitepick-release.keystore
 android/fastlane/google-play-service-account.json
 shorebird.yaml.bak
+android/fastlane/report.xml
+android/fastlane/README.md

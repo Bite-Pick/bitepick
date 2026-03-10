@@ -209,6 +209,115 @@ git tag --sort=-version:refname | head -10
 
 ---
 
+## 로컬 직접 배포 (Actions 없이)
+
+Actions 비용 한계 초과 또는 긴급 배포 시 사용.
+
+### 사전 준비
+
+```bash
+# Shorebird 로그인
+shorebird login
+
+# Ruby 의존성 설치
+cd ios && bundle install
+cd android && bundle install
+
+# 시크릿 파일 복호화 (GPG 패스프레이즈 필요)
+GPG_PASSPHRASE=패스프레이즈 .github/scripts/decrypt-secrets.sh
+```
+
+필요한 파일들이 제자리에 있는지 확인:
+- `android/app/bitepick-release.keystore`
+- `android/key.properties`
+- `android/app/src/prod/google-services.json`
+- `ios/Runner/GoogleService-Info-prod.plist`
+- `ios/AuthKey.p8`
+
+---
+
+### 버전 올리기
+
+`pubspec.yaml`에서 버전 수정:
+
+```
+version: 1.19.12+148
+```
+
+- `+` 앞: 스토어에 표시되는 버전명
+- `+` 뒤: 빌드번호 (이전 빌드번호보다 반드시 높아야 함, `build_numbers.json` 참고)
+
+---
+
+### Android 로컬 배포
+
+**Full Release (Play Store):**
+
+```bash
+# 1. AAB 빌드 (서명 포함)
+make androidBuild
+
+# 2. Play Store 내부 트랙 업로드
+cd android
+export MODE=prod
+export PACKAGE_NAME=com.trendflow.bitepick
+export SUPPLY_JSON_KEY_DATA=$(cat fastlane/google-play-service-account.json)
+bundle exec fastlane internal
+```
+
+**Shorebird Release (처음 또는 네이티브 변경 시):**
+
+```bash
+shorebird release android -t lib/src/main_prod.dart --flavor prod
+```
+
+**Shorebird Patch (Dart 코드만 변경 시):**
+
+```bash
+shorebird patch android -t lib/src/main_prod.dart --flavor prod
+```
+
+---
+
+### iOS 로컬 배포
+
+**Shorebird Release (처음 또는 네이티브 변경 시):**
+
+```bash
+shorebird release ios -t lib/src/main_prod.dart --flavor prod
+```
+
+완료되면 Transporter 앱으로 생성된 IPA를 TestFlight에 업로드.
+
+**Shorebird Patch (Dart 코드만 변경 시):**
+
+```bash
+shorebird patch ios -t lib/src/main_prod.dart --flavor prod
+```
+
+---
+
+### Shorebird 계정 관련
+
+Shorebird는 `shorebird.yaml`의 `app_id`로 앱과 연결됨.
+계정을 변경하려면:
+
+```bash
+# 1. 새 계정 로그인
+shorebird login
+
+# 2. 새 앱 생성 및 shorebird.yaml 업데이트
+shorebird init
+
+# 3. 새 release 배포 (patch 전 반드시 필요)
+shorebird release ios -t lib/src/main_prod.dart --flavor prod
+shorebird release android -t lib/src/main_prod.dart --flavor prod
+```
+
+> 계정 변경 시 기존 patch 히스토리는 이전되지 않음.
+
+---
+
 ## 시크릿 관리
 
 민감한 파일들은 GPG로 암호화되어 `.github/secrets/`에 저장되어 있음.
