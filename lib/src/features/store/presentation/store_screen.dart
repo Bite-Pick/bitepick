@@ -49,8 +49,6 @@ class StoreScreen extends ConsumerStatefulWidget {
 class _StoreScreenState extends ConsumerState<StoreScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int count = 1;
-  void setCount(int newCount) => setState(() => count = newCount);
 
   @override
   void initState() {
@@ -95,21 +93,42 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               ],
             ),
           ),
-          bottomNavigationBar: _buildBottomButton(store),
+          bottomNavigationBar: _BottomOrderBar(goods: store, storeId: widget.id,),
         );
       },
     );
   }
+}
 
-  Widget _buildBottomButton(GoodsDetailDto goods) {
+class _BottomOrderBar extends ConsumerStatefulWidget {
+  const _BottomOrderBar({
+    required this.goods,
+    required this.storeId,
+  });
+
+  final GoodsDetailDto goods;
+  final String storeId;
+
+  @override
+  ConsumerState<_BottomOrderBar> createState() => _BottomOrderBarState();
+}
+
+class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
+  int count = 1;
+
+  void setCount(int newCount) {
+    setState(() {
+      count = newCount;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final goods = widget.goods;
     final saleStatus = goods.saleStatus == "ON";
     final now = DateTime.now();
     final endTime = goods.endTime;
     final goodsStartTime = goods.startTime;
-    // NOTE: invalidPickUpTime일 경우 서버에서 ON/OFF를 업데이트
-    // final isInvalidPickupTime =
-    //     (now.hour * 3600 + now.minute * 60 + now.second) >
-    //     (endTime.hour * 3600 + endTime.minute * 60 + endTime.second);
     final startTime =
         (now.hour * 3600 + now.minute * 60 + now.second) >
             (goodsStartTime.hour * 3600 +
@@ -132,6 +151,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
               onPressed: () async {
                 final user = ref.read(userStateProvider).asData!.value;
                 final isLogin = user != null;
+
                 if (!isLogin) {
                   unawaited(showLoginAlerDialog(context));
                   return;
@@ -140,32 +160,31 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
                 if (!saleStatus) {
                   final res = await ref
                       .read(notificationRepositoryProvider)
-                      .registerStoreNotification(storeId: widget.id);
+                      .registerStoreNotification(storeId: widget.storeId);
                   if (res) ToastPresentor.success(context, "알림 신청 성공");
                   return;
-                } else {
-                  // 주문 정보 저장
-                  ref
-                      .read(
-                        orderPayScreenControllerProvider(
-                          goods.storeId,
-                        ).notifier,
-                      )
-                      .setOrderInfo(
-                        storeName: goods.storeName,
-                        storeAddress: goods.address,
-                        storeId: goods.storeId,
-                        goodsId: goods.goodsId,
-                        quantity: count,
-                        totalPrice: goods.salePrice * count,
-                        salePrice: goods.salePrice,
-                        originalPrice: goods.originalPrice,
-                        startTime: startTime,
-                        endTime: endTime,
-                      );
-                  // 주문 확인 화면으로 이동
-                  await OrderCautionRoute(storeId: goods.storeId).push(context);
                 }
+
+                ref
+                    .read(
+                      orderPayScreenControllerProvider(
+                        goods.storeId,
+                      ).notifier,
+                    )
+                    .setOrderInfo(
+                      storeName: goods.storeName,
+                      storeAddress: goods.address,
+                      storeId: goods.storeId,
+                      goodsId: goods.goodsId,
+                      quantity: count,
+                      totalPrice: goods.salePrice * count,
+                      salePrice: goods.salePrice,
+                      originalPrice: goods.originalPrice,
+                      startTime: startTime,
+                      endTime: endTime,
+                    );
+
+                await OrderCautionRoute(storeId: goods.storeId).push(context);
               },
               content: Text(!saleStatus ? '오픈 알림신청하기' : '구매하기'),
             ).primary(),
@@ -177,7 +196,10 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
 }
 
 class _StoreTabBar extends ConsumerWidget {
-  const _StoreTabBar({required this.goodsId, required this.controller});
+  const _StoreTabBar({
+    required this.goodsId,
+    required this.controller,
+  });
 
   final String goodsId;
   final TabController controller;
