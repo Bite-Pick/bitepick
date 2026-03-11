@@ -212,6 +212,13 @@ class PushNotification {
   /// FCM 토큰을 서버에 등록 (로그인 후 호출)
   Future<void> registerTokenToServer() async {
     try {
+      // iOS Keychain에 캐시된 이전 Firebase 프로젝트 토큰을 방지하기 위해
+      // 기존 토큰 삭제 후 새로 발급
+      if (Platform.isIOS) {
+        await FirebaseMessaging.instance.deleteToken();
+        talker.info('[FCM] Deleted existing token to force refresh');
+      }
+
       final token = await getToken();
       if (token == null) {
         talker.warning('[FCM] Token is null, cannot register to server');
