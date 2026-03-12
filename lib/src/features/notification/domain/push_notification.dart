@@ -172,27 +172,22 @@ class PushNotification {
   /// FCM 토큰 가져오기
   Future<String?> getToken() async {
     try {
-      final messaging = FirebaseMessaging.instance;
-
-      // iOS의 경우 APNS 토큰을 먼저 가져와야 함
       if (Platform.isIOS) {
-        final apnsToken = await messaging.getAPNSToken();
-        if (apnsToken == null) {
-          talker.warning('[FCM] APNS token not available yet, retrying...');
-          // APNS 토큰이 없으면 잠시 대기 후 재시도
-          await Future.delayed(const Duration(seconds: 2));
-          final retryApnsToken = await messaging.getAPNSToken();
-          if (retryApnsToken == null) {
-            talker.error('[FCM] APNS token still not available after retry');
-            return null;
-          }
-          talker.debug('[FCM] APNS token retrieved on retry');
-        } else {
-          talker.debug('[FCM] APNS token: ${apnsToken.substring(0, 20)}...');
+        String? apnsToken;
+        for (int i = 0; i < 10; i++) {
+          apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+          if (apnsToken != null) break;
+          await Future.delayed(const Duration(milliseconds: 500));
         }
+        if (apnsToken == null) {
+          talker.error('[FCM] APNS token not available');
+          return null;
+        }
+        talker.debug('[FCM] APNS token ready');
+        // Firebase 내부 APNS 상태 동기화 대기 (race condition 방지)
+        await Future.delayed(const Duration(milliseconds: 500));
       }
-
-      final token = await messaging.getToken();
+      final token = await FirebaseMessaging.instance.getToken();
       talker.info('[FCM] Token retrieved: ${token?.substring(0, 20)}...');
       return token;
     } catch (e, stackTrace) {
@@ -209,12 +204,8 @@ class PushNotification {
     });
   }
 
-  /// iOS Keychain 캐시 토큰 초기화 후 서버에 새 토큰 등록 (로그인 시 1회 호출)
+  /// 로그인 시 FCM 토큰을 서버에 등록
   Future<void> refreshAndRegisterToken() async {
-    if (Platform.isIOS) {
-      await FirebaseMessaging.instance.deleteToken();
-      talker.info('[FCM] Deleted existing token to force refresh');
-    }
     await registerTokenToServer();
   }
 
