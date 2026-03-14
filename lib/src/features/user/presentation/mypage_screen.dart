@@ -176,8 +176,8 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
 
     return Row(
       children: [
-        UserProfileItem(),
-        Gaps.w16,
+        UserProfileItem(providerType: userState.providerType),
+        Gaps.w12,
         Column(
           children: [
             Text(userState!.nickName),
@@ -228,8 +228,8 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
         trailing: BaseSvgIcon.right(color: MgColorScheme.gray6),
         onTap: onTap,
         contentPadding: EdgeInsets.symmetric(
-          vertical: 0, 
-          horizontal: MgSizes.md, 
+          vertical: 0,
+          horizontal: MgSizes.md,
         ),
       ),
     );
