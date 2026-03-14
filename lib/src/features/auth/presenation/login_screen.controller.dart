@@ -22,7 +22,7 @@ class LoginScreenController extends _$LoginScreenController {
     await _performSocialLogin(
       onSocialLogin: () =>
           ref.read(socialAuthRepositoryProvider).signInWithNaver(),
-      providerName: '네이버',
+      providerName: 'NAVER',
       onSocialLogout: () =>
           ref.read(socialAuthRepositoryProvider).logoutNaver(),
     );
@@ -33,7 +33,7 @@ class LoginScreenController extends _$LoginScreenController {
     await _performSocialLogin(
       onSocialLogin: () =>
           ref.read(socialAuthRepositoryProvider).signInWithKakao(),
-      providerName: '카카오',
+      providerName: 'KAKAO',
       onSocialLogout: () =>
           ref.read(socialAuthRepositoryProvider).logoutKakao(),
     );
@@ -44,7 +44,7 @@ class LoginScreenController extends _$LoginScreenController {
     await _performSocialLogin(
       onSocialLogin: () =>
           ref.read(socialAuthRepositoryProvider).signInWithApple(),
-      providerName: '애플',
+      providerName: 'APPLE',
     );
   }
 

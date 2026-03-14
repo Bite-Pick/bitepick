@@ -29,6 +29,21 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  String _lastProvider = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastLoginProvider();
+  }
+
+  Future<void> _loadLastLoginProvider() async {
+    final provider = await getLastLoginProvider();
+    if (mounted) {
+      setState(() => _lastProvider = provider);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Controller state 감지
@@ -82,12 +97,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             Gaps.h52,
             if (isLoading) ...[const CircularProgressIndicator(), Gaps.h24],
-            // MgButton(
-            //   content: Text("dd"),
-            //   onPressed: () {
-            //     SelectUserTypeRoute().go(context);
-            //   },
-            // ).gray(),
             Column(
               spacing: MgSizes.sm,
               children: [
@@ -102,6 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   backgroundColor: MgColorScheme.primary,
                   textColor: MgColorScheme.gray1,
                   isLoading: isLoading,
+                  providerKey: 'KAKAO',
                 ),
                 _buildSocialLoginButton(
                   onPressed: () async => await ref
@@ -112,6 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   backgroundColor: const Color(0xFF36AE3C),
                   textColor: MgColorScheme.gray11,
                   isLoading: isLoading,
+                  providerKey: 'NAVER',
                 ),
                 if (Platform.isIOS)
                   _buildSocialLoginButton(
@@ -123,6 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     backgroundColor: MgColorScheme.gray1,
                     textColor: MgColorScheme.gray11,
                     isLoading: isLoading,
+                    providerKey: 'APPLE',
                   ),
                 MgButton(
                   onPressed: () => MainRoute().go(context),
@@ -143,15 +155,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     required Color backgroundColor,
     required Color textColor,
     required bool isLoading,
+    required String providerKey,
   }) {
-    // return MgTooltip(
-    //   disabled: true, // TODO: 최근 로그인 툴팁 활성화
-    //   item: Text("최근에 로그인했어요").xs().white(),
-    //   offset: Offset(100.w, 0),
-    //   defaultVisible: true,
-    //   child:
-    // );
-    return MgButton(
+    final isLastUsed = _lastProvider == providerKey;
+    final button = MgButton(
       onPressed: isLoading ? null : onPressed,
       backgroundColor: backgroundColor,
       content: Row(
@@ -162,6 +169,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Text(text).textColor(textColor).sm(),
         ],
       ),
+    );
+
+    if (!isLastUsed) return button;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        button,
+        Positioned(
+          top: -10,
+          right: 12,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: MgColorScheme.gray2,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text("최근 로그인").xs().white(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -174,9 +202,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  // TODO: 최근 로그인 툴팁 활성화
   Future<String> getLastLoginProvider() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('lastLoginProvider') ?? '';
+    final value = prefs.getString('lastLoginProvider') ?? '';
+    // 구버전 한글값 마이그레이션
+    return switch (value) {
+      '카카오' => 'KAKAO',
+      '네이버' => 'NAVER',
+      '애플' => 'APPLE',
+      _ => value,
+    };
   }
 }
