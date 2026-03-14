@@ -61,7 +61,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
           children: [
             Expanded(child: _buildContent()),
             MgButton(
-              onPressed: () async {
+              onPressed: state.isSubmitting ? null : () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
                   ToastPresentor.success(
@@ -74,7 +74,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
                 }
               },
               content: Text('등록하기'),
-              disabled: state.form.invalid,
+              disabled: state.form.invalid || state.isSubmitting,
             ).primary().margin(horizontal: MgSizes.md, vertical: MgSizes.md),
           ],
         ),

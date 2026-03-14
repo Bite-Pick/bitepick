@@ -64,6 +64,8 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
     final controller = ref.read(ownerJoinInfoScreenControllerProvider.notifier);
     final form = controller.form;
 
+    final state = ref.watch(ownerJoinInfoScreenControllerProvider);
+
     return ReactiveForm(
       formGroup: form,
       child: BaseScaffold(
@@ -91,7 +93,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
             Gaps.h16,
             // 확인 버튼
             MgButton(
-              onPressed: () async {
+              onPressed: state.isLoading ? null : () async {
                 final result = await controller.submit();
                 if (result && context.mounted) {
                   FocusScope.of(context).unfocus();
@@ -102,7 +104,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                 }
               },
               content: const Text('확인'),
-              disabled: form.invalid || ref.watch(ownerJoinInfoScreenControllerProvider).isLoading,
+              disabled: form.invalid || state.isLoading,
             ).primary().margin(horizontal: MgSizes.md, bottom: MgSizes.xl),
           ],
         ),
