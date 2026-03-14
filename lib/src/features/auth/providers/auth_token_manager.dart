@@ -1,4 +1,5 @@
 import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
@@ -19,6 +20,11 @@ class AuthTokenManager extends _$AuthTokenManager {
     if (accessToken == null || refreshToken == null) {
       return null;
     }
+
+    // 앱 시작 시 이미 로그인된 유저의 FCM 토큰 재등록
+    ref.read(pushNotificationProvider).refreshAndRegisterToken().catchError((e) {
+      talker.error('[AUTH] Failed to register FCM token on app start', e);
+    });
 
     return AuthTokens(accessToken: accessToken, refreshToken: refreshToken);
   }
