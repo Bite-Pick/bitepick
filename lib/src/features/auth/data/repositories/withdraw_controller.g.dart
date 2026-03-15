@@ -7,7 +7,7 @@ part of 'withdraw_controller.dart';
 // **************************************************************************
 
 String _$withdrawControllerHash() =>
-    r'a1a91cafa931debcdb766f88ccade7a3ad28a195';
+    r'2794cb7794c7da2e8f0ebaf73dbd643d0c5b9c70';
 
 /// See also [WithdrawController].
 @ProviderFor(WithdrawController)

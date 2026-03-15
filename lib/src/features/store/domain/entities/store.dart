@@ -13,6 +13,7 @@ class Store with _$Store {
     required String address,
     required List<String> storeImageUrls,
     required List<Goods> goodsList,
+    String? description,
     String? parkingDescription, // TODO: parkingDescription 확인필요
     List<GoodsImagesList>? goodsImageList, // TODO: goodsImageList 확인필요
   }) = _Store;
@@ -37,7 +38,7 @@ class Store with _$Store {
       originPrice: firstGoods?.originPrice ?? 0,
       startTime: firstGoods?.startTime ?? "",
       endTime: firstGoods?.endTime ?? "",
-      description: firstGoods?.description ?? "",
+      description: description ?? "",
     );
   }
 }

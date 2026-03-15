@@ -16,6 +16,7 @@ _$StoreImpl _$$StoreImplFromJson(Map<String, dynamic> json) => _$StoreImpl(
   goodsList: (json['goodsList'] as List<dynamic>)
       .map((e) => Goods.fromJson(e as Map<String, dynamic>))
       .toList(),
+  description: json['description'] as String?,
   parkingDescription: json['parkingDescription'] as String?,
   goodsImageList: (json['goodsImageList'] as List<dynamic>?)
       ?.map((e) => GoodsImagesList.fromJson(e as Map<String, dynamic>))
@@ -29,6 +30,7 @@ Map<String, dynamic> _$$StoreImplToJson(_$StoreImpl instance) =>
       'address': instance.address,
       'storeImageUrls': instance.storeImageUrls,
       'goodsList': instance.goodsList,
+      'description': instance.description,
       'parkingDescription': instance.parkingDescription,
       'goodsImageList': instance.goodsImageList,
     };
