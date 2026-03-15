@@ -216,7 +216,7 @@ class DefaultRoute extends GoRouteData {
       switch (user.userRole) {
         case UserRole.owner:
           if (user.goodsId == "null") {
-            return OwnerGoodsEmptyRoute().location;
+            return GoodsRegisterRoute().location;
           }
           if (user.approved == ApprovedStatus.waiting) {
             return OwnerStoreWaitingRoute().location;

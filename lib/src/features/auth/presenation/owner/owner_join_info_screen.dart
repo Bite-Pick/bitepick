@@ -5,13 +5,13 @@ import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
+import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/auth/data/constant/financial_institution.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/bank_list_bottomsheet.dart';
 import 'package:magambell/src/features/goods/presentation/widgets/image_upload_section.dart';
-import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -99,8 +99,7 @@ class _OwnerJoinInfoScreenState extends ConsumerState<OwnerJoinInfoScreen> {
                   FocusScope.of(context).unfocus();
 
                   ToastPresentor.success(context, "가게 등록이 완료되었습니다");
-                  ref.invalidate(userStateProvider);
-                  DefaultRoute().go(context);
+                  GoodsRegisterRoute().go(context);
                 }
               },
               content: const Text('확인'),

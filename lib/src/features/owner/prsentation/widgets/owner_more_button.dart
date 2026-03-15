@@ -5,13 +5,16 @@ import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 
 class OwnerMoreButton extends ConsumerWidget {
-  const OwnerMoreButton({super.key});
+  const OwnerMoreButton({super.key, this.showWithdraw = true});
+
+  final bool showWithdraw;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<(String, String)> menus = [
       ('logout', '로그아웃'),
       ('support', '고객센터'),
-      ('withdraw', '회원탈퇴'),
+      if (showWithdraw) ('withdraw', '회원탈퇴'),
     ];
     return PopupMenuButton<String>(
       icon: BaseSvgIcon.moreVertical(),

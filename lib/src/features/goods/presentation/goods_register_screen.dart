@@ -50,6 +50,7 @@ class _GoodsRegisterScreenState extends ConsumerState<GoodsRegisterScreen> {
     return ReactiveForm(
       formGroup: state.form,
       child: BaseScaffold(
+        canSwipeBack: false,
         appBar: BaseAppBar(
           title: const Text('바이트백 등록'),
           // action: TextButton(
