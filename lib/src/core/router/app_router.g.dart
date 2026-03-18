@@ -300,6 +300,20 @@ RouteBase get $defaultRoute => GoRouteData.$route(
             ),
           ],
         ),
+        GoRouteData.$route(
+          path: 'approved-store',
+          name: 'ApprovedStoreListRoute',
+
+          factory: $AdminRegisteredStoreListRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'management',
+              name: 'AdminRegisteredStoreDetailRoute',
+
+              factory: $AdminRegisteredStoreDetailRouteExtension._fromState,
+            ),
+          ],
+        ),
       ],
     ),
     GoRouteData.$route(
@@ -673,6 +687,45 @@ extension $AdminPendingStoreDetailRouteExtension
       );
 
   String get location => GoRouteData.$location('/admin/waiting-store/approval');
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+extension $AdminRegisteredStoreListRouteExtension
+    on AdminRegisteredStoreListRoute {
+  static AdminRegisteredStoreListRoute _fromState(GoRouterState state) =>
+      AdminRegisteredStoreListRoute();
+
+  String get location => GoRouteData.$location('/admin/approved-store');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $AdminRegisteredStoreDetailRouteExtension
+    on AdminRegisteredStoreDetailRoute {
+  static AdminRegisteredStoreDetailRoute _fromState(GoRouterState state) =>
+      AdminRegisteredStoreDetailRoute(
+        $extra: state.extra as AdminRegisteredStoreDetailExtra,
+      );
+
+  String get location =>
+      GoRouteData.$location('/admin/approved-store/management');
 
   void go(BuildContext context) => context.go(location, extra: $extra);
 

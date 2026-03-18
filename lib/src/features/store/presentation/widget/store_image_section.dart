@@ -12,9 +12,10 @@ class StoreImageSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO[home] : 기기에 따라 크기를 조정해야하는지 검토
     // TODO[home] : 3개 이상 넘어가면 하단에 +n 표시
-    final double imagesize = 109.w;
+    final double imagesize1 = 108.w;
+    final double imagesize2 = 66.w;
     return SizedBox(
-      height: imagesize,
+      height: imagesize2,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: images.length,
@@ -23,8 +24,8 @@ class StoreImageSection extends ConsumerWidget {
           if (image == "") return SizedBox.shrink();
           return BaseNetworkImage(
             imageUrl: image,
-            width: imagesize,
-            height: imagesize,
+            width: imagesize1,
+            height: imagesize1,
           ).margin(right: MgSizes.xs);
         },
       ),

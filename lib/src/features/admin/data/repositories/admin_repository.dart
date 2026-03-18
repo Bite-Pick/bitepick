@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/admin/data/dtos/pending_store.dto.dart';
+import 'package:magambell/src/features/admin/data/dtos/registered_store.dto.dart';
 import 'package:magambell/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:magambell/src/features/banner/domain/entities/banner_image.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
@@ -78,6 +80,78 @@ class AdminRepository {
     return presignedUrls
         .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
         .toList();
+  }
+
+  /// 승입 완료된 매장 목록 조회 
+  Future<List<RegisteredStoreDto>> getRegisteredStoreList() async {
+    final response = await _dio.get('/v1/admin/stores');
+
+    if (response.data['status'] != 'OK') return [];
+
+    final data = response.data['data'];
+    if (data == null) return [];
+
+    final list = data['storeAdminListDTOs'] as List? ?? [];
+
+    return list
+        .map((json) => RegisteredStoreDto.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// 입점 매장 관리 (정보 수정)
+  Future<bool> manageStore(int storeId,{
+    required String storeName,
+    required String address,
+    required double latitude,
+    required double longitude,
+    required String ownerName,
+    required String ownerPhone,
+    required String businessNumber,
+    required String bankName,
+    required String bankAccount,
+    required String description,
+    required String parkingDescription,
+    required List<Map<String, dynamic>> storeImages,
+    required String goodsName,
+    required String startTime,
+    required String endTime,
+    required int originalPrice,
+    required int salePrice,
+    required int discount,
+    required int quantity,
+    required String saleStatus,
+    required List<Map<String, dynamic>> goodsImages
+  }) async {
+    final response = await _dio.put(
+      '/v1/admin/stores/$storeId',
+      data: {
+        'storeName': storeName,
+        'address': address,
+        'latitude': latitude,
+        'longitude': longitude,
+        'ownerName': ownerName,
+        'ownerPhone': ownerPhone,
+        'businessNumber': businessNumber,
+        'bankName': bankName,
+        'bankAccount': bankAccount,
+        'description': description,
+        'parkingDescription': parkingDescription,
+        'storeImages': storeImages,
+        'goodsName': goodsName,
+        'startTime': startTime,
+        'endTime': endTime,
+        'originalPrice': originalPrice,
+        'salePrice': salePrice,
+        'discount': discount,
+        'quantity': quantity,
+        'saleStatus': saleStatus,
+        'goodsImages': goodsImages
+      },
+    );
+    if (response.data['status'] != 'OK') {
+      return false;
+    }
+    return true;
   }
 
   /// 배너 리스트 조회
@@ -183,6 +257,11 @@ Future<List<PendingStoreDto>> pendingStoreList(
   return ref
       .read(adminRepositoryProvider)
       .getPendingStoreList(page: page, size: size);
+}
+
+@riverpod
+Future<List<RegisteredStoreDto>> registeredStoreList(Ref ref) async {
+  return ref.read(adminRepositoryProvider).getRegisteredStoreList();
 }
 
 @riverpod
