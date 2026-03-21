@@ -142,13 +142,24 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
         children: [
           if (saleStatus) ...[
             Expanded(
-              child: QuantityPicker(count: count, onCountChanged: setCount),
+              child: QuantityPicker(
+                count: count, 
+                onCountChanged: setCount, 
+                maxCount: goods.quantity,
+                onMaxReached: () {
+                  ToastPresentor.error(context, "재고가 부족합니다 (남은 수량: ${goods.quantity}개)");
+                },
+              ),
             ),
             Gaps.w10,
           ],
           Expanded(
             child: MgButton(
               onPressed: () async {
+                if (count > goods.quantity) {
+                  ToastPresentor.error(context, "재고가 부족합니다 (남은 수량: ${goods.quantity}개)");
+                  return;
+                }
                 final user = ref.read(userStateProvider).asData!.value;
                 final isLogin = user != null;
 

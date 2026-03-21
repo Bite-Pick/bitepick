@@ -22,6 +22,8 @@ class QuantityPicker extends StatelessWidget {
   final ValueChanged<int> onCountChanged;
   final MainAxisAlignment alignment;
   final Color backgroundColor;
+  final int? maxCount;
+  final VoidCallback? onMaxReached;
 
   const QuantityPicker({
     super.key,
@@ -29,10 +31,13 @@ class QuantityPicker extends StatelessWidget {
     required this.onCountChanged,
     this.alignment = MainAxisAlignment.center,
     this.backgroundColor = MgColorScheme.gray8,
+    this.maxCount,
+    this.onMaxReached,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isMaxReached = maxCount != null && count >= maxCount!;
     return Container(
       constraints: BoxConstraints(minHeight: 48),
       padding: EdgeInsets.symmetric(
@@ -47,7 +52,7 @@ class QuantityPicker extends StatelessWidget {
         mainAxisAlignment: alignment,
         children: [
           GestureDetector(
-            onTap: count > 0 ? () => onCountChanged(count - 1) : null,
+            onTap: count > 1 ? () => onCountChanged(count - 1) : null,
             child: BaseSvgIcon.minus(),
           ),
           Text('$count').md().margin(
@@ -55,7 +60,7 @@ class QuantityPicker extends StatelessWidget {
           ), // NOTE: 다량 구매 고객 많을시 숫자 선택 bottomSheet 나오도록
           GestureDetector(
             child: BaseSvgIcon.plus(),
-            onTap: () => onCountChanged(count + 1),
+            onTap: isMaxReached ? onMaxReached : () => onCountChanged(count + 1),
           ),
         ],
       ),
