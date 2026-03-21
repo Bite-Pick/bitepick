@@ -15,115 +15,80 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-GoodsListItemDto _$GoodsListItemDtoFromJson(Map<String, dynamic> json) {
-  return _GoodsListItemDto.fromJson(json);
+GoodsImageItemDto _$GoodsImageItemDtoFromJson(Map<String, dynamic> json) {
+  return _GoodsImageItemDto.fromJson(json);
 }
 
 /// @nodoc
-mixin _$GoodsListItemDto {
-  String get goodsId => throw _privateConstructorUsedError;
+mixin _$GoodsImageItemDto {
+  String get goodsImageId => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
+  String get key => throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
-  String get startTime => throw _privateConstructorUsedError;
-  String get endTime => throw _privateConstructorUsedError;
-  int get originPrice => throw _privateConstructorUsedError;
-  int get discount => throw _privateConstructorUsedError;
-  int get salePrice => throw _privateConstructorUsedError;
-  int get quantity => throw _privateConstructorUsedError;
-  String get saleStatus => throw _privateConstructorUsedError;
 
-  /// Serializes this GoodsListItemDto to a JSON map.
+  /// Serializes this GoodsImageItemDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of GoodsListItemDto
+  /// Create a copy of GoodsImageItemDto
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $GoodsListItemDtoCopyWith<GoodsListItemDto> get copyWith =>
+  $GoodsImageItemDtoCopyWith<GoodsImageItemDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GoodsListItemDtoCopyWith<$Res> {
-  factory $GoodsListItemDtoCopyWith(
-    GoodsListItemDto value,
-    $Res Function(GoodsListItemDto) then,
-  ) = _$GoodsListItemDtoCopyWithImpl<$Res, GoodsListItemDto>;
+abstract class $GoodsImageItemDtoCopyWith<$Res> {
+  factory $GoodsImageItemDtoCopyWith(
+    GoodsImageItemDto value,
+    $Res Function(GoodsImageItemDto) then,
+  ) = _$GoodsImageItemDtoCopyWithImpl<$Res, GoodsImageItemDto>;
   @useResult
   $Res call({
-    String goodsId,
+    String goodsImageId,
+    String? imageUrl,
+    String key,
     String? goodsName,
-    String startTime,
-    String endTime,
-    int originPrice,
-    int discount,
-    int salePrice,
-    int quantity,
-    String saleStatus,
   });
 }
 
 /// @nodoc
-class _$GoodsListItemDtoCopyWithImpl<$Res, $Val extends GoodsListItemDto>
-    implements $GoodsListItemDtoCopyWith<$Res> {
-  _$GoodsListItemDtoCopyWithImpl(this._value, this._then);
+class _$GoodsImageItemDtoCopyWithImpl<$Res, $Val extends GoodsImageItemDto>
+    implements $GoodsImageItemDtoCopyWith<$Res> {
+  _$GoodsImageItemDtoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of GoodsListItemDto
+  /// Create a copy of GoodsImageItemDto
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? goodsId = null,
+    Object? goodsImageId = null,
+    Object? imageUrl = freezed,
+    Object? key = null,
     Object? goodsName = freezed,
-    Object? startTime = null,
-    Object? endTime = null,
-    Object? originPrice = null,
-    Object? discount = null,
-    Object? salePrice = null,
-    Object? quantity = null,
-    Object? saleStatus = null,
   }) {
     return _then(
       _value.copyWith(
-            goodsId: null == goodsId
-                ? _value.goodsId
-                : goodsId // ignore: cast_nullable_to_non_nullable
+            goodsImageId: null == goodsImageId
+                ? _value.goodsImageId
+                : goodsImageId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            key: null == key
+                ? _value.key
+                : key // ignore: cast_nullable_to_non_nullable
                       as String,
             goodsName: freezed == goodsName
                 ? _value.goodsName
                 : goodsName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            startTime: null == startTime
-                ? _value.startTime
-                : startTime // ignore: cast_nullable_to_non_nullable
-                      as String,
-            endTime: null == endTime
-                ? _value.endTime
-                : endTime // ignore: cast_nullable_to_non_nullable
-                      as String,
-            originPrice: null == originPrice
-                ? _value.originPrice
-                : originPrice // ignore: cast_nullable_to_non_nullable
-                      as int,
-            discount: null == discount
-                ? _value.discount
-                : discount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            salePrice: null == salePrice
-                ? _value.salePrice
-                : salePrice // ignore: cast_nullable_to_non_nullable
-                      as int,
-            quantity: null == quantity
-                ? _value.quantity
-                : quantity // ignore: cast_nullable_to_non_nullable
-                      as int,
-            saleStatus: null == saleStatus
-                ? _value.saleStatus
-                : saleStatus // ignore: cast_nullable_to_non_nullable
-                      as String,
           )
           as $Val,
     );
@@ -131,89 +96,59 @@ class _$GoodsListItemDtoCopyWithImpl<$Res, $Val extends GoodsListItemDto>
 }
 
 /// @nodoc
-abstract class _$$GoodsListItemDtoImplCopyWith<$Res>
-    implements $GoodsListItemDtoCopyWith<$Res> {
-  factory _$$GoodsListItemDtoImplCopyWith(
-    _$GoodsListItemDtoImpl value,
-    $Res Function(_$GoodsListItemDtoImpl) then,
-  ) = __$$GoodsListItemDtoImplCopyWithImpl<$Res>;
+abstract class _$$GoodsImageItemDtoImplCopyWith<$Res>
+    implements $GoodsImageItemDtoCopyWith<$Res> {
+  factory _$$GoodsImageItemDtoImplCopyWith(
+    _$GoodsImageItemDtoImpl value,
+    $Res Function(_$GoodsImageItemDtoImpl) then,
+  ) = __$$GoodsImageItemDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
-    String goodsId,
+    String goodsImageId,
+    String? imageUrl,
+    String key,
     String? goodsName,
-    String startTime,
-    String endTime,
-    int originPrice,
-    int discount,
-    int salePrice,
-    int quantity,
-    String saleStatus,
   });
 }
 
 /// @nodoc
-class __$$GoodsListItemDtoImplCopyWithImpl<$Res>
-    extends _$GoodsListItemDtoCopyWithImpl<$Res, _$GoodsListItemDtoImpl>
-    implements _$$GoodsListItemDtoImplCopyWith<$Res> {
-  __$$GoodsListItemDtoImplCopyWithImpl(
-    _$GoodsListItemDtoImpl _value,
-    $Res Function(_$GoodsListItemDtoImpl) _then,
+class __$$GoodsImageItemDtoImplCopyWithImpl<$Res>
+    extends _$GoodsImageItemDtoCopyWithImpl<$Res, _$GoodsImageItemDtoImpl>
+    implements _$$GoodsImageItemDtoImplCopyWith<$Res> {
+  __$$GoodsImageItemDtoImplCopyWithImpl(
+    _$GoodsImageItemDtoImpl _value,
+    $Res Function(_$GoodsImageItemDtoImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of GoodsListItemDto
+  /// Create a copy of GoodsImageItemDto
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? goodsId = null,
+    Object? goodsImageId = null,
+    Object? imageUrl = freezed,
+    Object? key = null,
     Object? goodsName = freezed,
-    Object? startTime = null,
-    Object? endTime = null,
-    Object? originPrice = null,
-    Object? discount = null,
-    Object? salePrice = null,
-    Object? quantity = null,
-    Object? saleStatus = null,
   }) {
     return _then(
-      _$GoodsListItemDtoImpl(
-        goodsId: null == goodsId
-            ? _value.goodsId
-            : goodsId // ignore: cast_nullable_to_non_nullable
+      _$GoodsImageItemDtoImpl(
+        goodsImageId: null == goodsImageId
+            ? _value.goodsImageId
+            : goodsImageId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        key: null == key
+            ? _value.key
+            : key // ignore: cast_nullable_to_non_nullable
                   as String,
         goodsName: freezed == goodsName
             ? _value.goodsName
             : goodsName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        startTime: null == startTime
-            ? _value.startTime
-            : startTime // ignore: cast_nullable_to_non_nullable
-                  as String,
-        endTime: null == endTime
-            ? _value.endTime
-            : endTime // ignore: cast_nullable_to_non_nullable
-                  as String,
-        originPrice: null == originPrice
-            ? _value.originPrice
-            : originPrice // ignore: cast_nullable_to_non_nullable
-                  as int,
-        discount: null == discount
-            ? _value.discount
-            : discount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        salePrice: null == salePrice
-            ? _value.salePrice
-            : salePrice // ignore: cast_nullable_to_non_nullable
-                  as int,
-        quantity: null == quantity
-            ? _value.quantity
-            : quantity // ignore: cast_nullable_to_non_nullable
-                  as int,
-        saleStatus: null == saleStatus
-            ? _value.saleStatus
-            : saleStatus // ignore: cast_nullable_to_non_nullable
-                  as String,
       ),
     );
   }
@@ -221,141 +156,93 @@ class __$$GoodsListItemDtoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$GoodsListItemDtoImpl implements _GoodsListItemDto {
-  const _$GoodsListItemDtoImpl({
-    required this.goodsId,
+class _$GoodsImageItemDtoImpl implements _GoodsImageItemDto {
+  const _$GoodsImageItemDtoImpl({
+    required this.goodsImageId,
+    this.imageUrl,
+    this.key = '',
     this.goodsName,
-    required this.startTime,
-    required this.endTime,
-    required this.originPrice,
-    required this.discount,
-    required this.salePrice,
-    required this.quantity,
-    required this.saleStatus,
   });
 
-  factory _$GoodsListItemDtoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$GoodsListItemDtoImplFromJson(json);
+  factory _$GoodsImageItemDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GoodsImageItemDtoImplFromJson(json);
 
   @override
-  final String goodsId;
+  final String goodsImageId;
+  @override
+  final String? imageUrl;
+  @override
+  @JsonKey()
+  final String key;
   @override
   final String? goodsName;
-  @override
-  final String startTime;
-  @override
-  final String endTime;
-  @override
-  final int originPrice;
-  @override
-  final int discount;
-  @override
-  final int salePrice;
-  @override
-  final int quantity;
-  @override
-  final String saleStatus;
 
   @override
   String toString() {
-    return 'GoodsListItemDto(goodsId: $goodsId, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, saleStatus: $saleStatus)';
+    return 'GoodsImageItemDto(goodsImageId: $goodsImageId, imageUrl: $imageUrl, key: $key, goodsName: $goodsName)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$GoodsListItemDtoImpl &&
-            (identical(other.goodsId, goodsId) || other.goodsId == goodsId) &&
+            other is _$GoodsImageItemDtoImpl &&
+            (identical(other.goodsImageId, goodsImageId) ||
+                other.goodsImageId == goodsImageId) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.key, key) || other.key == key) &&
             (identical(other.goodsName, goodsName) ||
-                other.goodsName == goodsName) &&
-            (identical(other.startTime, startTime) ||
-                other.startTime == startTime) &&
-            (identical(other.endTime, endTime) || other.endTime == endTime) &&
-            (identical(other.originPrice, originPrice) ||
-                other.originPrice == originPrice) &&
-            (identical(other.discount, discount) ||
-                other.discount == discount) &&
-            (identical(other.salePrice, salePrice) ||
-                other.salePrice == salePrice) &&
-            (identical(other.quantity, quantity) ||
-                other.quantity == quantity) &&
-            (identical(other.saleStatus, saleStatus) ||
-                other.saleStatus == saleStatus));
+                other.goodsName == goodsName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    goodsId,
-    goodsName,
-    startTime,
-    endTime,
-    originPrice,
-    discount,
-    salePrice,
-    quantity,
-    saleStatus,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, goodsImageId, imageUrl, key, goodsName);
 
-  /// Create a copy of GoodsListItemDto
+  /// Create a copy of GoodsImageItemDto
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$GoodsListItemDtoImplCopyWith<_$GoodsListItemDtoImpl> get copyWith =>
-      __$$GoodsListItemDtoImplCopyWithImpl<_$GoodsListItemDtoImpl>(
+  _$$GoodsImageItemDtoImplCopyWith<_$GoodsImageItemDtoImpl> get copyWith =>
+      __$$GoodsImageItemDtoImplCopyWithImpl<_$GoodsImageItemDtoImpl>(
         this,
         _$identity,
       );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GoodsListItemDtoImplToJson(this);
+    return _$$GoodsImageItemDtoImplToJson(this);
   }
 }
 
-abstract class _GoodsListItemDto implements GoodsListItemDto {
-  const factory _GoodsListItemDto({
-    required final String goodsId,
+abstract class _GoodsImageItemDto implements GoodsImageItemDto {
+  const factory _GoodsImageItemDto({
+    required final String goodsImageId,
+    final String? imageUrl,
+    final String key,
     final String? goodsName,
-    required final String startTime,
-    required final String endTime,
-    required final int originPrice,
-    required final int discount,
-    required final int salePrice,
-    required final int quantity,
-    required final String saleStatus,
-  }) = _$GoodsListItemDtoImpl;
+  }) = _$GoodsImageItemDtoImpl;
 
-  factory _GoodsListItemDto.fromJson(Map<String, dynamic> json) =
-      _$GoodsListItemDtoImpl.fromJson;
+  factory _GoodsImageItemDto.fromJson(Map<String, dynamic> json) =
+      _$GoodsImageItemDtoImpl.fromJson;
 
   @override
-  String get goodsId;
+  String get goodsImageId;
+  @override
+  String? get imageUrl;
+  @override
+  String get key;
   @override
   String? get goodsName;
-  @override
-  String get startTime;
-  @override
-  String get endTime;
-  @override
-  int get originPrice;
-  @override
-  int get discount;
-  @override
-  int get salePrice;
-  @override
-  int get quantity;
-  @override
-  String get saleStatus;
 
-  /// Create a copy of GoodsListItemDto
+  /// Create a copy of GoodsImageItemDto
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$GoodsListItemDtoImplCopyWith<_$GoodsListItemDtoImpl> get copyWith =>
+  _$$GoodsImageItemDtoImplCopyWith<_$GoodsImageItemDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -368,7 +255,8 @@ mixin _$RegisteredStoreDto {
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   List<String> get storeImages => throw _privateConstructorUsedError;
-  List<GoodsListItemDto> get goodsList => throw _privateConstructorUsedError;
+  List<GoodsImageItemDto> get goodsImageList =>
+      throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   String? get parkingDescription => throw _privateConstructorUsedError;
@@ -410,7 +298,7 @@ abstract class $RegisteredStoreDtoCopyWith<$Res> {
     String storeId,
     String storeName,
     List<String> storeImages,
-    List<GoodsListItemDto> goodsList,
+    List<GoodsImageItemDto> goodsImageList,
     String? goodsName,
     String? description,
     String? parkingDescription,
@@ -451,7 +339,7 @@ class _$RegisteredStoreDtoCopyWithImpl<$Res, $Val extends RegisteredStoreDto>
     Object? storeId = null,
     Object? storeName = null,
     Object? storeImages = null,
-    Object? goodsList = null,
+    Object? goodsImageList = null,
     Object? goodsName = freezed,
     Object? description = freezed,
     Object? parkingDescription = freezed,
@@ -486,10 +374,10 @@ class _$RegisteredStoreDtoCopyWithImpl<$Res, $Val extends RegisteredStoreDto>
                 ? _value.storeImages
                 : storeImages // ignore: cast_nullable_to_non_nullable
                       as List<String>,
-            goodsList: null == goodsList
-                ? _value.goodsList
-                : goodsList // ignore: cast_nullable_to_non_nullable
-                      as List<GoodsListItemDto>,
+            goodsImageList: null == goodsImageList
+                ? _value.goodsImageList
+                : goodsImageList // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsImageItemDto>,
             goodsName: freezed == goodsName
                 ? _value.goodsName
                 : goodsName // ignore: cast_nullable_to_non_nullable
@@ -585,7 +473,7 @@ abstract class _$$RegisteredStoreDtoImplCopyWith<$Res>
     String storeId,
     String storeName,
     List<String> storeImages,
-    List<GoodsListItemDto> goodsList,
+    List<GoodsImageItemDto> goodsImageList,
     String? goodsName,
     String? description,
     String? parkingDescription,
@@ -625,7 +513,7 @@ class __$$RegisteredStoreDtoImplCopyWithImpl<$Res>
     Object? storeId = null,
     Object? storeName = null,
     Object? storeImages = null,
-    Object? goodsList = null,
+    Object? goodsImageList = null,
     Object? goodsName = freezed,
     Object? description = freezed,
     Object? parkingDescription = freezed,
@@ -660,10 +548,10 @@ class __$$RegisteredStoreDtoImplCopyWithImpl<$Res>
             ? _value._storeImages
             : storeImages // ignore: cast_nullable_to_non_nullable
                   as List<String>,
-        goodsList: null == goodsList
-            ? _value._goodsList
-            : goodsList // ignore: cast_nullable_to_non_nullable
-                  as List<GoodsListItemDto>,
+        goodsImageList: null == goodsImageList
+            ? _value._goodsImageList
+            : goodsImageList // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsImageItemDto>,
         goodsName: freezed == goodsName
             ? _value.goodsName
             : goodsName // ignore: cast_nullable_to_non_nullable
@@ -752,7 +640,7 @@ class _$RegisteredStoreDtoImpl implements _RegisteredStoreDto {
     required this.storeId,
     required this.storeName,
     final List<String> storeImages = const [],
-    final List<GoodsListItemDto> goodsList = const [],
+    final List<GoodsImageItemDto> goodsImageList = const [],
     this.goodsName,
     this.description,
     this.parkingDescription,
@@ -773,7 +661,7 @@ class _$RegisteredStoreDtoImpl implements _RegisteredStoreDto {
     required this.bankName,
     required this.bankAccount,
   }) : _storeImages = storeImages,
-       _goodsList = goodsList;
+       _goodsImageList = goodsImageList;
 
   factory _$RegisteredStoreDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegisteredStoreDtoImplFromJson(json);
@@ -791,13 +679,13 @@ class _$RegisteredStoreDtoImpl implements _RegisteredStoreDto {
     return EqualUnmodifiableListView(_storeImages);
   }
 
-  final List<GoodsListItemDto> _goodsList;
+  final List<GoodsImageItemDto> _goodsImageList;
   @override
   @JsonKey()
-  List<GoodsListItemDto> get goodsList {
-    if (_goodsList is EqualUnmodifiableListView) return _goodsList;
+  List<GoodsImageItemDto> get goodsImageList {
+    if (_goodsImageList is EqualUnmodifiableListView) return _goodsImageList;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_goodsList);
+    return EqualUnmodifiableListView(_goodsImageList);
   }
 
   @override
@@ -841,7 +729,7 @@ class _$RegisteredStoreDtoImpl implements _RegisteredStoreDto {
 
   @override
   String toString() {
-    return 'RegisteredStoreDto(storeId: $storeId, storeName: $storeName, storeImages: $storeImages, goodsList: $goodsList, goodsName: $goodsName, description: $description, parkingDescription: $parkingDescription, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus, longitude: $longitude, latitude: $latitude, address: $address, ownerName: $ownerName, ownerPhone: $ownerPhone, businessNumber: $businessNumber, bankName: $bankName, bankAccount: $bankAccount)';
+    return 'RegisteredStoreDto(storeId: $storeId, storeName: $storeName, storeImages: $storeImages, goodsImageList: $goodsImageList, goodsName: $goodsName, description: $description, parkingDescription: $parkingDescription, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus, longitude: $longitude, latitude: $latitude, address: $address, ownerName: $ownerName, ownerPhone: $ownerPhone, businessNumber: $businessNumber, bankName: $bankName, bankAccount: $bankAccount)';
   }
 
   @override
@@ -857,8 +745,8 @@ class _$RegisteredStoreDtoImpl implements _RegisteredStoreDto {
               _storeImages,
             ) &&
             const DeepCollectionEquality().equals(
-              other._goodsList,
-              _goodsList,
+              other._goodsImageList,
+              _goodsImageList,
             ) &&
             (identical(other.goodsName, goodsName) ||
                 other.goodsName == goodsName) &&
@@ -905,7 +793,7 @@ class _$RegisteredStoreDtoImpl implements _RegisteredStoreDto {
     storeId,
     storeName,
     const DeepCollectionEquality().hash(_storeImages),
-    const DeepCollectionEquality().hash(_goodsList),
+    const DeepCollectionEquality().hash(_goodsImageList),
     goodsName,
     description,
     parkingDescription,
@@ -949,7 +837,7 @@ abstract class _RegisteredStoreDto implements RegisteredStoreDto {
     required final String storeId,
     required final String storeName,
     final List<String> storeImages,
-    final List<GoodsListItemDto> goodsList,
+    final List<GoodsImageItemDto> goodsImageList,
     final String? goodsName,
     final String? description,
     final String? parkingDescription,
@@ -981,7 +869,7 @@ abstract class _RegisteredStoreDto implements RegisteredStoreDto {
   @override
   List<String> get storeImages;
   @override
-  List<GoodsListItemDto> get goodsList;
+  List<GoodsImageItemDto> get goodsImageList;
   @override
   String? get goodsName;
   @override

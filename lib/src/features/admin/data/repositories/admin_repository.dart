@@ -99,7 +99,8 @@ class AdminRepository {
   }
 
   /// 입점 매장 관리 (정보 수정)
-  Future<bool> manageStore(int storeId,{
+  /// 반환값: (storeUrls, goodsUrls) - url != null인 항목만 S3 업로드 필요
+  Future<({List<PresignedUrlImage> storeUrls, List<PresignedUrlImage> goodsUrls})?> manageStore(int storeId, {
     required String storeName,
     required String address,
     required double latitude,
@@ -119,7 +120,7 @@ class AdminRepository {
     required int discount,
     required int quantity,
     required String saleStatus,
-    required List<Map<String, dynamic>> goodsImages
+    required List<Map<String, dynamic>> goodsImages,
   }) async {
     final response = await _dio.put(
       '/v1/admin/stores/$storeId',
@@ -143,13 +144,22 @@ class AdminRepository {
         'discount': discount,
         'quantity': quantity,
         'saleStatus': saleStatus,
-        'goodsImages': goodsImages
+        'goodsImages': goodsImages,
       },
     );
-    if (response.data['status'] != 'OK') {
-      return false;
-    }
-    return true;
+    if (response.data['status'] != 'OK') return null;
+
+    final data = response.data['data'];
+    if (data == null) return (storeUrls: <PresignedUrlImage>[], goodsUrls: <PresignedUrlImage>[]);
+
+    final storeUrls = (data['storePreSignedUrlImages'] as List? ?? [])
+        .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
+        .toList();
+    final goodsUrls = (data['goodsPreSignedUrlImages'] as List? ?? [])
+        .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
+        .toList();
+
+    return (storeUrls: storeUrls, goodsUrls: goodsUrls);
   }
 
   /// 배너 리스트 조회

@@ -6,32 +6,22 @@ part of 'registered_store.dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GoodsListItemDtoImpl _$$GoodsListItemDtoImplFromJson(
+_$GoodsImageItemDtoImpl _$$GoodsImageItemDtoImplFromJson(
   Map<String, dynamic> json,
-) => _$GoodsListItemDtoImpl(
-  goodsId: json['goodsId'] as String,
+) => _$GoodsImageItemDtoImpl(
+  goodsImageId: json['goodsImageId'] as String,
+  imageUrl: json['imageUrl'] as String?,
+  key: json['key'] as String? ?? '',
   goodsName: json['goodsName'] as String?,
-  startTime: json['startTime'] as String,
-  endTime: json['endTime'] as String,
-  originPrice: (json['originPrice'] as num).toInt(),
-  discount: (json['discount'] as num).toInt(),
-  salePrice: (json['salePrice'] as num).toInt(),
-  quantity: (json['quantity'] as num).toInt(),
-  saleStatus: json['saleStatus'] as String,
 );
 
-Map<String, dynamic> _$$GoodsListItemDtoImplToJson(
-  _$GoodsListItemDtoImpl instance,
+Map<String, dynamic> _$$GoodsImageItemDtoImplToJson(
+  _$GoodsImageItemDtoImpl instance,
 ) => <String, dynamic>{
-  'goodsId': instance.goodsId,
+  'goodsImageId': instance.goodsImageId,
+  'imageUrl': instance.imageUrl,
+  'key': instance.key,
   'goodsName': instance.goodsName,
-  'startTime': instance.startTime,
-  'endTime': instance.endTime,
-  'originPrice': instance.originPrice,
-  'discount': instance.discount,
-  'salePrice': instance.salePrice,
-  'quantity': instance.quantity,
-  'saleStatus': instance.saleStatus,
 };
 
 _$RegisteredStoreDtoImpl _$$RegisteredStoreDtoImplFromJson(
@@ -44,9 +34,9 @@ _$RegisteredStoreDtoImpl _$$RegisteredStoreDtoImplFromJson(
           ?.map((e) => e as String)
           .toList() ??
       const [],
-  goodsList:
-      (json['goodsList'] as List<dynamic>?)
-          ?.map((e) => GoodsListItemDto.fromJson(e as Map<String, dynamic>))
+  goodsImageList:
+      (json['goodsImageList'] as List<dynamic>?)
+          ?.map((e) => GoodsImageItemDto.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
   goodsName: json['goodsName'] as String?,
@@ -76,7 +66,7 @@ Map<String, dynamic> _$$RegisteredStoreDtoImplToJson(
   'storeId': instance.storeId,
   'storeName': instance.storeName,
   'storeImages': instance.storeImages,
-  'goodsList': instance.goodsList,
+  'goodsImageList': instance.goodsImageList,
   'goodsName': instance.goodsName,
   'description': instance.description,
   'parkingDescription': instance.parkingDescription,

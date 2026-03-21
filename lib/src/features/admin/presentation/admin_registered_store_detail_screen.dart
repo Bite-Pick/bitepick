@@ -1,4 +1,3 @@
-import 'package:dartx/dartx.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,6 +73,18 @@ class _AdminRegisteredStoreDetailScreenState
         id: i + 1,
         key: '',
         uploadedUrl: widget.store.storeImages[i],
+      ));
+    }
+    // 기존 상품 이미지를 GoodsDetailItem으로 변환하여 추가
+    for (final item in widget.store.goodsImageList) {
+      if (item.imageUrl == null || item.imageUrl!.isEmpty) continue;
+      _goodsDetails.add(GoodsDetailItem(
+        localImage: LocalImage(
+          id: _goodsDetails.length + 1,
+          key: item.key,
+          uploadedUrl: item.imageUrl,
+        ),
+        name: item.goodsName ?? '',
       ));
     }
   }
@@ -430,57 +441,29 @@ class _AdminRegisteredStoreDetailScreenState
   }
 
   Future<void> _manageStore(int storeId) async {
-    // 새로 추가한 이미지만 업로드
-    final newStoreImages = _storeImages.where((img) => img.file != null).toList();
-    List<Map<String, dynamic>> storeImageUploads = [];
-
-    if (newStoreImages.isNotEmpty) {
-      final imageUploads = newStoreImages.mapIndexed((index, img) {
-        return {'key': img.key, 'id': index + 1};
-      }).toList();
-
-      final presignedUrls = await ref.read(adminRepositoryProvider).updateStoreImages(
-        storeId: widget.store.storeId,
-        images: imageUploads,
-      );
-
-      if (presignedUrls.isNotEmpty) {
-        final updatedLocalImages = newStoreImages.mapIndexed((index, img) {
-          if (index < presignedUrls.length) {
-            return img.copyWith(id: presignedUrls[index].id);
-          }
-          return img;
-        }).toList();
-
-        await ref.read(presignedImageRepositoryProvider).uploadImagesToS3(
-          localImages: updatedLocalImages,
-          presignedUrls: presignedUrls,
-        );
+    // 대표 이미지: 기존 URL 이미지 + 새 로컬 이미지
+    int newStoreImageIndex = 1;
+    final storeImageUploads = _storeImages.map((img) {
+      if (img.uploadedUrl != null) {
+        return {'id': 0, 'key': '', 'imageUrl': img.uploadedUrl!};
+      } else {
+        return {'id': newStoreImageIndex++, 'key': img.key, 'imageUrl': ''};
       }
-
-      storeImageUploads = imageUploads;
-    }
-
-    // 기존 굿즈(imageUrl)와 새 굿즈(key)를 합쳐서 전송
-    final existingGoodsUploads = widget.store.goodsList.map((goods) {
-      return {
-        'id': 0,
-        'key': '',
-        'imageUrl': '',
-        'goodsName': goods.goodsName ?? '',
-      };
     }).toList();
-    final newGoodsUploads = _goodsDetails.mapIndexed((index, detail) {
-      return {
-        'id': index + 1,
-        'key': detail.localImage.key,
-        'imageUrl': '',
-        'goodsName': detail.name,
-      };
-    }).toList();
-    final goodsImageUploads = [...existingGoodsUploads, ...newGoodsUploads];
 
-    final res = await ref.read(adminRepositoryProvider).manageStore(
+    // 상품 이미지: 기존 굿즈 + 새 굿즈
+    // 기존 굿즈: uploadedUrl 있는 것 (id=0, imageUrl로 유지)
+    // 새 굿즈: file 있는 것 (id 순번, key로 업로드)
+    int newGoodsIndex = 1;
+    final goodsImageUploads = _goodsDetails.map((detail) {
+      if (detail.localImage.file != null) {
+        return {'id': newGoodsIndex++, 'key': detail.localImage.key, 'imageUrl': '', 'goodsName': detail.name};
+      } else {
+        return {'id': 0, 'key': detail.localImage.key, 'imageUrl': detail.localImage.uploadedUrl ?? '', 'goodsName': detail.name};
+      }
+    }).toList();
+
+    final result = await ref.read(adminRepositoryProvider).manageStore(
       storeId,
       storeName: form.control('storeName').value as String,
       address: form.control('address').value as String,
@@ -506,12 +489,34 @@ class _AdminRegisteredStoreDetailScreenState
       goodsImages: goodsImageUploads,
     );
 
-    if (res && mounted) {
+    if (result == null) {
+      if (mounted) ToastPresentor.error(context, '수정이 완료되지 않았습니다');
+      return;
+    }
+
+    // 새로 추가한 이미지만 S3 업로드 (순서 기반 매칭)
+    final newStoreLocalImages = _storeImages.where((img) => img.file != null).toList();
+    final storeUrlsToUpload = result.storeUrls.where((u) => u.url != null).toList();
+    for (var i = 0; i < newStoreLocalImages.length && i < storeUrlsToUpload.length; i++) {
+      await ref.read(presignedImageRepositoryProvider).uploadToS3WithPresignedUrl(
+        presignedUrl: storeUrlsToUpload[i].url!,
+        file: newStoreLocalImages[i].file!,
+      );
+    }
+
+    final newGoodsLocalImages = _goodsDetails.where((d) => d.localImage.file != null).map((d) => d.localImage).toList();
+    final goodsUrlsToUpload = result.goodsUrls.where((u) => u.url != null).toList();
+    for (var i = 0; i < newGoodsLocalImages.length && i < goodsUrlsToUpload.length; i++) {
+      await ref.read(presignedImageRepositoryProvider).uploadToS3WithPresignedUrl(
+        presignedUrl: goodsUrlsToUpload[i].url!,
+        file: newGoodsLocalImages[i].file!,
+      );
+    }
+
+    if (mounted) {
       context.pop();
       ToastPresentor.success(context, '수정이 완료되었습니다');
       ref.invalidate(pendingStoreListProvider);
-    } else {
-      ToastPresentor.error(context, '수정이 완료되지 않았습니다');
     }
   }
 

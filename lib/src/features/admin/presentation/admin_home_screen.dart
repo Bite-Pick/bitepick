@@ -62,13 +62,25 @@ class AdminHomeScreen extends ConsumerWidget {
           Text("매장관리").bold().md(),
           MgAsyncAnimatedSwitcher(
             asyncValue: pendingStoreListAsync,
-            emptyBuilder: () => _buildMenu(
-              leadingIconPath: 'store-alt.svg',
-              title: "입점 매장 관리",
-              onTap: () async => AdminRegisteredStoreListRoute().push(context),
+            emptyBuilder: () => Column(
+              spacing: MgSizes.sm,
+              children: [
+                _buildMenu(
+                  leadingIconPath: 'user-check.svg',
+                  title: "가입 매장 승인",
+                  onTap: () async => AdminPendingStoreListRoute().push(context),
+                  badgeCount: 0,
+                ),
+                _buildMenu(
+                  leadingIconPath: 'store-alt.svg',
+                  title: "입점 매장 관리",
+                  onTap: () async => AdminRegisteredStoreListRoute().push(context),
+                ),
+              ],
             ),
             builder: (pendingStores) {
               return Column(
+                spacing: MgSizes.sm,
                 children: [
                   _buildMenu(
                     leadingIconPath: 'user-check.svg',

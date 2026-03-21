@@ -4,21 +4,16 @@ part 'registered_store.dto.freezed.dart';
 part 'registered_store.dto.g.dart';
 
 @freezed
-class GoodsListItemDto with _$GoodsListItemDto {
-  const factory GoodsListItemDto({
-    required String goodsId,
+class GoodsImageItemDto with _$GoodsImageItemDto {
+  const factory GoodsImageItemDto({
+    required String goodsImageId,
+    String? imageUrl,
+    @Default('') String key,
     String? goodsName,
-    required String startTime,
-    required String endTime,
-    required int originPrice,
-    required int discount,
-    required int salePrice,
-    required int quantity,
-    required String saleStatus,
-  }) = _GoodsListItemDto;
+  }) = _GoodsImageItemDto;
 
-  factory GoodsListItemDto.fromJson(Map<String, dynamic> json) =>
-      _$GoodsListItemDtoFromJson(json);
+  factory GoodsImageItemDto.fromJson(Map<String, dynamic> json) =>
+      _$GoodsImageItemDtoFromJson(json);
 }
 
 /// 입점 매장 전체 조회 및 수정 DTO
@@ -28,7 +23,7 @@ class RegisteredStoreDto with _$RegisteredStoreDto {
     required String storeId,
     required String storeName,
     @Default([]) List<String> storeImages,
-    @Default([]) List<GoodsListItemDto> goodsList,
+    @Default([]) List<GoodsImageItemDto> goodsImageList,
     String? goodsName,
     String? description,
     String? parkingDescription,
