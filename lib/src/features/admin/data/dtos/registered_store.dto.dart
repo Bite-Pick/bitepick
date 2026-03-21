@@ -3,15 +3,35 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'registered_store.dto.freezed.dart';
 part 'registered_store.dto.g.dart';
 
+@freezed
+class GoodsListItemDto with _$GoodsListItemDto {
+  const factory GoodsListItemDto({
+    required String goodsId,
+    String? goodsName,
+    required String startTime,
+    required String endTime,
+    required int originPrice,
+    required int discount,
+    required int salePrice,
+    required int quantity,
+    required String saleStatus,
+  }) = _GoodsListItemDto;
+
+  factory GoodsListItemDto.fromJson(Map<String, dynamic> json) =>
+      _$GoodsListItemDtoFromJson(json);
+}
+
 /// 입점 매장 전체 조회 및 수정 DTO
 @freezed
 class RegisteredStoreDto with _$RegisteredStoreDto {
   const factory RegisteredStoreDto({
     required String storeId,
     required String storeName,
-    @JsonKey(name: 'ImageUrl') @Default([]) List<String> imageUrl,
-    @JsonKey(name: 'GoodImageUrl') @Default([]) List<String> goodsImages,
+    @Default([]) List<String> storeImages,
+    @Default([]) List<GoodsListItemDto> goodsList,
     String? goodsName,
+    String? description,
+    String? parkingDescription,
     required String startTime,
     required String endTime,
     required int originPrice,

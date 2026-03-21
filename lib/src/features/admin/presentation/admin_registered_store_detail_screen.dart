@@ -1,18 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dartx/dartx.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/admin/data/dtos/registered_store.dto.dart';
 import 'package:magambell/src/features/admin/data/repositories/admin_repository.dart';
 import 'package:magambell/src/features/auth/presenation/owner/widgets/owner_info_section.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods_detail_item.dart';
+import 'package:magambell/src/features/goods/presentation/widgets/goods_detail_info_form_item.dart';
+import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
+import 'package:magambell/src/features/image/domain/entities/local_image.dart';
+import 'package:magambell/src/features/image/utils/image_requester.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
-import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
+import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_reactive_textfield.dart';
@@ -46,17 +52,32 @@ class AdminRegisteredStoreDetailScreen extends ConsumerStatefulWidget {
 
 class _AdminRegisteredStoreDetailScreenState
     extends ConsumerState<AdminRegisteredStoreDetailScreen>
-  with FormSectionBuilderMixin {
+    with FormSectionBuilderMixin {
   late FormGroup form;
-  List<String> localImages = [];
+
+  static const int _maxStoreImages = 5;
+
+  // 대표 이미지: 기존 URL + 새 로컬 파일을 통합 관리
+  // uploadedUrl != null → 기존 서버 이미지 / file != null → 새로 추가한 로컬 이미지
+  final List<LocalImage> _storeImages = [];
+
+  // 상품 정보 이미지
+  final List<GoodsDetailItem> _goodsDetails = [];
 
   @override
   void initState() {
     super.initState();
     _initializeForm();
-    localImages = widget.store.imageUrl;
+    // 기존 서버 이미지를 LocalImage(uploadedUrl)로 변환하여 통합 리스트에 추가
+    for (var i = 0; i < widget.store.storeImages.length; i++) {
+      _storeImages.add(LocalImage(
+        id: i + 1,
+        key: '',
+        uploadedUrl: widget.store.storeImages[i],
+      ));
+    }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return ReactiveForm(
@@ -73,18 +94,16 @@ class _AdminRegisteredStoreDetailScreenState
                     _buildStoreInfoSection().margin(horizontal: MgSizes.xl),
                     Divider(thickness: MgSizes.size6).margin(top: MgSizes.xxxl),
                     const OwnerInfoSection(
-                      enabled: false, // 읽기 전용
+                      enabled: false,
                     ).margin(horizontal: MgSizes.xl),
-                    
                     Divider(thickness: MgSizes.size6).margin(top: MgSizes.xxxl),
                     _buildStoreGoodsInfoSection().margin(horizontal: MgSizes.xl),
                   ],
                 ),
               ),
             ),
-            // 수정 완료 버튼
             MgButton(
-              onPressed: _handleEdit, 
+              onPressed: _handleEdit,
               content: const Text('수정 완료'),
             ).primary().margin(
               horizontal: MgSizes.md,
@@ -96,6 +115,8 @@ class _AdminRegisteredStoreDetailScreenState
       ),
     );
   }
+
+  // ─── 대표 이미지 섹션 ───────────────────────────────────────────────────────
 
   Widget _buildStoreInfoSection() {
     return Column(
@@ -110,23 +131,145 @@ class _AdminRegisteredStoreDetailScreenState
         buildSectionTitle("주차 안내"),
         MgReactiveTextField(formControlName: 'parkingDescription', enabled: true, compact: true, backgroundColor: MgColorScheme.gray9),
         buildSectionTitle("대표 이미지"),
-        // TODO: 이미지 수정 기능 추가(+다중 이미지 처리 관련 서버 수정)
-        widget.store.imageUrl.isNotEmpty
-            ? Row(
-                children: widget.store.imageUrl
-                    .map(
-                      (url) => BaseNetworkImage(
-                        imageUrl: url,
-                        width: 80.w,
-                        height: 80.w,
-                      ).margin(right: MgSizes.xs),
-                    )
-                    .toList(),
-              )
-            : const Text('등록된 이미지가 없습니다.'),
+        _buildStoreImageList(),
       ],
     );
   }
+
+  Widget _buildStoreImageList() {
+    final canAddMore = _storeImages.length < _maxStoreImages;
+
+    if (_storeImages.isEmpty) {
+      return GestureDetector(
+        onTap: _pickStoreImages,
+        child: DottedBorder(
+          options: RoundedRectDottedBorderOptions(
+            radius: Radius.circular(MgRadius.md),
+          ),
+          child: MgButton(
+            onPressed: _pickStoreImages,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BaseSvgIcon.camera(color: MgColorScheme.gray4),
+                Gaps.w8,
+                Text(
+                  "사진추가(0/$_maxStoreImages)",
+                ).textColor(MgColorScheme.gray4).regular(),
+              ],
+            ),
+          ).gray(),
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _storeImages.length + (canAddMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == 0 && canAddMore) {
+            return _buildAddImageButton();
+          }
+          final imageIndex = canAddMore ? index - 1 : index;
+          return _buildStoreImageItem(imageIndex);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAddImageButton() {
+    return GestureDetector(
+      onTap: _pickStoreImages,
+      child: Container(
+        width: 100,
+        height: 100,
+        margin: const EdgeInsets.only(right: MgSizes.sm),
+        child: DottedBorder(
+          options: RoundedRectDottedBorderOptions(
+            radius: Radius.circular(MgRadius.sm),
+            dashPattern: const [6, 3],
+            strokeWidth: 1.5,
+            color: MgColorScheme.gray5,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.add, size: 32, color: MgColorScheme.gray5),
+                Gaps.h4,
+                Text('${_storeImages.length}/$_maxStoreImages')
+                    .textColor(MgColorScheme.gray5)
+                    .xs(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoreImageItem(int index) {
+    final image = _storeImages[index];
+    final imageProvider = image.file != null
+        ? DecorationImage(image: FileImage(image.file!), fit: BoxFit.cover)
+        : image.uploadedUrl != null
+            ? DecorationImage(image: NetworkImage(image.uploadedUrl!), fit: BoxFit.cover)
+            : null;
+
+    return Stack(
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          margin: const EdgeInsets.only(right: MgSizes.sm),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(MgRadius.sm),
+            border: Border.all(color: MgColorScheme.gray7),
+            image: imageProvider,
+          ),
+        ),
+        Positioned(
+          top: 4,
+          right: 4 + MgSizes.sm,
+          child: GestureDetector(
+            onTap: () => setState(() => _storeImages.removeAt(index)),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.6),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.close, size: 16, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickStoreImages() async {
+    final remaining = _maxStoreImages - _storeImages.length;
+    if (remaining <= 0) return;
+    final files = await ImageRequester().pickMultipleFilesFromGallery(
+      quality: 85,
+      maxWidth: 1920,
+      maxHeight: 1920,
+    );
+    if (files.isEmpty) return;
+    setState(() {
+      for (final file in files.take(remaining)) {
+        _storeImages.add(LocalImage(
+          id: _storeImages.length + 1,
+          key: file.path.split('/').last,
+          file: file,
+        ));
+      }
+    });
+  }
+
+  // ─── 상품 정보 섹션 ────────────────────────────────────────────────────────
 
   Widget _buildStoreGoodsInfoSection() {
     return Column(
@@ -141,23 +284,84 @@ class _AdminRegisteredStoreDetailScreenState
         buildSectionTitle("할인율"),
         MgReactiveTextField(formControlName: 'discount', enabled: true, compact: true, backgroundColor: MgColorScheme.gray9),
         buildSectionTitle("상품 정보"),
-        // TODO: 이미지 수정 기능 추가(+다중 이미지 처리 관련 서버 수정)
-        widget.store.goodsImages.isNotEmpty
-            ? Row(
-                children: widget.store.goodsImages
-                    .map(
-                      (url) => BaseNetworkImage(
-                        imageUrl: url,
-                        width: 80.w,
-                        height: 80.w,
-                      ).margin(right: MgSizes.xs),
-                    )
-                    .toList(),
-              )
-            : const Text('등록된 이미지가 없습니다.'),
+        _buildGoodsImageSection(),
       ],
-    ); // 상품 이미지 및 정보 표시
+    );
   }
+
+  Widget _buildGoodsImageSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 새로 추가하는 상품 이미지
+        ..._goodsDetails.asMap().entries.map((entry) {
+          final index = entry.key;
+          final detail = entry.value;
+          return GoodsDetailInfoFormItem(
+            key: ValueKey(index),
+            index: index,
+            onRemove: () => setState(() => _goodsDetails.removeAt(index)),
+            onImageChanged: (file) {
+              if (file != null) {
+                setState(() {
+                  _goodsDetails[index] = _goodsDetails[index].copyWith(
+                    localImage: _goodsDetails[index].localImage.copyWith(file: file),
+                  );
+                });
+              }
+            },
+            onNameChanged: (name) {
+              _goodsDetails[index] = _goodsDetails[index].copyWith(name: name);
+            },
+            initialImage: detail.localImage.file,
+            initialImageUrl: detail.localImage.uploadedUrl,
+            initialName: detail.name,
+          );
+        }),
+        GestureDetector(
+          onTap: _addGoodsDetail,
+          behavior: HitTestBehavior.opaque,
+          child: DottedBorder(
+            options: RoundedRectDottedBorderOptions(
+              radius: Radius.circular(MgRadius.md),
+              dashPattern: const [8, 4],
+              color: MgColorScheme.gray5,
+              strokeWidth: 1.5,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: Center(
+                child: BaseSvgIcon.plus().margin(vertical: MgSizes.sm),
+              ),
+            ),
+          ).constrained(width: double.infinity, height: 48),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _addGoodsDetail() async {
+    final file = await ImageRequester().pickFileFromGallery(
+      quality: 85,
+      maxWidth: 1920,
+      maxHeight: 1920,
+    );
+    if (file != null) {
+      setState(() {
+        _goodsDetails.add(GoodsDetailItem(
+          localImage: LocalImage(
+            id: _goodsDetails.length + 1,
+            key: file.path.split('/').last,
+            file: file,
+          ),
+          name: '',
+        ));
+      });
+    }
+  }
+
+  // ─── Form ─────────────────────────────────────────────────────────────────
 
   void _initializeForm() {
     final store = widget.store;
@@ -166,16 +370,13 @@ class _AdminRegisteredStoreDetailScreenState
         value: store.storeName,
         validators: [Validators.required],
       ),
-      'description': FormControl<String>(
-        value: '',
-      ),
+      'description': FormControl<String>(value: store.description ?? ''),
       'address': FormControl<String>(
         value: store.address,
         validators: [Validators.required],
       ),
       'pickupTime': FormControl<String>(
-        value:
-            "${store.startTime.convertTime()} ~ ${store.endTime.convertTime()}",
+        value: "${store.startTime.convertTime()} ~ ${store.endTime.convertTime()}",
         validators: [Validators.required],
       ),
       'quantity': FormControl<String>(
@@ -190,9 +391,7 @@ class _AdminRegisteredStoreDetailScreenState
         value: '${store.discount}%',
         validators: [Validators.required],
       ),
-      'parkingDescription': FormControl<String>(
-        value: '', // TODO: 서버 수정 필요!!
-      ),
+      'parkingDescription': FormControl<String>(value: store.parkingDescription ?? ''),
       'representativeName': FormControl<String>(
         value: store.ownerName,
         validators: [Validators.required],
@@ -207,7 +406,7 @@ class _AdminRegisteredStoreDetailScreenState
       ),
       'bankName': FormControl<String?>(
         value: store.bankName,
-        validators: [Validators.required], 
+        validators: [Validators.required],
       ),
       'accountNumber': FormControl<String>(
         value: store.bankAccount,
@@ -215,6 +414,8 @@ class _AdminRegisteredStoreDetailScreenState
       ),
     });
   }
+
+  // ─── 수정 완료 ────────────────────────────────────────────────────────────
 
   void _handleEdit() {
     showDialog(
@@ -228,8 +429,57 @@ class _AdminRegisteredStoreDetailScreenState
     );
   }
 
-  /// 입점 매장 정보 수정
   Future<void> _manageStore(int storeId) async {
+    // 새로 추가한 이미지만 업로드
+    final newStoreImages = _storeImages.where((img) => img.file != null).toList();
+    List<Map<String, dynamic>> storeImageUploads = [];
+
+    if (newStoreImages.isNotEmpty) {
+      final imageUploads = newStoreImages.mapIndexed((index, img) {
+        return {'key': img.key, 'id': index + 1};
+      }).toList();
+
+      final presignedUrls = await ref.read(adminRepositoryProvider).updateStoreImages(
+        storeId: widget.store.storeId,
+        images: imageUploads,
+      );
+
+      if (presignedUrls.isNotEmpty) {
+        final updatedLocalImages = newStoreImages.mapIndexed((index, img) {
+          if (index < presignedUrls.length) {
+            return img.copyWith(id: presignedUrls[index].id);
+          }
+          return img;
+        }).toList();
+
+        await ref.read(presignedImageRepositoryProvider).uploadImagesToS3(
+          localImages: updatedLocalImages,
+          presignedUrls: presignedUrls,
+        );
+      }
+
+      storeImageUploads = imageUploads;
+    }
+
+    // 기존 굿즈(imageUrl)와 새 굿즈(key)를 합쳐서 전송
+    final existingGoodsUploads = widget.store.goodsList.map((goods) {
+      return {
+        'id': 0,
+        'key': '',
+        'imageUrl': '',
+        'goodsName': goods.goodsName ?? '',
+      };
+    }).toList();
+    final newGoodsUploads = _goodsDetails.mapIndexed((index, detail) {
+      return {
+        'id': index + 1,
+        'key': detail.localImage.key,
+        'imageUrl': '',
+        'goodsName': detail.name,
+      };
+    }).toList();
+    final goodsImageUploads = [...existingGoodsUploads, ...newGoodsUploads];
+
     final res = await ref.read(adminRepositoryProvider).manageStore(
       storeId,
       storeName: form.control('storeName').value as String,
@@ -243,8 +493,7 @@ class _AdminRegisteredStoreDetailScreenState
       bankAccount: form.control('accountNumber').value as String,
       description: form.control('description').value as String,
       parkingDescription: form.control('parkingDescription').value as String,
-      storeImages: [],
-      goodsName: form.control('goodsName').value as String,
+      storeImages: storeImageUploads,
       startTime: widget.store.startTime,
       endTime: widget.store.endTime,
       originalPrice: int.parse(form.control('originPrice').value as String),
@@ -254,10 +503,9 @@ class _AdminRegisteredStoreDetailScreenState
       ),
       quantity: int.parse(form.control('quantity').value as String),
       saleStatus: widget.store.saleStatus,
-      goodsImages: [],
+      goodsImages: goodsImageUploads,
     );
 
-    // 로딩 다이얼로그 닫기
     if (res && mounted) {
       context.pop();
       ToastPresentor.success(context, '수정이 완료되었습니다');

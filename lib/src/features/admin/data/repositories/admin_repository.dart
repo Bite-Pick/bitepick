@@ -68,7 +68,7 @@ class AdminRepository {
       data: {'storeId': storeId, 'storeImagesRegisters': images},
     );
 
-    if (response.data['status'] != 'SUCCESS') {
+    if (response.data['status'] != 'OK') {
       throw Exception('매장 이미지 수정에 실패했습니다.');
     }
 
@@ -112,7 +112,6 @@ class AdminRepository {
     required String description,
     required String parkingDescription,
     required List<Map<String, dynamic>> storeImages,
-    required String goodsName,
     required String startTime,
     required String endTime,
     required int originalPrice,
@@ -137,7 +136,6 @@ class AdminRepository {
         'description': description,
         'parkingDescription': parkingDescription,
         'storeImages': storeImages,
-        'goodsName': goodsName,
         'startTime': startTime,
         'endTime': endTime,
         'originalPrice': originalPrice,
