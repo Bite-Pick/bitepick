@@ -27,6 +27,8 @@ class MgTextField extends StatefulWidget {
     this.boxDecoration,
     this.prefixIcon,
     this.suffixIcon,
+    this.backgroundColor,
+    this.compact = false,
   });
 
   final String? label;
@@ -46,6 +48,8 @@ class MgTextField extends StatefulWidget {
   final BoxDecoration? boxDecoration;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Color? backgroundColor;
+  final bool compact;
 
   @override
   State<MgTextField> createState() => _MgTextFieldState();
@@ -120,7 +124,7 @@ class _MgTextFieldState extends State<MgTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: spacingMd),
+      margin: EdgeInsets.only(bottom: widget.compact ? 0 : spacingMd),
       decoration: widget.boxDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,9 +182,9 @@ class _MgTextFieldState extends State<MgTextField> {
                 vertical: spacingSm,
               ),
               decoration: BoxDecoration(
-                color: widget.enabled
+                color: widget.backgroundColor ?? (widget.enabled
                     ? MgColorScheme.gray11
-                    : MgColorScheme.gray9,
+                    : MgColorScheme.gray9),
                 borderRadius: BorderRadius.circular(borderRadiusMd),
                 border: Border.all(color: _borderColor, width: _borderWidth),
               ),
@@ -189,7 +193,7 @@ class _MgTextFieldState extends State<MgTextField> {
 
           // 에러 영역 항상 고정 높이로 유지 (레이아웃 점프 방지)
           SizedBox(
-            height: 20,
+            height: widget.compact ? 0 : 20,
             child: widget.error != null && widget.error!.isNotEmpty
                 ? Align(
                     alignment: Alignment.centerLeft,

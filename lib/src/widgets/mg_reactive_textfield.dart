@@ -18,7 +18,9 @@ class MgReactiveTextField<T> extends ReactiveFormField<T, T> {
     this.inputStyle,
     this.prefixIcon,
     this.suffixIcon,
+    this.backgroundColor,
     this.onSubmitted,
+    this.compact = false,
   }) : super(
          builder: (ReactiveFormFieldState<T, T> field) {
            final state = field as _MgReactiveTextFieldState<T>;
@@ -37,7 +39,9 @@ class MgReactiveTextField<T> extends ReactiveFormField<T, T> {
              inputStyle: inputStyle,
              prefixIcon: prefixIcon ?? SizedBox.shrink(),
              suffixIcon: suffixIcon,
+             backgroundColor: backgroundColor,
              onSubmitted: onSubmitted,
+             compact: compact,
            );
          },
        );
@@ -52,7 +56,9 @@ class MgReactiveTextField<T> extends ReactiveFormField<T, T> {
   final TextStyle? inputStyle;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Color? backgroundColor;
   final ValueChanged<String>? onSubmitted;
+  final bool compact;
 
   @override
   ReactiveFormFieldState<T, T> createState() =>

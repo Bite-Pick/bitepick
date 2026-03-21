@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
@@ -12,6 +13,7 @@ import 'package:magambell/src/features/admin/data/repositories/admin_repository.
 import 'package:magambell/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_pending_store_list_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_registered_store_list_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -60,26 +62,44 @@ class AdminHomeScreen extends ConsumerWidget {
           Text("매장관리").bold().md(),
           MgAsyncAnimatedSwitcher(
             asyncValue: pendingStoreListAsync,
-            emptyBuilder: () => Text("가입 대기 중인 매장이 없습니다").sm(),
+            emptyBuilder: () => Column(
+              spacing: MgSizes.sm,
+              children: [
+                _buildMenu(
+                  leadingIconPath: 'user-check.svg',
+                  title: "가입 매장 승인",
+                  onTap: () async => AdminPendingStoreListRoute().push(context),
+                  badgeCount: 0,
+                ),
+                _buildMenu(
+                  leadingIconPath: 'store-alt.svg',
+                  title: "입점 매장 관리",
+                  onTap: () async => AdminRegisteredStoreListRoute().push(context),
+                ),
+              ],
+            ),
             builder: (pendingStores) {
-              return _buildMenu(
-                leadingIconPath: 'user-check.svg',
-                title: "가입 매장 승인",
-                onTap: () async {
-                  await AdminPendingStoreListRoute().push(context);
-                  // TODO: 라우팅 돌아와서 counting 업데이트
-                },
-                badgeCount: pendingStores.length,
-              );
+              return Column(
+                spacing: MgSizes.sm,
+                children: [
+                  _buildMenu(
+                    leadingIconPath: 'user-check.svg',
+                    title: "가입 매장 승인",
+                    onTap: () async {
+                      await AdminPendingStoreListRoute().push(context);
+                    // TODO: 라우팅 돌아와서 counting 업데이트
+                    },
+                    badgeCount: pendingStores.length,
+                  ),
+                  _buildMenu(
+                    leadingIconPath: 'store-alt.svg',
+                    title: "입점 매장 관리",
+                    onTap: () async => AdminRegisteredStoreListRoute().push(context),
+                  ),
+                ],
+              );  
             },
           ),
-          // _buildMenu(
-          //   leadingIconPath: 'store-alt.svg',
-          //   title: "입점 매장 관리",
-          //   onTap: () async {
-          //     // TODO: 입점 매장 화면 추가
-          //   },
-          // ),
           Gaps.h2, //12+2+12
           Text("서비스 관리").bold().md(),
           _buildMenu(

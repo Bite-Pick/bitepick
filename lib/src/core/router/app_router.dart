@@ -9,6 +9,8 @@ import 'package:magambell/src/features/admin/presentation/admin_home_screen.dart
 import 'package:magambell/src/features/admin/presentation/admin_banner_list_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_pending_store_detail_screen.dart';
 import 'package:magambell/src/features/admin/presentation/admin_pending_store_list_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_registered_store_detail_screen.dart';
+import 'package:magambell/src/features/admin/presentation/admin_registered_store_list_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
@@ -181,6 +183,17 @@ class LoginRoute extends GoRouteData {
             TypedGoRoute<AdminPendingStoreDetailRoute>(
               name: 'AdminPendingStoreDetailRoute',
               path: 'approval',
+            ),
+          ],
+        ),
+
+        TypedGoRoute<AdminRegisteredStoreListRoute>(
+          name: 'ApprovedStoreListRoute',
+          path: 'approved-store',
+          routes: [
+            TypedGoRoute<AdminRegisteredStoreDetailRoute>(
+              name: 'AdminRegisteredStoreDetailRoute',
+              path: 'management',
             ),
           ],
         ),
