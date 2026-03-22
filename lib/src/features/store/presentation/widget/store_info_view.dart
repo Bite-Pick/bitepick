@@ -81,17 +81,18 @@ class StoreInfoView extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
+        Expanded(
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StoreTags(
               quantity: storeInfo.stockQuantity,
               saleStatus: storeInfo.saleStatus,
             ),
-            
+
             Text(storeInfo.storeName).md().bold(),
             if (storeInfo.description.isNotEmpty)
-              Text(storeInfo.description).regular().textGray().margin(
+              Text(storeInfo.description, softWrap: true).regular().textGray().margin(
                 top: MgSizes.size4,
                 bottom: MgSizes.size8,
               ), //description
@@ -115,8 +116,7 @@ class StoreInfoView extends ConsumerWidget {
               ),
             ),
           ],
-        ),
-        Spacer(),
+        )),
         if (hasFavorite && isLogin) StoreFavoriteIcon(storeInfo.storeId),
       ],
     ).margin(all: MgSizes.md, bottom: 0);
