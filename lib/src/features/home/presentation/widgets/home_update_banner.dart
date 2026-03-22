@@ -32,7 +32,8 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
     if (!ShorebirdManager.isAvailable) return;
 
     final status = await ShorebirdManager.checkForUpdate();
-    if (status == UpdateStatus.outdated || status == UpdateStatus.restartRequired) {
+    // outdated 상태는 main.dart에서 백그라운드 다운로드 중 — 다음 실행 시 restartRequired로 처리됨
+    if (status == UpdateStatus.restartRequired) {
       if (mounted) _showUpdateDialog(status!);
     }
   }
@@ -42,12 +43,16 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
 
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (_) => MgAlertDialog.basic(
-        title: '새로운 업데이트',
-        content: const Text('앱을 재시작하면 새 버전이 적용됩니다.', textAlign: TextAlign.center),
-        confirmText: '지금 재시작',
-        hasCancel: false,
+        title: '업데이트 준비 완료',
+        content: const Text(
+          '새 버전이 준비됐어요.\n지금 앱을 종료한 후 다시 열어주세요.',
+          textAlign: TextAlign.center,
+        ),
+        confirmText: '지금 종료',
+        cancelText: '나중에',
+        hasCancel: true,
         onConfirm: () => AppRestart.restart(),
       ),
     );
