@@ -23,20 +23,31 @@ class OrderListScreen extends ConsumerWidget {
         title: const Text('주문 내역'),
         leading: const SizedBox.shrink(),
       ),
-      body: MgAsyncAnimatedSwitcher(
-        asyncValue: ordersAsync,
-        emptyBuilder: () => _buildEmptyView(),
-        builder: (orders) {
-          return ListView.separated(
-            itemCount: orders.length,
-            separatorBuilder: (context, index) =>
-                Divider(thickness: 6).margin(vertical: MgSizes.lg),
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              return OrderListItem(order.toOrderListItemState());
-            },
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.refresh(userOrdersProvider());
         },
+        child: MgAsyncAnimatedSwitcher(
+          asyncValue: ordersAsync,
+          emptyBuilder: () => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(), // 👈 빈 상태에서도 스크롤 가능
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7, // 👈 화면 채우기
+              child: _buildEmptyView(),
+            ),
+          ),
+          builder: (orders) {
+            return ListView.separated(
+              itemCount: orders.length,
+              separatorBuilder: (context, index) =>
+                  Divider(thickness: 6).margin(vertical: MgSizes.lg),
+              itemBuilder: (context, index) {
+                final order = orders[index];
+                return OrderListItem(order.toOrderListItemState());
+              },
+            );
+          },
+        ),
       ),
     );
   }

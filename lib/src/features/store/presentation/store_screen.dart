@@ -72,25 +72,30 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
         return BaseScaffold(
           appBar: BaseAppBar(),
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverToBoxAdapter(child: StoreInfoView(store.toStoreInfoData())),
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  _StoreTabBar(
-                    goodsId: store.goodsId,
-                    controller: _tabController,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              ref.refresh(storeGoodsDetailProvider(widget.id));
+            }, 
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                SliverToBoxAdapter(child: StoreInfoView(store.toStoreInfoData())),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _SliverAppBarDelegate(
+                    _StoreTabBar(
+                      goodsId: store.goodsId,
+                      controller: _tabController,
+                    ),
                   ),
                 ),
-              ),
-            ],
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                StoreBiteBagView(store.goodsImages ?? []),
-                StoreReviewListView(store.goodsId),
               ],
+              body: TabBarView(
+                controller: _tabController,
+                children: [
+                  StoreBiteBagView(store.goodsImages ?? []),
+                  StoreReviewListView(store.goodsId),
+                ],
+              ),
             ),
           ),
           bottomNavigationBar: _BottomOrderBar(goods: store, storeId: widget.id,),
