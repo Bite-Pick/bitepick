@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/src/core/utils/app_restart.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
@@ -47,13 +46,12 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
       builder: (_) => MgAlertDialog.basic(
         title: '업데이트 준비 완료',
         content: const Text(
-          '새 버전이 준비됐어요.\n지금 앱을 종료한 후 다시 열어주세요.',
+          '새 버전이 준비됐어요.\n앱을 완전히 닫았다가 다시 열어주세요.',
           textAlign: TextAlign.center,
         ),
-        confirmText: '지금 종료',
-        cancelText: '나중에',
-        hasCancel: true,
-        onConfirm: () => AppRestart.restart(),
+        confirmText: '확인',
+        hasCancel: false,
+        onConfirm: () {},
       ),
     );
   }
