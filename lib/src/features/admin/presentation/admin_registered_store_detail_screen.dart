@@ -509,7 +509,9 @@ class _AdminRegisteredStoreDetailScreenState
 
   Future<void> _manageStore(int storeId) async {
     // 대표 이미지: 기존 URL 이미지 + 새 로컬 이미지
-    int newStoreImageIndex = 1;
+    // 새 이미지 id는 기존 이미지 수 + 1부터 시작하여 충돌 방지
+    final existingStoreCount = _storeImages.where((img) => img.uploadedUrl != null).length;
+    int newStoreImageIndex = existingStoreCount + 1;  // 기존 1개면 새 이미지는 2부터
     final storeImageUploads = _storeImages.map((img) {
       if (img.uploadedUrl != null) {
         return {'id': 0, 'key': '', 'imageUrl': img.uploadedUrl!};
@@ -519,9 +521,9 @@ class _AdminRegisteredStoreDetailScreenState
     }).toList();
 
     // 상품 이미지: 기존 굿즈 + 새 굿즈
-    // 기존 굿즈: uploadedUrl 있는 것 (id=0, imageUrl로 유지)
-    // 새 굿즈: file 있는 것 (id 순번, key로 업로드)
-    int newGoodsIndex = 1;
+    // 새 이미지 id는 기존 이미지 수 + 1부터 시작하여 충돌 방지
+    final existingGoodsCount = _goodsDetails.where((d) => d.localImage.file == null).length;
+    int newGoodsIndex = existingGoodsCount + 1;
     final goodsImageUploads = _goodsDetails.map((detail) {
       if (detail.localImage.file != null) {
         return {'id': newGoodsIndex++, 'key': detail.localImage.key, 'imageUrl': '', 'goodsName': detail.name};
@@ -529,6 +531,14 @@ class _AdminRegisteredStoreDetailScreenState
         return {'id': 0, 'key': detail.localImage.key, 'imageUrl': detail.localImage.uploadedUrl ?? '', 'goodsName': detail.name};
       }
     }).toList();
+
+    final goodsName = _goodsDetails.isNotEmpty
+        ? (_goodsDetails.first.name.isNotEmpty ? _goodsDetails.first.name : 'goods')
+        : (widget.store.goodsImageList.isNotEmpty
+            ? (widget.store.goodsImageList.first.goodsName?.isNotEmpty == true
+                ? widget.store.goodsImageList.first.goodsName!
+                : 'goods')
+            : (widget.store.goodsName?.isNotEmpty == true ? widget.store.goodsName! : 'goods'));
 
     final result = await ref.read(adminRepositoryProvider).manageStore(
       storeId,
@@ -547,12 +557,15 @@ class _AdminRegisteredStoreDetailScreenState
       startTime: widget.store.startTime,
       endTime: widget.store.endTime,
       originalPrice: int.parse(form.control('originPrice').value as String),
-      salePrice: widget.store.salePrice,
       discount: int.parse(
         (form.control('discount').value as String).replaceAll('%', ''),
       ),
+      salePrice: (int.parse(form.control('originPrice').value as String) *
+              (1 - int.parse((form.control('discount').value as String).replaceAll('%', '')) / 100))
+          .round(),
       quantity: int.parse(form.control('quantity').value as String),
       saleStatus: widget.store.saleStatus,
+      goodsName: goodsName,
       goodsImages: goodsImageUploads,
     );
 
