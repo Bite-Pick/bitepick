@@ -18,6 +18,7 @@ class StoreBiteBagView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         _buildNoticeItem(),
         _buildImages(goodsImages),
@@ -32,7 +33,9 @@ class StoreBiteBagView extends StatelessWidget {
           children: [
             BaseSvgIcon.speakerFilled(color: MgColorScheme.systemError),
             Gaps.w8,
-            Text("바이트백은 랜덤으로 구성됩니다"),
+            Expanded(
+              child: Text("바이트백은 아래의 대표 메뉴와 그 외 다양한 메뉴들을 포함하여 랜덤으로 구성됩니다."),
+            ),
           ],
         )
         .margin(horizontal: MgSizes.md, vertical: MgSizes.md)
