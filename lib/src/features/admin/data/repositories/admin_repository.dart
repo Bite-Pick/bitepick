@@ -120,6 +120,7 @@ class AdminRepository {
     required int discount,
     required int quantity,
     required String saleStatus,
+    required String goodsName,
     required List<Map<String, dynamic>> goodsImages,
   }) async {
     final response = await _dio.put(
@@ -144,6 +145,7 @@ class AdminRepository {
         'discount': discount,
         'quantity': quantity,
         'saleStatus': saleStatus,
+        'goodsName': goodsName,
         'goodsImages': goodsImages,
       },
     );
