@@ -15,12 +15,14 @@ class HomeUpdateBanner extends StatefulWidget {
 }
 
 class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
+  bool _dialogShown = false;
+
   @override
   void initState() {
     super.initState();
     if (widget.debugStatus != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showUpdateDialog(widget.debugStatus!);
+        _showUpdateDialog();
       });
     } else {
       _checkForUpdate();
@@ -31,27 +33,28 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
     if (!ShorebirdManager.isAvailable) return;
 
     final status = await ShorebirdManager.checkForUpdate();
-    // outdated 상태는 main.dart에서 백그라운드 다운로드 중 — 다음 실행 시 restartRequired로 처리됨
-    if (status == UpdateStatus.restartRequired) {
-      if (mounted) _showUpdateDialog(status!);
+    if (status == UpdateStatus.restartRequired || status == UpdateStatus.outdated) {
+      if (mounted) _showUpdateDialog();
     }
   }
 
-  void _showUpdateDialog(UpdateStatus status) {
-    if (!mounted) return;
+  void _showUpdateDialog() {
+    if (!mounted || _dialogShown) return;
+    _dialogShown = true;
 
     showDialog(
       context: context,
-      barrierDismissible: true,
-      builder: (_) => MgAlertDialog.basic(
-        title: '업데이트 준비 완료',
-        content: const Text(
-          '새 버전이 준비됐어요.\n앱을 완전히 닫았다가 다시 열어주세요.',
-          textAlign: TextAlign.center,
+      barrierDismissible: false,
+      builder: (_) => PopScope(
+        canPop: false,
+        child: MgAlertDialog(
+          title: '업데이트 준비 완료',
+          content: const Text(
+            '새 버전이 준비됐어요.\n앱을 완전히 닫았다가 다시 열어주세요.',
+            textAlign: TextAlign.center,
+          ),
+          actions: const SizedBox.shrink(),
         ),
-        confirmText: '확인',
-        hasCancel: false,
-        onConfirm: () {},
       ),
     );
   }

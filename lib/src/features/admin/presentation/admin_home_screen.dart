@@ -18,6 +18,7 @@ import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_butt
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class AdminHomeRoute extends GoRouteData {
@@ -53,7 +54,9 @@ class AdminHomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      body: Column(
+      body: Stack(
+        children: [
+          Column(
         spacing: MgSizes.sm,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -108,7 +111,10 @@ class AdminHomeScreen extends ConsumerWidget {
             onTap: () async => AdminBannerListRoute().push(context),
           ),
         ],
-      ).margin(horizontal: MgSizes.lg),
+          ).margin(horizontal: MgSizes.lg),
+          HomeUpdateBanner(),
+        ],
+      ),
     );
   }
 
