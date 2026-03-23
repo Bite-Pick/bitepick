@@ -4,6 +4,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/auth/data/repositories/withdraw_controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
@@ -26,6 +27,7 @@ Future<void> logout(
     if (!ok) return;
   }
 
+  await PushNotification.unsubscribeFromAllTopics();
   await ref.read(authTokenManagerProvider.notifier).deleteTokens();
   ref.invalidate(userStateProvider);
   ref.invalidate(ownerJoinInfoScreenControllerProvider);

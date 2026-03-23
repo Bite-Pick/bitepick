@@ -204,6 +204,31 @@ class PushNotification {
     });
   }
 
+  /// 사용자 역할에 따라 FCM 토픽 구독
+  /// - 역할: "CUSTOMER", "OWNER", "ADMIN"
+  static Future<void> subscribeToRoleTopic(String userRole) async {
+    try {
+      await FirebaseMessaging.instance.subscribeToTopic('all');
+      await FirebaseMessaging.instance.subscribeToTopic(userRole.toLowerCase());
+      talker.info('[FCM] Subscribed to topics: all, ${userRole.toLowerCase()}');
+    } catch (e, stackTrace) {
+      talker.error('[FCM] Failed to subscribe to topic', e, stackTrace);
+    }
+  }
+
+  /// FCM 토픽 구독 해제 (로그아웃 시 호출)
+  static Future<void> unsubscribeFromAllTopics() async {
+    try {
+      await FirebaseMessaging.instance.unsubscribeFromTopic('all');
+      for (final role in ['customer', 'owner', 'admin']) {
+        await FirebaseMessaging.instance.unsubscribeFromTopic(role);
+      }
+      talker.info('[FCM] Unsubscribed from all topics');
+    } catch (e, stackTrace) {
+      talker.error('[FCM] Failed to unsubscribe from topics', e, stackTrace);
+    }
+  }
+
   /// 로그인 시 FCM 토큰을 서버에 등록
   Future<void> refreshAndRegisterToken() async {
     await registerTokenToServer();
