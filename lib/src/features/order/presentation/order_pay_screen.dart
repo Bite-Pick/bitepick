@@ -78,7 +78,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                   _buildOrderItemCard(
                     storeName: storeName,
                     address: storeAddress,
-                    discount: (salePrice * 100 / originalPrice).toInt(),
+                    discount: ((originalPrice - salePrice) / originalPrice * 100).round(),
                     price: salePrice * quantity,
                     count: quantity,
                     pickupTime: pickupTime,

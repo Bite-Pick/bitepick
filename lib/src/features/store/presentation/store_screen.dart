@@ -59,6 +59,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
         return BaseScaffold(
           appBar: BaseAppBar(),
+          bottomNavigationBar: _BottomOrderBar(goods: store, storeId: widget.id),
           body: RefreshIndicator(
             onRefresh: () async {
               ref.refresh(storeGoodsDetailProvider(widget.id));
