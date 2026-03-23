@@ -108,8 +108,10 @@ class HomeScreenController extends _$HomeScreenController {
   }
 
   Future<void> saveToStorage(Address address) async {
+    final currentData = state.value;
+    if (currentData == null) return;
     await _localStorage.setAddress(address.id ?? 1); // TODO: 로직 수정 필요
-    state = AsyncData(state.value!.copyWith(defaultAddress: address));
+    state = AsyncData(currentData.copyWith(defaultAddress: address));
     await _reloadStoreGoods();
   }
 }

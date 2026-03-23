@@ -151,18 +151,16 @@ class _TextEditingControllerValueAccessor<T>
     if (T == String) return text as T;
 
     // int 타입
-    if (T == int) {
-      final intValue = int.tryParse(text);
-      return intValue as T?;
-    }
+    if (T == int) return int.tryParse(text) as T?;
 
     // double 타입
-    if (T == double) {
-      final doubleValue = double.tryParse(text);
-      return doubleValue as T?;
-    }
+    if (T == double) return double.tryParse(text) as T?;
 
-    // 기본적으로 String으로 처리
+    // T가 dynamic으로 추론된 경우 control의 현재 값 타입으로 판단
+    final currentValue = control?.value;
+    if (currentValue is int) return int.tryParse(text) as T?;
+    if (currentValue is double) return double.tryParse(text) as T?;
+
     return text as T;
   }
 

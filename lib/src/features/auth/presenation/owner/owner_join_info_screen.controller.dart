@@ -208,7 +208,6 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
         '[S3] Presigned URL IDs: ${result.map((url) => url.id).toList()}',
       );
 
-      bool isSuccess = false;
       await ref
           .read(presignedImageRepositoryProvider)
           .uploadImagesToS3(
@@ -220,7 +219,6 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
               talker.info(
                 '[S3] Upload progress: ${(overallProgress * 100).toStringAsFixed(1)}% ($currentIndex/$total)',
               );
-              isSuccess = true;
             },
           );
 
@@ -228,7 +226,7 @@ class OwnerJoinInfoScreenController extends _$OwnerJoinInfoScreenController {
 
       // 성공 시
       state = const AsyncValue.data(null);
-      return isSuccess;
+      return true;
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
       return false;
