@@ -369,7 +369,7 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
   const _$PendingStoreDtoImpl({
     required this.storeId,
     required this.storeName,
-    @JsonKey(name: 'ImageUrl') required final List<String> imageUrl,
+    @JsonKey(name: 'ImageUrl') final List<String> imageUrl = const [],
     this.goodsName,
     required this.startTime,
     required this.endTime,
@@ -535,7 +535,7 @@ abstract class _PendingStoreDto implements PendingStoreDto {
   const factory _PendingStoreDto({
     required final String storeId,
     required final String storeName,
-    @JsonKey(name: 'ImageUrl') required final List<String> imageUrl,
+    @JsonKey(name: 'ImageUrl') final List<String> imageUrl,
     final String? goodsName,
     required final String startTime,
     required final String endTime,

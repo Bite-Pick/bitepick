@@ -11,9 +11,9 @@ _$PendingStoreDtoImpl _$$PendingStoreDtoImplFromJson(
 ) => _$PendingStoreDtoImpl(
   storeId: json['storeId'] as String,
   storeName: json['storeName'] as String,
-  imageUrl: (json['ImageUrl'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
+  imageUrl:
+      (json['ImageUrl'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
   goodsName: json['goodsName'] as String?,
   startTime: json['startTime'] as String,
   endTime: json['endTime'] as String,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
@@ -56,7 +57,12 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   @override
   Widget build(BuildContext context) {
     final storeAsync = ref.watch(storeStateProvider);
-    return MgAsyncAnimatedSwitcher(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) SystemNavigator.pop();
+      },
+      child: MgAsyncAnimatedSwitcher(
       asyncValue: storeAsync,
       builder: (store) {
         return BaseScaffold(
@@ -102,6 +108,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           ),
         );
       },
+    ),
     );
   }
 

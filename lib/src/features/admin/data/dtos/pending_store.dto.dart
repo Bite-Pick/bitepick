@@ -9,7 +9,7 @@ class PendingStoreDto with _$PendingStoreDto {
   const factory PendingStoreDto({
     required String storeId,
     required String storeName,
-    @JsonKey(name: 'ImageUrl') required List<String> imageUrl,
+    @JsonKey(name: 'ImageUrl') @Default([]) List<String> imageUrl,
     String? goodsName,
     required String startTime,
     required String endTime,
