@@ -44,43 +44,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       builder: (controllerState) {
         return SafeArea(
           // TODO: BaseCustomScrollView refact
-          child: CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                pinned: true,
-                floating: true,
-                delegate: _HomeAppBar(
-                  controllerState.serviceAddresses,
-                  controllerState.defaultAddress,
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  Column(
-                    children: [
-                      HomeBannersView(),
-                      HomeUpdateBanner(),
-                      _buildFilterSection(
-                        controllerState.onlyAvailable,
-                        controllerState.sortType,
-                      ),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: controllerState.storeGoodsList.length,
-                        separatorBuilder: (context, index) => Gaps.h16,
-                        itemBuilder: (context, index) {
-                          final item = controllerState.storeGoodsList[index];
-                          return HomeGoodsItem(goods: item.toHomeGoodsItem())
-                              .margin(bottom: MgSizes.xs)
-                              .margin(horizontal: MgSizes.md);
-                        },
-                      ),
-                    ],
+          child: RefreshIndicator(
+            onRefresh: () async {
+              ref.refresh(homeScreenControllerProvider);
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverPersistentHeader(
+                  pinned: true,
+                  floating: true,
+                  delegate: _HomeAppBar(
+                    controllerState.serviceAddresses,
+                    controllerState.defaultAddress,
                   ),
-                ]),
-              ),
-            ],
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Column(
+                      children: [
+                        HomeBannersView(),
+                        HomeUpdateBanner(),
+                        _buildFilterSection(
+                          controllerState.onlyAvailable,
+                          controllerState.sortType,
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: controllerState.storeGoodsList.length,
+                          separatorBuilder: (context, index) => Gaps.h16,
+                          itemBuilder: (context, index) {
+                            final item = controllerState.storeGoodsList[index];
+                            return HomeGoodsItem(goods: item.toHomeGoodsItem())
+                                .margin(bottom: MgSizes.xs)
+                                .margin(horizontal: MgSizes.md);
+                          },
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ],
+            ),
           ),
         );
       },
