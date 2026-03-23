@@ -4,6 +4,7 @@ import 'package:magambell/src/features/auth/data/repositories/auth_repository.da
 import 'package:magambell/src/features/auth/data/repositories/social_auth_repository.dart';
 import 'package:magambell/src/features/auth/data/repositories/vertify_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/social_auth_result.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,6 +86,11 @@ class LoginScreenController extends _$LoginScreenController {
         _saveLastLoginProvider(providerName);
         // 로그인 성공: null 반환 (메인 화면으로 이동)
         ref.invalidate(userStateProvider);
+        // user role에 맞는 FCM 토픽 구독
+        final user = await ref.read(userStateProvider.future);
+        if (user != null) {
+          PushNotification.subscribeToRoleTopic(user.userRole.value);
+        }
         state = const AsyncValue.data(null);
       } else {
         // 로그인 실패 시 로그아웃

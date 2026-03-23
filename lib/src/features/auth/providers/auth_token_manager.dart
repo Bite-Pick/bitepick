@@ -1,5 +1,6 @@
 import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/notification/domain/push_notification.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_tokens.dart';
@@ -25,6 +26,12 @@ class AuthTokenManager extends _$AuthTokenManager {
     ref.read(pushNotificationProvider).refreshAndRegisterToken().catchError((e) {
       talker.error('[AUTH] Failed to register FCM token on app start', e);
     });
+
+    // user role에 맞는 FCM 토픽 구독
+    final user = await ref.read(userStateProvider.future).catchError((_) => null);
+    if (user != null) {
+      PushNotification.subscribeToRoleTopic(user.userRole.value);
+    }
 
     return AuthTokens(accessToken: accessToken, refreshToken: refreshToken);
   }
