@@ -18,6 +18,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class OwnerHomeRoute extends GoRouteData {
@@ -90,9 +91,14 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
               ],
             ),
           ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [OwnerOrderListView(), OwnerGoodsView()],
+          body: Stack(
+            children: [
+              TabBarView(
+                controller: _tabController,
+                children: [OwnerOrderListView(), OwnerGoodsView()],
+              ),
+              HomeUpdateBanner(),
+            ],
           ),
         );
       },

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:magambell/src/core/utils/app_restart.dart';
 import 'package:magambell/src/core/utils/shorebird_manager.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
@@ -16,12 +15,14 @@ class HomeUpdateBanner extends StatefulWidget {
 }
 
 class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
+  bool _dialogShown = false;
+
   @override
   void initState() {
     super.initState();
     if (widget.debugStatus != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showUpdateDialog(widget.debugStatus!);
+        _showUpdateDialog();
       });
     } else {
       _checkForUpdate();
@@ -32,23 +33,28 @@ class _HomeUpdateBannerState extends State<HomeUpdateBanner> {
     if (!ShorebirdManager.isAvailable) return;
 
     final status = await ShorebirdManager.checkForUpdate();
-    if (status == UpdateStatus.outdated || status == UpdateStatus.restartRequired) {
-      if (mounted) _showUpdateDialog(status!);
+    if (status == UpdateStatus.restartRequired || status == UpdateStatus.outdated) {
+      if (mounted) _showUpdateDialog();
     }
   }
 
-  void _showUpdateDialog(UpdateStatus status) {
-    if (!mounted) return;
+  void _showUpdateDialog() {
+    if (!mounted || _dialogShown) return;
+    _dialogShown = true;
 
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => MgAlertDialog.basic(
-        title: '새로운 업데이트',
-        content: const Text('앱을 재시작하면 새 버전이 적용됩니다.', textAlign: TextAlign.center),
-        confirmText: '지금 재시작',
-        hasCancel: false,
-        onConfirm: () => AppRestart.restart(),
+      builder: (_) => PopScope(
+        canPop: false,
+        child: MgAlertDialog(
+          title: '업데이트 준비 완료',
+          content: const Text(
+            '새 버전이 준비됐어요.\n앱을 완전히 닫았다가 다시 열어주세요.',
+            textAlign: TextAlign.center,
+          ),
+          actions: const SizedBox.shrink(),
+        ),
       ),
     );
   }

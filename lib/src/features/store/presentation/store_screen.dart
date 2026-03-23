@@ -46,21 +46,8 @@ class StoreScreen extends ConsumerStatefulWidget {
   ConsumerState<StoreScreen> createState() => _StoreScreenState();
 }
 
-class _StoreScreenState extends ConsumerState<StoreScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+class _StoreScreenState extends ConsumerState<StoreScreen> {
+  int _selectedTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -72,28 +59,36 @@ class _StoreScreenState extends ConsumerState<StoreScreen>
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
         return BaseScaffold(
           appBar: BaseAppBar(),
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverToBoxAdapter(child: StoreInfoView(store.toStoreInfoData())),
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  _StoreTabBar(
-                    goodsId: store.goodsId,
-                    controller: _tabController,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              ref.refresh(storeGoodsDetailProvider(widget.id));
+            }, 
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child: StoreInfoView(store.toStoreInfoData())),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _SliverAppBarDelegate(
+                    _StoreTabBar(
+                      goodsId: store.goodsId,
+                      selectedIndex: _selectedTabIndex,
+                      onTabChanged: (index) =>
+                          setState(() => _selectedTabIndex = index),
+                    ),
                   ),
                 ),
-              ),
-            ],
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                StoreBiteBagView(store.goodsImages ?? []),
-                StoreReviewListView(store.goodsId),
+                SliverToBoxAdapter(
+                  child: IndexedStack(
+                    index: _selectedTabIndex,
+                    children: [
+                      StoreBiteBagView(store.goodsImages ?? []),
+                      StoreReviewListView(store.goodsId),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          bottomNavigationBar: _BottomOrderBar(goods: store, storeId: widget.id,),
         );
       },
     );
@@ -143,8 +138,8 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
           if (saleStatus) ...[
             Expanded(
               child: QuantityPicker(
-                count: count, 
-                onCountChanged: setCount, 
+                count: count,
+                onCountChanged: setCount,
                 maxCount: goods.quantity,
                 onMaxReached: () {
                   ToastPresentor.error(context, "재고가 부족합니다 (남은 수량: ${goods.quantity}개)");
@@ -209,11 +204,13 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
 class _StoreTabBar extends ConsumerWidget {
   const _StoreTabBar({
     required this.goodsId,
-    required this.controller,
+    required this.selectedIndex,
+    required this.onTabChanged,
   });
 
   final String goodsId;
-  final TabController controller;
+  final int selectedIndex;
+  final ValueChanged<int> onTabChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -229,21 +226,25 @@ class _StoreTabBar extends ConsumerWidget {
   }
 
   Widget _buildTabBar(BuildContext context, int reviewCount) {
-    return TabBar(
-      dividerColor: MgColorScheme.gray8,
-      controller: controller,
-      labelColor: MgColorScheme.gray1,
-      unselectedLabelColor: MgColorScheme.gray5,
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicator: UnderlineTabIndicator(
-        borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+    return DefaultTabController(
+      length: 2,
+      initialIndex: selectedIndex,
+      child: TabBar(
+        dividerColor: MgColorScheme.gray8,
+        labelColor: MgColorScheme.gray1,
+        unselectedLabelColor: MgColorScheme.gray5,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: UnderlineTabIndicator(
+          borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+        ),
+        labelStyle: context.textTheme.titleLarge,
+        unselectedLabelStyle: context.textTheme.bodyLarge,
+        onTap: onTabChanged,
+        tabs: [
+          Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
+          Tab(text: '리뷰 $reviewCount'),
+        ],
       ),
-      labelStyle: context.textTheme.titleLarge,
-      unselectedLabelStyle: context.textTheme.bodyLarge,
-      tabs: [
-        Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
-        Tab(text: '리뷰 $reviewCount'),
-      ],
     );
   }
 }

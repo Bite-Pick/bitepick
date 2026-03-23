@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kpostal/kpostal.dart';
 import 'package:magambell/src/constants/index.dart';
+import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -56,6 +59,9 @@ class _AdminRegisteredStoreDetailScreenState
 
   static const int _maxStoreImages = 5;
 
+  late double _latitude;
+  late double _longitude;
+
   // 대표 이미지: 기존 URL + 새 로컬 파일을 통합 관리
   // uploadedUrl != null → 기존 서버 이미지 / file != null → 새로 추가한 로컬 이미지
   final List<LocalImage> _storeImages = [];
@@ -66,6 +72,8 @@ class _AdminRegisteredStoreDetailScreenState
   @override
   void initState() {
     super.initState();
+    _latitude = widget.store.latitude;
+    _longitude = widget.store.longitude;
     _initializeForm();
     // 기존 서버 이미지를 LocalImage(uploadedUrl)로 변환하여 통합 리스트에 추가
     for (var i = 0; i < widget.store.storeImages.length; i++) {
@@ -138,7 +146,12 @@ class _AdminRegisteredStoreDetailScreenState
         buildSectionTitle("매장 설명"),
         MgReactiveTextField(formControlName: 'description', enabled: true, compact: true, backgroundColor: MgColorScheme.gray9),
         buildSectionTitle("매장 주소"),
-        MgReactiveTextField(formControlName: 'address', enabled: true, compact: true, backgroundColor: MgColorScheme.gray9),
+        GestureDetector(
+          onTap: _findAddress,
+          child: AbsorbPointer(
+            child: MgReactiveTextField(formControlName: 'address', enabled: true, compact: true, backgroundColor: MgColorScheme.gray9),
+          ),
+        ),
         buildSectionTitle("주차 안내"),
         MgReactiveTextField(formControlName: 'parkingDescription', enabled: true, compact: true, backgroundColor: MgColorScheme.gray9),
         buildSectionTitle("대표 이미지"),
@@ -372,6 +385,60 @@ class _AdminRegisteredStoreDetailScreenState
     }
   }
 
+  // ─── 주소 검색 ────────────────────────────────────────────────────────────
+
+  Future<void> _findAddress() async {
+    await Navigator.push<Kpostal>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => KpostalView(
+          callback: (Kpostal result) async {
+            final latLng = await _geocodeWithKakao(result.address);
+            if (latLng != null) {
+              _latitude = latLng.$1;
+              _longitude = latLng.$2;
+            } else if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('위치 정보를 가져올 수 없습니다. 주소는 저장되었습니다.'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            }
+            form.control('address').value = result.address;
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<(double, double)?> _geocodeWithKakao(String query) async {
+    final dio = Dio(
+      BaseOptions(
+        headers: {
+          'Authorization': 'KakaoAK ${Environment.kakaoRestApiKey}',
+          'KA': 'sdk/1.0 flutter os/ios-17.0 lang/ko-KR',
+        },
+      ),
+    );
+    try {
+      final res = await dio.get(
+        'https://dapi.kakao.com/v2/local/search/address.json',
+        queryParameters: {'query': query},
+      );
+      if (res.statusCode != 200 || res.data == null) return null;
+      final docs = (res.data as Map<String, dynamic>)['documents'] as List<dynamic>;
+      if (docs.isEmpty) return null;
+      final first = docs.first as Map<String, dynamic>;
+      final x = double.tryParse(first['x']?.toString() ?? '');
+      final y = double.tryParse(first['y']?.toString() ?? '');
+      if (x == null || y == null) return null;
+      return (y, x); // y=lat, x=lng
+    } catch (_) {
+      return null;
+    }
+  }
+
   // ─── Form ─────────────────────────────────────────────────────────────────
 
   void _initializeForm() {
@@ -442,7 +509,9 @@ class _AdminRegisteredStoreDetailScreenState
 
   Future<void> _manageStore(int storeId) async {
     // 대표 이미지: 기존 URL 이미지 + 새 로컬 이미지
-    int newStoreImageIndex = 1;
+    // 새 이미지 id는 기존 이미지 수 + 1부터 시작하여 충돌 방지
+    final existingStoreCount = _storeImages.where((img) => img.uploadedUrl != null).length;
+    int newStoreImageIndex = existingStoreCount + 1;  // 기존 1개면 새 이미지는 2부터
     final storeImageUploads = _storeImages.map((img) {
       if (img.uploadedUrl != null) {
         return {'id': 0, 'key': '', 'imageUrl': img.uploadedUrl!};
@@ -452,9 +521,9 @@ class _AdminRegisteredStoreDetailScreenState
     }).toList();
 
     // 상품 이미지: 기존 굿즈 + 새 굿즈
-    // 기존 굿즈: uploadedUrl 있는 것 (id=0, imageUrl로 유지)
-    // 새 굿즈: file 있는 것 (id 순번, key로 업로드)
-    int newGoodsIndex = 1;
+    // 새 이미지 id는 기존 이미지 수 + 1부터 시작하여 충돌 방지
+    final existingGoodsCount = _goodsDetails.where((d) => d.localImage.file == null).length;
+    int newGoodsIndex = existingGoodsCount + 1;
     final goodsImageUploads = _goodsDetails.map((detail) {
       if (detail.localImage.file != null) {
         return {'id': newGoodsIndex++, 'key': detail.localImage.key, 'imageUrl': '', 'goodsName': detail.name};
@@ -463,12 +532,20 @@ class _AdminRegisteredStoreDetailScreenState
       }
     }).toList();
 
+    final goodsName = _goodsDetails.isNotEmpty
+        ? (_goodsDetails.first.name.isNotEmpty ? _goodsDetails.first.name : 'goods')
+        : (widget.store.goodsImageList.isNotEmpty
+            ? (widget.store.goodsImageList.first.goodsName?.isNotEmpty == true
+                ? widget.store.goodsImageList.first.goodsName!
+                : 'goods')
+            : (widget.store.goodsName?.isNotEmpty == true ? widget.store.goodsName! : 'goods'));
+
     final result = await ref.read(adminRepositoryProvider).manageStore(
       storeId,
       storeName: form.control('storeName').value as String,
       address: form.control('address').value as String,
-      latitude: widget.store.latitude,
-      longitude: widget.store.longitude,
+      latitude: _latitude,
+      longitude: _longitude,
       ownerName: form.control('representativeName').value as String,
       ownerPhone: form.control('representativePhone').value as String,
       businessNumber: form.control('businessNumber').value as String,
@@ -480,12 +557,15 @@ class _AdminRegisteredStoreDetailScreenState
       startTime: widget.store.startTime,
       endTime: widget.store.endTime,
       originalPrice: int.parse(form.control('originPrice').value as String),
-      salePrice: widget.store.salePrice,
       discount: int.parse(
         (form.control('discount').value as String).replaceAll('%', ''),
       ),
+      salePrice: (int.parse(form.control('originPrice').value as String) *
+              (1 - int.parse((form.control('discount').value as String).replaceAll('%', '')) / 100))
+          .round(),
       quantity: int.parse(form.control('quantity').value as String),
       saleStatus: widget.store.saleStatus,
+      goodsName: goodsName,
       goodsImages: goodsImageUploads,
     );
 

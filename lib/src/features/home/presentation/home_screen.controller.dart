@@ -23,7 +23,7 @@ class HomeScreenControllerState with _$HomeScreenControllerState {
 
 @riverpod
 class HomeScreenController extends _$HomeScreenController {
-  late final SharedPreferenceStore _localStorage;
+  late SharedPreferenceStore _localStorage;
   @override
   Future<HomeScreenControllerState> build() async {
     _localStorage = SharedPreferenceStore();

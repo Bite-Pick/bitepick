@@ -31,44 +31,42 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
     final reviewsAsync = ref.watch(
       reviewsProvider(goodsId: widget.goodsId, imageCheck: _imageCheckOnly),
     );
-    return SingleChildScrollView(
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              MgCheckbox(
-                initialValue: _imageCheckOnly,
-                onChanged: (value) => _toggleImageCheck(),
-              ),
-              Gaps.w8,
-              Text("포토리뷰").sm(),
-            ],
-          ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
-          MgAsyncAnimatedSwitcher(
-            asyncValue: reviewsAsync,
-            emptyBuilder: () => Center(
-              child: Column(
-                children: [
-                  Gaps.h(80.h),
-                  Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
-                  Gaps.h12,
-                  Text("아직 등록된 리뷰가 없어요").bold(),
-                ],
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            MgCheckbox(
+              initialValue: _imageCheckOnly,
+              onChanged: (value) => _toggleImageCheck(),
             ),
-            builder: (reviews) => Column(
-              children: reviews.map((review) {
-                // TODO: review에 userId가 내려오거나, 본인 리뷰 여부를 판별할 수 있는 flag가 추가되어야함
-                return review.nickName ==
-                        ref.read(userStateProvider).asData!.value?.nickName
-                    ? ReviewItem.myReview(review)
-                    : ReviewItem.userReview(review);
-              }).toList(),
+            Gaps.w8,
+            Text("포토리뷰").sm(),
+          ],
+        ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
+        MgAsyncAnimatedSwitcher(
+          asyncValue: reviewsAsync,
+          emptyBuilder: () => Center(
+            child: Column(
+              children: [
+                Gaps.h(24.h),
+                Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
+                Gaps.h12,
+                Text("아직 등록된 리뷰가 없어요").bold(),
+              ],
             ),
           ),
-        ],
-      ),
+          builder: (reviews) => Column(
+            children: reviews.map((review) {
+              // TODO: review에 userId가 내려오거나, 본인 리뷰 여부를 판별할 수 있는 flag가 추가되어야함
+              return review.nickName ==
+                      ref.read(userStateProvider).asData!.value?.nickName
+                  ? ReviewItem.myReview(review)
+                  : ReviewItem.userReview(review);
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
