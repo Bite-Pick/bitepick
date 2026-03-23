@@ -21,8 +21,8 @@ Dio apiClient(Ref ref) {
   final dio = Dio(
     BaseOptions(
       baseUrl: Environment.baseApiUrl,
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
       contentType: ContentType.json.mimeType,
       headers: {'Accept': 'application/json'},
     ),

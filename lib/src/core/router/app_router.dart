@@ -241,18 +241,9 @@ class DefaultRoute extends GoRouteData {
           return AdminHomeRoute().location;
       }
     } catch (error) {
-      // NOTE: [AppInterceptor]에서 처리
-      // // 에러 체크 - STORE_NOT_FOUND인 경우 Owner 매장 등록 화면으로
-      // if (error is DioException && error.response?.data != null) {
-      //   final errorCode = error.response?.data['code'];
-      //   if (errorCode == 'STORE_NOT_FOUND') {
-      //     // STORE_NOT_FOUND 에러면 매장 등록 화면으로
-      //     return OwnerJoinInfoRoute().location;
-      //   }
-      //   return LoginRoute().location;
-      // }
+      // 에러 시 로그인 화면으로 이동 (null 반환 시 스플래시에 영구 멈춤)
     }
-    return null; // Default return if no redirection is needed or error handled
+    return LoginRoute().location;
   }
 }
 
