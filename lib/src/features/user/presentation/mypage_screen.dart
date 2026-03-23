@@ -7,6 +7,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -59,36 +60,44 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
   @override
   Widget build(BuildContext context) {
     final myPageAsync = ref.watch(mypageProvider);
-    return BaseScaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Gaps.h16,
-            _buildProfileSection(),
-            Gaps.h16,
-            MgAsyncAnimatedSwitcher(
-              asyncValue: myPageAsync,
-              builder: (myPage) {
-                if (myPage == null) return SizedBox.shrink();
-                return _buildKgSection(
-                  myPage.savedKg,
-                ).margin(bottom: MgSizes.md);
-              },
-            ),
-            _buildMenuList(),
-            _buildAuthSection(),
-            _buildVersionSection(),
-            // _buildVersionSection(),
-            if (Environment.instance.isDev) ...[
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        ref.read(navigatorControllerProvider.notifier).changeTabIndex(0);
+      },
+      child: BaseScaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
               Gaps.h16,
-              _buildDeveloperSection(),
+              _buildProfileSection(),
+              Gaps.h16,
+              MgAsyncAnimatedSwitcher(
+                asyncValue: myPageAsync,
+                builder: (myPage) {
+                  if (myPage == null) return SizedBox.shrink();
+                  return _buildKgSection(
+                    myPage.savedKg,
+                  ).margin(bottom: MgSizes.md);
+                },
+              ),
+              _buildMenuList(),
+              _buildAuthSection(),
+              _buildVersionSection(),
+              // _buildVersionSection(),
+              if (Environment.instance.isDev) ...[
+                Gaps.h16,
+                _buildDeveloperSection(),
+              ],
+              Gaps.h16,
             ],
-            Gaps.h16,
-          ],
-        ).margin(horizontal: MgSizes.md),
+          ).margin(horizontal: MgSizes.md),
+        ),
       ),
     );
   }
+    
 
   Widget _buildKgSection(int savedKg) {
     final maxWidth = MediaQuery.sizeOf(context).width - MgSizes.md * 2;

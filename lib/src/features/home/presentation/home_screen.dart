@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
+import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -39,58 +41,72 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final controllerStateAsync = ref.watch(homeScreenControllerProvider);
 
-    return MgAsyncAnimatedSwitcher(
-      asyncValue: controllerStateAsync,
-      builder: (controllerState) {
-        return SafeArea(
-          // TODO: BaseCustomScrollView refact
-          child: RefreshIndicator(
-            onRefresh: () async {
-              ref.refresh(homeScreenControllerProvider);
-            },
-            child: CustomScrollView(
-              slivers: [
-                SliverPersistentHeader(
-                  pinned: true,
-                  floating: true,
-                  delegate: _HomeAppBar(
-                    controllerState.serviceAddresses,
-                    controllerState.defaultAddress,
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Column(
-                      children: [
-                        HomeBannersView(),
-                        HomeUpdateBanner(),
-                        _buildFilterSection(
-                          controllerState.onlyAvailable,
-                          controllerState.sortType,
-                        ),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controllerState.storeGoodsList.length,
-                          separatorBuilder: (context, index) => Gaps.h16,
-                          itemBuilder: (context, index) {
-                            final item = controllerState.storeGoodsList[index];
-                            return HomeGoodsItem(goods: item.toHomeGoodsItem())
-                                .margin(bottom: MgSizes.xs)
-                                .margin(horizontal: MgSizes.md);
-                          },
-                        ),
-                      ],
-                    ),
-                  ]),
-                ),
-              ],
-            ),
-          ),
-        );
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        final tabIndex = ref.read(navigatorControllerProvider).tabIndex;
+        if (tabIndex == 0) {
+          SystemNavigator.pop();
+        } else {
+          ref.read(navigatorControllerProvider.notifier).changeTabIndex(0);
+        }
       },
+      child: MgAsyncAnimatedSwitcher(
+        asyncValue: controllerStateAsync,
+        builder: (controllerState) {
+          return SafeArea(
+            // TODO: BaseCustomScrollView refact
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.refresh(homeScreenControllerProvider);
+              },
+              child: CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    floating: true,
+                    delegate: _HomeAppBar(
+                      controllerState.serviceAddresses,
+                      controllerState.defaultAddress,
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Column(
+                        children: [
+                          HomeBannersView(),
+                          HomeUpdateBanner(),
+                          _buildFilterSection(
+                            controllerState.onlyAvailable,
+                            controllerState.sortType,
+                          ),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: controllerState.storeGoodsList.length,
+                            separatorBuilder: (context, index) => Gaps.h16,
+                            itemBuilder: (context, index) {
+                              final item = controllerState.storeGoodsList[index];
+                              return HomeGoodsItem(goods: item.toHomeGoodsItem())
+                                  .margin(bottom: MgSizes.xs)
+                                  .margin(horizontal: MgSizes.md);
+                            },
+                          ),
+                        ],
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
+    
+    
 
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(

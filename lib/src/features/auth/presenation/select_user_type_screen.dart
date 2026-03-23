@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -137,6 +139,7 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
             },
             content: const Text("확인"),
           ).primary(),
+          if (Platform.isAndroid) SizedBox(height: 48,),
         ],
       ).padding(all: MgSizes.xl);
     }, height: 400.h);

@@ -23,7 +23,9 @@ Future<void> _firebaseMessagingBackgroundHandler(
 ) async {
   try {
     // 백그라운드 핸들러는 별도 isolate에서 실행되므로 Firebase 초기화 필요
-    await Firebase.initializeApp();
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
     talker.info(
       '[FCM] Background message received: ${remoteMessage.messageId}',
     );
@@ -45,19 +47,22 @@ Future<void> runMagamBellApp() async {
       await dotenv.load(fileName: '.env');
 
       // Firebase 초기화
-      if (Platform.isAndroid) {
-        await Firebase.initializeApp(
-          options: FirebaseOptions(
-            apiKey: Environment.firebaseApiKey,
-            appId: Environment.firebaseAppId,
-            messagingSenderId: Environment.firebaseMessagingSenderId,
-            projectId: Environment.firebaseProjectId,
-          ),
-        );
-      } else {
-        await Firebase.initializeApp();
+      try {
+        if (Firebase.apps.isEmpty) {
+          await Firebase.initializeApp(
+            options: FirebaseOptions(
+              apiKey: Environment.firebaseApiKey,
+              appId: Environment.firebaseAppId,
+              messagingSenderId: Environment.firebaseMessagingSenderId,
+              projectId: Environment.firebaseProjectId,
+            ),
+          );
+        } 
+      } catch (e) {
+        talker.info('[Firebase] Already initialized: $e');
       }
-
+      
+      
       // Background Message Handler 등록
       FirebaseMessaging.onBackgroundMessage(
         _firebaseMessagingBackgroundHandler,
