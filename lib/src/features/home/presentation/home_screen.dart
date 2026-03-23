@@ -122,7 +122,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildSortBottomSheet(SortType currentSortType) {
-    final List<String> sorts = SortType.values.map((e) => e.name).toList();
+    final List<String> sorts = SortType.values
+        .where((e) => e != SortType.distanceAsc && e != SortType.ratingDesc)
+        .map((e) => e.name)
+        .toList();
     return MgBottomsheet(
       Column(
         crossAxisAlignment: CrossAxisAlignment.center,

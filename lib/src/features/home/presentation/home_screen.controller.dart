@@ -30,10 +30,10 @@ class HomeScreenController extends _$HomeScreenController {
     final defaultAddress = await loadFromStorage();
     final serviceAddresses = await ref.read(serviceAddressesProvider.future);
     // 초기값으로 상점 목록 로드
-    final storeGoods = await ref.watch(
+    final storeGoods = await ref.read(
       storeGoodsListProvider(
-        latitude: defaultAddress.latitude ?? 37.5185663,
-        longitude: defaultAddress.longitude ?? 127.0230599,
+        latitude: defaultAddress.latitude,
+        longitude: defaultAddress.longitude,
         onlyAvailable: false, // 초기값
         sortType: SortType.recentDesc, // 초기값
       ).future,
@@ -77,14 +77,20 @@ class HomeScreenController extends _$HomeScreenController {
     if (currentData == null) return;
 
     try {
-      final storeGoods = await ref.read(
-        storeGoodsListProvider(
-          latitude: currentData.defaultAddress.latitude ?? 37.5185663,
-          longitude: currentData.defaultAddress.longitude ?? 127.0230599,
-          onlyAvailable: currentData.onlyAvailable,
-          sortType: currentData.sortType,
-        ).future,
-      );
+      var storeGoods = await ref
+          .read(storeRepositoryProvider)
+          .getStoreGoodsList(
+            latitude: currentData.defaultAddress.latitude,
+            longitude: currentData.defaultAddress.longitude,
+            onlyAvailable: currentData.onlyAvailable,
+            sortType: currentData.sortType,
+          );
+
+      if (currentData.onlyAvailable) {
+        storeGoods = storeGoods
+            .where((store) => store.saleStatus == 'ON')
+            .toList();
+      }
 
       state = AsyncData(currentData.copyWith(storeGoodsList: storeGoods));
     } catch (e, stack) {
