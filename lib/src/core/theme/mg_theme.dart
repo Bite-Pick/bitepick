@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 
@@ -34,6 +35,13 @@ class MgTheme {
       scaffoldBackgroundColor: MgColorScheme.gray11,
       fontFamily: MgFontFamily.regular,
       useMaterial3: true,
+      appBarTheme: const AppBarTheme(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark, // Android
+          statusBarBrightness: Brightness.light,    // iOS
+        ),
+      ),
       dividerTheme: const DividerThemeData(
         color: MgColorScheme.gray8,
         thickness: 1,
