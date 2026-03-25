@@ -19,6 +19,7 @@ class StoreBiteBagView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildNoticeItem(),
         _buildImages(goodsImages),
@@ -51,35 +52,39 @@ class StoreBiteBagView extends StatelessWidget {
         .where((g) => g.id != null && g.goodsName != null && g.imageUrl != null)
         .toList();
     if (_goodsImages.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
-          Gaps.h12,
-          Text("앗! 아직 등록된 메뉴소개가 없어요.").bold(),
-        ],
+      return Center(
+        child: Column(
+          children: [
+            Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
+            Gaps.h12,
+            Text("앗! 아직 등록된 메뉴소개가 없어요.").bold(),
+          ],
+        ),
       );
     }
-    return Center(
-      child: Wrap(
-        runSpacing: MgSizes.md,
-        spacing: MgSizes.md,
-        children: _goodsImages
-            .map(
-              (goodsImage) => Column(
-                children: [
-                  BaseNetworkImage(
-                    imageUrl: goodsImage.imageUrl!,
-                    width: 100.w,
-                    height: 100.w,
-                  ),
-                  Gaps.h4,
-                  Text(goodsImage.goodsName!),
-                ],
-              ),
-            )
-            .toList(),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final itemSize = (constraints.maxWidth - MgSizes.md * 2) / 3;
+        return Wrap(
+          runSpacing: MgSizes.md,
+          spacing: MgSizes.md,
+          children: _goodsImages
+              .map(
+                (goodsImage) => Column(
+                  children: [
+                    BaseNetworkImage(
+                      imageUrl: goodsImage.imageUrl!,
+                      width: itemSize,
+                      height: itemSize,
+                    ),
+                    Gaps.h4,
+                    Text(goodsImage.goodsName!),
+                  ],
+                ),
+              )
+              .toList(),
+        );
+      },
     );
   }
 

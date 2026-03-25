@@ -52,7 +52,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ref.read(navigatorControllerProvider.notifier).changeTabIndex(0);
         }
       },
-      child: MgAsyncAnimatedSwitcher(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
+        child: MgAsyncAnimatedSwitcher(
         asyncValue: controllerStateAsync,
         builder: (controllerState) {
           return SafeArea(
@@ -102,6 +108,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           );
         },
+      ),
       ),
     );
   }

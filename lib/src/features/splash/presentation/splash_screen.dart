@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,7 +35,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
       backgroundColor: MgColorScheme.primary,
       body: Stack(
         children: [
@@ -59,6 +66,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             child: Image.asset(R.ASSETS_LOGO_LOGO_SPLASH_PNG, width: 256.w),
           ),
         ],
+      ),
       ),
     );
   }

@@ -47,7 +47,13 @@ class StoreScreen extends ConsumerStatefulWidget {
 }
 
 class _StoreScreenState extends ConsumerState<StoreScreen> {
-  int _selectedTabIndex = 0;
+  final _tabIndex = ValueNotifier<int>(0);
+
+  @override
+  void dispose() {
+    _tabIndex.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,28 +69,33 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
           body: RefreshIndicator(
             onRefresh: () async {
               ref.refresh(storeGoodsDetailProvider(widget.id));
-            }, 
+            },
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: StoreInfoView(store.toStoreInfoData())),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _SliverAppBarDelegate(
-                    _StoreTabBar(
-                      goodsId: store.goodsId,
-                      selectedIndex: _selectedTabIndex,
-                      onTabChanged: (index) =>
-                          setState(() => _selectedTabIndex = index),
+                    ValueListenableBuilder<int>(
+                      valueListenable: _tabIndex,
+                      builder: (context, index, _) => _StoreTabBar(
+                        goodsId: store.goodsId,
+                        selectedIndex: index,
+                        onTabChanged: (i) => _tabIndex.value = i,
+                      ),
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: IndexedStack(
-                    index: _selectedTabIndex,
-                    children: [
-                      StoreBiteBagView(store.goodsImages ?? []),
-                      StoreReviewListView(store.goodsId),
-                    ],
+                  child: ValueListenableBuilder<int>(
+                    valueListenable: _tabIndex,
+                    builder: (context, index, _) => IndexedStack(
+                      index: index,
+                      children: [
+                        StoreBiteBagView(store.goodsImages ?? []),
+                        StoreReviewListView(store.goodsId),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -232,6 +243,7 @@ class _StoreTabBar extends ConsumerWidget {
       initialIndex: selectedIndex,
       child: TabBar(
         dividerColor: MgColorScheme.gray8,
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         labelColor: MgColorScheme.gray1,
         unselectedLabelColor: MgColorScheme.gray5,
         indicatorSize: TabBarIndicatorSize.tab,
