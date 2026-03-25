@@ -18,6 +18,9 @@ class HomeScreenControllerState with _$HomeScreenControllerState {
     required Address defaultAddress,
     required List<StoreListDTO> storeGoodsList,
     required List<Address> serviceAddresses,
+    @Default(1) int currentPage,
+    @Default(false) bool isLoadingMore,
+    @Default(true) bool hasMore,
   }) = _HomeScreenControllerState;
 }
 
@@ -45,6 +48,9 @@ class HomeScreenController extends _$HomeScreenController {
       defaultAddress: defaultAddress,
       storeGoodsList: storeGoods,
       serviceAddresses: serviceAddresses,
+      currentPage: 1,
+      isLoadingMore: false,
+      hasMore: storeGoods.length >= 10,
     );
   }
 
@@ -72,6 +78,46 @@ class HomeScreenController extends _$HomeScreenController {
     await _reloadStoreGoods();
   }
 
+  Future<void> loadMore() async {
+    final currentData = state.value;
+    if (currentData == null) return;
+    if (currentData.isLoadingMore) return;
+    if (!currentData.hasMore) return;
+
+    state = AsyncData(currentData.copyWith(isLoadingMore: true));
+
+    try {
+      final nextPage = currentData.currentPage + 1;
+      const pageSize = 10;
+
+      var newItems = await ref
+          .read(storeRepositoryProvider)
+          .getStoreGoodsList(
+            latitude: currentData.defaultAddress.latitude,
+            longitude: currentData.defaultAddress.longitude,
+            onlyAvailable: currentData.onlyAvailable,
+            sortType: currentData.sortType,
+            page: nextPage,
+            size: pageSize,
+          );
+
+      if (currentData.onlyAvailable) {
+        newItems = newItems.where((s) => s.saleStatus == 'ON').toList();
+      }
+
+      state = AsyncData(
+        currentData.copyWith(
+          storeGoodsList: [...currentData.storeGoodsList, ...newItems],
+          currentPage: nextPage,
+          isLoadingMore: false,
+          hasMore: newItems.length >= pageSize,
+        ),
+      );
+    } catch (e, stack) {
+      state = AsyncData(currentData.copyWith(isLoadingMore: false));
+    }
+  }
+
   Future<void> _reloadStoreGoods() async {
     final currentData = state.value;
     if (currentData == null) return;
@@ -84,6 +130,8 @@ class HomeScreenController extends _$HomeScreenController {
             longitude: currentData.defaultAddress.longitude,
             onlyAvailable: currentData.onlyAvailable,
             sortType: currentData.sortType,
+            page: 1,
+            size: 10,
           );
 
       if (currentData.onlyAvailable) {
@@ -92,7 +140,12 @@ class HomeScreenController extends _$HomeScreenController {
             .toList();
       }
 
-      state = AsyncData(currentData.copyWith(storeGoodsList: storeGoods));
+      state = AsyncData(currentData.copyWith(
+        storeGoodsList: storeGoods,
+        currentPage: 1,
+        isLoadingMore: false,
+        hasMore: storeGoods.length >= 10,
+      ));
     } catch (e, stack) {
       state = AsyncError(e, stack);
     }

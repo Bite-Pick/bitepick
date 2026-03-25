@@ -37,6 +37,27 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      ref.read(homeScreenControllerProvider.notifier).loadMore();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controllerStateAsync = ref.watch(homeScreenControllerProvider);
@@ -68,6 +89,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ref.refresh(homeScreenControllerProvider);
               },
               child: CustomScrollView(
+                controller: _scrollController,
                 slivers: [
                   SliverPersistentHeader(
                     pinned: true,
@@ -99,6 +121,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   .margin(horizontal: MgSizes.md);
                             },
                           ),
+                          if (controllerState.isLoadingMore)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                          if (!controllerState.hasMore &&
+                              controllerState.storeGoodsList.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Center(
+                                child: Text('모든 매장을 불러왔습니다').sm().textGray(),
+                              ),
+                            ),
                         ],
                       ),
                     ]),
@@ -146,7 +181,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheet(SortType currentSortType) {
     final List<String> sorts = SortType.values
-        .where((e) => e != SortType.distanceAsc && e != SortType.ratingDesc)
+        .where((e) => e != SortType.distanceAsc)
         .map((e) => e.name)
         .toList();
     return MgBottomsheet(
