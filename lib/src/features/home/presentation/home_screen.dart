@@ -80,75 +80,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           statusBarBrightness: Brightness.light,
         ),
         child: MgAsyncAnimatedSwitcher(
-        asyncValue: controllerStateAsync,
-        builder: (controllerState) {
-          return SafeArea(
-            // TODO: BaseCustomScrollView refact
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ref.refresh(homeScreenControllerProvider);
-              },
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverPersistentHeader(
-                    pinned: true,
-                    floating: true,
-                    delegate: _HomeAppBar(
-                      controllerState.serviceAddresses,
-                      controllerState.defaultAddress,
-                    ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Column(
-                        children: [
-                          HomeBannersView(),
-                          HomeUpdateBanner(),
-                          _buildFilterSection(
-                            controllerState.onlyAvailable,
-                            controllerState.sortType,
-                          ),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controllerState.storeGoodsList.length,
-                            separatorBuilder: (context, index) => Gaps.h16,
-                            itemBuilder: (context, index) {
-                              final item = controllerState.storeGoodsList[index];
-                              return HomeGoodsItem(goods: item.toHomeGoodsItem())
-                                  .margin(bottom: MgSizes.xs)
-                                  .margin(horizontal: MgSizes.md);
-                            },
-                          ),
-                          if (controllerState.isLoadingMore)
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: Center(child: CircularProgressIndicator()),
-                            ),
-                          if (!controllerState.hasMore &&
-                              controllerState.storeGoodsList.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Center(
-                                child: Text('모든 매장을 불러왔습니다').sm().textGray(),
-                              ),
-                            ),
-                        ],
+          asyncValue: controllerStateAsync,
+          builder: (controllerState) {
+            return SafeArea(
+              // TODO: BaseCustomScrollView refact
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref.refresh(homeScreenControllerProvider);
+                },
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverPersistentHeader(
+                      pinned: true,
+                      floating: true,
+                      delegate: _HomeAppBar(
+                        controllerState.serviceAddresses,
+                        controllerState.defaultAddress,
                       ),
-                    ]),
-                  ),
-                ],
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        Column(
+                          children: [
+                            HomeBannersView(),
+                            HomeUpdateBanner(),
+                            _buildFilterSection(
+                              controllerState.onlyAvailable,
+                              controllerState.sortType,
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controllerState.storeGoodsList.length,
+                              separatorBuilder: (context, index) => Gaps.h16,
+                              itemBuilder: (context, index) {
+                                final item =
+                                    controllerState.storeGoodsList[index];
+                                return HomeGoodsItem(
+                                      goods: item.toHomeGoodsItem(),
+                                    )
+                                    .margin(bottom: MgSizes.xs)
+                                    .margin(horizontal: MgSizes.md);
+                              },
+                            ),
+                            if (controllerState.isLoadingMore)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            if (!controllerState.hasMore &&
+                                controllerState.storeGoodsList.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                child: Center(
+                                  child: Text('bitepick').sm().textGray(),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ]),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
       ),
     );
   }
-    
-    
 
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
