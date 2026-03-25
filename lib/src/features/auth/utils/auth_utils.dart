@@ -27,7 +27,7 @@ Future<void> logout(
     if (!ok) return;
   }
 
-  await PushNotification.unsubscribeFromAllTopics();
+  PushNotification.unsubscribeFromAllTopics();
   await ref.read(authTokenManagerProvider.notifier).deleteTokens();
   ref.invalidate(userStateProvider);
   ref.invalidate(ownerJoinInfoScreenControllerProvider);
