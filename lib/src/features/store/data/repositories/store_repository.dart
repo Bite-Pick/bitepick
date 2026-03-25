@@ -110,7 +110,8 @@ class StoreRepository {
     final data = res.data['data'];
     if (data == null) return null;
 
-    return Store.fromJson(data as Map<String, dynamic>);
+    final storeData = data['data'] ?? data;
+    return Store.fromJson(storeData as Map<String, dynamic>);
   }
   
 }

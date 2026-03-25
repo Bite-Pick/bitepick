@@ -48,30 +48,52 @@ class StoreInfoView extends ConsumerWidget {
       );
     }
 
-    return SizedBox(
-      height: 240,
-      child: Swiper(
-        autoplay: true,
-        autoplayDelay: 4000,
-        loop: imageUrls.length > 1,
-        itemCount: imageUrls.length,
-        pagination: SwiperPagination(
-          builder: DotSwiperPaginationBuilder(
-            activeColor: MgColorScheme.primary,
-            color: MgColorScheme.gray4,
+    final isBeforeOpen = storeInfo.saleStatus == 'OFF';
+
+    return Stack(
+      children: [
+        SizedBox(
+          height: 240,
+          child: Swiper(
+            autoplay: true,
+            autoplayDelay: 4000,
+            loop: imageUrls.length > 1,
+            itemCount: imageUrls.length,
+            pagination: SwiperPagination(
+              builder: DotSwiperPaginationBuilder(
+                activeColor: MgColorScheme.primary,
+                color: MgColorScheme.gray4,
+              ),
+            ),
+            itemBuilder: (context, index) {
+              final imageUrl = imageUrls[index];
+              if (imageUrl.isEmpty) {
+                return Container(
+                  color: MgColorScheme.gray2,
+                  child: Center(child: Text('이미지 없음').textGray()),
+                );
+              }
+              return BaseNetworkImage(imageUrl: imageUrl, borderRadius: 0);
+            },
           ),
         ),
-        itemBuilder: (context, index) {
-          final imageUrl = imageUrls[index];
-          if (imageUrl.isEmpty) {
-            return Container(
-              color: MgColorScheme.gray2,
-              child: Center(child: Text('이미지 없음').textGray()),
-            );
-          }
-          return BaseNetworkImage(imageUrl: imageUrl, borderRadius: 0);
-        },
-      ),
+        if (isBeforeOpen)
+          Positioned.fill(
+            child: Container(
+              color: MgColorScheme.gray0.withValues(alpha: 0.5),
+              child: Center(
+                child: Text(
+                  '오픈 준비 중',
+                  style: const TextStyle(
+                    color: MgColorScheme.gray11,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

@@ -47,7 +47,13 @@ class StoreScreen extends ConsumerStatefulWidget {
 }
 
 class _StoreScreenState extends ConsumerState<StoreScreen> {
-  int _selectedTabIndex = 0;
+  final _tabIndex = ValueNotifier<int>(0);
+
+  @override
+  void dispose() {
+    _tabIndex.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,32 +65,42 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
         return BaseScaffold(
           appBar: BaseAppBar(),
-          bottomNavigationBar: _BottomOrderBar(goods: store, storeId: widget.id),
+          bottomNavigationBar: _BottomOrderBar(
+            goods: store,
+            storeId: widget.id,
+          ),
           body: RefreshIndicator(
             onRefresh: () async {
               ref.refresh(storeGoodsDetailProvider(widget.id));
-            }, 
+            },
             child: CustomScrollView(
               slivers: [
-                SliverToBoxAdapter(child: StoreInfoView(store.toStoreInfoData())),
+                SliverToBoxAdapter(
+                  child: StoreInfoView(store.toStoreInfoData()),
+                ),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _SliverAppBarDelegate(
-                    _StoreTabBar(
-                      goodsId: store.goodsId,
-                      selectedIndex: _selectedTabIndex,
-                      onTabChanged: (index) =>
-                          setState(() => _selectedTabIndex = index),
+                    ValueListenableBuilder<int>(
+                      valueListenable: _tabIndex,
+                      builder: (context, index, _) => _StoreTabBar(
+                        goodsId: store.goodsId,
+                        selectedIndex: index,
+                        onTabChanged: (i) => _tabIndex.value = i,
+                      ),
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: IndexedStack(
-                    index: _selectedTabIndex,
-                    children: [
-                      StoreBiteBagView(store.goodsImages ?? []),
-                      StoreReviewListView(store.goodsId),
-                    ],
+                  child: ValueListenableBuilder<int>(
+                    valueListenable: _tabIndex,
+                    builder: (context, index, _) => IndexedStack(
+                      index: index,
+                      children: [
+                        StoreBiteBagView(store.goodsImages ?? []),
+                        StoreReviewListView(store.goodsId),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -97,10 +113,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
 }
 
 class _BottomOrderBar extends ConsumerStatefulWidget {
-  const _BottomOrderBar({
-    required this.goods,
-    required this.storeId,
-  });
+  const _BottomOrderBar({required this.goods, required this.storeId});
 
   final GoodsDetailDto goods;
   final String storeId;
@@ -122,6 +135,10 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
   Widget build(BuildContext context) {
     final goods = widget.goods;
     final saleStatus = goods.saleStatus == "ON";
+    final subscribedAsync = ref.watch(
+      storeNotificationSubscribedProvider(storeId: widget.storeId),
+    );
+    final isSubscribed = subscribedAsync.asData?.value ?? false;
     final now = DateTime.now();
     final endTime = goods.endTime;
     final goodsStartTime = goods.startTime;
@@ -143,7 +160,10 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                 onCountChanged: setCount,
                 maxCount: goods.quantity,
                 onMaxReached: () {
-                  ToastPresentor.error(context, "재고가 부족합니다. (남은 수량: ${goods.quantity}개)");
+                  ToastPresentor.error(
+                    context,
+                    "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
+                  );
                 },
               ),
             ),
@@ -151,9 +171,13 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
           ],
           Expanded(
             child: MgButton(
+              disabled: !saleStatus && isSubscribed,
               onPressed: () async {
                 if (count > goods.quantity) {
-                  ToastPresentor.error(context, "재고가 부족합니다. (남은 수량: ${goods.quantity}개)");
+                  ToastPresentor.error(
+                    context,
+                    "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
+                  );
                   return;
                 }
                 final user = ref.read(userStateProvider).asData!.value;
@@ -165,18 +189,20 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                 }
 
                 if (!saleStatus) {
+                  if (isSubscribed) return;
                   final res = await ref
                       .read(notificationRepositoryProvider)
                       .registerStoreNotification(storeId: widget.storeId);
-                  if (res) ToastPresentor.success(context, "알림 신청 성공");
+                  if (res && context.mounted) {
+                    ToastPresentor.success(context, "알림 신청 성공");
+                    ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                  }
                   return;
                 }
 
                 ref
                     .read(
-                      orderPayScreenControllerProvider(
-                        goods.storeId,
-                      ).notifier,
+                      orderPayScreenControllerProvider(goods.storeId).notifier,
                     )
                     .setOrderInfo(
                       storeName: goods.storeName,
@@ -193,7 +219,7 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
 
                 await OrderCautionRoute(storeId: goods.storeId).push(context);
               },
-              content: Text(!saleStatus ? '오픈 알림신청하기' : '구매하기'),
+              content: Text(!saleStatus ? (isSubscribed ? '오픈 알림 신청 완료' : '오픈 알림 신청하기') : '구매하기'),
             ).primary(),
           ),
         ],
@@ -232,6 +258,7 @@ class _StoreTabBar extends ConsumerWidget {
       initialIndex: selectedIndex,
       child: TabBar(
         dividerColor: MgColorScheme.gray8,
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         labelColor: MgColorScheme.gray1,
         unselectedLabelColor: MgColorScheme.gray5,
         indicatorSize: TabBarIndicatorSize.tab,

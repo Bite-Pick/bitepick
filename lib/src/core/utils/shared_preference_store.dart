@@ -114,9 +114,9 @@ class SharedPreferenceStore {
   }
 
   /// 오픈 요청한 지역 가져오기
-  Future<String?> getRequestedRegion() async {
+  Future<int?> getRequestedRegion() async {
     try {
-      return (await _sharedPreferences).getString(
+      return (await _sharedPreferences).getInt(
         SharedPreferenceKey.requestedRegion,
       );
     } catch (e) {
