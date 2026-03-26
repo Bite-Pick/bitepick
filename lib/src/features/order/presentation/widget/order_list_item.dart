@@ -58,7 +58,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
             storeId: widget.order.storeId,
             address: widget.order.address ?? "",
             latitude: widget.order.latitude,
-            longitude: widget.order.latitude,
+            longitude: widget.order.longitude,
             storeName: widget.order.storeName,
             mapHeight: 160,
           ),

@@ -28,8 +28,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final isVersionAvailable = await checkAppVersion();
-      if (isVersionAvailable) DefaultRoute().go(context);
+      final results = await Future.wait([
+        checkAppVersion(),
+        Future.delayed(const Duration(seconds: 1)),
+      ]);
+      if (results[0] as bool) DefaultRoute().go(context);
     });
   }
 

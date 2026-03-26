@@ -37,22 +37,32 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen>
     final favoritesAsync = ref.watch(myFavoriteProvider);
     return BaseScaffold(
       appBar: BaseAppBar(title: const Text('관심 목록')),
-      body: MgAsyncAnimatedSwitcher(
-        asyncValue: favoritesAsync,
-        emptyBuilder: () => Center(child: Text("관심 목록이 없습니다")),
-
-        builder: (favorites) {
-          return ListView.separated(
-            itemCount: favorites.length,
-            itemBuilder: (context, index) {
-              final favorite = favorites[index];
-              return HomeGoodsItem(
-                goods: favorite.toHomeGoodsItem(),
-              ).margin(horizontal: MgSizes.md);
-            },
-            separatorBuilder: (context, index) => Gaps.h16,
-          ).margin(top: MgSizes.md);
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await ref.refresh(myFavoriteProvider.future);
         },
+        child: MgAsyncAnimatedSwitcher(
+          asyncValue: favoritesAsync,
+          emptyBuilder: () => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              child: Center(child: Text("관심 목록이 없습니다")),
+            ),
+          ),
+          builder: (favorites) {
+            return ListView.separated(
+              itemCount: favorites.length,
+              itemBuilder: (context, index) {
+                final favorite = favorites[index];
+                return HomeGoodsItem(
+                  goods: favorite.toHomeGoodsItem(),
+                ).margin(horizontal: MgSizes.md);
+              },
+              separatorBuilder: (context, index) => Gaps.h16,
+            ).margin(top: MgSizes.md);
+          },
+        ),
       ),
     );
   }
