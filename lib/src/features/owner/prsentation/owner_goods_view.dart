@@ -26,12 +26,18 @@ class OwnerGoodsView extends ConsumerWidget {
         return Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    StoreInfoView(store.toStoreInfoData(), hasFavorite: false),
-                    StoreBiteBagView(store.goodsImageList ?? []),
-                  ],
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await ref.refresh(ownerStoreProvider.future);
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      StoreInfoView(store.toStoreInfoData(), hasFavorite: false),
+                      StoreBiteBagView(store.goodsImageList ?? []),
+                    ],
+                  ),
                 ),
               ),
             ),
