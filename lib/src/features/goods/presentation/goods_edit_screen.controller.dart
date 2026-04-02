@@ -255,6 +255,23 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       return false;
     }
 
+    final context = GlobalVariable.navigatorKey.currentContext;
+    for (final detail in state.goodsDetails) {
+      final hasImage = detail.localImage.file != null || detail.localImage.uploadedUrl != null;
+      if (!hasImage) {
+        if (context != null) {
+          ToastPresentor.error(context, '${detail.name.isNotEmpty ? detail.name : '상품'} 이미지를 추가해주세요');
+        }
+        return false;
+      }
+      if (detail.name.trim().isEmpty) {
+        if (context != null) {
+          ToastPresentor.error(context, '상품명을 입력해주세요');
+        }
+        return false;
+      }
+    }
+
     try {
       state = state.copyWith(
         isSubmitting: true,
