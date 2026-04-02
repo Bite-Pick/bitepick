@@ -61,6 +61,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
 
     return MgAsyncAnimatedSwitcher<GoodsDetailDto?>(
       asyncValue: storeAsync,
+      onRetry: () => ref.invalidate(storeGoodsDetailProvider(widget.id)),
       builder: (store) {
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
         return BaseScaffold(
@@ -247,6 +248,7 @@ class _StoreTabBar extends ConsumerWidget {
 
     return MgAsyncAnimatedSwitcher(
       asyncValue: reviewsAsync,
+      onRetry: () => ref.invalidate(reviewsProvider(goodsId: goodsId, imageCheck: false)),
       emptyBuilder: () => _buildTabBar(context, 0),
       builder: (reviews) => _buildTabBar(context, reviews.length),
     );

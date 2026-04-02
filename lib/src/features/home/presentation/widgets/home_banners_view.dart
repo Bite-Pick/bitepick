@@ -26,6 +26,7 @@ class _HomeBannersViewState extends ConsumerState<HomeBannersView> {
 
     return MgAsyncAnimatedSwitcher(
       asyncValue: bannerImagesAsync,
+      onRetry: () => ref.invalidate(bannerImagesProvider),
       builder: (bannerImages) {
         return Swiper(
           controller: _swiperController,

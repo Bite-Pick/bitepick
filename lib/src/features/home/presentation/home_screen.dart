@@ -81,6 +81,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         child: MgAsyncAnimatedSwitcher(
           asyncValue: controllerStateAsync,
+          onRetry: () => ref.invalidate(homeScreenControllerProvider),
           builder: (controllerState) {
             return SafeArea(
               // TODO: BaseCustomScrollView refact

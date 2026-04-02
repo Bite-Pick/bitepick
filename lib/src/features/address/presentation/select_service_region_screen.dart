@@ -116,6 +116,7 @@ class _SelectServiceRegionScreenState
             flex: 1,
             child: MgAsyncAnimatedSwitcher(
               asyncValue: citiesAsync,
+              onRetry: () => ref.invalidate(regionCitiesProvider),
               builder: (cities) {
                 return _buildTableColumn(
                   '시 ∙ 도',

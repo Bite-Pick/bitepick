@@ -7,7 +7,7 @@ part of 'goods_edit_screen.controller.dart';
 // **************************************************************************
 
 String _$goodsEditScreenControllerHash() =>
-    r'93f3fd4fae67449e1ae30b4dd85b244dc8bea9f5';
+    r'98c68c8ea41cc27310b9584ad2cd121f7d968942';
 
 /// Copied from Dart SDK
 class _SystemHash {

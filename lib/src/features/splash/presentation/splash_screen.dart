@@ -32,6 +32,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         checkAppVersion(),
         Future.delayed(const Duration(seconds: 1)),
       ]);
+      if (!mounted) return;
       if (results[0] as bool) DefaultRoute().go(context);
     });
   }
@@ -87,6 +88,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     final isSupportedVersion = await _isUpdateRequired(policy.version);
     if (!isSupportedVersion) {
+      if (!mounted) return false;
       await showDialog(
         context: context,
         barrierDismissible: true,

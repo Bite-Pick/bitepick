@@ -38,6 +38,7 @@ class OrderListScreen extends ConsumerWidget {
           },
           child: MgAsyncAnimatedSwitcher(
             asyncValue: ordersAsync,
+            onRetry: () => ref.invalidate(userOrdersProvider()),
             emptyBuilder: () => SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(), // 👈 빈 상태에서도 스크롤 가능
               child: SizedBox(
