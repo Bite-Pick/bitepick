@@ -171,68 +171,89 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
             Gaps.w10,
           ],
           Expanded(
-            child: MgButton(
-              onPressed: () async {
-                if (count > goods.quantity) {
-                  ToastPresentor.error(
-                    context,
-                    "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
-                  );
-                  return;
-                }
-                final user = ref.read(userStateProvider).asData!.value;
-                final isLogin = user != null;
-
-                if (!isLogin) {
-                  unawaited(showLoginAlerDialog(context));
-                  return;
-                }
-
-                if (!saleStatus) {
-                  if (isSubscribed) {
-                    final res = await ref
-                        .read(notificationRepositoryProvider)
-                        .deleteNotificationToken(widget.storeId);
-                    if (res && context.mounted) {
-                      ToastPresentor.success(context, "알림 신청이 취소되었습니다");
-                      ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+            child:
+                MgButton(
+                  onPressed: () async {
+                    if (count > goods.quantity) {
+                      ToastPresentor.error(
+                        context,
+                        "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
+                      );
+                      return;
                     }
-                  } else {
-                    final res = await ref
-                        .read(notificationRepositoryProvider)
-                        .registerStoreNotification(storeId: widget.storeId);
-                    if (res && context.mounted) {
-                      ToastPresentor.success(context, "알림 신청 성공");
-                      ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
-                    }
-                  }
-                  return;
-                }
+                    final user = ref.read(userStateProvider).asData!.value;
+                    final isLogin = user != null;
 
-                ref
-                    .read(
-                      orderPayScreenControllerProvider(goods.storeId).notifier,
-                    )
-                    .setOrderInfo(
-                      storeName: goods.storeName,
-                      storeAddress: goods.address,
+                    if (!isLogin) {
+                      unawaited(showLoginAlerDialog(context));
+                      return;
+                    }
+
+                    if (!saleStatus) {
+                      if (isSubscribed) {
+                        final res = await ref
+                            .read(notificationRepositoryProvider)
+                            .deleteNotificationToken(widget.storeId);
+                        if (res && context.mounted) {
+                          ToastPresentor.success(context, "오픈 알림이 해제되었습니다.");
+                          ref.invalidate(
+                            storeNotificationSubscribedProvider(
+                              storeId: widget.storeId,
+                            ),
+                          );
+                        }
+                      } else {
+                        final res = await ref
+                            .read(notificationRepositoryProvider)
+                            .registerStoreNotification(storeId: widget.storeId);
+                        if (res && context.mounted) {
+                          ToastPresentor.success(context, "매장이 오픈하면 알려드릴게요!");
+                          ref.invalidate(
+                            storeNotificationSubscribedProvider(
+                              storeId: widget.storeId,
+                            ),
+                          );
+                        }
+                      }
+                      return;
+                    }
+
+                    ref
+                        .read(
+                          orderPayScreenControllerProvider(
+                            goods.storeId,
+                          ).notifier,
+                        )
+                        .setOrderInfo(
+                          storeName: goods.storeName,
+                          storeAddress: goods.address,
+                          storeId: goods.storeId,
+                          goodsId: goods.goodsId,
+                          quantity: count,
+                          totalPrice: goods.salePrice * count,
+                          salePrice: goods.salePrice,
+                          originalPrice: goods.originalPrice,
+                          startTime: startTime,
+                          endTime: endTime,
+                        );
+
+                    await OrderCautionRoute(
                       storeId: goods.storeId,
-                      goodsId: goods.goodsId,
-                      quantity: count,
-                      totalPrice: goods.salePrice * count,
-                      salePrice: goods.salePrice,
-                      originalPrice: goods.originalPrice,
-                      startTime: startTime,
-                      endTime: endTime,
-                    );
-
-                await OrderCautionRoute(storeId: goods.storeId).push(context);
-              },
-              content: Text(!saleStatus ? (isSubscribed ? '오픈 알림 취소하기' : '오픈 알림 신청하기') : '구매하기'),
-            ).primary().copyWith(
-              backgroundColor: !saleStatus && isSubscribed ? MgColorScheme.gray8 : null,
-              textColor: !saleStatus && isSubscribed ? MgColorScheme.gray4 : null,
-            ),
+                    ).push(context);
+                  },
+                  content: Text(
+                    !saleStatus
+                        ? (isSubscribed ? '오픈 알림 취소하기' : '오픈 알림 신청하기')
+                        : '구매하기',
+                  ),
+                ).primary().copyWith(
+                  backgroundColor: !saleStatus && isSubscribed
+                      ? MgColorScheme.gray8
+                      : null,
+                  textColor: !saleStatus && isSubscribed
+                      ? MgColorScheme.gray4
+                      : null,
+                ),
           ),
         ],
       ),
@@ -259,7 +280,8 @@ class _StoreTabBar extends ConsumerWidget {
 
     return MgAsyncAnimatedSwitcher(
       asyncValue: reviewsAsync,
-      onRetry: () => ref.invalidate(reviewsProvider(goodsId: goodsId, imageCheck: false)),
+      onRetry: () =>
+          ref.invalidate(reviewsProvider(goodsId: goodsId, imageCheck: false)),
       emptyBuilder: () => _buildTabBar(context, 0),
       builder: (reviews) => _buildTabBar(context, reviews.length),
     );
