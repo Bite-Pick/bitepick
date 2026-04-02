@@ -1,10 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:magambell/src/core/navigator/navigator_controller.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/utils/talker_instance.dart';
+import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/notification/data/repositories/notification_repository.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
+import 'package:magambell/src/features/store/presentation/store_screen.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_notification.g.dart';
@@ -36,7 +44,7 @@ class PushNotification {
       talker.info(
         '[FCM] App opened from notification: ${initialMessage.notification?.title}',
       );
-      handleNotificationNavigation(initialMessage);
+      handleNotificationNavigation(initialMessage, delayed: true);
     }
   }
 
@@ -97,11 +105,17 @@ class PushNotification {
     talker.info('[FCM] Local notifications initialized');
   }
 
-  /// 알림 클릭 처리
+  /// 알림 클릭 처리 (포그라운드 로컬 알림)
   static void onNotificationTapped(NotificationResponse response) {
     talker.info('[FCM] Notification tapped: ${response.payload}');
-    // TODO: 알림 클릭 시 화면 이동 처리
-    // 예: Navigator.push(...) 또는 GoRouter.go(...)
+    final payload = response.payload;
+    if (payload == null) return;
+    try {
+      final data = jsonDecode(payload) as Map<String, dynamic>;
+      _navigateFromData(data);
+    } catch (e) {
+      talker.error('[FCM] Failed to parse notification payload', e);
+    }
   }
 
   /// 메시지 리스너 설정
@@ -125,15 +139,42 @@ class PushNotification {
   }
 
   /// 알림 네비게이션 처리
-  static void handleNotificationNavigation(RemoteMessage message) {
-    // TODO: 알림 데이터에 따라 화면 이동
-    final data = message.data;
-    talker.debug('[FCM] Navigation data: $data');
+  static void handleNotificationNavigation(RemoteMessage message, {bool delayed = false}) {
+    talker.debug('[FCM] Navigation data: ${message.data}');
+    if (delayed) {
+      Future.delayed(const Duration(milliseconds: 500), () => _navigateFromData(message.data));
+    } else {
+      _navigateFromData(message.data);
+    }
+  }
 
-    // 예시:
-    // if (data.containsKey('storeId')) {
-    //   GoRouter.of(context).go('/store/${data['storeId']}');
-    // }
+  /// data에 따라 화면 이동
+  /// - storeId 있으면 → 매장 상세
+  /// - type == 'ORDER' 또는 orderId 있으면 → 사장님: OwnerHome, 일반: 주문내역 탭
+  /// - 그 외 → 아무것도 안 함 (앱만 오픈)
+  static void _navigateFromData(Map<String, dynamic> data) {
+    final context = GlobalVariable.navigatorKey.currentContext;
+    if (context == null || !context.mounted) return;
+
+    final storeId = data['storeId'] as String?;
+    final type = data['type'] as String?;
+    final hasOrderData = type == 'ORDER' || data.containsKey('orderId');
+
+    if (storeId != null) {
+      GoRouter.of(context).go(StoreRoute(id: storeId).location);
+      return;
+    }
+
+    if (hasOrderData) {
+      final container = ProviderScope.containerOf(context);
+      final user = container.read(userStateProvider).asData?.value;
+      if (user?.userRole == UserRole.owner) {
+        GoRouter.of(context).go(OwnerHomeRoute().location);
+      } else {
+        GoRouter.of(context).go(MainRoute().location);
+        container.read(navigatorControllerProvider.notifier).changeTabIndex(1);
+      }
+    }
   }
 
   /// 로컬 알림 표시 (Foreground용)
@@ -163,7 +204,7 @@ class PushNotification {
       message.notification?.title,
       message.notification?.body,
       details,
-      payload: message.data.toString(),
+      payload: jsonEncode(message.data),
     );
 
     talker.debug('[FCM] Local notification shown');
