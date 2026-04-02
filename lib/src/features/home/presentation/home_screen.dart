@@ -26,7 +26,6 @@ import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_checkbox.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -159,12 +158,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
-        MgCheckbox(
-          initialValue: onlyAvailable,
-          onChanged: (value) => ref
+        GestureDetector(
+          onTap: () => ref
               .read(homeScreenControllerProvider.notifier)
               .toggleOnlyAvailable(),
-          trailing: Text("예약가능").sm().margin(left: MgSizes.xs),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: onlyAvailable ? MgColorScheme.gray1 : Colors.transparent,
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(
+                color: onlyAvailable ? MgColorScheme.gray1 : MgColorScheme.gray7,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: onlyAvailable ? MgColorScheme.gray11 : MgColorScheme.gray5,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "예약가능",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: onlyAvailable ? MgColorScheme.gray11 : MgColorScheme.gray5,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ).margin(all: MgSizes.md),
 
         Spacer(),
