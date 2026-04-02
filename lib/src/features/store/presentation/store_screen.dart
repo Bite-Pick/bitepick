@@ -172,7 +172,6 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
           ],
           Expanded(
             child: MgButton(
-              disabled: !saleStatus && isSubscribed,
               onPressed: () async {
                 if (count > goods.quantity) {
                   ToastPresentor.error(
@@ -190,13 +189,22 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                 }
 
                 if (!saleStatus) {
-                  if (isSubscribed) return;
-                  final res = await ref
-                      .read(notificationRepositoryProvider)
-                      .registerStoreNotification(storeId: widget.storeId);
-                  if (res && context.mounted) {
-                    ToastPresentor.success(context, "알림 신청 성공");
-                    ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                  if (isSubscribed) {
+                    final res = await ref
+                        .read(notificationRepositoryProvider)
+                        .deleteNotificationToken(widget.storeId);
+                    if (res && context.mounted) {
+                      ToastPresentor.success(context, "알림 신청이 취소되었습니다");
+                      ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                    }
+                  } else {
+                    final res = await ref
+                        .read(notificationRepositoryProvider)
+                        .registerStoreNotification(storeId: widget.storeId);
+                    if (res && context.mounted) {
+                      ToastPresentor.success(context, "알림 신청 성공");
+                      ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                    }
                   }
                   return;
                 }
@@ -220,8 +228,11 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
 
                 await OrderCautionRoute(storeId: goods.storeId).push(context);
               },
-              content: Text(!saleStatus ? (isSubscribed ? '오픈 알림 신청 완료' : '오픈 알림 신청하기') : '구매하기'),
-            ).primary(),
+              content: Text(!saleStatus ? (isSubscribed ? '오픈 알림 취소하기' : '오픈 알림 신청하기') : '구매하기'),
+            ).primary().copyWith(
+              backgroundColor: !saleStatus && isSubscribed ? MgColorScheme.gray8 : null,
+              textColor: !saleStatus && isSubscribed ? MgColorScheme.gray4 : null,
+            ),
           ),
         ],
       ),
