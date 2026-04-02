@@ -51,6 +51,7 @@ class _SelectAddressScreenState extends ConsumerState<SelectAddressScreen> {
           Gaps.h40,
           MgAsyncAnimatedSwitcher(
             asyncValue: serviceAddressesAsync,
+            onRetry: () => ref.invalidate(serviceAddressesProvider),
             builder: (serviceAddresses) {
               return Column(
                 children: serviceAddresses

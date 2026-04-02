@@ -18,6 +18,7 @@ class OwnerOrderListView extends ConsumerWidget {
 
     return MgAsyncAnimatedSwitcher(
       asyncValue: controllerAsync,
+      onRetry: () => ref.invalidate(ownerOrderListControllerProvider),
       builder: (controllerState) {
         if (controllerState.isLoading && controllerState.orders.isEmpty) {
           return Center(child: CircularProgressIndicator());

@@ -75,6 +75,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
               Gaps.h16,
               MgAsyncAnimatedSwitcher(
                 asyncValue: myPageAsync,
+                onRetry: () => ref.invalidate(mypageProvider),
                 builder: (myPage) {
                   if (myPage == null) return SizedBox.shrink();
                   return _buildKgSection(

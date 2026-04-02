@@ -19,6 +19,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
+import 'package:dio/dio.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
@@ -64,6 +65,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       },
       child: MgAsyncAnimatedSwitcher(
       asyncValue: storeAsync,
+      onRetry: () => ref.invalidate(storeStateProvider),
       builder: (store) {
         return BaseScaffold(
           canSwipeBack:false,
@@ -174,9 +176,16 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   }
 
   Future<void> changeSaleStatus(String id, bool saleStatus) async {
-    await ref
-        .read(goodsRepositoryProvider)
-        .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
-    ref.invalidate(storeStateProvider);
+    try {
+      await ref
+          .read(goodsRepositoryProvider)
+          .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
+      ref.invalidate(storeStateProvider);
+    } on DioException catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("네트워크 오류가 발생했습니다. 다시 시도해주세요.")),
+      );
+    }
   }
 }

@@ -46,6 +46,7 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
         ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
         MgAsyncAnimatedSwitcher(
           asyncValue: reviewsAsync,
+          onRetry: () => ref.invalidate(reviewsProvider(goodsId: widget.goodsId, imageCheck: _imageCheckOnly)),
           emptyBuilder: () => Center(
             child: Column(
               children: [

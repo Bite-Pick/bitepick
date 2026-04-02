@@ -21,6 +21,7 @@ class OwnerGoodsView extends ConsumerWidget {
     final ownerStoreAsync = ref.watch(ownerStoreProvider);
     return MgAsyncAnimatedSwitcher(
       asyncValue: ownerStoreAsync,
+      onRetry: () => ref.invalidate(ownerStoreProvider),
       builder: (store) {
         if (store == null) return OwnerGoodsEmptyScreen();
         return Column(
@@ -28,7 +29,10 @@ class OwnerGoodsView extends ConsumerWidget {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await ref.refresh(ownerStoreProvider.future);
+                  try {
+                    ref.invalidate(ownerStoreProvider);
+                    await ref.read(ownerStoreProvider.future);
+                  } catch (_) {}
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),

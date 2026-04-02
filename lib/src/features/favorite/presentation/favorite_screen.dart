@@ -39,10 +39,14 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen>
       appBar: BaseAppBar(title: const Text('관심 목록')),
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.refresh(myFavoriteProvider.future);
+          try {
+            ref.invalidate(myFavoriteProvider);
+            await ref.read(myFavoriteProvider.future);
+          } catch (_) {}
         },
         child: MgAsyncAnimatedSwitcher(
           asyncValue: favoritesAsync,
+          onRetry: () => ref.invalidate(myFavoriteProvider),
           emptyBuilder: () => SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(

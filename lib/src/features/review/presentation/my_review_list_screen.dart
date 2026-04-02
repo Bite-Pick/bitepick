@@ -29,6 +29,7 @@ class MyReviewListScreen extends ConsumerWidget {
       body: MgAsyncAnimatedSwitcher(
         emptyBuilder: () => Center(child: Text("작성한 리뷰가 없습니다")),
         asyncValue: reviewsAsync,
+        onRetry: () => ref.invalidate(myReviewsProvider()),
         builder: (reviews) {
           return ListView.separated(
             itemCount: reviews.length,
