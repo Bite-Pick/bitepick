@@ -169,7 +169,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               color: onlyAvailable ? MgColorScheme.gray1 : Colors.transparent,
               borderRadius: BorderRadius.circular(100),
               border: Border.all(
-                color: onlyAvailable ? MgColorScheme.gray1 : MgColorScheme.gray7,
+                color: onlyAvailable
+                    ? MgColorScheme.gray1
+                    : MgColorScheme.gray7,
               ),
             ),
             child: Row(
@@ -178,14 +180,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Icon(
                   Icons.access_time_rounded,
                   size: 14,
-                  color: onlyAvailable ? MgColorScheme.gray11 : MgColorScheme.gray5,
+                  color: onlyAvailable
+                      ? MgColorScheme.gray11
+                      : MgColorScheme.gray1,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   "예약가능",
                   style: TextStyle(
-                    fontSize: 12,
-                    color: onlyAvailable ? MgColorScheme.gray11 : MgColorScheme.gray5,
+                    fontSize: 13,
+                    color: onlyAvailable
+                        ? MgColorScheme.gray11
+                        : MgColorScheme.gray1,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
