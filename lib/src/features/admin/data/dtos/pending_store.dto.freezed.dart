@@ -23,8 +23,9 @@ PendingStoreDto _$PendingStoreDtoFromJson(Map<String, dynamic> json) {
 mixin _$PendingStoreDto {
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ImageUrl')
-  List<String> get imageUrl => throw _privateConstructorUsedError;
+  List<String> get storeImages => throw _privateConstructorUsedError;
+  List<GoodsImageItemDto> get goodsImageList =>
+      throw _privateConstructorUsedError;
   String? get goodsName => throw _privateConstructorUsedError;
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
@@ -63,7 +64,8 @@ abstract class $PendingStoreDtoCopyWith<$Res> {
   $Res call({
     String storeId,
     String storeName,
-    @JsonKey(name: 'ImageUrl') List<String> imageUrl,
+    List<String> storeImages,
+    List<GoodsImageItemDto> goodsImageList,
     String? goodsName,
     String startTime,
     String endTime,
@@ -101,7 +103,8 @@ class _$PendingStoreDtoCopyWithImpl<$Res, $Val extends PendingStoreDto>
   $Res call({
     Object? storeId = null,
     Object? storeName = null,
-    Object? imageUrl = null,
+    Object? storeImages = null,
+    Object? goodsImageList = null,
     Object? goodsName = freezed,
     Object? startTime = null,
     Object? endTime = null,
@@ -130,10 +133,14 @@ class _$PendingStoreDtoCopyWithImpl<$Res, $Val extends PendingStoreDto>
                 ? _value.storeName
                 : storeName // ignore: cast_nullable_to_non_nullable
                       as String,
-            imageUrl: null == imageUrl
-                ? _value.imageUrl
-                : imageUrl // ignore: cast_nullable_to_non_nullable
+            storeImages: null == storeImages
+                ? _value.storeImages
+                : storeImages // ignore: cast_nullable_to_non_nullable
                       as List<String>,
+            goodsImageList: null == goodsImageList
+                ? _value.goodsImageList
+                : goodsImageList // ignore: cast_nullable_to_non_nullable
+                      as List<GoodsImageItemDto>,
             goodsName: freezed == goodsName
                 ? _value.goodsName
                 : goodsName // ignore: cast_nullable_to_non_nullable
@@ -220,7 +227,8 @@ abstract class _$$PendingStoreDtoImplCopyWith<$Res>
   $Res call({
     String storeId,
     String storeName,
-    @JsonKey(name: 'ImageUrl') List<String> imageUrl,
+    List<String> storeImages,
+    List<GoodsImageItemDto> goodsImageList,
     String? goodsName,
     String startTime,
     String endTime,
@@ -257,7 +265,8 @@ class __$$PendingStoreDtoImplCopyWithImpl<$Res>
   $Res call({
     Object? storeId = null,
     Object? storeName = null,
-    Object? imageUrl = null,
+    Object? storeImages = null,
+    Object? goodsImageList = null,
     Object? goodsName = freezed,
     Object? startTime = null,
     Object? endTime = null,
@@ -286,10 +295,14 @@ class __$$PendingStoreDtoImplCopyWithImpl<$Res>
             ? _value.storeName
             : storeName // ignore: cast_nullable_to_non_nullable
                   as String,
-        imageUrl: null == imageUrl
-            ? _value._imageUrl
-            : imageUrl // ignore: cast_nullable_to_non_nullable
+        storeImages: null == storeImages
+            ? _value._storeImages
+            : storeImages // ignore: cast_nullable_to_non_nullable
                   as List<String>,
+        goodsImageList: null == goodsImageList
+            ? _value._goodsImageList
+            : goodsImageList // ignore: cast_nullable_to_non_nullable
+                  as List<GoodsImageItemDto>,
         goodsName: freezed == goodsName
             ? _value.goodsName
             : goodsName // ignore: cast_nullable_to_non_nullable
@@ -369,7 +382,8 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
   const _$PendingStoreDtoImpl({
     required this.storeId,
     required this.storeName,
-    @JsonKey(name: 'ImageUrl') final List<String> imageUrl = const [],
+    final List<String> storeImages = const [],
+    final List<GoodsImageItemDto> goodsImageList = const [],
     this.goodsName,
     required this.startTime,
     required this.endTime,
@@ -387,7 +401,8 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
     required this.businessNumber,
     required this.bankName,
     required this.bankAccount,
-  }) : _imageUrl = imageUrl;
+  }) : _storeImages = storeImages,
+       _goodsImageList = goodsImageList;
 
   factory _$PendingStoreDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PendingStoreDtoImplFromJson(json);
@@ -396,13 +411,22 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
   final String storeId;
   @override
   final String storeName;
-  final List<String> _imageUrl;
+  final List<String> _storeImages;
   @override
-  @JsonKey(name: 'ImageUrl')
-  List<String> get imageUrl {
-    if (_imageUrl is EqualUnmodifiableListView) return _imageUrl;
+  @JsonKey()
+  List<String> get storeImages {
+    if (_storeImages is EqualUnmodifiableListView) return _storeImages;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imageUrl);
+    return EqualUnmodifiableListView(_storeImages);
+  }
+
+  final List<GoodsImageItemDto> _goodsImageList;
+  @override
+  @JsonKey()
+  List<GoodsImageItemDto> get goodsImageList {
+    if (_goodsImageList is EqualUnmodifiableListView) return _goodsImageList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_goodsImageList);
   }
 
   @override
@@ -442,7 +466,7 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
 
   @override
   String toString() {
-    return 'PendingStoreDto(storeId: $storeId, storeName: $storeName, imageUrl: $imageUrl, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus, longitude: $longitude, latitude: $latitude, address: $address, ownerName: $ownerName, ownerPhone: $ownerPhone, businessNumber: $businessNumber, bankName: $bankName, bankAccount: $bankAccount)';
+    return 'PendingStoreDto(storeId: $storeId, storeName: $storeName, storeImages: $storeImages, goodsImageList: $goodsImageList, goodsName: $goodsName, startTime: $startTime, endTime: $endTime, originPrice: $originPrice, discount: $discount, salePrice: $salePrice, quantity: $quantity, distance: $distance, saleStatus: $saleStatus, longitude: $longitude, latitude: $latitude, address: $address, ownerName: $ownerName, ownerPhone: $ownerPhone, businessNumber: $businessNumber, bankName: $bankName, bankAccount: $bankAccount)';
   }
 
   @override
@@ -453,7 +477,14 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
-            const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
+            const DeepCollectionEquality().equals(
+              other._storeImages,
+              _storeImages,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._goodsImageList,
+              _goodsImageList,
+            ) &&
             (identical(other.goodsName, goodsName) ||
                 other.goodsName == goodsName) &&
             (identical(other.startTime, startTime) ||
@@ -494,7 +525,8 @@ class _$PendingStoreDtoImpl implements _PendingStoreDto {
     runtimeType,
     storeId,
     storeName,
-    const DeepCollectionEquality().hash(_imageUrl),
+    const DeepCollectionEquality().hash(_storeImages),
+    const DeepCollectionEquality().hash(_goodsImageList),
     goodsName,
     startTime,
     endTime,
@@ -535,7 +567,8 @@ abstract class _PendingStoreDto implements PendingStoreDto {
   const factory _PendingStoreDto({
     required final String storeId,
     required final String storeName,
-    @JsonKey(name: 'ImageUrl') final List<String> imageUrl,
+    final List<String> storeImages,
+    final List<GoodsImageItemDto> goodsImageList,
     final String? goodsName,
     required final String startTime,
     required final String endTime,
@@ -563,8 +596,9 @@ abstract class _PendingStoreDto implements PendingStoreDto {
   @override
   String get storeName;
   @override
-  @JsonKey(name: 'ImageUrl')
-  List<String> get imageUrl;
+  List<String> get storeImages;
+  @override
+  List<GoodsImageItemDto> get goodsImageList;
   @override
   String? get goodsName;
   @override

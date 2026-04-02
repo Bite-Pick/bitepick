@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/features/admin/data/dtos/registered_store.dto.dart';
 
 part 'pending_store.dto.freezed.dart';
 part 'pending_store.dto.g.dart';
@@ -9,7 +10,8 @@ class PendingStoreDto with _$PendingStoreDto {
   const factory PendingStoreDto({
     required String storeId,
     required String storeName,
-    @JsonKey(name: 'ImageUrl') @Default([]) List<String> imageUrl,
+    @Default([]) List<String> storeImages,
+    @Default([]) List<GoodsImageItemDto> goodsImageList,
     String? goodsName,
     required String startTime,
     required String endTime,

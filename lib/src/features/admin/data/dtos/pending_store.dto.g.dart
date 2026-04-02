@@ -11,8 +11,15 @@ _$PendingStoreDtoImpl _$$PendingStoreDtoImplFromJson(
 ) => _$PendingStoreDtoImpl(
   storeId: json['storeId'] as String,
   storeName: json['storeName'] as String,
-  imageUrl:
-      (json['ImageUrl'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+  storeImages:
+      (json['storeImages'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  goodsImageList:
+      (json['goodsImageList'] as List<dynamic>?)
+          ?.map((e) => GoodsImageItemDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
       const [],
   goodsName: json['goodsName'] as String?,
   startTime: json['startTime'] as String,
@@ -38,7 +45,8 @@ Map<String, dynamic> _$$PendingStoreDtoImplToJson(
 ) => <String, dynamic>{
   'storeId': instance.storeId,
   'storeName': instance.storeName,
-  'ImageUrl': instance.imageUrl,
+  'storeImages': instance.storeImages,
+  'goodsImageList': instance.goodsImageList,
   'goodsName': instance.goodsName,
   'startTime': instance.startTime,
   'endTime': instance.endTime,
