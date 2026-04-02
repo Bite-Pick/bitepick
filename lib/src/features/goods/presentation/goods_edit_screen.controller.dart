@@ -110,7 +110,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       return GoodsDetailItem(
         localImage: LocalImage(
           id: imageItem.id ?? index+1,
-          key: imageItem.imageUrl?.split('/').last ?? '',
+          key: imageItem.key ?? '',
           file: null, // 이미 업로드된 이미지는 file이 없음
           uploadedUrl: imageItem.imageUrl,
         ),
@@ -270,6 +270,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
           'key': goodsDetail.localImage.key,
           'id': goodsDetail.localImage.id,
           'goodsName': goodsDetail.name,
+          'imageUrl': goodsDetail.localImage.uploadedUrl,
         };
       }).toList();
 
