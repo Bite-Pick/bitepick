@@ -20,6 +20,73 @@ import 'package:magambell/src/widgets/toast_presentor.dart';
 
 enum ReviewItemButtonType { report, delete, none }
 
+class _ImageViewerDialog extends StatefulWidget {
+  const _ImageViewerDialog({
+    required this.imageUrls,
+    required this.initialIndex,
+  });
+
+  final List<String> imageUrls;
+  final int initialIndex;
+
+  @override
+  State<_ImageViewerDialog> createState() => _ImageViewerDialogState();
+}
+
+class _ImageViewerDialogState extends State<_ImageViewerDialog> {
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog.fullscreen(
+      backgroundColor: Colors.black,
+      child: Stack(
+        children: [
+          PageView.builder(
+            itemCount: widget.imageUrls.length,
+            controller: PageController(initialPage: widget.initialIndex),
+            onPageChanged: (i) => setState(() => _currentIndex = i),
+            itemBuilder: (_, index) => InteractiveViewer(
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: widget.imageUrls[index],
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close, color: Colors.white),
+              ),
+            ),
+          ),
+          if (widget.imageUrls.length > 1)
+            Positioned(
+              bottom: MgSizes.xl,
+              left: 0,
+              right: 0,
+              child: Text(
+                '${_currentIndex + 1} / ${widget.imageUrls.length}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class ReviewItem extends ConsumerStatefulWidget {
   const ReviewItem(
     this.review, {
@@ -70,17 +137,22 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
           ),
           Text(widget.review.description).sm().margin(vertical: MgSizes.sm),
           if (widget.review.imageUrls.isNotEmpty)
-            Row(
-              children: widget.review.imageUrls
-                  .map(
-                    (imageUrl) => BaseNetworkImage(
-                      imageUrl: imageUrl,
-                      height: 120.w,
-                      width: 120.w,
-                    ),
-                  )
-                  .toList(),
-            ).constrained(height: 120),
+            SizedBox(
+              height: 120.w,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.review.imageUrls.length,
+                separatorBuilder: (_, __) => Gaps.w8,
+                itemBuilder: (_, index) => GestureDetector(
+                  onTap: () => _showImageViewer(index),
+                  child: BaseNetworkImage(
+                    imageUrl: widget.review.imageUrls[index],
+                    height: 120.w,
+                    width: 120.w,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -100,6 +172,16 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
       ),
       ReviewItemButtonType.none => const SizedBox.shrink(),
     };
+  }
+
+  void _showImageViewer(int initialIndex) {
+    showDialog(
+      context: context,
+      builder: (_) => _ImageViewerDialog(
+        imageUrls: widget.review.imageUrls,
+        initialIndex: initialIndex,
+      ),
+    );
   }
 
   // TODO[review]: 테스트 필요

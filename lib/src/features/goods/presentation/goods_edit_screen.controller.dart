@@ -110,7 +110,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       return GoodsDetailItem(
         localImage: LocalImage(
           id: imageItem.id ?? index+1,
-          key: imageItem.imageUrl?.split('/').last ?? '',
+          key: imageItem.key ?? '',
           file: null, // 이미 업로드된 이미지는 file이 없음
           uploadedUrl: imageItem.imageUrl,
         ),
@@ -255,6 +255,23 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
       return false;
     }
 
+    final context = GlobalVariable.navigatorKey.currentContext;
+    for (final detail in state.goodsDetails) {
+      final hasImage = detail.localImage.file != null || detail.localImage.uploadedUrl != null;
+      if (!hasImage) {
+        if (context != null) {
+          ToastPresentor.error(context, '${detail.name.isNotEmpty ? detail.name : '상품'} 이미지를 추가해주세요');
+        }
+        return false;
+      }
+      if (detail.name.trim().isEmpty) {
+        if (context != null) {
+          ToastPresentor.error(context, '상품명을 입력해주세요');
+        }
+        return false;
+      }
+    }
+
     try {
       state = state.copyWith(
         isSubmitting: true,
@@ -270,6 +287,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
           'key': goodsDetail.localImage.key,
           'id': goodsDetail.localImage.id,
           'goodsName': goodsDetail.name,
+          'imageUrl': goodsDetail.localImage.uploadedUrl,
         };
       }).toList();
 

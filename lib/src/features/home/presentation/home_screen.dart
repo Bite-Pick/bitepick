@@ -26,7 +26,6 @@ import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_checkbox.dart';
 import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -37,6 +36,27 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      ref.read(homeScreenControllerProvider.notifier).loadMore();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controllerStateAsync = ref.watch(homeScreenControllerProvider);
@@ -59,71 +79,125 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           statusBarBrightness: Brightness.light,
         ),
         child: MgAsyncAnimatedSwitcher(
-        asyncValue: controllerStateAsync,
-        builder: (controllerState) {
-          return SafeArea(
-            // TODO: BaseCustomScrollView refact
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ref.refresh(homeScreenControllerProvider);
-              },
-              child: CustomScrollView(
-                slivers: [
-                  SliverPersistentHeader(
-                    pinned: true,
-                    floating: true,
-                    delegate: _HomeAppBar(
-                      controllerState.serviceAddresses,
-                      controllerState.defaultAddress,
-                    ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Column(
-                        children: [
-                          HomeBannersView(),
-                          HomeUpdateBanner(),
-                          _buildFilterSection(
-                            controllerState.onlyAvailable,
-                            controllerState.sortType,
-                          ),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controllerState.storeGoodsList.length,
-                            separatorBuilder: (context, index) => Gaps.h16,
-                            itemBuilder: (context, index) {
-                              final item = controllerState.storeGoodsList[index];
-                              return HomeGoodsItem(goods: item.toHomeGoodsItem())
-                                  .margin(bottom: MgSizes.xs)
-                                  .margin(horizontal: MgSizes.md);
-                            },
-                          ),
-                        ],
+          asyncValue: controllerStateAsync,
+          onRetry: () => ref.invalidate(homeScreenControllerProvider),
+          builder: (controllerState) {
+            return SafeArea(
+              // TODO: BaseCustomScrollView refact
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref.refresh(homeScreenControllerProvider);
+                },
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverPersistentHeader(
+                      pinned: true,
+                      floating: true,
+                      delegate: _HomeAppBar(
+                        controllerState.serviceAddresses,
+                        controllerState.defaultAddress,
                       ),
-                    ]),
-                  ),
-                ],
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        Column(
+                          children: [
+                            HomeBannersView(),
+                            HomeUpdateBanner(),
+                            _buildFilterSection(
+                              controllerState.onlyAvailable,
+                              controllerState.sortType,
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controllerState.storeGoodsList.length,
+                              separatorBuilder: (context, index) => Gaps.h16,
+                              itemBuilder: (context, index) {
+                                final item =
+                                    controllerState.storeGoodsList[index];
+                                return HomeGoodsItem(
+                                      goods: item.toHomeGoodsItem(),
+                                    )
+                                    .margin(bottom: MgSizes.xs)
+                                    .margin(horizontal: MgSizes.md);
+                              },
+                            ),
+                            if (controllerState.isLoadingMore)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            if (!controllerState.hasMore &&
+                                controllerState.storeGoodsList.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                child: Center(
+                                  child: Text('bitepick').sm().textGray(),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ]),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
       ),
     );
   }
-    
-    
 
   Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
     return Row(
       children: [
-        MgCheckbox(
-          initialValue: onlyAvailable,
-          onChanged: (value) => ref
+        GestureDetector(
+          onTap: () => ref
               .read(homeScreenControllerProvider.notifier)
               .toggleOnlyAvailable(),
-          trailing: Text("예약가능").sm().margin(left: MgSizes.xs),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: onlyAvailable ? MgColorScheme.gray1 : Colors.transparent,
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(
+                color: onlyAvailable
+                    ? MgColorScheme.gray1
+                    : MgColorScheme.gray7,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: onlyAvailable
+                      ? MgColorScheme.gray11
+                      : MgColorScheme.gray1,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "예약가능",
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: onlyAvailable
+                        ? MgColorScheme.gray11
+                        : MgColorScheme.gray1,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ).margin(all: MgSizes.md),
 
         Spacer(),
@@ -146,7 +220,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheet(SortType currentSortType) {
     final List<String> sorts = SortType.values
-        .where((e) => e != SortType.distanceAsc && e != SortType.ratingDesc)
+        .where((e) => e != SortType.distanceAsc)
         .map((e) => e.name)
         .toList();
     return MgBottomsheet(

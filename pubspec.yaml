@@ -2,7 +2,7 @@ name: magambell
 description: "A new Flutter project."
 publish_to: 'none' 
 
-version: 1.20.1+162
+version: 1.20.2+165
 
 environment:
   sdk: ^3.9.0
@@ -26,6 +26,7 @@ dependencies:
   # Network
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
+  connectivity_plus: ^6.1.0
 
   # Logging
   talker_flutter: ^4.6.12

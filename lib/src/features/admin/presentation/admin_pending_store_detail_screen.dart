@@ -55,7 +55,7 @@ class _AdminPendingStoreDetailScreenState
     super.initState();
     _initializeForm();
     // Initialize localImages from the store DTO
-    localImages = widget.store.imageUrl;
+    localImages = widget.store.storeImages;
   }
 
   @override
@@ -114,9 +114,9 @@ class _AdminPendingStoreDetailScreenState
         // ),
         buildSectionTitle("대표이미지"),
         // TODO: 이미지 수정 기능 추가(+다중 이미지 처리 관련 서버 수정)
-        widget.store.imageUrl.isNotEmpty
+        widget.store.storeImages.isNotEmpty
             ? Row(
-                children: widget.store.imageUrl
+                children: widget.store.storeImages
                     .map(
                       (url) => BaseNetworkImage(
                         imageUrl: url,

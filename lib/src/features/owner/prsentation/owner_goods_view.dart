@@ -21,17 +21,27 @@ class OwnerGoodsView extends ConsumerWidget {
     final ownerStoreAsync = ref.watch(ownerStoreProvider);
     return MgAsyncAnimatedSwitcher(
       asyncValue: ownerStoreAsync,
+      onRetry: () => ref.invalidate(ownerStoreProvider),
       builder: (store) {
         if (store == null) return OwnerGoodsEmptyScreen();
         return Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    StoreInfoView(store.toStoreInfoData(), hasFavorite: false),
-                    StoreBiteBagView(store.goodsImageList ?? []),
-                  ],
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  try {
+                    ref.invalidate(ownerStoreProvider);
+                    await ref.read(ownerStoreProvider.future);
+                  } catch (_) {}
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      StoreInfoView(store.toStoreInfoData(), hasFavorite: false),
+                      StoreBiteBagView(store.goodsImageList ?? []),
+                    ],
+                  ),
                 ),
               ),
             ),

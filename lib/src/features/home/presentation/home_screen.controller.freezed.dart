@@ -22,6 +22,9 @@ mixin _$HomeScreenControllerState {
   Address get defaultAddress => throw _privateConstructorUsedError;
   List<StoreListDTO> get storeGoodsList => throw _privateConstructorUsedError;
   List<Address> get serviceAddresses => throw _privateConstructorUsedError;
+  int get currentPage => throw _privateConstructorUsedError;
+  bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get hasMore => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
@@ -43,6 +46,9 @@ abstract class $HomeScreenControllerStateCopyWith<$Res> {
     Address defaultAddress,
     List<StoreListDTO> storeGoodsList,
     List<Address> serviceAddresses,
+    int currentPage,
+    bool isLoadingMore,
+    bool hasMore,
   });
 
   $AddressCopyWith<$Res> get defaultAddress;
@@ -71,6 +77,9 @@ class _$HomeScreenControllerStateCopyWithImpl<
     Object? defaultAddress = null,
     Object? storeGoodsList = null,
     Object? serviceAddresses = null,
+    Object? currentPage = null,
+    Object? isLoadingMore = null,
+    Object? hasMore = null,
   }) {
     return _then(
       _value.copyWith(
@@ -94,6 +103,18 @@ class _$HomeScreenControllerStateCopyWithImpl<
                 ? _value.serviceAddresses
                 : serviceAddresses // ignore: cast_nullable_to_non_nullable
                       as List<Address>,
+            currentPage: null == currentPage
+                ? _value.currentPage
+                : currentPage // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isLoadingMore: null == isLoadingMore
+                ? _value.isLoadingMore
+                : isLoadingMore // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasMore: null == hasMore
+                ? _value.hasMore
+                : hasMore // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -125,6 +146,9 @@ abstract class _$$HomeScreenControllerStateImplCopyWith<$Res>
     Address defaultAddress,
     List<StoreListDTO> storeGoodsList,
     List<Address> serviceAddresses,
+    int currentPage,
+    bool isLoadingMore,
+    bool hasMore,
   });
 
   @override
@@ -154,6 +178,9 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
     Object? defaultAddress = null,
     Object? storeGoodsList = null,
     Object? serviceAddresses = null,
+    Object? currentPage = null,
+    Object? isLoadingMore = null,
+    Object? hasMore = null,
   }) {
     return _then(
       _$HomeScreenControllerStateImpl(
@@ -177,6 +204,18 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
             ? _value._serviceAddresses
             : serviceAddresses // ignore: cast_nullable_to_non_nullable
                   as List<Address>,
+        currentPage: null == currentPage
+            ? _value.currentPage
+            : currentPage // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isLoadingMore: null == isLoadingMore
+            ? _value.isLoadingMore
+            : isLoadingMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasMore: null == hasMore
+            ? _value.hasMore
+            : hasMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -191,6 +230,9 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     required this.defaultAddress,
     required final List<StoreListDTO> storeGoodsList,
     required final List<Address> serviceAddresses,
+    this.currentPage = 1,
+    this.isLoadingMore = false,
+    this.hasMore = true,
   }) : _storeGoodsList = storeGoodsList,
        _serviceAddresses = serviceAddresses;
 
@@ -218,8 +260,18 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
   }
 
   @override
+  @JsonKey()
+  final int currentPage;
+  @override
+  @JsonKey()
+  final bool isLoadingMore;
+  @override
+  @JsonKey()
+  final bool hasMore;
+
+  @override
   String toString() {
-    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, defaultAddress: $defaultAddress, storeGoodsList: $storeGoodsList, serviceAddresses: $serviceAddresses)';
+    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, defaultAddress: $defaultAddress, storeGoodsList: $storeGoodsList, serviceAddresses: $serviceAddresses, currentPage: $currentPage, isLoadingMore: $isLoadingMore, hasMore: $hasMore)';
   }
 
   @override
@@ -240,7 +292,12 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
             const DeepCollectionEquality().equals(
               other._serviceAddresses,
               _serviceAddresses,
-            ));
+            ) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore) &&
+            (identical(other.hasMore, hasMore) || other.hasMore == hasMore));
   }
 
   @override
@@ -251,6 +308,9 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     defaultAddress,
     const DeepCollectionEquality().hash(_storeGoodsList),
     const DeepCollectionEquality().hash(_serviceAddresses),
+    currentPage,
+    isLoadingMore,
+    hasMore,
   );
 
   /// Create a copy of HomeScreenControllerState
@@ -272,6 +332,9 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
     required final Address defaultAddress,
     required final List<StoreListDTO> storeGoodsList,
     required final List<Address> serviceAddresses,
+    final int currentPage,
+    final bool isLoadingMore,
+    final bool hasMore,
   }) = _$HomeScreenControllerStateImpl;
 
   @override
@@ -284,6 +347,12 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
   List<StoreListDTO> get storeGoodsList;
   @override
   List<Address> get serviceAddresses;
+  @override
+  int get currentPage;
+  @override
+  bool get isLoadingMore;
+  @override
+  bool get hasMore;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.

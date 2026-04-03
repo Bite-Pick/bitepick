@@ -79,8 +79,7 @@ class NotificationRepository {
 
   Future<bool> deleteNotificationToken(String storeId) async {
     final res = await _dio.delete('/v1/notification/store/$storeId');
-    final data = res.data['data'] as String?;
-    if (res.data['status'] != 'OK' || data == null) return false;
+    if (res.data['status'] != 'OK') return false;
     return true;
   }
 

@@ -156,8 +156,8 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
     _pickupDate = pickupDate;
 
-    // 30분 단위로 반올림/내림
-    rangeStartMinute = ((rangeStartMinute + 14) ~/ 30) * 30; // 반올림
+    // 30분 단위로 올림/내림
+    rangeStartMinute = ((rangeStartMinute + 29) ~/ 30) * 30; // 올림
     rangeEndMinute = (rangeEndMinute ~/ 30) * 30; // 내림
 
     // 30분 단위로 시간 생성
@@ -318,7 +318,9 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
                               : MgColorScheme.gray5,
                         )
                         .fontSize(isSelected ? MgFontSize.lg : MgFontSize.md)
-                        .fontWeight(isSelected ? FontWeight.bold : FontWeight.normal),
+                        .fontWeight(
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
                   );
                 },
                 childCount: _timeOptions.length,
