@@ -149,8 +149,8 @@ class PushNotification {
   }
 
   /// data에 따라 화면 이동
-  /// - storeId 있으면 → 매장 상세
-  /// - type == 'ORDER' 또는 orderId 있으면 → 사장님: OwnerHome, 일반: 주문내역 탭
+  /// - type == 'STORE_OPEN' && storeId 있으면 → 매장 상세
+  /// - type == 'ORDER' 이면 → 사장님: OwnerHome, 일반: 주문내역 탭
   /// - 그 외 → 아무것도 안 함 (앱만 오픈)
   static void _navigateFromData(Map<String, dynamic> data) {
     final context = GlobalVariable.navigatorKey.currentContext;
@@ -158,14 +158,13 @@ class PushNotification {
 
     final storeId = data['storeId'] as String?;
     final type = data['type'] as String?;
-    final hasOrderData = type == 'ORDER' || data.containsKey('orderId');
 
-    if (storeId != null) {
+    if (type == 'STORE_OPEN' && storeId != null) {
       GoRouter.of(context).go(StoreRoute(id: storeId).location);
       return;
     }
 
-    if (hasOrderData) {
+    if (type == 'ORDER') {
       final container = ProviderScope.containerOf(context);
       final user = container.read(userStateProvider).asData?.value;
       if (user?.userRole == UserRole.owner) {
