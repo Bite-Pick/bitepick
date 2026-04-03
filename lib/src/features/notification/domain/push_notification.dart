@@ -35,7 +35,9 @@ class PushNotification {
     // listenToTokenRefresh(registerTokenToServer);
   }
 
-  /// 앱 종료 상태에서 알림으로 실행되었는지 확인
+  static RemoteMessage? _pendingInitialMessage;
+
+  /// 앱 종료 상태에서 알림으로 실행되었는지 확인 (실제 네비게이션은 navigatePendingMessage에서)
   static Future<void> checkInitialMessage() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance
         .getInitialMessage();
@@ -44,8 +46,15 @@ class PushNotification {
       talker.info(
         '[FCM] App opened from notification: ${initialMessage.notification?.title}',
       );
-      handleNotificationNavigation(initialMessage, delayed: true);
+      _pendingInitialMessage = initialMessage;
     }
+  }
+
+  /// splash 이후에 호출 — 저장된 초기 알림으로 네비게이션 실행
+  static void navigatePendingMessage() {
+    if (_pendingInitialMessage == null) return;
+    handleNotificationNavigation(_pendingInitialMessage!);
+    _pendingInitialMessage = null;
   }
 
   /// 알림 권한 요청

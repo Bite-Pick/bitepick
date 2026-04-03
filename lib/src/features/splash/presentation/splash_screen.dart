@@ -12,6 +12,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/splash/data/repositories/app_version_policy_repository.dart';
 import 'package:magambell/src/features/splash/domain/entities/app_version_policy.dart';
+import 'package:magambell/src/features/notification/domain/push_notification.dart';
 import 'package:magambell/src/features/splash/presentation/widgets/version_update_alert_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -33,7 +34,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         Future.delayed(const Duration(seconds: 1)),
       ]);
       if (!mounted) return;
-      if (results[0] as bool) DefaultRoute().go(context);
+      if (results[0] as bool) {
+        DefaultRoute().go(context);
+        PushNotification.navigatePendingMessage();
+      }
     });
   }
 
