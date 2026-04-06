@@ -143,11 +143,12 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
     final now = DateTime.now();
     final endTime = goods.endTime;
     final goodsStartTime = goods.startTime;
-    final startTime =
-        (now.hour * 3600 + now.minute * 60 + now.second) >
-            (goodsStartTime.hour * 3600 +
-                goodsStartTime.minute * 60 +
-                goodsStartTime.second)
+    final nowSeconds = now.hour * 3600 + now.minute * 60 + now.second;
+    final startSeconds = goodsStartTime.hour * 3600 + goodsStartTime.minute * 60 + goodsStartTime.second;
+    final endSeconds = endTime.hour * 3600 + endTime.minute * 60 + endTime.second;
+    // 현재 시간이 픽업 범위 안(startTime < now <= endTime)일 때만 now로 대체
+    // 범위 밖이면 goodsStartTime 사용 → 타임피커가 오늘/내일 날짜를 알아서 처리
+    final startTime = (nowSeconds > startSeconds && nowSeconds <= endSeconds)
         ? now
         : goodsStartTime;
 
