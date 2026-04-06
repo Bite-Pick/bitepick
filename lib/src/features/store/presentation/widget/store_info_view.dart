@@ -21,9 +21,10 @@ import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class StoreInfoView extends ConsumerWidget {
-  const StoreInfoView(this.storeInfo, {super.key, this.hasFavorite = true});
+  const StoreInfoView(this.storeInfo, {super.key, this.hasFavorite = true, this.onPhotoChangeTap});
   final StoreInfoUiData storeInfo;
   final bool hasFavorite;
+  final VoidCallback? onPhotoChangeTap;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
@@ -41,10 +42,20 @@ class StoreInfoView extends ConsumerWidget {
   Widget _buildThumbnailImageView() {
     List<String> imageUrls = storeInfo.imageUrls;
     if (storeInfo.imageUrls.isEmpty) {
-      return Container(
-        height: 300,
-        color: MgColorScheme.gray2,
-        child: Center(child: Text('이미지 없음').textGray()),
+      return Stack(
+        children: [
+          Container(
+            height: 300,
+            color: MgColorScheme.gray2,
+            child: Center(child: Text('이미지 없음').textGray()),
+          ),
+          if (onPhotoChangeTap != null)
+            Positioned(
+              top: 22,
+              left: 22,
+              child: _buildPhotoChangeChip(),
+            ),
+        ],
       );
     }
 
@@ -93,7 +104,37 @@ class StoreInfoView extends ConsumerWidget {
               ),
             ),
           ),
+        if (onPhotoChangeTap != null)
+          Positioned(
+            top: 22,
+            left: 22,
+            child: _buildPhotoChangeChip(),
+          ),
       ],
+    );
+  }
+
+  Widget _buildPhotoChangeChip() {
+    return GestureDetector(
+      onTap: onPhotoChangeTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.55),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+            const SizedBox(width: 4),
+            const Text(
+              '사진 변경',
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
