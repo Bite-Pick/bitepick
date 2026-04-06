@@ -95,7 +95,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
               unselectedLabelStyle: context.textTheme.bodyLarge,
               tabs: [
                 Tab(text: '주문'),
-                Tab(text: '상품'),
+                Tab(text: '판매'),
               ],
             ),
           ),
