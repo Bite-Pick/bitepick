@@ -80,7 +80,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
     // 2. 초기 선택 인덱스 계산
     // disableNowFilter이고 initialTime이 없으면 가장 이른 시간(인덱스 0)으로 설정
-    if (widget.disableNowFilter && widget.initialTime == null) {
+    if ((widget.disableNowFilter || !_isPickupToday) && widget.initialTime == null) {
       _selectedIndex = 0;
     } else {
       final initialTime = widget.initialTime ?? DateTime.now();
