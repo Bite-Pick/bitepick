@@ -42,6 +42,8 @@ class OwnerHomeScreen extends ConsumerStatefulWidget {
 class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  bool _isTogglingStatus = false;
+  bool? _optimisticSaleStatus;
 
   @override
   void initState() {
@@ -77,7 +79,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
               children: [
                 _buildServiceSwitch(
                   store?.goodsList[0].goodsId ?? "",
-                  store?.goodsList[0].saleStatus == "ON",
+                  _optimisticSaleStatus ?? (store?.goodsList[0].saleStatus == "ON"),
                 ),
                 OwnerMoreButton(),
               ],
@@ -131,13 +133,17 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
 
   Widget _buildServiceSwitch(String id, bool saleStatus) {
     void onToggle() {
+      if (_isTogglingStatus) return;
       final newValue = !saleStatus;
       if (!newValue) {
+        // OFF: 다이얼로그 확인 후 UI 전환 (changeSaleStatus 내에서 낙관적 상태 세팅)
         showDialog(
           context: context,
           builder: (context) => _buildAlertDialog(id, newValue),
         );
       } else {
+        // ON: 즉시 UI 반영
+        setState(() => _optimisticSaleStatus = newValue);
         changeSaleStatus(id, newValue);
       }
     }
@@ -176,16 +182,31 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   }
 
   Future<void> changeSaleStatus(String id, bool saleStatus) async {
+    if (_isTogglingStatus) return;
+    setState(() {
+      _isTogglingStatus = true;
+      _optimisticSaleStatus = saleStatus;
+    });
     try {
       await ref
           .read(goodsRepositoryProvider)
           .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
       ref.invalidate(storeStateProvider);
+      // provider 재로딩 완료까지 기다린 후 낙관적 상태 해제
+      await ref.read(storeStateProvider.future);
     } on DioException catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("네트워크 오류가 발생했습니다. 다시 시도해주세요.")),
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isTogglingStatus = false;
+          // 성공 시엔 provider 값이 준비됐으므로 낙관적 상태 해제, 실패 시엔 롤백
+          _optimisticSaleStatus = null;
+        });
+      }
     }
   }
 }
