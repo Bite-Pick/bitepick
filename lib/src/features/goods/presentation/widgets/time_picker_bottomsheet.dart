@@ -42,6 +42,17 @@ class TimePickerBottomSheet extends StatefulWidget {
   @override
   State<TimePickerBottomSheet> createState() => _TimePickerBottomSheetState();
 
+  static String formatSelectedTime(DateTime dt) {
+    final now = DateTime.now();
+    final isToday = dt.year == now.year && dt.month == now.month && dt.day == now.day;
+    final dayLabel = isToday ? '오늘' : '내일';
+    final dateLabel = '${dt.month}/${dt.day}';
+    final period = dt.hour < 12 ? '오전' : '오후';
+    final hour12 = dt.hour == 0 ? 12 : (dt.hour > 12 ? dt.hour - 12 : dt.hour);
+    final minuteStr = dt.minute.toString().padLeft(2, '0');
+    return '$dayLabel($dateLabel) $period $hour12:$minuteStr';
+  }
+
   static Future<void> show(
     BuildContext context, {
     DateTime? initialTime,
@@ -61,7 +72,7 @@ class TimePickerBottomSheet extends StatefulWidget {
         onTimeSelected: onTimeSelected,
         onSelectionChanged: onSelectionChanged,
       );
-    }, height: 450);
+    }, height: 370);
   }
 }
 
