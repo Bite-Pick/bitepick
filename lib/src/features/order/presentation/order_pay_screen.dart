@@ -114,7 +114,7 @@ class _OrderPayScreenState extends ConsumerState<OrderPayScreen> {
                     thickness: 2,
                     color: MgColorScheme.gray10,
                   ).margin(vertical: MgSizes.xxl),
-                  _buildNoticeCard().margin(horizontal: MgSizes.md),
+                  _buildNoticeCard().margin(horizontal: MgSizes.md, bottom: 63),
                 ],
               ),
             ),
