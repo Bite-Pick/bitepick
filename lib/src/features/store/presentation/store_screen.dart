@@ -234,7 +234,7 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
             child:
                 MgButton(
                   onPressed: () async {
-                    if (count > goods.quantity) {
+                    if (saleStatus && count > goods.quantity) {
                       ToastPresentor.error(
                         context,
                         "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
