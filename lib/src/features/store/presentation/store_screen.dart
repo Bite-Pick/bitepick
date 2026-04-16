@@ -75,6 +75,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
           ),
           body: RefreshIndicator(
             onRefresh: () async {
+              ref.invalidate(storeSubscriberCountProvider(storeId: widget.id));
               ref.refresh(storeGoodsDetailProvider(widget.id));
             },
             child: CustomScrollView(
@@ -145,12 +146,9 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
     );
     final isSubscribed = subscribedAsync.asData?.value ?? false;
 
-    // 서버에서 초기값 1회 수신
     ref.listen(storeSubscriberCountProvider(storeId: widget.storeId), (_, next) {
       next.whenData((serverCount) {
-        if (mounted && _subscriberCount == null) {
-          setState(() => _subscriberCount = serverCount);
-        }
+        if (mounted) setState(() => _subscriberCount = serverCount);
       });
     });
     final now = DateTime.now();
@@ -258,16 +256,14 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                         final res = await ref
                             .read(notificationRepositoryProvider)
                             .deleteNotificationToken(widget.storeId);
-                        if (res && context.mounted) {
-                          ToastPresentor.notificationToast(context, "오픈 알림이 해제되었습니다.");
-                          ref.invalidate(
-                            storeNotificationSubscribedProvider(
-                              storeId: widget.storeId,
-                            ),
-                          );
-                        } else if (context.mounted) {
-                          // 실패 시 롤백
-                          setState(() => _subscriberCount = (_subscriberCount ?? 0) + 1);
+                        if (context.mounted) {
+                          if (res) {
+                            ToastPresentor.notificationToast(context, "오픈 알림이 해제되었습니다.");
+                            ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                          } else {
+                            // 실패 시 롤백
+                            setState(() => _subscriberCount = (_subscriberCount ?? 0) + 1);
+                          }
                         }
                       } else {
                         // 옵티미스틱 업데이트: 즉시 증가
@@ -278,27 +274,21 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                           final res = await ref
                               .read(notificationRepositoryProvider)
                               .registerStoreNotification(storeId: widget.storeId);
-                          if (res && context.mounted) {
-                            ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
-                            ref.invalidate(
-                              storeNotificationSubscribedProvider(
-                                storeId: widget.storeId,
-                              ),
-                            );
-                          } else if (context.mounted) {
-                            // 실패 시 롤백
-                            setState(() {
-                              _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
-                            });
+                          if (context.mounted) {
+                            if (res) {
+                              ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
+                              ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                            } else {
+                              // 실패 시 롤백
+                              setState(() {
+                                _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
+                              });
+                            }
                           }
                         } on DuplicateNotificationStoreException {
                           if (context.mounted) {
                             ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
-                            ref.invalidate(
-                              storeNotificationSubscribedProvider(
-                                storeId: widget.storeId,
-                              ),
-                            );
+                            ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
                           }
                         } catch (_) {
                           if (context.mounted) {
