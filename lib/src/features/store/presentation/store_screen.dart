@@ -196,7 +196,7 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                             .read(notificationRepositoryProvider)
                             .deleteNotificationToken(widget.storeId);
                         if (res && context.mounted) {
-                          ToastPresentor.success(context, "오픈 알림이 해제되었습니다.");
+                          ToastPresentor.notificationToast(context, "오픈 알림이 해제되었습니다.");
                           ref.invalidate(
                             storeNotificationSubscribedProvider(
                               storeId: widget.storeId,
@@ -208,7 +208,7 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                             .read(notificationRepositoryProvider)
                             .registerStoreNotification(storeId: widget.storeId);
                         if (res && context.mounted) {
-                          ToastPresentor.success(context, "매장이 오픈하면 알려드릴게요!");
+                          ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
                           ref.invalidate(
                             storeNotificationSubscribedProvider(
                               storeId: widget.storeId,

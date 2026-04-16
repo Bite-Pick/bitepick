@@ -104,6 +104,45 @@ class ToastPresentor {
     );
   }
 
+  static void notificationToast(
+    BuildContext context,
+    String message,
+  ) {
+    unawaited(
+      context.showFlash(
+        duration: const Duration(milliseconds: 2000),
+        builder: (context, controller) {
+          return Align(
+            alignment: Alignment.center,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                margin: Gutter.wlg,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: MgColorScheme.gray1,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
+                      color: MgColorScheme.systemSuccess,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(message).md().regular().textColor(Colors.white),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   static void bottomInfo(
     BuildContext context,
     String message, {
