@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,8 +8,10 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/goods/data/dtos/goods_detail.dto.dart';
+import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/features/notification/data/repositories/notification_repository.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
@@ -72,6 +75,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
           ),
           body: RefreshIndicator(
             onRefresh: () async {
+              ref.invalidate(storeSubscriberCountProvider(storeId: widget.id));
               ref.refresh(storeGoodsDetailProvider(widget.id));
             },
             child: CustomScrollView(
@@ -125,6 +129,7 @@ class _BottomOrderBar extends ConsumerStatefulWidget {
 
 class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
   int count = 1;
+  int? _subscriberCount;
 
   void setCount(int newCount) {
     setState(() {
@@ -140,6 +145,12 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
       storeNotificationSubscribedProvider(storeId: widget.storeId),
     );
     final isSubscribed = subscribedAsync.asData?.value ?? false;
+
+    ref.listen(storeSubscriberCountProvider(storeId: widget.storeId), (_, next) {
+      next.whenData((serverCount) {
+        if (mounted) setState(() => _subscriberCount = serverCount);
+      });
+    });
     final now = DateTime.now();
     final endTime = goods.endTime;
     final goodsStartTime = goods.startTime;
@@ -153,9 +164,55 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
         : goodsStartTime;
 
     return SafeArea(
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (saleStatus) ...[
+          if (!saleStatus && _subscriberCount != null)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(
+                top: 11,
+                bottom: defaultTargetPlatform == TargetPlatform.iOS ? 11 : 14,
+              ),
+              decoration: const BoxDecoration(
+                color: Color(0xFF37383C),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+              ),
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '$_subscriberCount명이',
+                      style: const TextStyle(
+                        color: MgColorScheme.primary,
+                        fontFamily: MgFontFamily.bold,
+                        fontSize: MgFontSize.sm,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' 매장 오픈을 기다리고 있어요!',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: MgFontFamily.semiBold,
+                        fontSize: MgFontSize.sm,
+                      ),
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: MgSizes.md,
+              vertical: MgSizes.md,
+            ),
+            child: Row(
+              children: [
+                if (saleStatus) ...[
             Expanded(
               child: QuantityPicker(
                 count: count,
@@ -175,7 +232,7 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
             child:
                 MgButton(
                   onPressed: () async {
-                    if (count > goods.quantity) {
+                    if (saleStatus && count > goods.quantity) {
                       ToastPresentor.error(
                         context,
                         "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
@@ -192,28 +249,54 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
 
                     if (!saleStatus) {
                       if (isSubscribed) {
+                        // 옵티미스틱 업데이트: 즉시 감소
+                        setState(() {
+                          _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
+                        });
                         final res = await ref
                             .read(notificationRepositoryProvider)
                             .deleteNotificationToken(widget.storeId);
-                        if (res && context.mounted) {
-                          ToastPresentor.success(context, "오픈 알림이 해제되었습니다.");
-                          ref.invalidate(
-                            storeNotificationSubscribedProvider(
-                              storeId: widget.storeId,
-                            ),
-                          );
+                        if (context.mounted) {
+                          if (res) {
+                            ToastPresentor.notificationToast(context, "오픈 알림이 해제되었습니다.");
+                            ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                          } else {
+                            // 실패 시 롤백
+                            setState(() => _subscriberCount = (_subscriberCount ?? 0) + 1);
+                          }
                         }
                       } else {
-                        final res = await ref
-                            .read(notificationRepositoryProvider)
-                            .registerStoreNotification(storeId: widget.storeId);
-                        if (res && context.mounted) {
-                          ToastPresentor.success(context, "매장이 오픈하면 알려드릴게요!");
-                          ref.invalidate(
-                            storeNotificationSubscribedProvider(
-                              storeId: widget.storeId,
-                            ),
-                          );
+                        // 옵티미스틱 업데이트: 즉시 증가
+                        setState(() {
+                          _subscriberCount = (_subscriberCount ?? 0) + 1;
+                        });
+                        try {
+                          final res = await ref
+                              .read(notificationRepositoryProvider)
+                              .registerStoreNotification(storeId: widget.storeId);
+                          if (context.mounted) {
+                            if (res) {
+                              ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
+                              ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                            } else {
+                              // 실패 시 롤백
+                              setState(() {
+                                _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
+                              });
+                            }
+                          }
+                        } on DuplicateNotificationStoreException {
+                          if (context.mounted) {
+                            ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
+                            ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
+                          }
+                        } catch (_) {
+                          if (context.mounted) {
+                            // 기타 에러 시 롤백
+                            setState(() {
+                              _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
+                            });
+                          }
                         }
                       }
                       return;
@@ -256,9 +339,12 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                       : null,
                 ),
           ),
+              ],
+            ),
+          ),
         ],
       ),
-    ).margin(horizontal: MgSizes.md, vertical: MgSizes.md);
+    );
   }
 }
 

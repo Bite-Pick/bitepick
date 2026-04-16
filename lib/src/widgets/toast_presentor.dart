@@ -17,6 +17,8 @@ class ToastPresentor {
     unawaited(
       context.showFlash(
         duration: const Duration(milliseconds: 2000),
+        transitionDuration: const Duration(milliseconds: 350),
+        reverseTransitionDuration: const Duration(milliseconds: 250),
         builder: (context, controller) {
           return FlashBar(
             controller: controller,
@@ -32,7 +34,10 @@ class ToastPresentor {
               borderRadius: BorderRadius.circular(MgRadius.md),
             ),
             margin: Gutter.wlg + Gutter.hmd,
+            forwardAnimationCurve: Curves.easeOutCubic,
+            reverseAnimationCurve: Curves.easeInCubic,
             insetAnimationDuration: const Duration(milliseconds: 300),
+            insetAnimationCurve: Curves.easeOut,
             elevation: 0,
           );
         },
@@ -49,6 +54,8 @@ class ToastPresentor {
     unawaited(
       context.showFlash(
         duration: const Duration(milliseconds: 2000),
+        transitionDuration: const Duration(milliseconds: 350),
+        reverseTransitionDuration: const Duration(milliseconds: 250),
         builder: (context, controller) {
           return FlashBar(
             controller: controller,
@@ -64,7 +71,10 @@ class ToastPresentor {
               borderRadius: BorderRadius.circular(MgRadius.md),
             ),
             margin: Gutter.wlg + Gutter.hmd,
+            forwardAnimationCurve: Curves.easeOutCubic,
+            reverseAnimationCurve: Curves.easeInCubic,
             insetAnimationDuration: const Duration(milliseconds: 300),
+            insetAnimationCurve: Curves.easeOut,
             elevation: 0,
           );
         },
@@ -81,6 +91,8 @@ class ToastPresentor {
     unawaited(
       context.showFlash(
         duration: const Duration(milliseconds: 2000),
+        transitionDuration: const Duration(milliseconds: 350),
+        reverseTransitionDuration: const Duration(milliseconds: 250),
         builder: (context, controller) {
           return FlashBar(
             controller: controller,
@@ -96,8 +108,68 @@ class ToastPresentor {
               borderRadius: BorderRadius.circular(MgRadius.md),
             ),
             margin: Gutter.wlg + Gutter.hmd,
+            forwardAnimationCurve: Curves.easeOutCubic,
+            reverseAnimationCurve: Curves.easeInCubic,
             insetAnimationDuration: const Duration(milliseconds: 300),
+            insetAnimationCurve: Curves.easeOut,
             elevation: 0,
+          );
+        },
+      ),
+    );
+  }
+
+  static void notificationToast(
+    BuildContext context,
+    String message,
+  ) {
+    unawaited(
+      context.showFlash(
+        duration: const Duration(milliseconds: 2000),
+        transitionDuration: const Duration(milliseconds: 350),
+        reverseTransitionDuration: const Duration(milliseconds: 250),
+        builder: (context, controller) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: controller.controller,
+              curve: Curves.easeOut,
+              reverseCurve: Curves.easeIn,
+            ),
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.85, end: 1.0).animate(
+                CurvedAnimation(
+                  parent: controller.controller,
+                  curve: Curves.easeOutBack,
+                  reverseCurve: Curves.easeIn,
+                ),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    margin: Gutter.wlg,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: MgColorScheme.gray1,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: MgColorScheme.systemSuccess,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(message).md().regular().textColor(Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -112,6 +184,8 @@ class ToastPresentor {
     unawaited(
       context.showFlash(
         duration: const Duration(milliseconds: 2000),
+        transitionDuration: const Duration(milliseconds: 350),
+        reverseTransitionDuration: const Duration(milliseconds: 250),
         builder: (context, controller) {
           return FlashBar(
             controller: controller,
@@ -126,7 +200,10 @@ class ToastPresentor {
               borderRadius: BorderRadius.circular(MgRadius.md),
             ),
             margin: Gutter.wlg + Gutter.hmd,
+            forwardAnimationCurve: Curves.easeOutCubic,
+            reverseAnimationCurve: Curves.easeInCubic,
             insetAnimationDuration: const Duration(milliseconds: 300),
+            insetAnimationCurve: Curves.easeOut,
             elevation: 0,
           );
         },

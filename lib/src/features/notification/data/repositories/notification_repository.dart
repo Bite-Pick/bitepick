@@ -83,6 +83,18 @@ class NotificationRepository {
     return true;
   }
 
+  /// 매장 오픈 알림 신청자 수 조회
+  Future<int> getStoreSubscriberCount(String storeId) async {
+    final res = await _dio.get('/v1/notification/store/$storeId/subscribers');
+    talker.debug('[Notification] subscriber count raw response: ${res.data}');
+    // data 래퍼가 있는 경우와 없는 경우 모두 처리
+    final body = res.data as Map<String, dynamic>?;
+    final data = body?['data'] as Map<String, dynamic>? ?? body;
+    final count = data?['subscriberCount'] as int? ?? 0;
+    talker.debug('[Notification] subscriber count parsed: $count');
+    return count;
+  }
+
   Future<bool> saveNotificationToken(String fcmToken) async {
     final res = await _dio.post(
       '/v1/notification',
@@ -118,6 +130,16 @@ Future<bool> storeNotificationSubscribed(
 }) async {
   final repo = ref.read(notificationRepositoryProvider);
   return repo.getStoreNotificationSubscribed(storeId);
+}
+
+/// 매장 오픈 알림 신청자 수 Provider
+@riverpod
+Future<int> storeSubscriberCount(
+  Ref ref, {
+  required String storeId,
+}) async {
+  final repo = ref.read(notificationRepositoryProvider);
+  return repo.getStoreSubscriberCount(storeId);
 }
 
 /// 알림 등록 호출은 보통 UI 로직 or Notifier에서
