@@ -141,6 +141,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   child: Text('bitepick').sm().textGray(),
                                 ),
                               ),
+                            const _BusinessInfoSection(),
                           ],
                         ),
                       ]),
@@ -262,6 +263,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
         ],
       ).margin(vertical: MgSizes.sm, horizontal: MgSizes.md),
+    );
+  }
+}
+
+class _BusinessInfoSection extends StatelessWidget {
+  const _BusinessInfoSection();
+
+  @override
+  Widget build(BuildContext context) {
+    const infoStyle = TextStyle(fontSize: 13, color: Color(0xFF888888));
+    const labelStyle = TextStyle(
+      fontSize: 13,
+      color: Color(0xFF888888),
+      fontWeight: FontWeight.w600,
+    );
+
+    Widget row(String label, String value) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(text: '$label: ', style: labelStyle),
+              TextSpan(text: value, style: infoStyle),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFFF5F5F5),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '사업자 정보',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF333333),
+            ),
+          ),
+          const SizedBox(height: 16),
+          row('상호', '바이트픽'),
+          row('대표자', '김강민'),
+          row('사업자등록번호', '515-62-00946'),
+          row('통신판매업', '2025-용인수지-1423'),
+          row('고객센터', '010-8859-9948'),
+          row('사업장', '경기도 용인시 수지구 죽전로 152 글로컬산학협력관 B211호'),
+        ],
+      ),
     );
   }
 }

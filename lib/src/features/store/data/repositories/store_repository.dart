@@ -113,7 +113,28 @@ class StoreRepository {
     final storeData = data['data'] ?? data;
     return Store.fromJson(storeData as Map<String, dynamic>);
   }
-  
+
+  Future<List<PresignedUrlImage>> updateStoreImages({
+    required String storeId,
+    required List<Map<String, dynamic>> images,
+  }) async {
+    final response = await _dio.patch(
+      '/v1/store',
+      data: {'storeId': storeId, 'storeImagesRegisters': images},
+    );
+
+    if (response.data['status'] != 'OK') {
+      throw Exception('매장 이미지 수정에 실패했습니다.');
+    }
+
+    final data = response.data['data'];
+    if (data == null) return [];
+
+    final presignedUrls = data['storePreSignedUrlImages'] as List? ?? [];
+    return presignedUrls
+        .map((json) => PresignedUrlImage.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
 }
 
 @riverpod

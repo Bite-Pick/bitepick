@@ -217,5 +217,141 @@ class _StoreNotificationSubscribedProviderElement
   String get storeId => (origin as StoreNotificationSubscribedProvider).storeId;
 }
 
+String _$storeSubscriberCountHash() =>
+    r'f90656675c561189b38fa5be8a07ff9208612d6c';
+
+/// 매장 오픈 알림 신청자 수 Provider
+///
+/// Copied from [storeSubscriberCount].
+@ProviderFor(storeSubscriberCount)
+const storeSubscriberCountProvider = StoreSubscriberCountFamily();
+
+/// 매장 오픈 알림 신청자 수 Provider
+///
+/// Copied from [storeSubscriberCount].
+class StoreSubscriberCountFamily extends Family<AsyncValue<int>> {
+  /// 매장 오픈 알림 신청자 수 Provider
+  ///
+  /// Copied from [storeSubscriberCount].
+  const StoreSubscriberCountFamily();
+
+  /// 매장 오픈 알림 신청자 수 Provider
+  ///
+  /// Copied from [storeSubscriberCount].
+  StoreSubscriberCountProvider call({required String storeId}) {
+    return StoreSubscriberCountProvider(storeId: storeId);
+  }
+
+  @override
+  StoreSubscriberCountProvider getProviderOverride(
+    covariant StoreSubscriberCountProvider provider,
+  ) {
+    return call(storeId: provider.storeId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'storeSubscriberCountProvider';
+}
+
+/// 매장 오픈 알림 신청자 수 Provider
+///
+/// Copied from [storeSubscriberCount].
+class StoreSubscriberCountProvider extends AutoDisposeFutureProvider<int> {
+  /// 매장 오픈 알림 신청자 수 Provider
+  ///
+  /// Copied from [storeSubscriberCount].
+  StoreSubscriberCountProvider({required String storeId})
+    : this._internal(
+        (ref) => storeSubscriberCount(
+          ref as StoreSubscriberCountRef,
+          storeId: storeId,
+        ),
+        from: storeSubscriberCountProvider,
+        name: r'storeSubscriberCountProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$storeSubscriberCountHash,
+        dependencies: StoreSubscriberCountFamily._dependencies,
+        allTransitiveDependencies:
+            StoreSubscriberCountFamily._allTransitiveDependencies,
+        storeId: storeId,
+      );
+
+  StoreSubscriberCountProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.storeId,
+  }) : super.internal();
+
+  final String storeId;
+
+  @override
+  Override overrideWith(
+    FutureOr<int> Function(StoreSubscriberCountRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: StoreSubscriberCountProvider._internal(
+        (ref) => create(ref as StoreSubscriberCountRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        storeId: storeId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<int> createElement() {
+    return _StoreSubscriberCountProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is StoreSubscriberCountProvider && other.storeId == storeId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, storeId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin StoreSubscriberCountRef on AutoDisposeFutureProviderRef<int> {
+  /// The parameter `storeId` of this provider.
+  String get storeId;
+}
+
+class _StoreSubscriberCountProviderElement
+    extends AutoDisposeFutureProviderElement<int>
+    with StoreSubscriberCountRef {
+  _StoreSubscriberCountProviderElement(super.provider);
+
+  @override
+  String get storeId => (origin as StoreSubscriberCountProvider).storeId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

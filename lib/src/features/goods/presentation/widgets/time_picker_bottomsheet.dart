@@ -42,6 +42,17 @@ class TimePickerBottomSheet extends StatefulWidget {
   @override
   State<TimePickerBottomSheet> createState() => _TimePickerBottomSheetState();
 
+  static String formatSelectedTime(DateTime dt) {
+    final now = DateTime.now();
+    final isToday = dt.year == now.year && dt.month == now.month && dt.day == now.day;
+    final dayLabel = isToday ? '오늘' : '내일';
+    final dateLabel = '${dt.month}/${dt.day}';
+    final period = dt.hour < 12 ? '오전' : '오후';
+    final hour12 = dt.hour == 0 ? 12 : (dt.hour > 12 ? dt.hour - 12 : dt.hour);
+    final minuteStr = dt.minute.toString().padLeft(2, '0');
+    return '$dayLabel($dateLabel) $period $hour12:$minuteStr';
+  }
+
   static Future<void> show(
     BuildContext context, {
     DateTime? initialTime,
@@ -61,7 +72,7 @@ class TimePickerBottomSheet extends StatefulWidget {
         onTimeSelected: onTimeSelected,
         onSelectionChanged: onSelectionChanged,
       );
-    }, height: 450);
+    }, height: 370);
   }
 }
 
@@ -80,7 +91,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
     // 2. 초기 선택 인덱스 계산
     // disableNowFilter이고 initialTime이 없으면 가장 이른 시간(인덱스 0)으로 설정
-    if (widget.disableNowFilter && widget.initialTime == null) {
+    if ((widget.disableNowFilter || !_isPickupToday) && widget.initialTime == null) {
       _selectedIndex = 0;
     } else {
       final initialTime = widget.initialTime ?? DateTime.now();
@@ -102,7 +113,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     super.dispose();
   }
 
-  /// 30분 단위로 시간 옵션 생성
+  /// 10분 단위로 시간 옵션 생성
   /// 현재 시간 기준으로 픽업 날짜(오늘/내일)와 선택 가능한 시간 범위를 자동 결정
   List<TimeOption> _generateTimeOptions() {
     final options = <TimeOption>[];
@@ -156,15 +167,15 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
     _pickupDate = pickupDate;
 
-    // 30분 단위로 올림/내림
-    rangeStartMinute = ((rangeStartMinute + 29) ~/ 30) * 30; // 올림
-    rangeEndMinute = (rangeEndMinute ~/ 30) * 30; // 내림
+    // 10분 단위로 올림/내림
+    rangeStartMinute = ((rangeStartMinute + 9) ~/ 10) * 10; // 올림
+    rangeEndMinute = (rangeEndMinute ~/ 10) * 10; // 내림
 
-    // 30분 단위로 시간 생성
+    // 10분 단위로 시간 생성
     for (
       int minute = rangeStartMinute;
       minute <= rangeEndMinute;
-      minute += 30
+      minute += 10
     ) {
       final hour = minute ~/ 60;
       final min = minute % 60;
