@@ -21,7 +21,7 @@ migrate_working_dir/
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
-#.vscode/
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -61,9 +61,15 @@ ios/Runner/GoogleService-Info-Prod.plist
 lib/src/playground.dart
 Makefile
 
+# Claude local settings
+.claude/settings.local.json
+**/CLAUDE.md
+
 #android playstore
 android/app/bitepick-release.keystore
 android/fastlane/google-play-service-account.json
 shorebird.yaml.bak
 android/fastlane/report.xml
 android/fastlane/README.md
+ios/Flutter/Dev.xcconfig
+ios/Flutter/Prod.xcconfig
