@@ -17,13 +17,29 @@
 ## [Unreleased]
 
 ### Added
+-
+
+### Changed
+-
+
+### Fixed
+-
+
+---
+
+## [1.21.0] - 2026-04-17
+
+### Added
+
 - 사장님 영업 전 재고 확인 알림창 팝업 (ce2a6cf)
 - 오픈알림 토스트 트랜지션 효과 추가 (2b0b5ce)
 - 오픈 알림 신청자 수 표시 (ad2bf2c)
 - 사업자 정보 하단 표시 (35a540b)
 - 사장님 상품 관리 페이지에 사진 변경 가능으로 수정 (b6ffda5)
 
+
 ### Fixed
+
 - 재고 업데이트 후 새로고침 (dad849b)
 - 픽업시간 단위 10분으로 변경 (1fcf60e)
 - 오픈알림 구독자 수 표시 버그 수정 (bbe1927)
@@ -37,6 +53,7 @@
 - 다음날 예약 미리 켜면 픽업시간 안 뜨는 오류 수정 (1c8d763)
 - 리뷰많은순 버그 수정 (e8a263b)
 
+---
 ## [1.20.2] - 2026-04-17
 
 _마지막 커밋: `f29891a`_
@@ -73,5 +90,6 @@ _마지막 커밋: `f29891a`_
 
 ---
 
-[Unreleased]: https://github.com/YOUR_ORG/bitepick/compare/v1.20.2...HEAD
+[Unreleased]: https://github.com/YOUR_ORG/bitepick/compare/v1.21.0...HEAD
+[1.21.0]: https://github.com/YOUR_ORG/bitepick/compare/v1.20.2...v1.21.0
 [1.20.2]: https://github.com/YOUR_ORG/bitepick/releases/tag/v1.20.2
