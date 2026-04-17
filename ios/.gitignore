@@ -15,10 +15,8 @@ Icon?
 profile
 xcuserdata
 **/.generated/
-Flutter/AppFrameworkInfo.plist
+fastlane/AuthKey.p8
 Flutter/App.framework
-Flutter/Dev.xcconfig
-Flutter/Prod.xcconfig
 Flutter/Flutter.framework
 Flutter/Flutter.podspec
 Flutter/Generated.xcconfig
