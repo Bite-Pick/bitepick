@@ -113,7 +113,7 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
     super.dispose();
   }
 
-  /// 30분 단위로 시간 옵션 생성
+  /// 10분 단위로 시간 옵션 생성
   /// 현재 시간 기준으로 픽업 날짜(오늘/내일)와 선택 가능한 시간 범위를 자동 결정
   List<TimeOption> _generateTimeOptions() {
     final options = <TimeOption>[];
@@ -167,15 +167,15 @@ class _TimePickerBottomSheetState extends State<TimePickerBottomSheet> {
 
     _pickupDate = pickupDate;
 
-    // 30분 단위로 올림/내림
-    rangeStartMinute = ((rangeStartMinute + 29) ~/ 30) * 30; // 올림
-    rangeEndMinute = (rangeEndMinute ~/ 30) * 30; // 내림
+    // 10분 단위로 올림/내림
+    rangeStartMinute = ((rangeStartMinute + 9) ~/ 10) * 10; // 올림
+    rangeEndMinute = (rangeEndMinute ~/ 10) * 10; // 내림
 
-    // 30분 단위로 시간 생성
+    // 10분 단위로 시간 생성
     for (
       int minute = rangeStartMinute;
       minute <= rangeEndMinute;
-      minute += 30
+      minute += 10
     ) {
       final hour = minute ~/ 60;
       final min = minute % 60;
