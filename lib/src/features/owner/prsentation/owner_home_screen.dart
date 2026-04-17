@@ -15,6 +15,7 @@ import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -226,6 +227,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           .read(goodsRepositoryProvider)
           .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
       ref.invalidate(storeStateProvider);
+      ref.invalidate(ownerStoreProvider);
       // provider 재로딩 완료까지 기다린 후 낙관적 상태 해제
       await ref.read(storeStateProvider.future);
     } on DioException catch (_) {
