@@ -102,9 +102,12 @@ if git rev-parse "$TAG" >/dev/null 2>&1; then
   exit 1
 fi
 
+CURRENT_BUILD_NUM="${CURRENT_BUILD#+}"
+NEW_BUILD_NUM="$((CURRENT_BUILD_NUM + 1))"
+
 echo "──────────────────────────────────────────────"
-echo " 현재 버전 : $CURRENT_VERSION${CURRENT_BUILD}"
-echo " 새 버전   : $NEW_VERSION${CURRENT_BUILD}"
+echo " 현재 버전 : $CURRENT_VERSION+${CURRENT_BUILD_NUM}"
+echo " 새 버전   : $NEW_VERSION+${NEW_BUILD_NUM}"
 echo " 태그      : $TAG"
 echo " 날짜      : $TODAY"
 echo "──────────────────────────────────────────────"
@@ -119,10 +122,13 @@ import sys, re, pathlib
 path, cur, new = sys.argv[1], sys.argv[2], sys.argv[3]
 p = pathlib.Path(path)
 text = p.read_text()
-# 'version: X.Y.Z' 또는 'version: X.Y.Z+B' 모두 커버. 버전만 교체, 빌드번호는 유지.
+# 'version: X.Y.Z' 또는 'version: X.Y.Z+B' 모두 커버. 버전 올리고 빌드번호도 +1.
+def bump(m):
+    build = int(m.group(2)[1:]) + 1 if m.group(2) else 1
+    return f"{m.group(1)}{new}+{build}"
 text2 = re.sub(
     r'^(version:\s*)' + re.escape(cur) + r'(\+\d+)?\s*$',
-    lambda m: f"{m.group(1)}{new}{m.group(2) or ''}",
+    bump,
     text,
     count=1,
     flags=re.MULTILINE,
