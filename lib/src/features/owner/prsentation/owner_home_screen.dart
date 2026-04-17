@@ -11,6 +11,7 @@ import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/core/utils/inquiry_button.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
+import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
@@ -19,6 +20,7 @@ import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
+import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:dio/dio.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
@@ -80,6 +82,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                 _buildServiceSwitch(
                   store?.goodsList[0].goodsId ?? "",
                   _optimisticSaleStatus ?? (store?.goodsList[0].saleStatus == "ON"),
+                  store?.goodsList[0],
                 ),
                 OwnerMoreButton(),
               ],
@@ -131,20 +134,24 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildServiceSwitch(String id, bool saleStatus) {
+  Widget _buildServiceSwitch(String id, bool saleStatus, Goods? goods) {
     void onToggle() {
       if (_isTogglingStatus) return;
       final newValue = !saleStatus;
       if (!newValue) {
-        // OFF: 다이얼로그 확인 후 UI 전환 (changeSaleStatus 내에서 낙관적 상태 세팅)
+        // OFF: 다이얼로그 확인 후 UI 전환
         showDialog(
           context: context,
           builder: (context) => _buildAlertDialog(id, newValue),
         );
       } else {
-        // ON: 즉시 UI 반영
-        setState(() => _optimisticSaleStatus = newValue);
-        changeSaleStatus(id, newValue);
+        // ON: 재고 확인 팝업
+        if (goods != null) {
+          _showQuantityConfirmDialog(id, goods);
+        } else {
+          setState(() => _optimisticSaleStatus = newValue);
+          changeSaleStatus(id, newValue);
+        }
       }
     }
 
@@ -181,6 +188,33 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
+  void _showQuantityConfirmDialog(String id, Goods goods) {
+    showDialog(
+      context: context,
+      builder: (_) => _QuantityConfirmDialog(
+        goods: goods,
+        onConfirm: (newQuantity) async {
+          setState(() => _optimisticSaleStatus = true);
+          if (newQuantity != goods.stockQuantity) {
+            try {
+              await ref.read(goodsRepositoryProvider).editGoods(
+                goodsId: goods.goodsId!,
+                originalPrice: goods.originPrice,
+                discount: goods.discount,
+                salePrice: goods.salePrice,
+                quantity: newQuantity,
+                startTime: DateTime.parse(goods.startTime),
+                endTime: DateTime.parse(goods.endTime),
+                goodsImagesRegisters: [],
+              );
+            } catch (_) {}
+          }
+          await changeSaleStatus(id, true);
+        },
+      ),
+    );
+  }
+
   Future<void> changeSaleStatus(String id, bool saleStatus) async {
     if (_isTogglingStatus) return;
     setState(() {
@@ -208,5 +242,108 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         });
       }
     }
+  }
+}
+
+class _QuantityConfirmDialog extends StatefulWidget {
+  const _QuantityConfirmDialog({required this.goods, required this.onConfirm});
+
+  final Goods goods;
+  final ValueChanged<int> onConfirm;
+
+  @override
+  State<_QuantityConfirmDialog> createState() => _QuantityConfirmDialogState();
+}
+
+class _QuantityConfirmDialogState extends State<_QuantityConfirmDialog> {
+  late int _quantity;
+
+  @override
+  void initState() {
+    super.initState();
+    _quantity = widget.goods.stockQuantity;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 쇼핑백 아이콘
+            Image.asset('assets/images/product.png', width: 40, height: 40),
+            const SizedBox(height: 12),
+            // 타이틀
+            Text(
+              '오늘 판매할 수량을\n확인해주세요!',
+              textAlign: TextAlign.center,
+            ).bold().lg(),
+            const SizedBox(height: 20),
+            // 수량 선택
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: MgColorScheme.gray7),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: _quantity > 1
+                        ? () => setState(() => _quantity--)
+                        : null,
+                    icon: BaseSvgIcon.minus(),
+                  ),
+                  Expanded(
+                    child: Text('$_quantity개', textAlign: TextAlign.center)
+                        .bold()
+                        .md(),
+                  ),
+                  IconButton(
+                    onPressed: () => setState(() => _quantity++),
+                    icon: BaseSvgIcon.plus(),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // 안내 문구
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: MgColorScheme.gray9,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('• 입력하신 수량만큼만 오늘 판매됩니다.')
+                      .sm()
+                      .regular()
+                      .textColor(MgColorScheme.gray3),
+                  const SizedBox(height: 4),
+                  Text('• 오늘 남은 재고를 묶음으로 준비해주시면 됩니다.')
+                      .sm()
+                      .regular()
+                      .textColor(MgColorScheme.gray3),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // 확인 버튼
+            MgButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                widget.onConfirm(_quantity);
+              },
+              content: const Text('영업 시작하기'),
+            ).primary(),
+          ],
+        ),
+      ),
+    );
   }
 }
