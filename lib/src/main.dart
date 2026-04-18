@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -43,6 +44,8 @@ Future<void> runMagamBellApp() async {
     () async {
       // Move WidgetsFlutterBinding inside the zone to avoid zone mismatch
       WidgetsFlutterBinding.ensureInitialized();
+
+      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
       await dotenv.load(fileName: '.env');
 
