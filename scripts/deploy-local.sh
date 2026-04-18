@@ -84,15 +84,18 @@ print(d.get(v, d.get(max(d, key=lambda k: d[k]), 0)))
     echo "❌ 패치의 원본 빌드번호를 찾지 못했습니다. --build-number 로 직접 지정하세요."
     exit 1
   fi
+elif [[ -n "$EXISTING_BUILD" ]]; then
+  # 정식 릴리즈: pubspec.yaml 에 이미 빌드번호가 있으면 그대로 사용 (release.sh 가 올린 값)
+  BUILD_NUMBER="$EXISTING_BUILD"
 elif [[ -f build_numbers.json ]]; then
-  # 정식 릴리즈: 기존 최댓값 +1
+  # pubspec 에 빌드번호가 없을 때만 build_numbers.json 최댓값 +1 로 계산
   BUILD_NUMBER="$(python3 -c "
 import json
 d = json.load(open('build_numbers.json'))
 print(max(d.values()) + 1 if d else 1)
 ")"
 else
-  BUILD_NUMBER=$((${EXISTING_BUILD:-0} + 1))
+  BUILD_NUMBER=1
 fi
 
 echo "──────────────────────────────────────────────"
