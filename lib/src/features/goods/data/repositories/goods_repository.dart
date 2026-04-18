@@ -57,7 +57,7 @@ class GoodsRepository {
     required int quantity,
     required DateTime startTime,
     required DateTime endTime,
-    required List<Map<String, dynamic>> goodsImagesRegisters,
+    List<Map<String, dynamic>>? goodsImagesRegisters,
   }) async {
     final res = await _dio.patch(
       '/v1/goods',
@@ -70,7 +70,8 @@ class GoodsRepository {
         'quantity': quantity,
         'startTime': startTime.toIso8601String(),
         'endTime': endTime.toIso8601String(),
-        'goodsImagesRegisters': goodsImagesRegisters,
+        if (goodsImagesRegisters != null)
+          'goodsImagesRegisters': goodsImagesRegisters,
       },
     );
     if (res.data['status'] != "OK") return null;

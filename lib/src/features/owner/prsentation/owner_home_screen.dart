@@ -206,7 +206,6 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                 quantity: newQuantity,
                 startTime: DateTime.parse(goods.startTime),
                 endTime: DateTime.parse(goods.endTime),
-                goodsImagesRegisters: [],
               );
             } catch (_) {}
           }
