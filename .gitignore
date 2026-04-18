@@ -73,3 +73,5 @@ android/fastlane/report.xml
 android/fastlane/README.md
 ios/Flutter/Dev.xcconfig
 ios/Flutter/Prod.xcconfig
+ios/fastlane/README.md
+ios/fastlane/report.xml
