@@ -118,6 +118,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     for (var i = 0; i < 3; i++) {
       if (currentAppVersionParts[i] < minimumAppVersionParts[i]) return false;
+      if (currentAppVersionParts[i] > minimumAppVersionParts[i]) return true;
     }
     return true;
   }
