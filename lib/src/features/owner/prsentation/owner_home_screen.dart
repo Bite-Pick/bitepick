@@ -84,6 +84,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                   store?.goodsList[0].goodsId ?? "",
                   _optimisticSaleStatus ?? (store?.goodsList[0].saleStatus == "ON"),
                   store?.goodsList[0],
+                  store?.goodsImageList,
                 ),
                 OwnerMoreButton(),
               ],
@@ -135,7 +136,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildServiceSwitch(String id, bool saleStatus, Goods? goods) {
+  Widget _buildServiceSwitch(String id, bool saleStatus, Goods? goods, List<GoodsImagesList>? goodsImageList) {
     void onToggle() {
       if (_isTogglingStatus) return;
       final newValue = !saleStatus;
@@ -148,7 +149,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       } else {
         // ON: 재고 확인 팝업
         if (goods != null) {
-          _showQuantityConfirmDialog(id, goods);
+          _showQuantityConfirmDialog(id, goods, goodsImageList);
         } else {
           setState(() => _optimisticSaleStatus = newValue);
           changeSaleStatus(id, newValue);
@@ -189,7 +190,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  void _showQuantityConfirmDialog(String id, Goods goods) {
+  void _showQuantityConfirmDialog(String id, Goods goods, List<GoodsImagesList>? goodsImageList) {
     showDialog(
       context: context,
       builder: (_) => _QuantityConfirmDialog(
@@ -206,6 +207,14 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                 quantity: newQuantity,
                 startTime: DateTime.parse(goods.startTime),
                 endTime: DateTime.parse(goods.endTime),
+                goodsImagesRegisters: goodsImageList
+                    ?.map((e) => {
+                          'id': e.id,
+                          'key': e.key,
+                          'imageUrl': e.imageUrl,
+                          'goodsName': e.goodsName,
+                        })
+                    .toList(),
               );
             } catch (_) {}
           }

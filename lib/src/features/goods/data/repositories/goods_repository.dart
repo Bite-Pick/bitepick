@@ -62,7 +62,7 @@ class GoodsRepository {
     final res = await _dio.patch(
       '/v1/goods',
       data: {
-        'goodsId': goodsId,
+        'goodsId': int.parse(goodsId),
         'name': "test", // TODO: 백엔드 수정 필요
         'originalPrice': originalPrice,
         'discount': discount,
