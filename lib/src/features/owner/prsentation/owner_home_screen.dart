@@ -198,14 +198,9 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           setState(() => _optimisticSaleStatus = true);
           if (newQuantity != goods.stockQuantity) {
             try {
-              await ref.read(goodsRepositoryProvider).editGoods(
+              await ref.read(goodsRepositoryProvider).editGoodsQuantity(
                 goodsId: goods.goodsId!,
-                originalPrice: goods.originPrice,
-                discount: goods.discount,
-                salePrice: goods.salePrice,
                 quantity: newQuantity,
-                startTime: DateTime.parse(goods.startTime),
-                endTime: DateTime.parse(goods.endTime),
               );
             } catch (_) {}
           }
