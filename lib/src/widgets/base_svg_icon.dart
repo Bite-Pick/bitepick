@@ -129,6 +129,12 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.upload({double? size, Color? color}) =>
       _makeIcon('upload.svg', size, color);
 
+  factory BaseSvgIcon.mapView({double? size, Color? color}) =>
+      _makeIcon('map-view.svg', size, color);
+
+  factory BaseSvgIcon.listView({double? size, Color? color}) =>
+      _makeIcon('list-view.svg', size, color);
+
   // Filled icons
   factory BaseSvgIcon.heartFilled({double? size, Color? color}) =>
       _makeIcon('filled/heart.svg', size, color);
@@ -161,7 +167,7 @@ class BaseSvgIcon extends StatelessWidget {
 
   factory BaseSvgIcon.homeLogo({double? size, Color? color}) =>
       _makeIcon('home_logo.svg', size, color);
-        factory BaseSvgIcon.helpCirlce({double? size, Color? color}) =>
+  factory BaseSvgIcon.helpCirlce({double? size, Color? color}) =>
       _makeIcon('help-circle.svg', size, color);
 
   BaseSvgIcon copyWith({Color? color, double? size, bool? hasColorFilter}) {
