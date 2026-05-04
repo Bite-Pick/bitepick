@@ -175,8 +175,8 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
 
   Widget _buildItemTitle(_CautionItem item) {
     if (item.highlight != null) {
-      return RichText(
-        text: TextSpan(
+      return Text.rich(
+        TextSpan(
           style: const TextStyle(
             fontSize: MgFontSize.md,
             fontWeight: FontWeight.w700,
@@ -414,8 +414,8 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
       children: [
         const Text('• ', style: style),
         Expanded(
-          child: RichText(
-            text: TextSpan(
+          child: Text.rich(
+            TextSpan(
               style: style,
               children: [
                 TextSpan(text: prefix),
