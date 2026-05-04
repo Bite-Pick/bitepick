@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/services/analytics_service.dart';
 import 'package:magambell/src/core/config/environment.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/router/app_router.dart';
@@ -84,6 +85,16 @@ class PortOnePaymentScreenController extends _$PortOnePaymentScreenController {
         context.pop();
         return;
       }
+
+      final orderForm = ref.read(orderPayScreenControllerProvider(state.storeId));
+      AnalyticsService().logPurchase(
+        transactionId: response.paymentId,
+        storeId: state.storeId,
+        goodsId: orderForm.goodsId,
+        storeName: orderForm.storeName,
+        amount: state.amount,
+        quantity: orderForm.quantity,
+      );
 
       ref.invalidate(userOrdersProvider());
 
