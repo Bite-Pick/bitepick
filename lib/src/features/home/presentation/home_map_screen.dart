@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
@@ -80,13 +81,14 @@ class HomeMapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
+    final defaultAddress = controllerState?.defaultAddress;
 
     return BaseScaffold(
       body: SafeArea(
         child: Column(
           children: [
             HomeAppBarContent(
-              defaultAddress: controllerState?.defaultAddress,
+              defaultAddress: defaultAddress,
               serviceAddresses: controllerState?.serviceAddresses ?? [],
             ),
             _buildAvailableChip(
@@ -94,7 +96,27 @@ class HomeMapScreen extends ConsumerWidget {
               ref,
               controllerState?.onlyAvailable ?? false,
             ),
-            Expanded(child: Container(color: NewColorScheme.gray13)),
+            Expanded(
+              child: NaverMap(
+                options: NaverMapViewOptions(
+                  initialCameraPosition: NCameraPosition(
+                    target: defaultAddress != null
+                        ? NLatLng(
+                            defaultAddress.latitude,
+                            defaultAddress.longitude,
+                          )
+                        : const NLatLng(37.5666102, 126.9783881),
+                    zoom: 14,
+                  ),
+                  mapType: NMapType.basic,
+                  activeLayerGroups: [
+                    NLayerGroup.building,
+                    NLayerGroup.transit,
+                  ],
+                ),
+                onMapReady: (_) {},
+              ),
+            ),
           ],
         ),
       ),
