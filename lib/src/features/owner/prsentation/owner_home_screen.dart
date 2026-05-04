@@ -16,7 +16,6 @@ import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
-import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -62,7 +61,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final storeAsync = ref.watch(storeStateProvider);
+    final storeAsync = ref.watch(ownerStoreProvider);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -70,7 +69,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       },
       child: MgAsyncAnimatedSwitcher(
         asyncValue: storeAsync,
-        onRetry: () => ref.invalidate(storeStateProvider),
+        onRetry: () => ref.invalidate(ownerStoreProvider),
         builder: (store) {
           return BaseScaffold(
             canSwipeBack: false,
@@ -233,10 +232,9 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       await ref
           .read(goodsRepositoryProvider)
           .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
-      ref.invalidate(storeStateProvider);
       ref.invalidate(ownerStoreProvider);
       // provider 재로딩 완료까지 기다린 후 낙관적 상태 해제
-      await ref.read(storeStateProvider.future);
+      await ref.read(ownerStoreProvider.future);
     } on DioException catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
