@@ -333,7 +333,7 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return _HomeAppBarContent(
+    return HomeAppBarContent(
       defaultAddress: defaultAddress,
       serviceAddresses: serviceAddresses,
     );
@@ -348,8 +348,9 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
 
-class _HomeAppBarContent extends ConsumerStatefulWidget {
-  const _HomeAppBarContent({
+class HomeAppBarContent extends ConsumerStatefulWidget {
+  const HomeAppBarContent({
+    super.key,
     required this.defaultAddress,
     required this.serviceAddresses,
   });
@@ -358,10 +359,10 @@ class _HomeAppBarContent extends ConsumerStatefulWidget {
   final Address? defaultAddress;
 
   @override
-  ConsumerState<_HomeAppBarContent> createState() => _HomeAppBarContentState();
+  ConsumerState<HomeAppBarContent> createState() => _HomeAppBarContentState();
 }
 
-class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
+class _HomeAppBarContentState extends ConsumerState<HomeAppBarContent> {
   @override
   Widget build(BuildContext context) {
     return Row(
