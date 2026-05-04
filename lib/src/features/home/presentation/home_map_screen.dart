@@ -20,9 +20,16 @@ class HomeMapScreen extends ConsumerWidget {
   const HomeMapScreen({super.key});
 
   @override
-  Widget _buildAvailableChip(BuildContext context, WidgetRef ref, bool onlyAvailable) {
+  Widget _buildAvailableChip(
+    BuildContext context,
+    WidgetRef ref,
+    bool onlyAvailable,
+  ) {
     return Padding(
-      padding: const EdgeInsets.all(MgSizes.md),
+      padding: const EdgeInsets.symmetric(
+        horizontal: MgSizes.md,
+        vertical: MgSizes.xs,
+      ),
       child: Align(
         alignment: Alignment.centerLeft,
         child: GestureDetector(
@@ -36,7 +43,9 @@ class HomeMapScreen extends ConsumerWidget {
               color: onlyAvailable ? MgColorScheme.gray1 : Colors.transparent,
               borderRadius: BorderRadius.circular(100),
               border: Border.all(
-                color: onlyAvailable ? MgColorScheme.gray1 : MgColorScheme.gray7,
+                color: onlyAvailable
+                    ? MgColorScheme.gray1
+                    : MgColorScheme.gray7,
               ),
             ),
             child: Row(
@@ -45,7 +54,9 @@ class HomeMapScreen extends ConsumerWidget {
                 Icon(
                   Icons.access_time_rounded,
                   size: 14,
-                  color: onlyAvailable ? MgColorScheme.gray11 : MgColorScheme.gray1,
+                  color: onlyAvailable
+                      ? MgColorScheme.gray11
+                      : MgColorScheme.gray1,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -53,7 +64,9 @@ class HomeMapScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: onlyAvailable ? MgColorScheme.gray11 : MgColorScheme.gray1,
+                    color: onlyAvailable
+                        ? MgColorScheme.gray11
+                        : MgColorScheme.gray1,
                   ),
                 ),
               ],
@@ -76,10 +89,12 @@ class HomeMapScreen extends ConsumerWidget {
               defaultAddress: controllerState?.defaultAddress,
               serviceAddresses: controllerState?.serviceAddresses ?? [],
             ),
-            _buildAvailableChip(context, ref, controllerState?.onlyAvailable ?? false),
-            Expanded(
-              child: Container(color: NewColorScheme.gray13),
+            _buildAvailableChip(
+              context,
+              ref,
+              controllerState?.onlyAvailable ?? false,
             ),
+            Expanded(child: Container(color: NewColorScheme.gray13)),
           ],
         ),
       ),
