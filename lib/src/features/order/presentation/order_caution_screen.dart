@@ -68,7 +68,7 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 160),
+              padding: EdgeInsets.zero,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -80,7 +80,7 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
                   Container(
                     height: 10,
                     width: double.infinity,
-                    color: const Color(0xFFF4F4F5),
+                    color: NewColorScheme.gray12,
                   ),
                   Gaps.h24,
                   _buildPrivacyCheckbox(),
@@ -181,14 +181,14 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
             fontSize: MgFontSize.md,
             fontWeight: FontWeight.w700,
             fontFamily: MgFontFamily.bold,
-            color: MgColorScheme.gray1,
+            color: NewColorScheme.gray1,
             height: 1.5,
           ),
           children: [
             if (item.prefix != null) TextSpan(text: item.prefix),
             TextSpan(
               text: item.highlight,
-              style: const TextStyle(color: Color(0xFFFDBA00)),
+              style: const TextStyle(color: MgColorScheme.primaryHeavy),
             ),
             if (item.suffix != null) TextSpan(text: item.suffix),
           ],
@@ -217,22 +217,23 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
                   visualDensity: VisualDensity.compact,
                   activeColor: MgColorScheme.primary,
                   checkColor: MgColorScheme.gray1,
-                  side: const BorderSide(color: MgColorScheme.gray5),
+                  side: const BorderSide(color: NewColorScheme.gray5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(3),
                   ),
                 ),
               ),
               Gaps.w8,
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => launchUrl(
-                    Uri.parse(PRIAVCY_POLICY),
-                    mode: LaunchMode.externalApplication,
+              GestureDetector(
+                onTap: () => launchUrl(
+                  Uri.parse(PRIAVCY_POLICY),
+                  mode: LaunchMode.externalApplication,
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    border: Border(bottom: BorderSide(width: 0.7)),
                   ),
-                  child: Text(
-                    '(필수) 개인정보 제 3자 제공 동의',
-                  ).sm().semibold().underline(),
+                  child: Text('(필수) 개인정보 제 3자 제공 동의').sm().semibold(),
                 ),
               ),
             ],
@@ -242,7 +243,7 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
             '예약 안내를 위해 매장에 번호가 전달되며, 재고에 따라 먼저 연락드릴 수 있어요.',
             style: TextStyle(
               fontSize: 13,
-              color: MgColorScheme.gray4,
+              color: NewColorScheme.gray6,
               height: 1.5,
             ),
           ),
@@ -254,7 +255,8 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
   Widget _buildAccordionSection() {
     return Container(
       width: double.infinity,
-      color: const Color(0xFFF7F7F8),
+      color: NewColorScheme.gray13,
+      padding: const EdgeInsets.only(bottom: 160),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -304,12 +306,12 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(title).sm().semibold(),
+                  Text(title).sm().medium(),
                   Icon(
                     isExpanded
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    color: MgColorScheme.gray4,
+                    color: NewColorScheme.gray5,
                     size: 20,
                   ),
                 ],
@@ -384,8 +386,8 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
 
   Widget _buildBullet(String text) {
     const style = TextStyle(
-      fontSize: MgFontSize.sm,
-      color: MgColorScheme.gray4,
+      fontSize: MgFontSize.xs,
+      color: NewColorScheme.gray5,
       height: 1.6,
     );
     return Row(
@@ -403,8 +405,8 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
     required String suffix,
   }) {
     const style = TextStyle(
-      fontSize: MgFontSize.sm,
-      color: MgColorScheme.gray4,
+      fontSize: MgFontSize.xs,
+      color: NewColorScheme.gray5,
       height: 1.6,
     );
     return Row(
@@ -420,10 +422,10 @@ class _OrderCautionScreenState extends State<OrderCautionScreen> {
                 TextSpan(
                   text: bold,
                   style: const TextStyle(
-                    fontSize: MgFontSize.sm,
+                    fontSize: MgFontSize.xs,
                     fontWeight: FontWeight.w700,
                     fontFamily: MgFontFamily.bold,
-                    color: MgColorScheme.gray1,
+                    color: NewColorScheme.gray5,
                     height: 1.6,
                   ),
                 ),
