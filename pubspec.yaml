@@ -2,7 +2,7 @@ name: magambell
 description: "A new Flutter project."
 publish_to: 'none' 
 
-version: 1.21.0+170
+version: 1.21.1+171
 environment:
   sdk: ^3.9.0
 
