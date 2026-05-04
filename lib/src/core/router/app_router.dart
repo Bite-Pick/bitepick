@@ -20,6 +20,7 @@ import 'package:magambell/src/features/auth/presenation/select_user_type_screen.
 import 'package:magambell/src/features/favorite/presentation/favorite_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
 import 'package:magambell/src/features/goods/presentation/goods_register_screen.dart';
+import 'package:magambell/src/features/home/presentation/home_map_screen.dart';
 import 'package:magambell/src/features/main/presentation/main_screen.dart';
 import 'package:magambell/src/features/map/presentation/store_map_screen.dart';
 import 'package:magambell/src/features/order/presentation/order_caution_screen.dart';
@@ -130,6 +131,7 @@ class LoginRoute extends GoRouteData {
       path: 'store/:id',
       routes: [TypedGoRoute<StoreMapRoute>(name: 'StoreMapRoute', path: 'map')],
     ),
+    TypedGoRoute<HomeMapRoute>(name: 'HomeMapRoute', path: 'home/map'),
     TypedGoRoute<SearchRoute>(name: 'SearchRoute', path: 'search'),
     // TypedGoRoute<SearchAddressRoute>(
     //   name: 'SearchAddressRoute',
