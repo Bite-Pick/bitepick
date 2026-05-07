@@ -13,6 +13,7 @@ import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
+import 'package:magambell/src/features/home/presentation/widgets/map_tooltip_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_map_bottom_sheet.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -28,10 +29,7 @@ class HomeMapRoute extends GoRouteData {
 }
 
 class HomeMapScreen extends ConsumerStatefulWidget {
-  const HomeMapScreen({
-    super.key,
-    this.onListPressed,
-  });
+  const HomeMapScreen({super.key, this.onListPressed});
 
   final VoidCallback? onListPressed;
 
@@ -46,8 +44,12 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   double _currentZoom = 14.0;
   List<StoreListDTO> _currentStores = [];
   StoreListDTO? _bottomSheetStore;
+  bool _tooltipVisible = true;
 
   static const _myLocationMarkerId = 'my_location';
+  static const _tooltipMarkerId = 'service_tooltip';
+  static const _tooltipPosition = NLatLng(37.3243773830569, 127.107505020642);
+  static const _tooltipHideDistanceM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
 
@@ -58,10 +60,13 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   }
 
   void _onMapReady(NaverMapController controller) {
+    // 핫 리로드 등으로 컨트롤러가 교체될 때 기존 상태를 초기화
+    _mapReady = false;
     _mapController = controller;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _mapReady = true;
+      _addTooltipMarker();
       final stores = ref
           .read(homeScreenControllerProvider)
           .valueOrNull
@@ -72,9 +77,35 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     });
   }
 
+  Future<void> _hideTooltip() async {
+    if (!_tooltipVisible) return;
+    _tooltipVisible = false;
+    try {
+      await _mapController?.deleteOverlay(
+        NOverlayInfo(type: NOverlayType.marker, id: _tooltipMarkerId),
+      );
+    } catch (_) {}
+  }
+
+  Future<void> _addTooltipMarker() async {
+    final controller = _mapController;
+    if (controller == null || !_mapReady) return;
+    final icon = await NOverlayImage.fromWidget(
+      widget: const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
+      size: const Size(165, 45),
+      context: context,
+    );
+    if (!mounted || !_mapReady) return;
+    await controller.addOverlay(
+      NMarker(id: _tooltipMarkerId, position: _tooltipPosition)
+        ..setIcon(icon)
+        ..setAnchor(const NPoint(0.5, 1.0))
+        ..setGlobalZIndex(300000),
+    );
+  }
+
   Future<void> _refreshStoreMarkers(List<StoreListDTO> stores) async {
     final controller = _mapController;
-    // 지도가 준비되지 않았으면 fromWidget 호출 금지 (크래시 방지)
     if (controller == null || !_mapReady) return;
 
     for (final store in _currentStores) {
@@ -88,11 +119,13 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       } catch (_) {}
     }
 
+    if (!mounted || !_mapReady) return;
     _currentStores = stores;
 
     for (final store in stores) {
-      if (!mounted) return;
+      if (!mounted || !_mapReady) return;
       final marker = await _buildStoreMarker(store);
+      if (!mounted || !_mapReady) return;
       marker.setOnTapListener((_) => _onStorePinTapped(store));
       await controller.addOverlay(marker);
     }
@@ -123,6 +156,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   }
 
   void _onStorePinTapped(StoreListDTO store) {
+    _hideTooltip();
     setState(() {
       _selectedStoreId = store.storeId;
       _bottomSheetStore = store;
@@ -153,6 +187,16 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           _refreshStoreMarkers(_currentStores);
         }
       }
+
+      final distance = Geolocator.distanceBetween(
+        position.target.latitude,
+        position.target.longitude,
+        _tooltipPosition.latitude,
+        _tooltipPosition.longitude,
+      );
+      if (distance > _tooltipHideDistanceM) {
+        _hideTooltip();
+      }
     });
   }
 
@@ -166,9 +210,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         permission == LocationPermission.deniedForever) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('위치 권한이 필요합니다. 설정에서 허용해주세요.'),
-          ),
+          const SnackBar(content: Text('위치 권한이 필요합니다. 설정에서 허용해주세요.')),
         );
       }
       return;
@@ -182,9 +224,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       );
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('현재 위치를 가져올 수 없습니다.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('현재 위치를 가져올 수 없습니다.')));
       }
       return;
     }
@@ -211,6 +253,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       size: const Size(52, 52),
       context: context,
     );
+    if (!mounted) return;
     await controller.addOverlay(
       NMarker(id: _myLocationMarkerId, position: target)..setIcon(icon),
     );
@@ -353,8 +396,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
               left: 16,
               child: MapIconFloatingButton(
                 icon: BaseSvgIcon.store(size: 20, color: NewColorScheme.gray1),
-                onPressed: () =>
-                    SelectServiceRegionRoute().push<bool>(context),
+                onPressed: () => SelectServiceRegionRoute().push<bool>(context),
               ),
             ),
             // 가게 바텀시트 — 플로팅 버튼보다 위에 배치, 슬라이드 애니메이션
@@ -379,10 +421,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 }
 
 class _StoreBottomSheetPanel extends StatelessWidget {
-  const _StoreBottomSheetPanel({
-    required this.store,
-    required this.onClose,
-  });
+  const _StoreBottomSheetPanel({required this.store, required this.onClose});
 
   final StoreListDTO store;
   final VoidCallback onClose;
