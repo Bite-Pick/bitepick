@@ -72,6 +72,9 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.mapPin({double? size, Color? color}) =>
       _makeIcon('map-pin.svg', size, color);
 
+  factory BaseSvgIcon.mapPinSmall({double? size, Color? color}) =>
+      _makeIcon('map-pin-small.svg', size, color);
+
   factory BaseSvgIcon.messageCircle({double? size, Color? color}) =>
       _makeIcon('message-circle.svg', size, color);
 
