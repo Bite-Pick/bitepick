@@ -7,11 +7,14 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
+import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
-import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
+import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
+import 'package:magambell/src/features/home/presentation/widgets/store_map_bottom_sheet.dart';
+import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 
@@ -38,11 +41,119 @@ class HomeMapScreen extends ConsumerStatefulWidget {
 
 class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   NaverMapController? _mapController;
+  bool _mapReady = false; // NOverlayImage.fromWidget 가능 여부 플래그
+  String? _selectedStoreId;
+  double _currentZoom = 14.0;
+  List<StoreListDTO> _currentStores = [];
+  StoreListDTO? _bottomSheetStore;
 
   static const _myLocationMarkerId = 'my_location';
+  static const _labelHideZoom = 12.0;
+  static const _storeMarkerPrefix = 'store_';
+
+  @override
+  void dispose() {
+    _mapReady = false;
+    super.dispose();
+  }
 
   void _onMapReady(NaverMapController controller) {
     _mapController = controller;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _mapReady = true;
+      final stores = ref
+          .read(homeScreenControllerProvider)
+          .valueOrNull
+          ?.storeGoodsList;
+      if (stores != null && stores.isNotEmpty) {
+        _refreshStoreMarkers(stores);
+      }
+    });
+  }
+
+  Future<void> _refreshStoreMarkers(List<StoreListDTO> stores) async {
+    final controller = _mapController;
+    // 지도가 준비되지 않았으면 fromWidget 호출 금지 (크래시 방지)
+    if (controller == null || !_mapReady) return;
+
+    for (final store in _currentStores) {
+      try {
+        await controller.deleteOverlay(
+          NOverlayInfo(
+            type: NOverlayType.marker,
+            id: '$_storeMarkerPrefix${store.storeId}',
+          ),
+        );
+      } catch (_) {}
+    }
+
+    _currentStores = stores;
+
+    for (final store in stores) {
+      if (!mounted) return;
+      final marker = await _buildStoreMarker(store);
+      marker.setOnTapListener((_) => _onStorePinTapped(store));
+      await controller.addOverlay(marker);
+    }
+  }
+
+  Future<NMarker> _buildStoreMarker(StoreListDTO store) async {
+    final isSelected = store.storeId == _selectedStoreId;
+    final isOpen = store.saleStatus == 'ON';
+    final showLabel = _currentZoom > _labelHideZoom;
+
+    final icon = await NOverlayImage.fromWidget(
+      widget: StorePinMarker(
+        storeName: store.storeName,
+        isSelected: isSelected,
+        isOpen: isOpen,
+        showLabel: showLabel,
+      ),
+      size: isSelected
+          ? Size(80, isOpen ? 110 : 90)
+          : Size(80, isOpen ? 90 : 70),
+      context: context,
+    );
+
+    return NMarker(
+      id: '$_storeMarkerPrefix${store.storeId}',
+      position: NLatLng(store.latitude, store.longitude),
+    )..setIcon(icon);
+  }
+
+  void _onStorePinTapped(StoreListDTO store) {
+    setState(() {
+      _selectedStoreId = store.storeId;
+      _bottomSheetStore = store;
+    });
+    // setState 후 프레임 완료 시점에 마커 갱신
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _refreshStoreMarkers(_currentStores);
+    });
+  }
+
+  void _onBottomSheetClose() {
+    setState(() {
+      _selectedStoreId = null;
+      _bottomSheetStore = null;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _refreshStoreMarkers(_currentStores);
+    });
+  }
+
+  void _onCameraChange(NCameraUpdateReason reason, bool animated) {
+    _mapController?.getCameraPosition().then((position) {
+      final wasAbove = _currentZoom > _labelHideZoom;
+      final isAbove = position.zoom > _labelHideZoom;
+      if (wasAbove != isAbove) {
+        setState(() => _currentZoom = position.zoom);
+        if (_currentStores.isNotEmpty) {
+          _refreshStoreMarkers(_currentStores);
+        }
+      }
+    });
   }
 
   Future<void> _onGpsPressed() async {
@@ -163,6 +274,17 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
     final defaultAddress = controllerState?.defaultAddress;
 
+    ref.listen(homeScreenControllerProvider, (prev, next) {
+      final stores = next.valueOrNull?.storeGoodsList;
+      if (stores != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _refreshStoreMarkers(stores);
+        });
+      }
+    });
+
+    final bottomSheetStore = _bottomSheetStore;
+
     return BaseScaffold(
       body: SafeArea(
         child: Stack(
@@ -193,6 +315,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                       ],
                     ),
                     onMapReady: _onMapReady,
+                    onCameraChange: _onCameraChange,
                   ),
                 ),
               ],
@@ -211,16 +334,22 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                   ),
                 ),
               ),
-            Positioned(
-              bottom: 16,
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              bottom: bottomSheetStore != null ? 288 + 16 : 16,
               left: 16,
               child: MapIconFloatingButton(
                 icon: BaseSvgIcon.gps(size: 20, color: NewColorScheme.gray1),
                 onPressed: _onGpsPressed,
               ),
             ),
-            Positioned(
-              bottom: 16 + 36 + 8,
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              bottom: bottomSheetStore != null
+                  ? 288 + 16 + 36 + 8
+                  : 16 + 36 + 8,
               left: 16,
               child: MapIconFloatingButton(
                 icon: BaseSvgIcon.store(size: 20, color: NewColorScheme.gray1),
@@ -228,8 +357,54 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                     SelectServiceRegionRoute().push<bool>(context),
               ),
             ),
+            // 가게 바텀시트 — 플로팅 버튼보다 위에 배치, 슬라이드 애니메이션
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
+              left: 0,
+              right: 0,
+              bottom: bottomSheetStore != null ? 0 : -288,
+              child: bottomSheetStore != null
+                  ? _StoreBottomSheetPanel(
+                      store: bottomSheetStore,
+                      onClose: _onBottomSheetClose,
+                    )
+                  : const SizedBox.shrink(),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _StoreBottomSheetPanel extends StatelessWidget {
+  const _StoreBottomSheetPanel({
+    required this.store,
+    required this.onClose,
+  });
+
+  final StoreListDTO store;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x29000000),
+            blurRadius: 12,
+            offset: Offset(2, 0),
+          ),
+        ],
+      ),
+      child: StoreMapBottomSheet(
+        storeId: store.storeId,
+        distance: store.distance,
+        onClose: onClose,
       ),
     );
   }
