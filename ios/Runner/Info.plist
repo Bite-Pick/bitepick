@@ -99,7 +99,7 @@
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>주소를 검색하기 위해 현재 위치 정보가 필요합니다</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>주소를 검색하기 위해 현재 위치 정보가 필요합니다</string>
+		<string>내 주변 매장을 찾기 위해 위치 정보를 사용합니다.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>사진을 선택하여 업로드하기 위해 사진 라이브러리 접근 권한이 필요합니다</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
