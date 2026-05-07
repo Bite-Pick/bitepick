@@ -21,7 +21,7 @@ class MainRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return MainScreen();
+    return const MainScreen();
   }
 }
 
@@ -32,7 +32,6 @@ class MainScreen extends ConsumerWidget {
     HomeScreen(),
     OrderListScreen(),
     MypageScreen(),
-    HomeMapScreen(),
   ];
 
   static const int _mapTabIndex = 3;
@@ -40,13 +39,19 @@ class MainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navState = ref.watch(navigatorControllerProvider);
-
     final isMapTab = navState.tabIndex == _mapTabIndex;
 
     return BaseScaffold(
       body: Stack(
         children: [
-          IndexedStack(index: navState.tabIndex, children: _screens),
+          if (isMapTab)
+            HomeMapScreen(
+              onListPressed: () => ref
+                  .read(navigatorControllerProvider.notifier)
+                  .changeTabIndex(0),
+            )
+          else
+            IndexedStack(index: navState.tabIndex, children: _screens),
           if (navState.tabIndex == 0)
             Positioned(
               bottom: MgSizes.md,
@@ -59,22 +64,6 @@ class MainScreen extends ConsumerWidget {
                   onPressed: () => ref
                       .read(navigatorControllerProvider.notifier)
                       .changeTabIndex(_mapTabIndex),
-                ),
-              ),
-            ),
-          if (isMapTab)
-            Positioned(
-              bottom: MgSizes.md,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: MapViewFloatingButton(
-                  label: '목록보기',
-                  icon: BaseSvgIcon.listView(size: 16),
-                  onPressed: () => ref
-                      .read(navigatorControllerProvider.notifier)
-                      .changeTabIndex(0),
-                  variant: MapViewFloatingButtonVariant.light,
                 ),
               ),
             ),
@@ -115,25 +104,22 @@ class MainScreen extends ConsumerWidget {
           iconName: 'home',
           label: '메인',
           index: 0,
-          currentIndex: navState.tabIndex == _mapTabIndex
-              ? 0
-              : navState.tabIndex,
+          currentIndex:
+              navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
           iconName: 'order',
           label: '주문내역',
           index: 1,
-          currentIndex: navState.tabIndex == _mapTabIndex
-              ? 0
-              : navState.tabIndex,
+          currentIndex:
+              navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
         ),
         _buildBottomNavigationBarItem(
           iconName: 'mypage',
           label: '마이페이지',
           index: 2,
-          currentIndex: navState.tabIndex == _mapTabIndex
-              ? 0
-              : navState.tabIndex,
+          currentIndex:
+              navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
         ),
       ],
     );
