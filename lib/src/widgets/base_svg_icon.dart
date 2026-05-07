@@ -135,6 +135,12 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.listView({double? size, Color? color}) =>
       _makeIcon('list-view.svg', size, color);
 
+  factory BaseSvgIcon.store({double? size, Color? color}) =>
+      _makeIcon('store.svg', size, color);
+
+  factory BaseSvgIcon.gps({double? size, Color? color}) =>
+      _makeIcon('gps.svg', size, color);
+
   // Filled icons
   factory BaseSvgIcon.heartFilled({double? size, Color? color}) =>
       _makeIcon('filled/heart.svg', size, color);
