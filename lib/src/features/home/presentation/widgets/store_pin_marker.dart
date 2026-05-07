@@ -104,7 +104,7 @@ class _OpenBadge extends StatelessWidget {
                     fontFamily: 'Pretendard',
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF0F0F10),
+                    color: NewColorScheme.gray1,
                     letterSpacing: -0.3,
                     height: 1.5,
                   ),
