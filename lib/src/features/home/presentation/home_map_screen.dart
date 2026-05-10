@@ -63,7 +63,12 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     // 핫 리로드 등으로 컨트롤러가 교체될 때 기존 상태를 초기화
     _mapReady = false;
     _mapController = controller;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      await precacheImage(
+        const AssetImage('assets/images/pin_store_default.png'),
+        context,
+      );
       if (!mounted) return;
       _mapReady = true;
       _addTooltipMarker();
