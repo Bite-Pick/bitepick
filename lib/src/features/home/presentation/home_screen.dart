@@ -379,15 +379,36 @@ class _HomeAppBarContentState extends ConsumerState<HomeAppBarContent> {
         .colored(MgColorScheme.gray11);
   }
 
+  String _shortAddressName(String fullName) {
+    final parts = fullName.split(' ');
+    final city = parts.firstWhere(
+      (p) => p.endsWith('시'),
+      orElse: () => parts.first,
+    );
+    return '$city ${parts.last}';
+  }
+
   // TODO[tooltip]: 주소 변경시 tooltip 표시
   Widget _buildAddress(List<Address> serviceAreas) {
+    final addressText = widget.defaultAddress != null
+        ? _shortAddressName(widget.defaultAddress!.name)
+        : '주소를 설정해주세요';
     return GestureDetector(
       onTap: () async => showAddressBottomSheet(serviceAreas),
       child: Row(
         children: [
-          BaseSvgIcon.mapPin(size: 20),
-          Gaps.w8,
-          Text(widget.defaultAddress?.name ?? '주소를 설정해주세요'),
+          Text(
+            addressText,
+            style: const TextStyle(
+              fontFamily: 'Pretendard',
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              height: 1.5,
+              letterSpacing: -0.4,
+            ),
+          ),
+          Gaps.w4,
+          BaseSvgIcon.down(size: 16),
         ],
       ),
     );

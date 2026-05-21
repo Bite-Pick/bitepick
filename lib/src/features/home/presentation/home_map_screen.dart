@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +16,8 @@ import 'package:magambell/src/features/home/presentation/widgets/map_icon_floati
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_tooltip_marker.dart';
+import 'package:magambell/src/features/home/presentation/widgets/non_service_area_banner.dart';
+import 'package:magambell/src/features/home/presentation/widgets/service_area_request_chip.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_map_bottom_sheet.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -46,21 +50,57 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   StoreListDTO? _bottomSheetStore;
   bool _tooltipVisible = true;
 
+  // 비서비스 지역 UI 상태
+  bool _bannerVisible = false;
+  bool _serviceAreaChipDismissed = false;
+  Timer? _bannerDebounceTimer;
+
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
   static const _tooltipPosition = NLatLng(37.3243773830569, 127.107505020642);
   static const _tooltipHideDistanceM = 5000.0;
+  static const _serviceAreaRadiusM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
 
   @override
   void dispose() {
+    _bannerDebounceTimer?.cancel();
     _mapReady = false;
     super.dispose();
   }
 
+  bool _checkIsInServiceArea(NLatLng target) {
+    final serviceAddresses =
+        ref.read(homeScreenControllerProvider).valueOrNull?.serviceAddresses ??
+        [];
+    if (serviceAddresses.isEmpty) return true;
+    return serviceAddresses.any((addr) {
+      final dist = Geolocator.distanceBetween(
+        target.latitude,
+        target.longitude,
+        addr.latitude,
+        addr.longitude,
+      );
+      return dist <= _serviceAreaRadiusM;
+    });
+  }
+
+  void _updateBannerVisibility(bool inServiceArea) {
+    _bannerDebounceTimer?.cancel();
+    _bannerDebounceTimer = Timer(const Duration(milliseconds: 200), () {
+      if (mounted) setState(() => _bannerVisible = !inServiceArea);
+    });
+  }
+
+  Future<void> _onBannerCtaTapped() async {
+    if (_mapController == null) return;
+    await _mapController!.updateCamera(
+      NCameraUpdate.withParams(target: _tooltipPosition, zoom: 13),
+    );
+  }
+
   void _onMapReady(NaverMapController controller) {
-    // 핫 리로드 등으로 컨트롤러가 교체될 때 기존 상태를 초기화
     _mapReady = false;
     _mapController = controller;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -161,7 +201,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   }
 
   void _onStorePinTapped(StoreListDTO store) {
-    _hideTooltip();
+    _hideTooltip(); // 툴팁 페이드 아웃
     setState(() {
       _selectedStoreId = store.storeId;
       _bottomSheetStore = store;
@@ -202,6 +242,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       if (distance > _tooltipHideDistanceM) {
         _hideTooltip();
       }
+
+      final inServiceArea = _checkIsInServiceArea(position.target);
+      _updateBannerVisibility(inServiceArea);
     });
   }
 
@@ -344,30 +387,52 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                   serviceAddresses: controllerState?.serviceAddresses ?? [],
                 ),
                 _buildAvailableChip(controllerState?.onlyAvailable ?? false),
+                if (_bannerVisible)
+                  NonServiceAreaBanner(
+                    serviceAreaLabel: '죽전',
+                    onCtaTapped: _onBannerCtaTapped,
+                  ),
                 Expanded(
-                  child: NaverMap(
-                    options: NaverMapViewOptions(
-                      initialCameraPosition: NCameraPosition(
-                        target: defaultAddress != null
-                            ? NLatLng(
-                                defaultAddress.latitude,
-                                defaultAddress.longitude,
-                              )
-                            : const NLatLng(37.5666102, 126.9783881),
-                        zoom: 14,
+                  child: Stack(
+                    children: [
+                      NaverMap(
+                        options: NaverMapViewOptions(
+                          initialCameraPosition: NCameraPosition(
+                            target: defaultAddress != null
+                                ? NLatLng(
+                                    defaultAddress.latitude,
+                                    defaultAddress.longitude,
+                                  )
+                                : const NLatLng(37.5666102, 126.9783881),
+                            zoom: 14,
+                          ),
+                          mapType: NMapType.basic,
+                          activeLayerGroups: [
+                            NLayerGroup.building,
+                            NLayerGroup.transit,
+                          ],
+                        ),
+                        onMapReady: _onMapReady,
+                        onCameraChange: _onCameraChange,
                       ),
-                      mapType: NMapType.basic,
-                      activeLayerGroups: [
-                        NLayerGroup.building,
-                        NLayerGroup.transit,
-                      ],
-                    ),
-                    onMapReady: _onMapReady,
-                    onCameraChange: _onCameraChange,
+                    ],
                   ),
                 ),
               ],
             ),
+            if (_bannerVisible && !_serviceAreaChipDismissed)
+              Positioned(
+                bottom: bottomSheetStore != null
+                    ? 288 + 100
+                    : 100,
+                left: 16,
+                child: ServiceAreaRequestChip(
+                  onTap: () =>
+                      SelectServiceRegionRoute().push<bool>(context),
+                  onDismiss: () =>
+                      setState(() => _serviceAreaChipDismissed = true),
+                ),
+              ),
             if (widget.onListPressed != null)
               Positioned(
                 bottom: MgSizes.md,

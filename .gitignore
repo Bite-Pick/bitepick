@@ -56,7 +56,6 @@ android/app/src/prod/google-services.json
 ios/Runner/GoogleService-Info-Dev.plist
 ios/Runner/GoogleService-Info-Prod.plist
 
-
 # local playground
 lib/src/playground.dart
 Makefile
@@ -75,3 +74,6 @@ ios/Flutter/Dev.xcconfig
 ios/Flutter/Prod.xcconfig
 ios/fastlane/README.md
 ios/fastlane/report.xml
+
+# FVM Version Cache
+.fvm/

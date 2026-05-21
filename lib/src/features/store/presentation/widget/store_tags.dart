@@ -41,7 +41,7 @@ class StoreTags extends StatelessWidget {
     if (tags.isEmpty) return SizedBox.shrink();
 
     return Row(
-      children: tags.joinWithWidget(Gaps.w6),
+      children: tags.joinWithWidget(Gaps.w4),
     ).margin(bottom: MgSizes.sm);
   }
 }

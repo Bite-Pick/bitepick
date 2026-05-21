@@ -66,6 +66,9 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.left({double? size, Color? color}) =>
       _makeIcon('left.svg', size, color);
 
+  factory BaseSvgIcon.megaphone({double? size, Color? color}) =>
+      _makeIcon('megaphone_normal.svg', size, color);
+
   factory BaseSvgIcon.link({double? size, Color? color}) =>
       _makeIcon('link.svg', size, color);
 
