@@ -17,6 +17,7 @@ import 'package:magambell/src/features/home/presentation/widgets/map_view_floati
 import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_tooltip_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/non_service_area_banner.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/service_area_request_chip.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_map_bottom_sheet.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
@@ -307,58 +308,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     );
   }
 
-  Widget _buildAvailableChip(bool onlyAvailable) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: MgSizes.md,
-        vertical: MgSizes.xs,
-      ),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: GestureDetector(
-          onTap: () => ref
-              .read(homeScreenControllerProvider.notifier)
-              .toggleOnlyAvailable(),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: onlyAvailable ? MgColorScheme.gray1 : Colors.transparent,
-              borderRadius: BorderRadius.circular(100),
-              border: Border.all(
-                color: onlyAvailable
-                    ? MgColorScheme.gray1
-                    : MgColorScheme.gray7,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.access_time_rounded,
-                  size: 14,
-                  color: onlyAvailable
-                      ? MgColorScheme.gray11
-                      : MgColorScheme.gray1,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '예약가능',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: onlyAvailable
-                        ? MgColorScheme.gray11
-                        : MgColorScheme.gray1,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +335,12 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                   defaultAddress: defaultAddress,
                   serviceAddresses: controllerState?.serviceAddresses ?? [],
                 ),
-                _buildAvailableChip(controllerState?.onlyAvailable ?? false),
+                HomeFilterBar(
+                  onlyAvailable: controllerState?.onlyAvailable ?? false,
+                  onToggleAvailable: () => ref
+                      .read(homeScreenControllerProvider.notifier)
+                      .toggleOnlyAvailable(),
+                ),
                 if (_bannerVisible)
                   NonServiceAreaBanner(
                     serviceAreaLabel: '죽전',

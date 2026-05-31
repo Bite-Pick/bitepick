@@ -78,50 +78,62 @@ class MainScreen extends ConsumerWidget {
     WidgetRef ref,
     MgDefaultNavigatorState navState,
   ) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
-      onTap: (index) {
-        // TODO: user domain 로직으로 분리
-        final user = ref.read(userStateProvider).asData!.value;
-        final isLogin = user != null;
-        if (!isLogin && index != 0) {
-          unawaited(showLoginAlerDialog(context));
-          return;
-        }
-
-        ref.read(navigatorControllerProvider.notifier).changeTabIndex(index);
-      },
-      selectedItemColor: MgColorScheme.gray0,
-      unselectedItemColor: MgColorScheme.gray5,
-      selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
-      unselectedLabelStyle: Theme.of(
-        context,
-      ).textTheme.bodySmall!.copyWith(color: MgColorScheme.gray6),
-      backgroundColor: MgColorScheme.gray11,
-      items: [
-        _buildBottomNavigationBarItem(
-          iconName: 'home',
-          label: '메인',
-          index: 0,
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      child: SizedBox(
+        height: 80,
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           currentIndex:
               navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+          onTap: (index) {
+            // TODO: user domain 로직으로 분리
+            final user = ref.read(userStateProvider).asData!.value;
+            final isLogin = user != null;
+            if (!isLogin && index != 0) {
+              unawaited(showLoginAlerDialog(context));
+              return;
+            }
+            ref
+                .read(navigatorControllerProvider.notifier)
+                .changeTabIndex(index);
+          },
+          selectedItemColor: MgColorScheme.gray0,
+          unselectedItemColor: MgColorScheme.gray5,
+          selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
+          unselectedLabelStyle: Theme.of(context)
+              .textTheme
+              .bodySmall!
+              .copyWith(color: MgColorScheme.gray6),
+          backgroundColor: MgColorScheme.gray11,
+          items: [
+            _buildBottomNavigationBarItem(
+              iconName: 'home',
+              label: '홈',
+              index: 0,
+              currentIndex:
+                  navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+            ),
+            _buildBottomNavigationBarItem(
+              iconName: 'order',
+              label: '주문내역',
+              index: 1,
+              currentIndex:
+                  navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+            ),
+            _buildBottomNavigationBarItem(
+              iconName: 'mypage',
+              label: '나의바픽',
+              index: 2,
+              currentIndex:
+                  navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+            ),
+          ],
         ),
-        _buildBottomNavigationBarItem(
-          iconName: 'order',
-          label: '주문내역',
-          index: 1,
-          currentIndex:
-              navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
-        ),
-        _buildBottomNavigationBarItem(
-          iconName: 'mypage',
-          label: '마이페이지',
-          index: 2,
-          currentIndex:
-              navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
-        ),
-      ],
+      ),
     );
   }
 
@@ -135,7 +147,10 @@ class MainScreen extends ConsumerWidget {
     final assetName = isSelected ? iconName : '${iconName}_gray';
 
     return BottomNavigationBarItem(
-      icon: BaseSvgIcon(assetName: 'filled/$assetName.svg', size: MgSizes.xxl),
+      icon: Padding(
+        padding: const EdgeInsets.only(bottom: 3),
+        child: BaseSvgIcon(assetName: 'filled/$assetName.svg', size: MgSizes.xxl),
+      ),
       label: label,
     );
   }
