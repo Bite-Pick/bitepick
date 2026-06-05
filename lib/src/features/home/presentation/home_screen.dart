@@ -21,12 +21,12 @@ import 'package:magambell/src/features/user/presentation/widgets/login_user_aler
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_tag.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -103,17 +103,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       delegate: SliverChildListDelegate([
                         Column(
                           children: [
+                            const SizedBox(height: 4),
                             HomeBannersView(),
                             HomeUpdateBanner(),
-                            _buildFilterSection(
-                              controllerState.onlyAvailable,
-                              controllerState.sortType,
+                            HomeFilterBar(
+                              onlyAvailable: controllerState.onlyAvailable,
+                              sortType: controllerState.sortType,
+                              showFilter: true,
+                              onToggleAvailable: () => ref
+                                  .read(homeScreenControllerProvider.notifier)
+                                  .toggleOnlyAvailable(),
+                              onSortTap: () async {
+                                await MgBottomsheet.show(
+                                  context,
+                                  (context, bottomState) =>
+                                      _buildSortBottomSheet(
+                                        controllerState.sortType,
+                                      ),
+                                );
+                              },
                             ),
                             ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: controllerState.storeGoodsList.length,
-                              separatorBuilder: (context, index) => Gaps.h16,
+                              separatorBuilder: (context, index) => Gaps.h4,
                               itemBuilder: (context, index) {
                                 final item =
                                     controllerState.storeGoodsList[index];
@@ -153,69 +167,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildFilterSection(bool onlyAvailable, SortType sortType) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () => ref
-              .read(homeScreenControllerProvider.notifier)
-              .toggleOnlyAvailable(),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: onlyAvailable ? MgColorScheme.gray1 : Colors.transparent,
-              borderRadius: BorderRadius.circular(100),
-              border: Border.all(
-                color: onlyAvailable
-                    ? MgColorScheme.gray1
-                    : MgColorScheme.gray7,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.access_time_rounded,
-                  size: 14,
-                  color: onlyAvailable
-                      ? MgColorScheme.gray11
-                      : MgColorScheme.gray1,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  "예약가능",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: onlyAvailable
-                        ? MgColorScheme.gray11
-                        : MgColorScheme.gray1,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ).margin(all: MgSizes.md),
-
-        Spacer(),
-        GestureDetector(
-          onTap: () async {
-            await MgBottomsheet.show(context, (context, bottomState) {
-              return _buildSortBottomSheet(sortType);
-            });
-          },
-          child: MgTag(
-            // paddingWidth: 0,
-            paddingWidth: MgSizes.md,
-            suffix: BaseSvgIcon.down(size: 16),
-            child: Text(sortType.name).sm(),
-          ).transparent(),
-        ),
-      ],
     );
   }
 
@@ -333,7 +284,7 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return _HomeAppBarContent(
+    return HomeAppBarContent(
       defaultAddress: defaultAddress,
       serviceAddresses: serviceAddresses,
     );
@@ -348,8 +299,9 @@ class _HomeAppBar extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
 
-class _HomeAppBarContent extends ConsumerStatefulWidget {
-  const _HomeAppBarContent({
+class HomeAppBarContent extends ConsumerStatefulWidget {
+  const HomeAppBarContent({
+    super.key,
     required this.defaultAddress,
     required this.serviceAddresses,
   });
@@ -358,10 +310,10 @@ class _HomeAppBarContent extends ConsumerStatefulWidget {
   final Address? defaultAddress;
 
   @override
-  ConsumerState<_HomeAppBarContent> createState() => _HomeAppBarContentState();
+  ConsumerState<HomeAppBarContent> createState() => _HomeAppBarContentState();
 }
 
-class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
+class _HomeAppBarContentState extends ConsumerState<HomeAppBarContent> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -378,15 +330,36 @@ class _HomeAppBarContentState extends ConsumerState<_HomeAppBarContent> {
         .colored(MgColorScheme.gray11);
   }
 
+  String _shortAddressName(String fullName) {
+    final parts = fullName.split(' ');
+    final city = parts.firstWhere(
+      (p) => p.endsWith('시'),
+      orElse: () => parts.first,
+    );
+    return '$city ${parts.last}';
+  }
+
   // TODO[tooltip]: 주소 변경시 tooltip 표시
   Widget _buildAddress(List<Address> serviceAreas) {
+    final addressText = widget.defaultAddress != null
+        ? _shortAddressName(widget.defaultAddress!.name)
+        : '주소를 설정해주세요';
     return GestureDetector(
       onTap: () async => showAddressBottomSheet(serviceAreas),
       child: Row(
         children: [
-          BaseSvgIcon.mapPin(size: 20),
-          Gaps.w8,
-          Text(widget.defaultAddress?.name ?? '주소를 설정해주세요'),
+          Text(
+            addressText,
+            style: const TextStyle(
+              fontFamily: 'Pretendard',
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              height: 1.5,
+              letterSpacing: -0.4,
+            ),
+          ),
+          Gaps.w4,
+          BaseSvgIcon.down(size: 16),
         ],
       ),
     );

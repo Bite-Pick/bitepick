@@ -209,6 +209,12 @@ RouteBase get $defaultRoute => GoRouteData.$route(
       ],
     ),
     GoRouteData.$route(
+      path: 'home/map',
+      name: 'HomeMapRoute',
+
+      factory: $HomeMapRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
       path: 'search',
       name: 'SearchRoute',
 
@@ -439,6 +445,21 @@ extension $StoreMapRouteExtension on StoreMapRoute {
 
   void replace(BuildContext context) =>
       context.replace(location, extra: $extra);
+}
+
+extension $HomeMapRouteExtension on HomeMapRoute {
+  static HomeMapRoute _fromState(GoRouterState state) => const HomeMapRoute();
+
+  String get location => GoRouteData.$location('/home/map');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 extension $SearchRouteExtension on SearchRoute {

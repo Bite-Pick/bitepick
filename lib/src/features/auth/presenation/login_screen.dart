@@ -172,7 +172,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(imagePath, width: MgSizes.xl),
-          Gaps.w6,
+          Gaps.w4,
           Text(text).textColor(textColor).sm(),
         ],
       ),

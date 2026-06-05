@@ -66,11 +66,17 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.left({double? size, Color? color}) =>
       _makeIcon('left.svg', size, color);
 
+  factory BaseSvgIcon.megaphone({double? size, Color? color}) =>
+      _makeIcon('megaphone_normal.svg', size, color);
+
   factory BaseSvgIcon.link({double? size, Color? color}) =>
       _makeIcon('link.svg', size, color);
 
   factory BaseSvgIcon.mapPin({double? size, Color? color}) =>
       _makeIcon('map-pin.svg', size, color);
+
+  factory BaseSvgIcon.mapPinSmall({double? size, Color? color}) =>
+      _makeIcon('map-pin-small.svg', size, color);
 
   factory BaseSvgIcon.messageCircle({double? size, Color? color}) =>
       _makeIcon('message-circle.svg', size, color);
@@ -129,6 +135,21 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.upload({double? size, Color? color}) =>
       _makeIcon('upload.svg', size, color);
 
+  factory BaseSvgIcon.mapView({double? size, Color? color}) =>
+      _makeIcon('map-view.svg', size, color);
+
+  factory BaseSvgIcon.listView({double? size, Color? color}) =>
+      _makeIcon('list-view.svg', size, color);
+
+  factory BaseSvgIcon.store({double? size, Color? color}) =>
+      _makeIcon('store.svg', size, color);
+
+  factory BaseSvgIcon.gps({double? size, Color? color}) =>
+      _makeIcon('gps.svg', size, color);
+
+  factory BaseSvgIcon.pinStoreSelected({double? size, Color? color}) =>
+      _makeIcon('pin_store_selected.svg', size, color);
+
   // Filled icons
   factory BaseSvgIcon.heartFilled({double? size, Color? color}) =>
       _makeIcon('filled/heart.svg', size, color);
@@ -161,7 +182,7 @@ class BaseSvgIcon extends StatelessWidget {
 
   factory BaseSvgIcon.homeLogo({double? size, Color? color}) =>
       _makeIcon('home_logo.svg', size, color);
-        factory BaseSvgIcon.helpCirlce({double? size, Color? color}) =>
+  factory BaseSvgIcon.helpCirlce({double? size, Color? color}) =>
       _makeIcon('help-circle.svg', size, color);
 
   BaseSvgIcon copyWith({Color? color, double? size, bool? hasColorFilter}) {
