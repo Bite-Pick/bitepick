@@ -83,9 +83,7 @@ class MainScreen extends ConsumerWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      child: SizedBox(
-        height: 80,
-        child: BottomNavigationBar(
+      child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex:
               navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
@@ -133,7 +131,6 @@ class MainScreen extends ConsumerWidget {
             ),
           ],
         ),
-      ),
     );
   }
 
