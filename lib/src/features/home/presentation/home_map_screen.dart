@@ -106,10 +106,32 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     _mapController = controller;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      await precacheImage(
-        const AssetImage('assets/images/pin_store_default.png'),
-        context,
-      );
+      await Future.wait([
+        precacheImage(
+          const AssetImage('assets/images/pin_store_default.png'),
+          context,
+        ),
+        NOverlayImage.fromWidget(
+          widget: const StorePinMarker(
+            storeName: '',
+            isSelected: true,
+            isOpen: false,
+            showLabel: false,
+          ),
+          size: const Size(80, 90),
+          context: context,
+        ),
+        NOverlayImage.fromWidget(
+          widget: const StorePinMarker(
+            storeName: '',
+            isSelected: true,
+            isOpen: true,
+            showLabel: false,
+          ),
+          size: const Size(80, 110),
+          context: context,
+        ),
+      ]);
       if (!mounted) return;
       _mapReady = true;
       _addTooltipMarker();
@@ -308,7 +330,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
@@ -376,13 +397,10 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
             ),
             if (_bannerVisible && !_serviceAreaChipDismissed)
               Positioned(
-                bottom: bottomSheetStore != null
-                    ? 288 + 100
-                    : 100,
+                bottom: bottomSheetStore != null ? 288 + 100 : 100,
                 left: 16,
                 child: ServiceAreaRequestChip(
-                  onTap: () =>
-                      SelectServiceRegionRoute().push<bool>(context),
+                  onTap: () => SelectServiceRegionRoute().push<bool>(context),
                   onDismiss: () =>
                       setState(() => _serviceAreaChipDismissed = true),
                 ),
