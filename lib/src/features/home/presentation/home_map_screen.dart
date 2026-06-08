@@ -12,6 +12,7 @@ import 'package:magambell/src/features/address/presentation/select_service_regio
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
@@ -55,6 +56,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   bool _bannerVisible = false;
   bool _serviceAreaChipDismissed = false;
   Timer? _bannerDebounceTimer;
+  Timer? _mapFetchDebounceTimer;
 
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
@@ -67,6 +69,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   @override
   void dispose() {
     _bannerDebounceTimer?.cancel();
+    _mapFetchDebounceTimer?.cancel();
     _mapReady = false;
     super.dispose();
   }
@@ -135,13 +138,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       if (!mounted) return;
       _mapReady = true;
       _addTooltipMarker();
-      final stores = ref
-          .read(homeScreenControllerProvider)
-          .valueOrNull
-          ?.storeGoodsList;
-      if (stores != null && stores.isNotEmpty) {
-        _refreshStoreMarkers(stores);
-      }
+      _fetchMapStores();
     });
   }
 
@@ -251,9 +248,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       final isAbove = position.zoom > _labelHideZoom;
       if (wasAbove != isAbove) {
         setState(() => _currentZoom = position.zoom);
-        if (_currentStores.isNotEmpty) {
-          _refreshStoreMarkers(_currentStores);
-        }
       }
 
       final distance = Geolocator.distanceBetween(
@@ -268,7 +262,34 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
       final inServiceArea = _checkIsInServiceArea(position.target);
       _updateBannerVisibility(inServiceArea);
+
+      _mapFetchDebounceTimer?.cancel();
+      _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+        if (mounted) _fetchMapStores();
+      });
     });
+  }
+
+  Future<void> _fetchMapStores() async {
+    final controller = _mapController;
+    if (controller == null || !_mapReady) return;
+
+    final bounds = await controller.getContentBounds();
+    final onlyAvailable =
+        ref.read(homeScreenControllerProvider).valueOrNull?.onlyAvailable ??
+        false;
+
+    final stores = await ref
+        .read(storeRepositoryProvider)
+        .getStoreMapList(
+          swLatitude: bounds.southWest.latitude,
+          swLongitude: bounds.southWest.longitude,
+          neLatitude: bounds.northEast.latitude,
+          neLongitude: bounds.northEast.longitude,
+          onlyAvailable: onlyAvailable,
+        );
+
+    if (mounted) _refreshStoreMarkers(stores);
   }
 
   Future<void> _onGpsPressed() async {
@@ -336,10 +357,11 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     final defaultAddress = controllerState?.defaultAddress;
 
     ref.listen(homeScreenControllerProvider, (prev, next) {
-      final stores = next.valueOrNull?.storeGoodsList;
-      if (stores != null) {
+      final prevAvailable = prev?.valueOrNull?.onlyAvailable;
+      final nextAvailable = next.valueOrNull?.onlyAvailable;
+      if (prevAvailable != nextAvailable) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _refreshStoreMarkers(stores);
+          if (mounted) _fetchMapStores();
         });
       }
     });
