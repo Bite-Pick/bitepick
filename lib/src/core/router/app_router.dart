@@ -32,6 +32,8 @@ import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
@@ -66,6 +68,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     observers: [TalkerRouteObserver()],
   );
 });
+
+@TypedGoRoute<OnboardingRoute>(name: 'OnboardingRoute', path: '/onboarding')
+class OnboardingRoute extends GoRouteData {
+  const OnboardingRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const OnboardingScreen();
+  }
+}
 
 @TypedGoRoute<SplashRoute>(name: 'SplashRoute', path: '/splash')
 class SplashRoute extends GoRouteData {
@@ -222,6 +234,11 @@ class DefaultRoute extends GoRouteData {
     if (state.uri.path != '/') return null;
 
     try {
+      // 온보딩 미완료 시 온보딩 화면으로 이동
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
+      if (!onboardingCompleted) return OnboardingRoute().location;
+
       // ProviderContainer를 통해 userProvider 접근
       final ref = ProviderScope.containerOf(context);
       final user = await ref.read(userStateProvider.future);
