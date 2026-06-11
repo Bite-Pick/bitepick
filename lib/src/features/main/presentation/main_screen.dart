@@ -84,7 +84,7 @@ class MainScreen extends ConsumerWidget {
         highlightColor: Colors.transparent,
       ),
       child: SizedBox(
-        height: 80,
+        height: 80 + MediaQuery.of(context).padding.bottom,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex:
