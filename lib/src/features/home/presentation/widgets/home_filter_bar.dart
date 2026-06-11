@@ -61,50 +61,59 @@ class HomeFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const bottomBorder = BoxDecoration(
+      border: Border(
+        bottom: BorderSide(color: Color(0xFFEAEBEC), width: 1),
+      ),
+    );
+
     // 지도 뷰: chip만 단독 표시 (outer frame 없음)
     if (!showFilter) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: MgSizes.md,
-          vertical: MgSizes.xs,
-        ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: _buildChip(),
+      return DecoratedBox(
+        decoration: bottomBorder,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: MgSizes.md,
+            vertical: MgSizes.xs,
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: _buildChip(),
+          ),
         ),
       );
     }
 
     // 리스트 뷰: chip + filter
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: MgSizes.md,
-        vertical: 8,
-      ),
-      child: SizedBox(
-        height: 48,
-        child: Row(
-          children: [
-          _buildChip(),
-          const Spacer(),
-          if (sortType != null)
-            GestureDetector(
-              onTap: onSortTap,
-              child: SizedBox(
-                width: 54,
-                height: 20,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(sortType!.name).sm(),
-                    BaseSvgIcon.down(size: 16),
-                  ],
+        padding: const EdgeInsets.symmetric(
+          horizontal: MgSizes.md,
+          vertical: 8,
+        ),
+        child: SizedBox(
+          height: 48,
+          child: Row(
+            children: [
+            _buildChip(),
+            const Spacer(),
+            if (sortType != null)
+              GestureDetector(
+                onTap: onSortTap,
+                child: SizedBox(
+                  width: 54,
+                  height: 20,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(sortType!.name).sm(),
+                      BaseSvgIcon.down(size: 16),
+                    ],
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+          ),
         ),
-      ),
     );
   }
 }
