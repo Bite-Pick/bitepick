@@ -29,7 +29,7 @@ class StoreTags extends StatelessWidget {
     // TODO: saleStatus enum으로 변경및 조건문 수정
     if (saleStatus == "ON") {
       tags.add(
-        MgTag(child: Text("픽업 가능", style: _tagTextStyle)).copyWith(
+        MgTag(child: Text("예약 가능", style: _tagTextStyle)).copyWith(
           backgroundColor: NewColorScheme.systemNeutral,
           color: NewColorScheme.systemAlert,
         ),
@@ -47,7 +47,9 @@ class StoreTags extends StatelessWidget {
       tags.add(
         quantity >= 10
             ? MgTag(child: Text('재고있음')).gray()
-            : MgTag(child: Text('${quantity.toInt()}개 남음', style: _tagTextStyle)).copyWith(
+            : MgTag(
+                child: Text('${quantity.toInt()}개 남음', style: _tagTextStyle),
+              ).copyWith(
                 backgroundColor: NewColorScheme.systemAlert,
                 color: NewColorScheme.gray14,
               ),

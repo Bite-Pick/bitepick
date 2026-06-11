@@ -133,7 +133,6 @@ class MainScreen extends ConsumerWidget {
             ),
           ],
         ),
-      ),
     );
   }
 

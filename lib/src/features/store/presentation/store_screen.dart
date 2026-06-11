@@ -99,13 +99,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
                 SliverToBoxAdapter(
                   child: ValueListenableBuilder<int>(
                     valueListenable: _tabIndex,
-                    builder: (context, index, _) => IndexedStack(
-                      index: index,
-                      children: [
-                        StoreBiteBagView(store.goodsImages ?? []),
-                        StoreReviewListView(store.goodsId),
-                      ],
-                    ),
+                    builder: (context, index, _) => index == 0
+                        ? StoreBiteBagView(store.goodsImages ?? [])
+                        : StoreReviewListView(store.goodsId),
                   ),
                 ),
               ],

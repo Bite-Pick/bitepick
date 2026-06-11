@@ -12,6 +12,7 @@ import 'package:magambell/src/features/address/presentation/select_service_regio
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
+import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
@@ -56,6 +57,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   bool _serviceAreaChipDismissed = false;
   Timer? _bannerDebounceTimer;
   Timer? _tooltipTimer;
+  Timer? _mapFetchDebounceTimer;
 
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
@@ -68,6 +70,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   void dispose() {
     _bannerDebounceTimer?.cancel();
     _tooltipTimer?.cancel();
+    _mapFetchDebounceTimer?.cancel();
     _mapReady = false;
     super.dispose();
   }
@@ -108,13 +111,36 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     _mapController = controller;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      await precacheImage(
-        const AssetImage('assets/images/pin_store_default.png'),
-        context,
-      );
+      await Future.wait([
+        precacheImage(
+          const AssetImage('assets/images/pin_store_default.png'),
+          context,
+        ),
+        NOverlayImage.fromWidget(
+          widget: const StorePinMarker(
+            storeName: '',
+            isSelected: true,
+            isOpen: false,
+            showLabel: false,
+          ),
+          size: const Size(80, 90),
+          context: context,
+        ),
+        NOverlayImage.fromWidget(
+          widget: const StorePinMarker(
+            storeName: '',
+            isSelected: true,
+            isOpen: true,
+            showLabel: false,
+          ),
+          size: const Size(80, 110),
+          context: context,
+        ),
+      ]);
       if (!mounted) return;
       _mapReady = true;
       _showTooltip();
+      _fetchMapStores();
       final stores = ref
           .read(homeScreenControllerProvider)
           .valueOrNull
@@ -237,14 +263,38 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       final isAbove = position.zoom > _labelHideZoom;
       if (wasAbove != isAbove) {
         setState(() => _currentZoom = position.zoom);
-        if (_currentStores.isNotEmpty) {
-          _refreshStoreMarkers(_currentStores);
-        }
       }
 
       final inServiceArea = _checkIsInServiceArea(position.target);
       _updateBannerVisibility(inServiceArea);
+
+      _mapFetchDebounceTimer?.cancel();
+      _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+        if (mounted) _fetchMapStores();
+      });
     });
+  }
+
+  Future<void> _fetchMapStores() async {
+    final controller = _mapController;
+    if (controller == null || !_mapReady) return;
+
+    final bounds = await controller.getContentBounds();
+    final onlyAvailable =
+        ref.read(homeScreenControllerProvider).valueOrNull?.onlyAvailable ??
+        false;
+
+    final stores = await ref
+        .read(storeRepositoryProvider)
+        .getStoreMapList(
+          swLatitude: bounds.southWest.latitude,
+          swLongitude: bounds.southWest.longitude,
+          neLatitude: bounds.northEast.latitude,
+          neLongitude: bounds.northEast.longitude,
+          onlyAvailable: onlyAvailable,
+        );
+
+    if (mounted) _refreshStoreMarkers(stores);
   }
 
   Future<void> _onGpsPressed() async {
@@ -306,17 +356,17 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
     final defaultAddress = controllerState?.defaultAddress;
 
     ref.listen(homeScreenControllerProvider, (prev, next) {
-      final stores = next.valueOrNull?.storeGoodsList;
-      if (stores != null) {
+      final prevAvailable = prev?.valueOrNull?.onlyAvailable;
+      final nextAvailable = next.valueOrNull?.onlyAvailable;
+      if (prevAvailable != nextAvailable) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _refreshStoreMarkers(stores);
+          if (mounted) _fetchMapStores();
         });
       }
     });
@@ -369,13 +419,10 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
             ),
             if (_bannerVisible && !_serviceAreaChipDismissed)
               Positioned(
-                bottom: bottomSheetStore != null
-                    ? 288 + 100
-                    : 100,
+                bottom: bottomSheetStore != null ? 288 + 100 : 100,
                 left: 16,
                 child: ServiceAreaRequestChip(
-                  onTap: () =>
-                      SelectServiceRegionRoute().push<bool>(context),
+                  onTap: () => SelectServiceRegionRoute().push<bool>(context),
                   onDismiss: () =>
                       setState(() => _serviceAreaChipDismissed = true),
                 ),
