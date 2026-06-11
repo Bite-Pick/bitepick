@@ -98,7 +98,7 @@ class StoreMapBottomSheet extends ConsumerWidget {
                             child: Center(
                               child: BaseSvgIcon.close(
                                 size: 18,
-                                color: Color(0xFF70737C),
+                                color: NewColorScheme.gray5,
                               ),
                             ),
                           ),
