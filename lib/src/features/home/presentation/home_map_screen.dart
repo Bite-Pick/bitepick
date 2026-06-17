@@ -448,25 +448,22 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
             AnimatedPositioned(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeOutCubic,
-              bottom: bottomSheetStore != null ? 288 + 16 + 10 : 16,
+              bottom: bottomSheetStore != null ? 288 + 16 + 16: 16,
               left: 16,
               child: MapIconFloatingButton(
-                icon: BaseSvgIcon.gps(size: 25, color: NewColorScheme.gray1),
+                icon: BaseSvgIcon.gps(size: 20, color: NewColorScheme.gray1),
                 onPressed: _onGpsPressed,
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutCubic,
-              bottom: bottomSheetStore != null
-                  ? 288 + 16 + 36 + 8 + 10
-                  : 16 + 36 + 8,
-              left: 16,
-              child: MapIconFloatingButton(
-                icon: BaseSvgIcon.store(size: 25, color: NewColorScheme.gray1),
-                onPressed: () => SelectServiceRegionRoute().push<bool>(context),
+            if (bottomSheetStore == null)
+              Positioned(
+                bottom: 16 + 38 + 8,
+                left: 16,
+                child: MapIconFloatingButton(
+                  icon: BaseSvgIcon.store(size: 20, color: NewColorScheme.gray1),
+                  onPressed: () => SelectServiceRegionRoute().push<bool>(context),
+                ),
               ),
-            ),
             // 가게 바텀시트 — 플로팅 버튼보다 위에 배치, 슬라이드 애니메이션
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),

@@ -83,57 +83,69 @@ class MainScreen extends ConsumerWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      child: SizedBox(
-        height: 80 + MediaQuery.of(context).padding.bottom,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex:
-              navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
-          onTap: (index) {
-            // TODO: user domain 로직으로 분리
-            final user = ref.read(userStateProvider).asData!.value;
-            final isLogin = user != null;
-            if (!isLogin && index != 0) {
-              unawaited(showLoginAlerDialog(context));
-              return;
-            }
-            ref
-                .read(navigatorControllerProvider.notifier)
-                .changeTabIndex(index);
-          },
-          selectedItemColor: MgColorScheme.gray0,
-          unselectedItemColor: MgColorScheme.gray5,
-          selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
-          unselectedLabelStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(color: MgColorScheme.gray6),
-          backgroundColor: MgColorScheme.gray11,
-          items: [
-            _buildBottomNavigationBarItem(
-              iconName: 'home',
-              label: '홈',
-              index: 0,
-              currentIndex:
-                  navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(height: 0.5, color: NewColorScheme.gray11),
+          MediaQuery.removePadding(
+              context: context,
+              removeBottom: true,
+              child: SizedBox(
+                height: 80,
+                child: BottomNavigationBar(
+                  elevation: 0,
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex:
+                      navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+                  onTap: (index) {
+                    // TODO: user domain 로직으로 분리
+                    final user = ref.read(userStateProvider).asData!.value;
+                    final isLogin = user != null;
+                    if (!isLogin && index != 0) {
+                      unawaited(showLoginAlerDialog(context));
+                      return;
+                    }
+                    ref
+                        .read(navigatorControllerProvider.notifier)
+                        .changeTabIndex(index);
+                  },
+                  selectedItemColor: MgColorScheme.gray0,
+                  unselectedItemColor: MgColorScheme.gray5,
+                  selectedLabelStyle: Theme.of(context).textTheme.bodySmall,
+                  unselectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: MgColorScheme.gray6),
+                  backgroundColor: MgColorScheme.gray11,
+                  items: [
+                    _buildBottomNavigationBarItem(
+                      iconName: 'home',
+                      label: '홈',
+                      index: 0,
+                      currentIndex:
+                          navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+                    ),
+                    _buildBottomNavigationBarItem(
+                      iconName: 'order',
+                      label: '주문내역',
+                      index: 1,
+                      currentIndex:
+                          navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+                    ),
+                    _buildBottomNavigationBarItem(
+                      iconName: 'mypage',
+                      label: '나의바픽',
+                      index: 2,
+                      currentIndex:
+                          navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
+                    ),
+                  ],
+                ),
+              ),
             ),
-            _buildBottomNavigationBarItem(
-              iconName: 'order',
-              label: '주문내역',
-              index: 1,
-              currentIndex:
-                  navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
-            ),
-            _buildBottomNavigationBarItem(
-              iconName: 'mypage',
-              label: '나의바픽',
-              index: 2,
-              currentIndex:
-                  navState.tabIndex == _mapTabIndex ? 0 : navState.tabIndex,
-            ),
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
-      ),
     );
   }
 
