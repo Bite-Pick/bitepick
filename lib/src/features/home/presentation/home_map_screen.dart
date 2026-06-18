@@ -50,18 +50,18 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   double _currentZoom = 14.0;
   List<StoreListDTO> _currentStores = [];
   StoreListDTO? _bottomSheetStore;
-  bool _tooltipVisible = true;
+  bool _tooltipVisible = false;
 
   // 비서비스 지역 UI 상태
   bool _bannerVisible = false;
   bool _serviceAreaChipDismissed = false;
   Timer? _bannerDebounceTimer;
+  Timer? _tooltipTimer;
   Timer? _mapFetchDebounceTimer;
 
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
   static const _tooltipPosition = NLatLng(37.3243773830569, 127.107505020642);
-  static const _tooltipHideDistanceM = 5000.0;
   static const _serviceAreaRadiusM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
@@ -69,6 +69,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   @override
   void dispose() {
     _bannerDebounceTimer?.cancel();
+    _tooltipTimer?.cancel();
     _mapFetchDebounceTimer?.cancel();
     _mapReady = false;
     super.dispose();
@@ -102,6 +103,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     await _mapController!.updateCamera(
       NCameraUpdate.withParams(target: _tooltipPosition, zoom: 13),
     );
+    await _showTooltip();
   }
 
   void _onMapReady(NaverMapController controller) {
@@ -137,9 +139,40 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       ]);
       if (!mounted) return;
       _mapReady = true;
-      _addTooltipMarker();
+      _showTooltip();
       _fetchMapStores();
+      final stores = ref
+          .read(homeScreenControllerProvider)
+          .valueOrNull
+          ?.storeGoodsList;
+      if (stores != null && stores.isNotEmpty) {
+        _refreshStoreMarkers(stores);
+      }
     });
+  }
+
+  Future<void> _showTooltip() async {
+    _tooltipTimer?.cancel();
+    if (_tooltipVisible) {
+      _tooltipTimer = Timer(const Duration(seconds: 3), _hideTooltip);
+      return;
+    }
+    final controller = _mapController;
+    if (controller == null || !_mapReady || !mounted) return;
+    final icon = await NOverlayImage.fromWidget(
+      widget: const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
+      size: const Size(165, 45),
+      context: context,
+    );
+    if (!mounted || !_mapReady) return;
+    _tooltipVisible = true;
+    await controller.addOverlay(
+      NMarker(id: _tooltipMarkerId, position: _tooltipPosition)
+        ..setIcon(icon)
+        ..setAnchor(const NPoint(0.5, 1.0))
+        ..setGlobalZIndex(300000),
+    );
+    _tooltipTimer = Timer(const Duration(seconds: 3), _hideTooltip);
   }
 
   Future<void> _hideTooltip() async {
@@ -150,23 +183,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         NOverlayInfo(type: NOverlayType.marker, id: _tooltipMarkerId),
       );
     } catch (_) {}
-  }
-
-  Future<void> _addTooltipMarker() async {
-    final controller = _mapController;
-    if (controller == null || !_mapReady) return;
-    final icon = await NOverlayImage.fromWidget(
-      widget: const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
-      size: const Size(165, 45),
-      context: context,
-    );
-    if (!mounted || !_mapReady) return;
-    await controller.addOverlay(
-      NMarker(id: _tooltipMarkerId, position: _tooltipPosition)
-        ..setIcon(icon)
-        ..setAnchor(const NPoint(0.5, 1.0))
-        ..setGlobalZIndex(300000),
-    );
   }
 
   Future<void> _refreshStoreMarkers(List<StoreListDTO> stores) async {
@@ -221,12 +237,15 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   }
 
   void _onStorePinTapped(StoreListDTO store) {
-    _hideTooltip(); // 툴팁 페이드 아웃
     setState(() {
       _selectedStoreId = store.storeId;
       _bottomSheetStore = store;
     });
-    // setState 후 프레임 완료 시점에 마커 갱신
+    _mapController?.updateCamera(
+      NCameraUpdate.scrollAndZoomTo(
+        target: NLatLng(store.latitude, store.longitude),
+      )..setPivot(const NPoint(0.5, 0.35)),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _refreshStoreMarkers(_currentStores);
     });
@@ -248,16 +267,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       final isAbove = position.zoom > _labelHideZoom;
       if (wasAbove != isAbove) {
         setState(() => _currentZoom = position.zoom);
-      }
-
-      final distance = Geolocator.distanceBetween(
-        position.target.latitude,
-        position.target.longitude,
-        _tooltipPosition.latitude,
-        _tooltipPosition.longitude,
-      );
-      if (distance > _tooltipHideDistanceM) {
-        _hideTooltip();
       }
 
       final inServiceArea = _checkIsInServiceArea(position.target);
@@ -394,14 +403,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                     children: [
                       NaverMap(
                         options: NaverMapViewOptions(
-                          initialCameraPosition: NCameraPosition(
-                            target: defaultAddress != null
-                                ? NLatLng(
-                                    defaultAddress.latitude,
-                                    defaultAddress.longitude,
-                                  )
-                                : const NLatLng(37.5666102, 126.9783881),
-                            zoom: 14,
+                          initialCameraPosition: const NCameraPosition(
+                            target: _tooltipPosition,
+                            zoom: 13,
                           ),
                           mapType: NMapType.basic,
                           activeLayerGroups: [
@@ -444,25 +448,22 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
             AnimatedPositioned(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeOutCubic,
-              bottom: bottomSheetStore != null ? 288 + 16 : 16,
+              bottom: bottomSheetStore != null ? 288 + 16 + 16: 16,
               left: 16,
               child: MapIconFloatingButton(
                 icon: BaseSvgIcon.gps(size: 20, color: NewColorScheme.gray1),
                 onPressed: _onGpsPressed,
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutCubic,
-              bottom: bottomSheetStore != null
-                  ? 288 + 16 + 36 + 8
-                  : 16 + 36 + 8,
-              left: 16,
-              child: MapIconFloatingButton(
-                icon: BaseSvgIcon.store(size: 20, color: NewColorScheme.gray1),
-                onPressed: () => SelectServiceRegionRoute().push<bool>(context),
+            if (bottomSheetStore == null)
+              Positioned(
+                bottom: 16 + 38 + 8,
+                left: 16,
+                child: MapIconFloatingButton(
+                  icon: BaseSvgIcon.store(size: 20, color: NewColorScheme.gray1),
+                  onPressed: () => SelectServiceRegionRoute().push<bool>(context),
+                ),
               ),
-            ),
             // 가게 바텀시트 — 플로팅 버튼보다 위에 배치, 슬라이드 애니메이션
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),

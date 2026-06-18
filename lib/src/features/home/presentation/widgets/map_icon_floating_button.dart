@@ -16,8 +16,8 @@ class MapIconFloatingButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 36,
-        height: 36,
+        width: 38,
+        height: 38,
         decoration: BoxDecoration(
           color: NewColorScheme.gray14,
           shape: BoxShape.circle,
