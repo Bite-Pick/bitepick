@@ -234,15 +234,17 @@ class DefaultRoute extends GoRouteData {
     if (state.uri.path != '/') return null;
 
     try {
-      // 온보딩 미완료 시 온보딩 화면으로 이동
-      final prefs = await SharedPreferences.getInstance();
-      final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
-      if (!onboardingCompleted) return OnboardingRoute().location;
-
       // ProviderContainer를 통해 userProvider 접근
       final ref = ProviderScope.containerOf(context);
       final user = await ref.read(userStateProvider.future);
+
+      // 비로그인 → 로그인 화면
       if (user == null) return LoginRoute().location;
+
+      // 로그인됐지만 온보딩 미완료 → 온보딩 화면
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
+      if (!onboardingCompleted) return OnboardingRoute().location;
 
       // userRole에 따라 다른 홈 화면으로 리다이렉트
       switch (user.userRole) {

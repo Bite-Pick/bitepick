@@ -7,8 +7,8 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/address/presentation/select_address_screen.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
+import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/owner/owner_join_info_screen.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -44,15 +44,14 @@ class JoinSuccessScreen extends ConsumerWidget {
               : Text("지역 설정이후에 서비스를 이용할 수 있어요"),
           Spacer(),
           MgButton(
-            onPressed: () {
-              // Owner인 경우 매장 정보 입력 화면으로, 아니면 홈으로
+            onPressed: () async {
+              await ref.read(userStateProvider.notifier).refresh();
+              if (!context.mounted) return;
+              // Owner인 경우 매장 정보 입력 화면으로, 아니면 온보딩으로
               if (userRole == UserRole.owner) {
-                //  // 회원가입 성공 - 유저 정보 refresh
-                // await ref.read(userStateProvider.notifier).refresh();
-
                 OwnerJoinInfoRoute().go(context);
               } else {
-                SelectAddressRoute().go(context);
+                OnboardingRoute().go(context);
               }
             },
             content: const Text("시작하기"),
