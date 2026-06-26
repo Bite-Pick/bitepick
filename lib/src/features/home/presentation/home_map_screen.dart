@@ -65,6 +65,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   static const _serviceAreaRadiusM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
+  static const double _selectedPinHeight = 43.0;
+  static const double _unselectedPinHeight = 36.0;
+  static const double _openStateOffset = 26.0;
 
   @override
   void dispose() {
@@ -217,6 +220,10 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     final isOpen = store.saleStatus == 'ON';
     final showLabel = _currentZoom > _labelHideZoom;
 
+    final imageSize = isSelected
+        ? Size(80, isOpen ? 110 : 90)
+        : Size(80, isOpen ? 90 : 70);
+
     final icon = await NOverlayImage.fromWidget(
       widget: StorePinMarker(
         storeName: store.storeName,
@@ -224,16 +231,20 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         isOpen: isOpen,
         showLabel: showLabel,
       ),
-      size: isSelected
-          ? Size(80, isOpen ? 110 : 90)
-          : Size(80, isOpen ? 90 : 70),
+      size: imageSize,
       context: context,
     );
+
+    final pinHeight = isSelected ? _selectedPinHeight : _unselectedPinHeight;
+    final pinTipY = (isOpen ? _openStateOffset : 0.0) + pinHeight;
+    final anchorY = pinTipY / imageSize.height;
 
     return NMarker(
       id: '$_storeMarkerPrefix${store.storeId}',
       position: NLatLng(store.latitude, store.longitude),
-    )..setIcon(icon);
+    )
+      ..setIcon(icon)
+      ..setAnchor(NPoint(0.5, anchorY));
   }
 
   void _onStorePinTapped(StoreListDTO store) {
