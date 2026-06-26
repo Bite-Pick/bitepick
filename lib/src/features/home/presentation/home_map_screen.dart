@@ -65,6 +65,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   static const _serviceAreaRadiusM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
+  static const double _selectedPinHeight = 43.0;
+  static const double _unselectedPinHeight = 36.0;
+  static const double _openStateOffset = 26.0;
 
   @override
   void dispose() {
@@ -232,8 +235,8 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       context: context,
     );
 
-    final pinHeight = isSelected ? 43.0 : 36.0;
-    final pinTipY = (isOpen ? 26.0 : 0.0) + pinHeight;
+    final pinHeight = isSelected ? _selectedPinHeight : _unselectedPinHeight;
+    final pinTipY = (isOpen ? _openStateOffset : 0.0) + pinHeight;
     final anchorY = pinTipY / imageSize.height;
 
     return NMarker(
