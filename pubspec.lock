@@ -647,10 +647,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_naver_map
-      sha256: d8ac4d24ed07267949d559b9ba6d7c2e571ffd8ce4b717d0ae63b7f9e0aa623d
+      sha256: "5d76331cc9f5c678adfda7089834b99d0377fd365e7c144da9784b876ceed36e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1+1"
+    version: "1.4.4"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

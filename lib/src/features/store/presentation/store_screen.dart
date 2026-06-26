@@ -99,13 +99,9 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
                 SliverToBoxAdapter(
                   child: ValueListenableBuilder<int>(
                     valueListenable: _tabIndex,
-                    builder: (context, index, _) => IndexedStack(
-                      index: index,
-                      children: [
-                        StoreBiteBagView(store.goodsImages ?? []),
-                        StoreReviewListView(store.goodsId),
-                      ],
-                    ),
+                    builder: (context, index, _) => index == 0
+                        ? StoreBiteBagView(store.goodsImages ?? [])
+                        : StoreReviewListView(store.goodsId),
                   ),
                 ),
               ],
@@ -146,17 +142,25 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
     );
     final isSubscribed = subscribedAsync.asData?.value ?? false;
 
-    ref.listen(storeSubscriberCountProvider(storeId: widget.storeId), (_, next) {
+    ref.listen(storeSubscriberCountProvider(storeId: widget.storeId), (
+      _,
+      next,
+    ) {
       next.whenData((serverCount) {
-        if (mounted) setState(() => _subscriberCount = serverCount);
+        if (mounted)
+          setState(() => _subscriberCount = serverCount + 5); // 임시로 +5명으로 표시
       });
     });
     final now = DateTime.now();
     final endTime = goods.endTime;
     final goodsStartTime = goods.startTime;
     final nowSeconds = now.hour * 3600 + now.minute * 60 + now.second;
-    final startSeconds = goodsStartTime.hour * 3600 + goodsStartTime.minute * 60 + goodsStartTime.second;
-    final endSeconds = endTime.hour * 3600 + endTime.minute * 60 + endTime.second;
+    final startSeconds =
+        goodsStartTime.hour * 3600 +
+        goodsStartTime.minute * 60 +
+        goodsStartTime.second;
+    final endSeconds =
+        endTime.hour * 3600 + endTime.minute * 60 + endTime.second;
     // 현재 시간이 픽업 범위 안(startTime < now <= endTime)일 때만 now로 대체
     // 범위 밖이면 goodsStartTime 사용 → 타임피커가 오늘/내일 날짜를 알아서 처리
     final startTime = (nowSeconds > startSeconds && nowSeconds <= endSeconds)
@@ -213,132 +217,170 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
             child: Row(
               children: [
                 if (saleStatus) ...[
-            Expanded(
-              child: QuantityPicker(
-                count: count,
-                onCountChanged: setCount,
-                maxCount: goods.quantity,
-                onMaxReached: () {
-                  ToastPresentor.error(
-                    context,
-                    "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
-                  );
-                },
-              ),
-            ),
-            Gaps.w10,
-          ],
-          Expanded(
-            child:
-                MgButton(
-                  onPressed: () async {
-                    if (saleStatus && count > goods.quantity) {
-                      ToastPresentor.error(
-                        context,
-                        "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
-                      );
-                      return;
-                    }
-                    final user = ref.read(userStateProvider).asData!.value;
-                    final isLogin = user != null;
-
-                    if (!isLogin) {
-                      unawaited(showLoginAlerDialog(context));
-                      return;
-                    }
-
-                    if (!saleStatus) {
-                      if (isSubscribed) {
-                        // 옵티미스틱 업데이트: 즉시 감소
-                        setState(() {
-                          _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
-                        });
-                        final res = await ref
-                            .read(notificationRepositoryProvider)
-                            .deleteNotificationToken(widget.storeId);
-                        if (context.mounted) {
-                          if (res) {
-                            ToastPresentor.notificationToast(context, "오픈 알림이 해제되었습니다.");
-                            ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
-                          } else {
-                            // 실패 시 롤백
-                            setState(() => _subscriberCount = (_subscriberCount ?? 0) + 1);
-                          }
-                        }
-                      } else {
-                        // 옵티미스틱 업데이트: 즉시 증가
-                        setState(() {
-                          _subscriberCount = (_subscriberCount ?? 0) + 1;
-                        });
-                        try {
-                          final res = await ref
-                              .read(notificationRepositoryProvider)
-                              .registerStoreNotification(storeId: widget.storeId);
-                          if (context.mounted) {
-                            if (res) {
-                              ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
-                              ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
-                            } else {
-                              // 실패 시 롤백
-                              setState(() {
-                                _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
-                              });
-                            }
-                          }
-                        } on DuplicateNotificationStoreException {
-                          if (context.mounted) {
-                            ToastPresentor.notificationToast(context, "매장이 오픈하면 알려드릴게요!");
-                            ref.invalidate(storeNotificationSubscribedProvider(storeId: widget.storeId));
-                          }
-                        } catch (_) {
-                          if (context.mounted) {
-                            // 기타 에러 시 롤백
-                            setState(() {
-                              _subscriberCount = ((_subscriberCount ?? 1) - 1).clamp(0, 99999);
-                            });
-                          }
-                        }
-                      }
-                      return;
-                    }
-
-                    ref
-                        .read(
-                          orderPayScreenControllerProvider(
-                            goods.storeId,
-                          ).notifier,
-                        )
-                        .setOrderInfo(
-                          storeName: goods.storeName,
-                          storeAddress: goods.address,
-                          storeId: goods.storeId,
-                          goodsId: goods.goodsId,
-                          quantity: count,
-                          totalPrice: goods.salePrice * count,
-                          salePrice: goods.salePrice,
-                          originalPrice: goods.originalPrice,
-                          startTime: startTime,
-                          endTime: endTime,
+                  Expanded(
+                    child: QuantityPicker(
+                      count: count,
+                      onCountChanged: setCount,
+                      maxCount: goods.quantity,
+                      onMaxReached: () {
+                        ToastPresentor.error(
+                          context,
+                          "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
                         );
-
-                    await OrderCautionRoute(
-                      storeId: goods.storeId,
-                    ).push(context);
-                  },
-                  content: Text(
-                    !saleStatus
-                        ? (isSubscribed ? '오픈 알림 취소하기' : '오픈 알림 신청하기')
-                        : '구매하기',
+                      },
+                    ),
                   ),
-                ).primary().copyWith(
-                  backgroundColor: !saleStatus && isSubscribed
-                      ? MgColorScheme.gray8
-                      : null,
-                  textColor: !saleStatus && isSubscribed
-                      ? MgColorScheme.gray4
-                      : null,
+                  Gaps.w10,
+                ],
+                Expanded(
+                  child:
+                      MgButton(
+                        onPressed: () async {
+                          if (saleStatus && count > goods.quantity) {
+                            ToastPresentor.error(
+                              context,
+                              "재고가 부족합니다. (남은 수량: ${goods.quantity}개)",
+                            );
+                            return;
+                          }
+                          final user = ref
+                              .read(userStateProvider)
+                              .asData!
+                              .value;
+                          final isLogin = user != null;
+
+                          if (!isLogin) {
+                            unawaited(showLoginAlerDialog(context));
+                            return;
+                          }
+
+                          if (!saleStatus) {
+                            if (isSubscribed) {
+                              // 옵티미스틱 업데이트: 즉시 감소
+                              setState(() {
+                                _subscriberCount = ((_subscriberCount ?? 1) - 1)
+                                    .clamp(0, 99999);
+                              });
+                              final res = await ref
+                                  .read(notificationRepositoryProvider)
+                                  .deleteNotificationToken(widget.storeId);
+                              if (context.mounted) {
+                                if (res) {
+                                  ToastPresentor.notificationToast(
+                                    context,
+                                    "오픈 알림이 해제되었습니다.",
+                                  );
+                                  ref.invalidate(
+                                    storeNotificationSubscribedProvider(
+                                      storeId: widget.storeId,
+                                    ),
+                                  );
+                                } else {
+                                  // 실패 시 롤백
+                                  setState(
+                                    () => _subscriberCount =
+                                        (_subscriberCount ?? 0) + 1,
+                                  );
+                                }
+                              }
+                            } else {
+                              // 옵티미스틱 업데이트: 즉시 증가
+                              setState(() {
+                                _subscriberCount = (_subscriberCount ?? 0) + 1;
+                              });
+                              try {
+                                final res = await ref
+                                    .read(notificationRepositoryProvider)
+                                    .registerStoreNotification(
+                                      storeId: widget.storeId,
+                                    );
+                                if (context.mounted) {
+                                  if (res) {
+                                    ToastPresentor.notificationToast(
+                                      context,
+                                      "매장이 오픈하면 알려드릴게요!",
+                                    );
+                                    ref.invalidate(
+                                      storeNotificationSubscribedProvider(
+                                        storeId: widget.storeId,
+                                      ),
+                                    );
+                                  } else {
+                                    // 실패 시 롤백
+                                    setState(() {
+                                      _subscriberCount =
+                                          ((_subscriberCount ?? 1) - 1).clamp(
+                                            0,
+                                            99999,
+                                          );
+                                    });
+                                  }
+                                }
+                              } on DuplicateNotificationStoreException {
+                                if (context.mounted) {
+                                  ToastPresentor.notificationToast(
+                                    context,
+                                    "매장이 오픈하면 알려드릴게요!",
+                                  );
+                                  ref.invalidate(
+                                    storeNotificationSubscribedProvider(
+                                      storeId: widget.storeId,
+                                    ),
+                                  );
+                                }
+                              } catch (_) {
+                                if (context.mounted) {
+                                  // 기타 에러 시 롤백
+                                  setState(() {
+                                    _subscriberCount =
+                                        ((_subscriberCount ?? 1) - 1).clamp(
+                                          0,
+                                          99999,
+                                        );
+                                  });
+                                }
+                              }
+                            }
+                            return;
+                          }
+
+                          ref
+                              .read(
+                                orderPayScreenControllerProvider(
+                                  goods.storeId,
+                                ).notifier,
+                              )
+                              .setOrderInfo(
+                                storeName: goods.storeName,
+                                storeAddress: goods.address,
+                                storeId: goods.storeId,
+                                goodsId: goods.goodsId,
+                                quantity: count,
+                                totalPrice: goods.salePrice * count,
+                                salePrice: goods.salePrice,
+                                originalPrice: goods.originalPrice,
+                                startTime: startTime,
+                                endTime: endTime,
+                              );
+
+                          await OrderCautionRoute(
+                            storeId: goods.storeId,
+                          ).push(context);
+                        },
+                        content: Text(
+                          !saleStatus
+                              ? (isSubscribed ? '오픈 알림 취소하기' : '오픈 알림 신청하기')
+                              : '구매하기',
+                        ),
+                      ).primary().copyWith(
+                        backgroundColor: !saleStatus && isSubscribed
+                            ? MgColorScheme.gray8
+                            : null,
+                        textColor: !saleStatus && isSubscribed
+                            ? MgColorScheme.gray4
+                            : null,
+                      ),
                 ),
-          ),
               ],
             ),
           ),

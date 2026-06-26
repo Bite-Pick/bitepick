@@ -55,19 +55,28 @@ class AnalyticsService {
     );
   }
 
-  /// 결제 완료 직후
-  Future<void> logPurchaseCompleted({
+  /// 결제 완료 직후 (GA4 표준 purchase 이벤트 — 수익 집계용)
+  Future<void> logPurchase({
+    required String transactionId,
     required String storeId,
+    required String goodsId,
+    required String storeName,
     required int amount,
     required int quantity,
   }) async {
-    await _analytics.logEvent(
-      name: 'purchase_completed',
-      parameters: {
-        'store_id': storeId,
-        'amount': amount,
-        'quantity': quantity,
-      },
+    await _analytics.logPurchase(
+      transactionId: transactionId,
+      affiliation: storeId,
+      value: amount.toDouble(),
+      currency: 'KRW',
+      items: [
+        AnalyticsEventItem(
+          itemId: goodsId,
+          itemName: '$storeName 바이트백',
+          quantity: quantity,
+          price: amount / quantity,
+        ),
+      ],
     );
   }
 

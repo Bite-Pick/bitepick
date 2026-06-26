@@ -102,6 +102,34 @@ class StoreRepository {
         .toList();
   }
 
+  Future<List<StoreListDTO>> getStoreMapList({
+    required double swLatitude,
+    required double swLongitude,
+    required double neLatitude,
+    required double neLongitude,
+    bool onlyAvailable = false,
+  }) async {
+    final res = await _dio.get(
+      '/v1/store/map',
+      queryParameters: {
+        'swLatitude': swLatitude,
+        'swLongitude': swLongitude,
+        'neLatitude': neLatitude,
+        'neLongitude': neLongitude,
+        'onlyAvailable': onlyAvailable,
+      },
+    );
+
+    if (res.data['status'] != 'OK') return [];
+
+    final list =
+        res.data['data']?['storeListDTOResponses'] as List? ?? [];
+
+    return list
+        .map((json) => StoreListDTO.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
   Future<Store?> getOwnerStore() async {
     final res = await _dio.get('/v1/store/owner');
 

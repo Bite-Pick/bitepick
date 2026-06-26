@@ -3,7 +3,6 @@ import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/home/domain/entities/home_goods_item_data.dart';
 
 part 'store_list.dto.freezed.dart';
-part 'store_list.dto.g.dart';
 
 /// 매장 리스트 응답 DTO
 @freezed
@@ -11,7 +10,7 @@ class StoreListDTO with _$StoreListDTO {
   const factory StoreListDTO({
     required String storeId,
     required String storeName,
-    @JsonKey(name: 'ImageUrl') required List<String> imageUrl,
+    @Default([]) List<String> imageUrl,
     required double latitude,
     required double longitude,
     required String address,
@@ -28,8 +27,30 @@ class StoreListDTO with _$StoreListDTO {
 
   const StoreListDTO._();
 
-  factory StoreListDTO.fromJson(Map<String, dynamic> json) =>
-      _$StoreListDTOFromJson(json);
+  factory StoreListDTO.fromJson(Map<String, dynamic> json) {
+    // prod 서버는 'ImageUrl'(대문자), dev 서버는 'imageUrl'(소문자)로 내려옴
+    final rawImages = json['ImageUrl'] ?? json['imageUrl'];
+    final images = rawImages is List
+        ? rawImages.map((e) => e as String).toList()
+        : <String>[];
+    return StoreListDTO(
+      storeId: json['storeId'] as String,
+      storeName: json['storeName'] as String,
+      imageUrl: images,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      address: json['address'] as String,
+      goodsName: json['goodsName'] as String?,
+      startTime: json['startTime'] as String,
+      endTime: json['endTime'] as String,
+      originPrice: json['originPrice'] as int,
+      discount: json['discount'] as int,
+      salePrice: json['salePrice'] as int,
+      quantity: json['quantity'] as int,
+      distance: (json['distance'] as num).toDouble(),
+      saleStatus: json['saleStatus'] as String,
+    );
+  }
 
   /// DTO를 Goods 엔티티로 변환
   Goods toGoods() {

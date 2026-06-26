@@ -15,15 +15,10 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-StoreListDTO _$StoreListDTOFromJson(Map<String, dynamic> json) {
-  return _StoreListDTO.fromJson(json);
-}
-
 /// @nodoc
 mixin _$StoreListDTO {
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ImageUrl')
   List<String> get imageUrl => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
@@ -37,9 +32,6 @@ mixin _$StoreListDTO {
   int get quantity => throw _privateConstructorUsedError;
   double get distance => throw _privateConstructorUsedError;
   String get saleStatus => throw _privateConstructorUsedError;
-
-  /// Serializes this StoreListDTO to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of StoreListDTO
   /// with the given fields replaced by the non-null parameter values.
@@ -58,7 +50,7 @@ abstract class $StoreListDTOCopyWith<$Res> {
   $Res call({
     String storeId,
     String storeName,
-    @JsonKey(name: 'ImageUrl') List<String> imageUrl,
+    List<String> imageUrl,
     double latitude,
     double longitude,
     String address,
@@ -185,7 +177,7 @@ abstract class _$$StoreListDTOImplCopyWith<$Res>
   $Res call({
     String storeId,
     String storeName,
-    @JsonKey(name: 'ImageUrl') List<String> imageUrl,
+    List<String> imageUrl,
     double latitude,
     double longitude,
     String address,
@@ -299,12 +291,12 @@ class __$$StoreListDTOImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$StoreListDTOImpl extends _StoreListDTO {
   const _$StoreListDTOImpl({
     required this.storeId,
     required this.storeName,
-    @JsonKey(name: 'ImageUrl') required final List<String> imageUrl,
+    final List<String> imageUrl = const [],
     required this.latitude,
     required this.longitude,
     required this.address,
@@ -320,16 +312,13 @@ class _$StoreListDTOImpl extends _StoreListDTO {
   }) : _imageUrl = imageUrl,
        super._();
 
-  factory _$StoreListDTOImpl.fromJson(Map<String, dynamic> json) =>
-      _$$StoreListDTOImplFromJson(json);
-
   @override
   final String storeId;
   @override
   final String storeName;
   final List<String> _imageUrl;
   @override
-  @JsonKey(name: 'ImageUrl')
+  @JsonKey()
   List<String> get imageUrl {
     if (_imageUrl is EqualUnmodifiableListView) return _imageUrl;
     // ignore: implicit_dynamic_type
@@ -399,7 +388,6 @@ class _$StoreListDTOImpl extends _StoreListDTO {
                 other.saleStatus == saleStatus));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -427,18 +415,13 @@ class _$StoreListDTOImpl extends _StoreListDTO {
   @pragma('vm:prefer-inline')
   _$$StoreListDTOImplCopyWith<_$StoreListDTOImpl> get copyWith =>
       __$$StoreListDTOImplCopyWithImpl<_$StoreListDTOImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$StoreListDTOImplToJson(this);
-  }
 }
 
 abstract class _StoreListDTO extends StoreListDTO {
   const factory _StoreListDTO({
     required final String storeId,
     required final String storeName,
-    @JsonKey(name: 'ImageUrl') required final List<String> imageUrl,
+    final List<String> imageUrl,
     required final double latitude,
     required final double longitude,
     required final String address,
@@ -454,15 +437,11 @@ abstract class _StoreListDTO extends StoreListDTO {
   }) = _$StoreListDTOImpl;
   const _StoreListDTO._() : super._();
 
-  factory _StoreListDTO.fromJson(Map<String, dynamic> json) =
-      _$StoreListDTOImpl.fromJson;
-
   @override
   String get storeId;
   @override
   String get storeName;
   @override
-  @JsonKey(name: 'ImageUrl')
   List<String> get imageUrl;
   @override
   double get latitude;

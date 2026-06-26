@@ -86,6 +86,17 @@ class GoodsRepository {
         .toList();
   }
 
+  Future<bool> editGoodsQuantity({
+    required String goodsId,
+    required int quantity,
+  }) async {
+    final res = await _dio.patch(
+      '/v1/goods/${goodsId}/quantity',
+      data: {'quantity': quantity},
+    );
+    return res.data['status'] == 'OK';
+  }
+
   Future<bool> setGoodsSaleStatus({
     required String id,
     required bool saleStatus,

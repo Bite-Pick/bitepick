@@ -16,7 +16,6 @@ import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
-import 'package:magambell/src/features/store/providers/store.provider.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -62,62 +61,63 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final storeAsync = ref.watch(storeStateProvider);
+    final storeAsync = ref.watch(ownerStoreProvider);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) SystemNavigator.pop();
       },
       child: MgAsyncAnimatedSwitcher(
-      asyncValue: storeAsync,
-      onRetry: () => ref.invalidate(storeStateProvider),
-      builder: (store) {
-        return BaseScaffold(
-          canSwipeBack:false,
-          appBar: BaseAppBar(
-            // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
-            // leadingWidth: 120,
-            leading: SizedBox.shrink(),
-            action: Row(
-              children: [
-                _buildServiceSwitch(
-                  store?.goodsList[0].goodsId ?? "",
-                  _optimisticSaleStatus ?? (store?.goodsList[0].saleStatus == "ON"),
-                  store?.goodsList[0],
-                  store?.goodsImageList,
-                ),
-                OwnerMoreButton(),
-              ],
-            ),
-            bottom: TabBar(
-              dividerColor: Colors.transparent,
-              controller: _tabController,
-              labelColor: MgColorScheme.gray1,
-              unselectedLabelColor: MgColorScheme.gray5,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicator: UnderlineTabIndicator(
-                borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+        asyncValue: storeAsync,
+        onRetry: () => ref.invalidate(ownerStoreProvider),
+        builder: (store) {
+          return BaseScaffold(
+            canSwipeBack: false,
+            appBar: BaseAppBar(
+              // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
+              // leadingWidth: 120,
+              leading: SizedBox.shrink(),
+              action: Row(
+                children: [
+                  _buildServiceSwitch(
+                    store?.goodsList[0].goodsId ?? "",
+                    _optimisticSaleStatus ??
+                        (store?.goodsList[0].saleStatus == "ON"),
+                    store?.goodsList[0],
+                    store?.goodsImageList,
+                  ),
+                  OwnerMoreButton(),
+                ],
               ),
-              labelStyle: context.textTheme.titleLarge,
-              unselectedLabelStyle: context.textTheme.bodyLarge,
-              tabs: [
-                Tab(text: '주문'),
-                Tab(text: '판매'),
-              ],
-            ),
-          ),
-          body: Stack(
-            children: [
-              TabBarView(
+              bottom: TabBar(
+                dividerColor: Colors.transparent,
                 controller: _tabController,
-                children: [OwnerOrderListView(), OwnerGoodsView()],
+                labelColor: MgColorScheme.gray1,
+                unselectedLabelColor: MgColorScheme.gray5,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
+                ),
+                labelStyle: context.textTheme.titleLarge,
+                unselectedLabelStyle: context.textTheme.bodyLarge,
+                tabs: [
+                  Tab(text: '주문'),
+                  Tab(text: '판매'),
+                ],
               ),
-              HomeUpdateBanner(),
-            ],
-          ),
-        );
-      },
-    ),
+            ),
+            body: Stack(
+              children: [
+                TabBarView(
+                  controller: _tabController,
+                  children: [OwnerOrderListView(), OwnerGoodsView()],
+                ),
+                HomeUpdateBanner(),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -136,7 +136,12 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildServiceSwitch(String id, bool saleStatus, Goods? goods, List<GoodsImagesList>? goodsImageList) {
+  Widget _buildServiceSwitch(
+    String id,
+    bool saleStatus,
+    Goods? goods,
+    List<GoodsImagesList>? goodsImageList,
+  ) {
     void onToggle() {
       if (_isTogglingStatus) return;
       final newValue = !saleStatus;
@@ -190,7 +195,11 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  void _showQuantityConfirmDialog(String id, Goods goods, List<GoodsImagesList>? goodsImageList) {
+  void _showQuantityConfirmDialog(
+    String id,
+    Goods goods,
+    List<GoodsImagesList>? goodsImageList,
+  ) {
     showDialog(
       context: context,
       builder: (_) => _QuantityConfirmDialog(
@@ -199,23 +208,12 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           setState(() => _optimisticSaleStatus = true);
           if (newQuantity != goods.stockQuantity) {
             try {
-              await ref.read(goodsRepositoryProvider).editGoods(
-                goodsId: goods.goodsId!,
-                originalPrice: goods.originPrice,
-                discount: goods.discount,
-                salePrice: goods.salePrice,
-                quantity: newQuantity,
-                startTime: DateTime.parse(goods.startTime),
-                endTime: DateTime.parse(goods.endTime),
-                goodsImagesRegisters: goodsImageList
-                    ?.map((e) => {
-                          'id': e.id,
-                          'key': e.key,
-                          'imageUrl': e.imageUrl,
-                          'goodsName': e.goodsName,
-                        })
-                    .toList(),
-              );
+              await ref
+                  .read(goodsRepositoryProvider)
+                  .editGoodsQuantity(
+                    goodsId: goods.goodsId!,
+                    quantity: newQuantity,
+                  );
             } catch (_) {}
           }
           await changeSaleStatus(id, true);
@@ -234,10 +232,9 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       await ref
           .read(goodsRepositoryProvider)
           .setGoodsSaleStatus(id: id, saleStatus: saleStatus);
-      ref.invalidate(storeStateProvider);
       ref.invalidate(ownerStoreProvider);
       // provider 재로딩 완료까지 기다린 후 낙관적 상태 해제
-      await ref.read(storeStateProvider.future);
+      await ref.read(ownerStoreProvider.future);
     } on DioException catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -307,9 +304,10 @@ class _QuantityConfirmDialogState extends State<_QuantityConfirmDialog> {
                     icon: BaseSvgIcon.minus(),
                   ),
                   Expanded(
-                    child: Text('$_quantity개', textAlign: TextAlign.center)
-                        .bold()
-                        .md(),
+                    child: Text(
+                      '$_quantity개',
+                      textAlign: TextAlign.center,
+                    ).bold().md(),
                   ),
                   IconButton(
                     onPressed: () => setState(() => _quantity++),
@@ -330,15 +328,13 @@ class _QuantityConfirmDialogState extends State<_QuantityConfirmDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('• 입력하신 수량만큼만 오늘 판매됩니다.')
-                      .sm()
-                      .regular()
-                      .textColor(MgColorScheme.gray3),
+                  Text(
+                    '• 입력하신 수량만큼만 오늘 판매됩니다.',
+                  ).sm().regular().textColor(MgColorScheme.gray3),
                   const SizedBox(height: 4),
-                  Text('• 오늘 남은 재고를 묶음으로 준비해주시면 됩니다.')
-                      .sm()
-                      .regular()
-                      .textColor(MgColorScheme.gray3),
+                  Text(
+                    '• 오늘 남은 재고를 묶음으로 준비해주시면 됩니다.',
+                  ).sm().regular().textColor(MgColorScheme.gray3),
                 ],
               ),
             ),
