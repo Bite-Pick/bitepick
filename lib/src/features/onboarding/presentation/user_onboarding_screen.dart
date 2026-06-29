@@ -24,19 +24,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       subtitle: "바이트픽은 당일 만든 신선한 빵이 담긴\n'바이트백'을 최대 ",
       subtitleHighlight: '60% 할인된 가격에',
       subtitleSuffix: ' 제공해요.',
-      imagePath: 'assets/images/onboarding1.png',
+      imagePath: 'assets/images/user_onboarding1.png',
       imageWidth: 252,
       imageHeight: 275,
     ),
     _OnboardingData(
       title: '바이트픽으로 결제하고\n편하게 픽업해요',
       subtitle: '원하는 바이트백을 결제하고 사장님이 수락하면,\n픽업시간에 방문하면 돼요!',
-      imagePath: 'assets/images/onboarding2.png',
+      imagePath: 'assets/images/user_onboarding2.png',
     ),
     _OnboardingData(
       title: '어? 매장이 다 닫혀있나요 👀',
       subtitle: '매장의 오픈 알림을 켜두세요.\n매장이 오픈하는 순간, 먼저 알려드릴게요!',
-      imagePath: 'assets/images/onboarding3.png',
+      imagePath: 'assets/images/user_onboarding3.png',
     ),
   ];
 

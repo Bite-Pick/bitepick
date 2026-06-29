@@ -6,7 +6,13 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$onboardingRoute, $splashRoute, $loginRoute, $defaultRoute];
+List<RouteBase> get $appRoutes => [
+  $onboardingRoute,
+  $ownerOnboardingRoute,
+  $splashRoute,
+  $loginRoute,
+  $defaultRoute,
+];
 
 RouteBase get $onboardingRoute => GoRouteData.$route(
   path: '/onboarding',
@@ -16,9 +22,33 @@ RouteBase get $onboardingRoute => GoRouteData.$route(
 );
 
 extension $OnboardingRouteExtension on OnboardingRoute {
-  static OnboardingRoute _fromState(GoRouterState state) => const OnboardingRoute();
+  static OnboardingRoute _fromState(GoRouterState state) =>
+      const OnboardingRoute();
 
   String get location => GoRouteData.$location('/onboarding');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $ownerOnboardingRoute => GoRouteData.$route(
+  path: '/owner-onboarding',
+  name: 'OwnerOnboardingRoute',
+
+  factory: $OwnerOnboardingRouteExtension._fromState,
+);
+
+extension $OwnerOnboardingRouteExtension on OwnerOnboardingRoute {
+  static OwnerOnboardingRoute _fromState(GoRouterState state) =>
+      const OwnerOnboardingRoute();
+
+  String get location => GoRouteData.$location('/owner-onboarding');
 
   void go(BuildContext context) => context.go(location);
 

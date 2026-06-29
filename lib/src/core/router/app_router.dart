@@ -32,7 +32,8 @@ import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
-import 'package:magambell/src/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:magambell/src/features/onboarding/presentation/owner_onboarding_screen.dart';
+import 'package:magambell/src/features/onboarding/presentation/user_onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
@@ -76,6 +77,19 @@ class OnboardingRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const OnboardingScreen();
+  }
+}
+
+@TypedGoRoute<OwnerOnboardingRoute>(
+  name: 'OwnerOnboardingRoute',
+  path: '/owner-onboarding',
+)
+class OwnerOnboardingRoute extends GoRouteData {
+  const OwnerOnboardingRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const OwnerOnboardingScreen();
   }
 }
 
@@ -241,10 +255,7 @@ class DefaultRoute extends GoRouteData {
       // 비로그인 → 로그인 화면
       if (user == null) return LoginRoute().location;
 
-      // 로그인됐지만 온보딩 미완료 → 온보딩 화면
       final prefs = await SharedPreferences.getInstance();
-      final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
-      if (!onboardingCompleted) return OnboardingRoute().location;
 
       // userRole에 따라 다른 홈 화면으로 리다이렉트
       switch (user.userRole) {
@@ -255,10 +266,16 @@ class DefaultRoute extends GoRouteData {
           if (user.approved == ApprovedStatus.waiting) {
             return OwnerStoreWaitingRoute().location;
           }
+          final ownerOnboardingCompleted =
+              prefs.getBool('owner_onboarding_completed') ?? false;
+          if (!ownerOnboardingCompleted) return OwnerOnboardingRoute().location;
           return OwnerHomeRoute().location;
         case UserRole.customer:
+          final onboardingCompleted =
+              prefs.getBool('onboarding_completed') ?? false;
+          if (!onboardingCompleted) return OnboardingRoute().location;
           return MainRoute().location;
-        case UserRole.admin: // TODO: 확인 필요
+        case UserRole.admin:
           return AdminHomeRoute().location;
       }
     } catch (error) {
