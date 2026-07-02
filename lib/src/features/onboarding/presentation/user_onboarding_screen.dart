@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/onboarding/domain/constants.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,7 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_completed', true);
+    await prefs.setBool(kOnboardingCompletedKey, true);
     if (!mounted) return;
     MainRoute().go(context);
   }
@@ -132,7 +133,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     : _completeOnboarding,
                 fullWidth: true,
                 height: 52.h,
-                content: const Text('다음'),
+                content: Text(_currentPage < _pages.length - 1 ? '다음' : '시작하기'),
               ).primary(),
             ),
             SizedBox(height: 40.h),

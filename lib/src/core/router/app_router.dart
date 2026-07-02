@@ -32,6 +32,7 @@ import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/onboarding/domain/constants.dart';
 import 'package:magambell/src/features/onboarding/presentation/owner_onboarding_screen.dart';
 import 'package:magambell/src/features/onboarding/presentation/user_onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -267,12 +268,12 @@ class DefaultRoute extends GoRouteData {
             return OwnerStoreWaitingRoute().location;
           }
           final ownerOnboardingCompleted =
-              prefs.getBool('owner_onboarding_completed') ?? false;
+              prefs.getBool(kOwnerOnboardingCompletedKey) ?? false;
           if (!ownerOnboardingCompleted) return OwnerOnboardingRoute().location;
           return OwnerHomeRoute().location;
         case UserRole.customer:
           final onboardingCompleted =
-              prefs.getBool('onboarding_completed') ?? false;
+              prefs.getBool(kOnboardingCompletedKey) ?? false;
           if (!onboardingCompleted) return OnboardingRoute().location;
           return MainRoute().location;
         case UserRole.admin:

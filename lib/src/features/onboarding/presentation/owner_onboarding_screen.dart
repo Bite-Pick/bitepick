@@ -5,6 +5,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/onboarding/domain/constants.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,7 +54,7 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
 
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('owner_onboarding_completed', true);
+    await prefs.setBool(kOwnerOnboardingCompletedKey, true);
     if (!mounted) return;
     OwnerHomeRoute().go(context);
   }
@@ -85,14 +86,19 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
               current: _currentPage,
             ),
             SizedBox(height: 60.h),
-            // 시작하기 버튼
+            // 다음 / 시작하기 버튼
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: MgButton(
-                onPressed: _completeOnboarding,
+                onPressed: _currentPage < _pages.length - 1
+                    ? () => _pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        )
+                    : _completeOnboarding,
                 fullWidth: true,
                 height: 52.h,
-                content: const Text('시작하기'),
+                content: Text(_currentPage < _pages.length - 1 ? '다음' : '시작하기'),
               ).primary(),
             ),
             SizedBox(height: 34.h),
