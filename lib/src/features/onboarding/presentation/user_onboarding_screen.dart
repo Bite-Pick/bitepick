@@ -5,6 +5,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/onboarding/domain/constants.dart';
+import 'package:magambell/src/features/onboarding/presentation/widgets/onboarding_page_indicators.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -112,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Positioned(
                     top: 476.h,
                     left: 168.w,
-                    child: _PageIndicators(
+                    child: OnboardingPageIndicators(
                       count: _pages.length,
                       current: _currentPage,
                     ),
@@ -260,35 +261,6 @@ class _NavArrow extends StatelessWidget {
               ),
             )
           : null,
-    );
-  }
-}
-
-class _PageIndicators extends StatelessWidget {
-  const _PageIndicators({required this.count, required this.current});
-
-  final int count;
-  final int current;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(count, (i) {
-        final isActive = i == current;
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          width: 8.w,
-          height: 8.h,
-          margin: i < count - 1
-              ? EdgeInsets.only(right: 8.w)
-              : EdgeInsets.zero,
-          decoration: BoxDecoration(
-            color: isActive ? MgColorScheme.primaryStrong : MgColorScheme.gray7,
-            shape: BoxShape.circle,
-          ),
-        );
-      }),
     );
   }
 }
