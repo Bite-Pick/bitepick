@@ -86,7 +86,7 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
               current: _currentPage,
             ),
             SizedBox(height: 60.h),
-            // 다음 / 시작하기 버튼
+            // 시작하기 버튼(마지막 페이지 전까지는 다음 페이지로 이동)
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: MgButton(
@@ -98,7 +98,7 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
                     : _completeOnboarding,
                 fullWidth: true,
                 height: 52.h,
-                content: Text(_currentPage < _pages.length - 1 ? '다음' : '시작하기'),
+                content: const Text('시작하기'),
               ).primary(),
             ),
             SizedBox(height: 34.h),

@@ -80,34 +80,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     itemCount: _pages.length,
                     itemBuilder: (_, i) => _OnboardingPage(data: _pages[i]),
                   ),
-                  // 내비게이션 화살표 — 전체 화면 정중앙 (812/2 - 148 - 14 = 244)
-                  Positioned(
-                    top: 244.h,
-                    left: 8.w,
-                    width: 359.w,
-                    height: 28.h,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _NavArrow(
-                          icon: Icons.chevron_left_rounded,
-                          visible: _currentPage > 0,
-                          onTap: () => _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                        _NavArrow(
-                          icon: Icons.chevron_right_rounded,
-                          visible: _currentPage < _pages.length - 1,
-                          onTap: () => _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   // 페이지 인디케이터 — top:476, left:168, width:40, height:8, gap:8
                   Positioned(
                     top: 476.h,
@@ -120,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
-            // 하단 영역 180px — 다음 / 시작하기 버튼
+            // 하단 영역 180px — 시작하기 버튼(마지막 페이지 전까지는 다음 페이지로 이동)
             const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -133,7 +105,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     : _completeOnboarding,
                 fullWidth: true,
                 height: 52.h,
-                content: Text(_currentPage < _pages.length - 1 ? '다음' : '시작하기'),
+                content: const Text('시작하기'),
               ).primary(),
             ),
             SizedBox(height: 40.h),
@@ -230,36 +202,6 @@ class _OnboardingPage extends StatelessWidget {
         ],
       ),
       textAlign: TextAlign.center,
-    );
-  }
-}
-
-class _NavArrow extends StatelessWidget {
-  const _NavArrow({
-    required this.icon,
-    required this.visible,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final bool visible;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 28.w,
-      height: 28.h,
-      child: visible
-          ? GestureDetector(
-              onTap: onTap,
-              child: Icon(
-                icon,
-                size: 28.sp,
-                color: NewColorScheme.gray1,
-              ),
-            )
-          : null,
     );
   }
 }
