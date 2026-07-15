@@ -66,21 +66,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            // 상단 여백 148px (status bar 포함)
             SizedBox(height: 148.h),
-            // 컨텐츠 영역 484px
             SizedBox(
               height: 484.h,
               child: Stack(
                 children: [
-                  // 스와이프 페이지
                   PageView.builder(
                     controller: _pageController,
                     onPageChanged: (i) => setState(() => _currentPage = i),
                     itemCount: _pages.length,
                     itemBuilder: (_, i) => _OnboardingPage(data: _pages[i]),
                   ),
-                  // 페이지 인디케이터 — top:476, left:168, width:40, height:8, gap:8
                   Positioned(
                     top: 476.h,
                     left: 168.w,
@@ -92,7 +88,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
-            // 하단 영역 180px — 시작하기 버튼(마지막 페이지 전까지는 다음 페이지로 이동)
             const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -105,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     : _completeOnboarding,
                 fullWidth: true,
                 height: 52.h,
-                content: const Text('시작하기'),
+                content: Text(_currentPage < _pages.length - 1 ? '다음' : '시작하기'),
               ).primary(),
             ),
             SizedBox(height: 40.h),
@@ -125,7 +120,6 @@ class _OnboardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 이미지 — top:142, width:375, height:322
         Positioned(
           top: 142.h,
           left: 0,
@@ -141,7 +135,6 @@ class _OnboardingPage extends StatelessWidget {
                 )
               : Image.asset(data.imagePath, fit: BoxFit.contain),
         ),
-        // 텍스트 블록 — top:0, left:53(center), width:270, height:130(hug), gap:12
         Positioned(
           top: 0,
           left: 53.w,
