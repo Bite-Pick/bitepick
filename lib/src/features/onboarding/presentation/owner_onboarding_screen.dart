@@ -83,7 +83,7 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
                 itemBuilder: (_, i) => _buildPage(i),
               ),
             ),
-            _PageIndicators(
+            OnboardingPageIndicators(
               count: _pages.length,
               current: _currentPage,
             ),
