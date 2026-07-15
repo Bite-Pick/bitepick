@@ -67,49 +67,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            // 상단 여백 148px (status bar 포함)
             SizedBox(height: 148.h),
-            // 컨텐츠 영역 484px
             SizedBox(
               height: 484.h,
               child: Stack(
                 children: [
-                  // 스와이프 페이지
                   PageView.builder(
                     controller: _pageController,
                     onPageChanged: (i) => setState(() => _currentPage = i),
                     itemCount: _pages.length,
                     itemBuilder: (_, i) => _OnboardingPage(data: _pages[i]),
                   ),
-                  // 내비게이션 화살표 — 전체 화면 정중앙 (812/2 - 148 - 14 = 244)
-                  Positioned(
-                    top: 244.h,
-                    left: 8.w,
-                    width: 359.w,
-                    height: 28.h,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _NavArrow(
-                          icon: Icons.chevron_left_rounded,
-                          visible: _currentPage > 0,
-                          onTap: () => _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                        _NavArrow(
-                          icon: Icons.chevron_right_rounded,
-                          visible: _currentPage < _pages.length - 1,
-                          onTap: () => _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // 페이지 인디케이터 — top:476, left:168, width:40, height:8, gap:8
                   Positioned(
                     top: 476.h,
                     left: 168.w,
@@ -121,7 +89,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
-            // 하단 영역 180px — 다음 / 시작하기 버튼
             const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -154,7 +121,6 @@ class _OnboardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 이미지 — top:142, width:375, height:322
         Positioned(
           top: 142.h,
           left: 0,
@@ -170,7 +136,6 @@ class _OnboardingPage extends StatelessWidget {
                 )
               : Image.asset(data.imagePath, fit: BoxFit.contain),
         ),
-        // 텍스트 블록 — top:0, left:53(center), width:270, height:130(hug), gap:12
         Positioned(
           top: 0,
           left: 53.w,
@@ -235,32 +200,31 @@ class _OnboardingPage extends StatelessWidget {
   }
 }
 
-class _NavArrow extends StatelessWidget {
-  const _NavArrow({
-    required this.icon,
-    required this.visible,
-    required this.onTap,
-  });
+class _PageIndicators extends StatelessWidget {
+  const _PageIndicators({required this.count, required this.current});
 
-  final IconData icon;
-  final bool visible;
-  final VoidCallback onTap;
+  final int count;
+  final int current;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 28.w,
-      height: 28.h,
-      child: visible
-          ? GestureDetector(
-              onTap: onTap,
-              child: Icon(
-                icon,
-                size: 28.sp,
-                color: NewColorScheme.gray1,
-              ),
-            )
-          : null,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(count, (i) {
+        final isActive = i == current;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          width: 8.w,
+          height: 8.h,
+          margin: i < count - 1
+              ? EdgeInsets.only(right: 8.w)
+              : EdgeInsets.zero,
+          decoration: BoxDecoration(
+            color: isActive ? MgColorScheme.primaryStrong : MgColorScheme.gray7,
+            shape: BoxShape.circle,
+          ),
+        );
+      }),
     );
   }
 }

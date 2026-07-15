@@ -75,7 +75,6 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
         backgroundColor: NewColorScheme.gray14,
         body: Column(
           children: [
-            // 콘텐츠 영역
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -84,13 +83,11 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
                 itemBuilder: (_, i) => _buildPage(i),
               ),
             ),
-            // 인디케이터: 버튼 위 60px
-            OnboardingPageIndicators(
+            _PageIndicators(
               count: _pages.length,
               current: _currentPage,
             ),
             SizedBox(height: 60.h),
-            // 다음 / 시작하기 버튼
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: MgButton(
@@ -135,7 +132,6 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
               .center(),
         ),
         SizedBox(height: 12.h),
-        // 이미지 프레임 375x380
         SizedBox(
           height: 380.h,
           child: Column(
@@ -206,13 +202,11 @@ class _CostTooltip extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 화살표: height 6, tip width 20
           SizedBox(
             width: 155.w,
             height: 6.h,
             child: CustomPaint(painter: _ArrowPainter()),
           ),
-          // 본체: 155x41, border-radius 8
           Container(
             height: 41.h,
             decoration: BoxDecoration(
