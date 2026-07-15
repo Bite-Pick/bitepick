@@ -6,6 +6,7 @@ import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart'
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/onboarding/domain/constants.dart';
+import 'package:magambell/src/features/onboarding/presentation/widgets/onboarding_page_indicators.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,18 +32,21 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
       title: '당일 남은 빵을 세트로\n묶어 파는 박스예요',
       subtitle: '매일 메뉴를 올릴 필요 없어요.\n남은 빵 금액에 맞춰 담아드리면 끝이에요.',
       imagePath: 'assets/images/owner_onboarding2.png',
+      titleWidth: 202,
     ),
     _OwnerOnboardingData(
       badge: '판매 방법',
       title: '버튼 세번이면\n오늘 판매 준비 끝!',
       subtitle: '영업중 켜고, 개수만 입력하면 준비 끝\n주문 오면 수락만 해요.',
       imagePath: 'assets/images/owner_onboarding3.png',
+      titleWidth: 164,
     ),
     _OwnerOnboardingData(
       badge: '예약 취소',
       title: '재고 걱정 없이\n편하게 시작하세요',
       subtitle: '예약 먼저 받고, 재고가 없으면 취소하면 돼요.\n부담 갖지 마세요!',
       imagePath: 'assets/images/owner_onboarding4.png',
+      titleWidth: 167,
     ),
   ];
 
@@ -68,7 +72,7 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: NewColorScheme.gray14,
         body: Column(
           children: [
             Expanded(
@@ -108,9 +112,7 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
   Widget _buildPage(int index) {
     final page = _pages[index];
     if (index == 0) return _buildFirstPage(page);
-    if (index == 1) return _buildSecondPage(page);
-    if (index == 2) return _buildThirdPage(page);
-    return _buildFourthPage(page);
+    return _buildTextPage(page);
   }
 
   Widget _buildFirstPage(_OwnerOnboardingData page) {
@@ -150,92 +152,14 @@ class _OwnerOnboardingScreenState extends State<OwnerOnboardingScreen> {
     );
   }
 
-  Widget _buildSecondPage(_OwnerOnboardingData page) {
+  Widget _buildTextPage(_OwnerOnboardingData page) {
     return Column(
       children: [
         SizedBox(height: 108.h),
         _BadgeChip(label: page.badge),
         SizedBox(height: 12.h),
         SizedBox(
-          width: 202.w,
-          child: Text(page.title)
-              .bold()
-              .fontSize(24)
-              .height(1.5)
-              .letterSpacing(24 * -0.025)
-              .textColor(NewColorScheme.gray1)
-              .center(),
-        ),
-        SizedBox(height: 12.h),
-        SizedBox(
-          width: 270.w,
-          child: Text(page.subtitle!)
-              .regular()
-              .fontSize(15)
-              .height(1.5)
-              .letterSpacing(15 * -0.025)
-              .textColor(NewColorScheme.gray5)
-              .center(),
-        ),
-        SizedBox(height: 12.h),
-        if (page.imagePath != null)
-          Image.asset(
-            page.imagePath!,
-            width: 375.w,
-            height: 360.h,
-            fit: BoxFit.contain,
-          ),
-      ],
-    );
-  }
-
-  Widget _buildFourthPage(_OwnerOnboardingData page) {
-    return Column(
-      children: [
-        SizedBox(height: 108.h),
-        _BadgeChip(label: page.badge),
-        SizedBox(height: 12.h),
-        SizedBox(
-          width: 167.w,
-          child: Text(page.title)
-              .bold()
-              .fontSize(24)
-              .height(1.5)
-              .letterSpacing(24 * -0.025)
-              .textColor(NewColorScheme.gray1)
-              .center(),
-        ),
-        SizedBox(height: 12.h),
-        SizedBox(
-          width: 270.w,
-          child: Text(page.subtitle!)
-              .regular()
-              .fontSize(15)
-              .height(1.5)
-              .letterSpacing(15 * -0.025)
-              .textColor(NewColorScheme.gray5)
-              .center(),
-        ),
-        SizedBox(height: 12.h),
-        if (page.imagePath != null)
-          Image.asset(
-            page.imagePath!,
-            width: 375.w,
-            height: 360.h,
-            fit: BoxFit.contain,
-          ),
-      ],
-    );
-  }
-
-  Widget _buildThirdPage(_OwnerOnboardingData page) {
-    return Column(
-      children: [
-        SizedBox(height: 108.h),
-        _BadgeChip(label: page.badge),
-        SizedBox(height: 12.h),
-        SizedBox(
-          width: 164.w,
+          width: page.titleWidth!.w,
           child: Text(page.title)
               .bold()
               .fontSize(24)
@@ -363,46 +287,18 @@ class _BadgeChip extends StatelessWidget {
   }
 }
 
-
-class _PageIndicators extends StatelessWidget {
-  const _PageIndicators({required this.count, required this.current});
-
-  final int count;
-  final int current;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(count, (i) {
-        final isActive = i == current;
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          width: 8.w,
-          height: 8.h,
-          margin:
-              i < count - 1 ? EdgeInsets.only(right: 8.w) : EdgeInsets.zero,
-          decoration: BoxDecoration(
-            color:
-                isActive ? MgColorScheme.primaryStrong : MgColorScheme.gray7,
-            shape: BoxShape.circle,
-          ),
-        );
-      }),
-    );
-  }
-}
-
 class _OwnerOnboardingData {
   const _OwnerOnboardingData({
     required this.badge,
     required this.title,
     this.subtitle,
     this.imagePath,
+    this.titleWidth,
   });
 
   final String badge;
   final String title;
   final String? subtitle;
   final String? imagePath;
+  final double? titleWidth;
 }

@@ -5,6 +5,7 @@ import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/onboarding/domain/constants.dart';
+import 'package:magambell/src/features/onboarding/presentation/widgets/onboarding_page_indicators.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -80,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Positioned(
                     top: 476.h,
                     left: 168.w,
-                    child: _PageIndicators(
+                    child: OnboardingPageIndicators(
                       count: _pages.length,
                       current: _currentPage,
                     ),
