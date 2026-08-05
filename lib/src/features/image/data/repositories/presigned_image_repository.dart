@@ -79,6 +79,22 @@ class PreSignedImageRepository {
     }
   }
 
+  /// 로컬 이미지와 presigned URL을 배열 순서로 매칭해 S3에 업로드
+  /// (id 매칭 없이 순서만 보장되면 되는 단순 목록에 사용)
+  Future<void> uploadLocalImagesInOrder({
+    required List<LocalImage> localImages,
+    required List<PresignedUrlImage> presignedUrls,
+  }) async {
+    final filesToUpload = localImages.where((img) => img.file != null).toList();
+    final urlsToUpload = presignedUrls.where((u) => u.url != null).toList();
+    for (var i = 0; i < filesToUpload.length && i < urlsToUpload.length; i++) {
+      await uploadToS3WithPresignedUrl(
+        presignedUrl: urlsToUpload[i].url!,
+        file: filesToUpload[i].file!,
+      );
+    }
+  }
+
   Future<void> uploadImagesToS3({
     required List<LocalImage> localImages,
     required List<PresignedUrlImage> presignedUrls,
