@@ -95,21 +95,12 @@ class OwnerGoodsView extends ConsumerWidget {
                       images: imageUploads,
                     );
 
-                final newLocalImages =
-                    images.where((img) => img.file != null).toList();
-                final urlsToUpload =
-                    presignedUrls.where((u) => u.url != null).toList();
-
-                for (var i = 0;
-                    i < newLocalImages.length && i < urlsToUpload.length;
-                    i++) {
-                  await ref
-                      .read(presignedImageRepositoryProvider)
-                      .uploadToS3WithPresignedUrl(
-                        presignedUrl: urlsToUpload[i].url!,
-                        file: newLocalImages[i].file!,
-                      );
-                }
+                await ref
+                    .read(presignedImageRepositoryProvider)
+                    .uploadLocalImagesInOrder(
+                      localImages: images,
+                      presignedUrls: presignedUrls,
+                    );
 
                 if (sheetContext.mounted) {
                   Navigator.of(sheetContext).pop();

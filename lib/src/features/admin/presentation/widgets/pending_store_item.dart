@@ -32,9 +32,8 @@ class AdminPendingStoreItem extends StatelessWidget {
             ],
           ),
         ),
-        Text(store.address).sm().textGray(),
-        Text(store.address).sm().textGray(),
         // 주소
+        Text(store.address).sm().textGray(),
         Gaps.h12,
         StoreImageSection(store.storeImages),
         Gaps.h8,
