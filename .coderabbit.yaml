@@ -1,0 +1,205 @@
+# ================================================================ #
+#                🐰 CodeRabbit 설정 (Flutter / bitepick)            #
+# ================================================================ #
+# 리뷰 언어
+language: "ko-KR"
+
+# 리뷰 톤
+tone_instructions: >
+  문제를 지적할 때는 원인과 이유까지 설명하고, 가능하면 공식 문서나
+  레퍼런스를 함께 제시해주세요. 잘한 부분은 가볍게 칭찬하고,
+  함께 성장하는 동료 개발자의 말투로 피드백해주세요.
+  Flutter/Dart 관련 지적은 가능하면 dart.dev, api.flutter.dev,
+  riverpod.dev 등 공식 문서 링크를 함께 달아주세요.
+
+reviews:
+  # quiet / chill / assertive
+  profile: "chill"
+  request_changes_workflow: false
+
+  # 요약 관련
+  high_level_summary: true
+  changed_files_summary: true
+  collapse_walkthrough: true
+  sequence_diagrams: true
+  assess_linked_issues: true
+  poem: true
+
+  # 자동화 계열
+  related_issues: false
+  related_prs: true
+  suggested_labels: false
+  auto_apply_labels: false
+  suggested_reviewers: false
+  auto_assign_reviewers: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+
+    base_branches:
+      - "main"
+      - "dev"
+
+  # 리뷰 대상에서 제외할 경로
+  path_filters:
+    # 코드 생성 결과물 (freezed / json_serializable / riverpod_generator / go_router_builder)
+    - "!**/*.g.dart"
+    - "!**/*.freezed.dart"
+    - "!**/*.gr.dart"
+    - "!**/*.config.dart"
+    - "!**/*.mocks.dart"
+    # 빌드 산출물 / 툴 캐시
+    - "!**/build/**"
+    - "!**/.dart_tool/**"
+    - "!**/.fvm/**"
+    - "!ios/Pods/**"
+    - "!ios/Flutter/Generated.xcconfig"
+    - "!ios/Flutter/flutter_export_environment.sh"
+    - "!android/.gradle/**"
+    - "!android/gradle/wrapper/**"
+    - "!android/gradlew"
+    - "!android/gradlew.bat"
+    # 락파일 / 자동 갱신 파일
+    - "!pubspec.lock"
+    - "!**/Gemfile.lock"
+    - "!ios/Podfile.lock"
+    - "!build_numbers.json"
+    # 에셋 / 바이너리 / 암호화된 시크릿
+    - "!assets/**"
+    - "!**/*.gpg"
+    - "!**/*.png"
+    - "!**/*.jpg"
+    - "!**/*.svg"
+    - "!**/*.ttf"
+    - "!**/*.otf"
+    - "!**/*.json.enc"
+    # 다국어 리소스 생성물 (수기 관리 파일이면 이 줄은 빼도 됩니다)
+    - "!**/l10n/generated/**"
+
+  # 경로별 리뷰 관점 지정
+  path_instructions:
+    # ---- 공통: Dart 전반 ----
+    - path: "lib/**/*.dart"
+      instructions: >
+        Effective Dart와 프로젝트의 analysis_options.yaml을 기준으로 봐주세요.
+        null-safety를 우회하는 `!` 남용이나 불필요한 `dynamic`이 없는지,
+        async 함수에서 await 누락이나 unawaited future가 없는지,
+        BuildContext를 async gap 이후에 사용할 때 `mounted` 확인이 있는지,
+        하드코딩된 문자열/색상/사이즈 대신 constants·테마·l10n을 쓰는지 확인해주세요.
+        예외는 try-catch로 삼키지 말고 프로젝트의 커스텀 예외/에러 모델로
+        변환해 상위로 전달하는지 봐주세요.
+
+    # ---- Presentation (화면 / 위젯) ----
+    - path: "lib/src/features/**/presentation/**/*.dart"
+      instructions: >
+        View는 화면 구성과 상태 구독만 담당하는지, 비즈니스 로직이나 API 호출이
+        위젯 build 안에 섞여 있지 않은지 봐주세요.
+        build() 안에서 Provider를 새로 만들거나 무거운 연산·객체 생성을 하지 않는지,
+        가능한 곳에 const 생성자를 쓰는지, 위젯 트리가 과도하게 깊어질 때
+        별도 위젯으로 분리했는지 확인해주세요.
+        ListView는 builder 계열을 쓰는지, 이미지에 캐싱(cached_network_image)이
+        적용됐는지, dispose가 필요한 Controller/FocusNode/AnimationController가
+        정리되는지도 봐주세요.
+        레이아웃은 flutter_screenutil 기준으로 일관되게 반응형 처리가 되는지,
+        Overflow/SafeArea/키보드 대응이 되어 있는지 확인해주세요.
+
+    # ---- 상태 관리 (Riverpod controller / provider) ----
+    - path: "lib/src/features/**/{providers,presentation}/**/*.{controller,provider}.dart"
+      instructions: >
+        Riverpod 컨벤션을 기준으로 봐주세요. 코드 생성(@riverpod) 스타일이
+        일관되게 쓰이는지, 상태 클래스가 freezed로 불변으로 정의되고
+        copyWith로만 갱신되는지, state를 직접 mutate 하지 않는지 확인해주세요.
+        AsyncValue의 loading/error/data 세 상태가 모두 처리되는지,
+        에러를 그냥 삼키지 않는지, autoDispose와 keepAlive 선택이 화면 수명과
+        맞는지, ref.listen/ref.watch/ref.read 사용 위치가 올바른지
+        (build 밖에서 watch, 콜백에서 read) 봐주세요.
+        Controller가 Repository 추상화에만 의존하고 Dio나 DTO에 직접
+        의존하지 않는지도 확인해주세요.
+
+    # ---- 데이터 계층 (repository / dto) ----
+    - path: "lib/src/features/**/data/**/*.dart"
+      instructions: >
+        네트워크·저장소 접근이 이 계층 안에 갇혀 있는지 봐주세요.
+        DTO를 화면이나 상태에 그대로 노출하지 않고 domain entity로 변환하는지,
+        json_serializable 매핑에서 nullable/기본값 처리가 안전한지,
+        DioException을 도메인 에러로 변환해 상위에 전달하는지 확인해주세요.
+        엔드포인트 경로·쿼리 파라미터 하드코딩, 토큰이나 키의 코드 내 노출,
+        로그에 개인정보나 인증 토큰이 찍히는지도 함께 봐주세요.
+
+    # ---- 도메인 ----
+    - path: "lib/src/features/**/domain/**/*.dart"
+      instructions: >
+        엔티티가 Flutter나 네트워크 라이브러리에 의존하지 않는 순수 Dart인지,
+        불변(immutable)으로 정의됐는지, 값 비교(==/hashCode 또는 freezed)가
+        보장되는지 봐주세요.
+
+    # ---- 코어 / 공용 위젯 ----
+    - path: "lib/src/{core,widgets,constants}/**/*.dart"
+      instructions: >
+        공용 코드인 만큼 특정 기능(feature)에 종속된 로직이 섞여 있지 않은지,
+        API가 이름만으로 용도를 알 수 있게 설계됐는지 봐주세요.
+        라우팅(go_router)은 경로 상수화와 딥링크/에러 라우트 처리가 되어 있는지,
+        인터셉터는 토큰 갱신 실패나 재시도 루프 위험이 없는지 확인해주세요.
+
+    # ---- 테스트 ----
+    - path: "test/**/*.dart"
+      instructions: >
+        테스트가 구현이 아닌 동작을 검증하는지, given-when-then 구조가 명확한지,
+        엣지 케이스와 실패 케이스가 함께 있는지 봐주세요.
+        위젯 테스트에서 pump/pumpAndSettle 사용이 적절한지,
+        ProviderContainer나 overrides로 의존성을 격리하는지,
+        실제 네트워크를 타지 않는지도 확인해주세요.
+
+    # ---- 네이티브 ----
+    - path: "{android,ios}/**"
+      instructions: >
+        권한(Info.plist / AndroidManifest) 추가 시 실제로 필요한 최소 권한인지,
+        키·시크릿·서명 정보가 저장소에 직접 커밋되지 않았는지,
+        minSdk/deploymentTarget 변경이 의도된 것인지 확인해주세요.
+
+    # ---- CI / 스크립트 ----
+    - path: ".github/workflows/**"
+      instructions: >
+        시크릿이 로그에 노출될 여지가 있는지, 액션 버전이 고정되어 있는지,
+        불필요한 배포 트리거가 없는지 확인해주세요.
+        Flutter/FVM 버전이 고정되어 있는지, fastlane 배포 잡이 의도한 브랜치에서만
+        도는지도 봐주세요.
+
+    - path: ".github/scripts/**"
+      instructions: >
+        복호화·암호화 스크립트에서 시크릿이 평문으로 남거나 로그에 출력되지 않는지,
+        set -euo pipefail 같은 안전장치가 있는지 확인해주세요.
+
+  # 정적 분석 도구 (Dart 전용 린터는 아직 없어서, 주변 파일 위주로 켭니다)
+  tools:
+    gitleaks:
+      enabled: true
+    actionlint:
+      enabled: true
+    shellcheck:
+      enabled: true
+    yamllint:
+      enabled: true
+    markdownlint:
+      enabled: true
+    swiftlint:
+      enabled: true
+    detekt:
+      enabled: true
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "**/CONTRIBUTING.md"
+      - "**/CONVENTION.md"
+      - "**/AGENTS.md"
+      - "**/CLAUDE.md"
+      - "docs/**/*.md"
