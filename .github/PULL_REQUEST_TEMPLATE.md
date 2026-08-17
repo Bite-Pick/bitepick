@@ -1,6 +1,6 @@
 ## 🔗 Related Issue
 <!-- 연관된 이슈를 태그해 주세요. -->
-- close #
+- closes #
 
 ## 🪄 Work Description
 <!-- 작업한 내용을 간략히 설명해 주세요. -->
