@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/datetime_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -74,9 +73,9 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           return BaseScaffold(
             canSwipeBack: false,
             appBar: BaseAppBar(
-              // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
-              // leadingWidth: 120,
-              leading: SizedBox.shrink(),
+              height: 48,
+              leading: _buildStoreNameLabel(store?.storeName),
+              leadingWidth: 140,
               action: Row(
                 children: [
                   _buildServiceSwitch(
@@ -86,9 +85,8 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                     store?.goodsList[0],
                     store?.goodsImageList,
                   ),
-                  OwnerMoreButton(),
                 ],
-              ),
+              ).margin(right: MgSizes.xxl),
               bottom: TabBar(
                 dividerColor: Colors.transparent,
                 controller: _tabController,
@@ -121,18 +119,29 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     );
   }
 
-  Widget _buildDaySelectButton() {
-    return GestureDetector(
-      onTap: () {
-        // TODO[store]: 날짜 변경
-      },
-      child: Row(
-        children: [
-          Text(DateTime.now().format("M월 d일")).bold().md(),
-          Gaps.w4,
-          BaseSvgIcon.down(),
-        ],
-      ).margin(horizontal: MgSizes.sm),
+  Widget _buildStoreNameLabel(String? storeName) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: OwnerMoreButton(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                storeName ?? "",
+                style: context.textTheme.headlineSmall?.copyWith(
+                  color: NewColorScheme.gray1,
+                ),
+              ).max(1).ellipsis(),
+            ),
+            Gaps.w2,
+            BaseSvgIcon.chevronDown(
+              size: MgSizes.size16,
+              color: NewColorScheme.gray1,
+            ),
+          ],
+        ).margin(left: MgSizes.xxl, top: 11),
+      ),
     );
   }
 
@@ -167,17 +176,38 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       onTap: onToggle,
       child: Row(
         children: [
-          Text("영업중").bold().md(),
+          Text(
+            "영업중",
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: NewColorScheme.gray4,
+            ),
+          ).right(),
           Gaps.w8,
-          IgnorePointer(
-            child: Switch(
-              value: saleStatus,
-              onChanged: (_) {},
-              activeThumbColor: MgColorScheme.gray11,
-              activeTrackColor: MgColorScheme.systemSuccess, // 활성화(ON) 시 트랙 색상
-              inactiveThumbColor: MgColorScheme.gray11, // 비활성화 원 색
-              inactiveTrackColor: MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
-              trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            width: 48,
+            height: 28,
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: saleStatus
+                  ? MgColorScheme.systemInfo // 활성화(ON) 시 트랙 색상
+                  : MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: AnimatedAlign(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              alignment: saleStatus ? Alignment.centerRight : Alignment.centerLeft,
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
             ),
           ),
         ],
