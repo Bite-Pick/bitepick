@@ -42,6 +42,8 @@ class OwnerHomeScreen extends ConsumerStatefulWidget {
 
 class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
     with SingleTickerProviderStateMixin {
+  static const _switchAnimationDuration = Duration(milliseconds: 200);
+
   late final TabController _tabController;
   bool _isTogglingStatus = false;
   bool? _optimisticSaleStatus;
@@ -185,24 +187,24 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
           ).right(),
           Gaps.w8,
           AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+            duration: _switchAnimationDuration,
             curve: Curves.easeInOut,
-            width: 48,
-            height: 28,
-            padding: const EdgeInsets.all(4),
+            width: MgSizes.size48,
+            height: MgSizes.size28,
+            padding: const EdgeInsets.all(MgSizes.size4),
             decoration: BoxDecoration(
               color: saleStatus
                   ? MgColorScheme.systemInfo // 활성화(ON) 시 트랙 색상
                   : MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(MgRadius.full),
             ),
             child: AnimatedAlign(
-              duration: const Duration(milliseconds: 200),
+              duration: _switchAnimationDuration,
               curve: Curves.easeInOut,
               alignment: saleStatus ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: 20,
-                height: 20,
+                width: MgSizes.size20,
+                height: MgSizes.size20,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
