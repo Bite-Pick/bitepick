@@ -36,6 +36,9 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.down({double? size, Color? color}) =>
       _makeIcon('down.svg', size, color);
 
+  factory BaseSvgIcon.chevronDown({double? size, Color? color}) =>
+      _makeIcon('chevron-down.svg', size, color);
+
   factory BaseSvgIcon.download({double? size, Color? color}) =>
       _makeIcon('download.svg', size, color);
 
