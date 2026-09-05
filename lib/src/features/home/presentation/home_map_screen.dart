@@ -217,9 +217,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     }
   }
 
-  // NOverlayImage.fromWidget은 앱의 MediaQuery와 분리된 별도 렌더 트리에서
-  // 위젯을 이미지로 그리기 때문에, 전역 글씨 크기 고정 설정이 적용되지 않는다.
-  // 그 렌더 트리 안쪽에 현재 context의 MediaQuery를 다시 씌워서 강제로 적용시킨다.
   Widget _lockTextScale(Widget child) {
     return MediaQuery(data: MediaQuery.of(context), child: child);
   }
