@@ -163,7 +163,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     final controller = _mapController;
     if (controller == null || !_mapReady || !mounted) return;
     final icon = await NOverlayImage.fromWidget(
-      widget: const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
+      widget: _lockTextScale(
+        const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
+      ),
       size: const Size(165, 45),
       context: context,
     );
@@ -215,6 +217,10 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     }
   }
 
+  Widget _lockTextScale(Widget child) {
+    return MediaQuery(data: MediaQuery.of(context), child: child);
+  }
+
   Future<NMarker> _buildStoreMarker(StoreListDTO store) async {
     final isSelected = store.storeId == _selectedStoreId;
     final isOpen = store.saleStatus == 'ON';
@@ -225,11 +231,13 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         : Size(80, isOpen ? 90 : 70);
 
     final icon = await NOverlayImage.fromWidget(
-      widget: StorePinMarker(
-        storeName: store.storeName,
-        isSelected: isSelected,
-        isOpen: isOpen,
-        showLabel: showLabel,
+      widget: _lockTextScale(
+        StorePinMarker(
+          storeName: store.storeName,
+          isSelected: isSelected,
+          isOpen: isOpen,
+          showLabel: showLabel,
+        ),
       ),
       size: imageSize,
       context: context,
