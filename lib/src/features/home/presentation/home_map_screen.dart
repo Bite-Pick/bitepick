@@ -61,6 +61,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   Timer? _bannerDebounceTimer;
   Timer? _tooltipTimer;
   Timer? _mapFetchDebounceTimer;
+  int _fetchStoresRequestId = 0;
 
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
@@ -282,8 +283,14 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         reason == NCameraUpdateReason.gesture ||
         reason == NCameraUpdateReason.control;
 
-    if (isUserMoved && !_showSearchAreaButton) {
-      setState(() => _showSearchAreaButton = true);
+    if (isUserMoved) {
+      // 앱이 시작한 이동(애니메이션)이 끝나기 전에 사용자가 직접 지도를
+      // 움직인 경우, 이후의 카메라 정지를 앱 이동으로 잘못 처리해
+      // 검색 버튼을 바로 숨기거나 자동 조회하지 않도록 플래그를 정리한다.
+      _isAppInitiatedMove = false;
+      if (!_showSearchAreaButton) {
+        setState(() => _showSearchAreaButton = true);
+      }
     }
 
     _mapController?.getCameraPosition().then((position) {
@@ -307,11 +314,13 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     }
     _mapFetchDebounceTimer?.cancel();
     _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
-      if (mounted) _fetchMapStores();
+      if (mounted) unawaited(_fetchMapStores());
     });
   }
 
   Future<void> _onSearchAreaPressed() async {
+    _mapFetchDebounceTimer?.cancel();
+    _mapFetchDebounceTimer = null;
     setState(() => _showSearchAreaButton = false);
     await _fetchMapStores();
   }
@@ -319,6 +328,8 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   Future<void> _fetchMapStores() async {
     final controller = _mapController;
     if (controller == null || !_mapReady) return;
+
+    final requestId = ++_fetchStoresRequestId;
 
     final bounds = await controller.getContentBounds();
     final onlyAvailable =
@@ -335,6 +346,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           onlyAvailable: onlyAvailable,
         );
 
+    if (requestId != _fetchStoresRequestId) return;
     if (mounted) _refreshStoreMarkers(stores);
   }
 
