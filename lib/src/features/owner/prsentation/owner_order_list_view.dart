@@ -7,6 +7,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_owner_info_item.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.controller.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/order_status_tabs.dart';
+import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class OwnerOrderListView extends ConsumerWidget {
@@ -56,7 +57,9 @@ class OwnerOrderListView extends ConsumerWidget {
                     ),
             ),
           ],
-        ).colored(MgColorScheme.gray9);
+        )
+            .padding(bottom: BaseScaffold.getBottomMargin(context))
+            .colored(MgColorScheme.gray9);
       },
     );
   }
