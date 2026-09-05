@@ -19,6 +19,7 @@ import 'package:magambell/src/features/home/presentation/widgets/my_location_mar
 import 'package:magambell/src/features/home/presentation/widgets/map_tooltip_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/non_service_area_banner.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
+import 'package:magambell/src/features/home/presentation/widgets/search_in_area_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/service_area_request_chip.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_map_bottom_sheet.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
@@ -55,6 +56,8 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   // 비서비스 지역 UI 상태
   bool _bannerVisible = false;
   bool _serviceAreaChipDismissed = false;
+  bool _showSearchAreaButton = false;
+  bool _isAppInitiatedMove = false;
   Timer? _bannerDebounceTimer;
   Timer? _tooltipTimer;
   Timer? _mapFetchDebounceTimer;
@@ -103,6 +106,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
   Future<void> _onBannerCtaTapped() async {
     if (_mapController == null) return;
+    _isAppInitiatedMove = true;
     await _mapController!.updateCamera(
       NCameraUpdate.withParams(target: _tooltipPosition, zoom: 13),
     );
@@ -252,6 +256,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       _selectedStoreId = store.storeId;
       _bottomSheetStore = store;
     });
+    _isAppInitiatedMove = true;
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(
         target: NLatLng(store.latitude, store.longitude),
@@ -273,6 +278,14 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   }
 
   void _onCameraChange(NCameraUpdateReason reason, bool animated) {
+    final isUserMoved =
+        reason == NCameraUpdateReason.gesture ||
+        reason == NCameraUpdateReason.control;
+
+    if (isUserMoved && !_showSearchAreaButton) {
+      setState(() => _showSearchAreaButton = true);
+    }
+
     _mapController?.getCameraPosition().then((position) {
       final wasAbove = _currentZoom > _labelHideZoom;
       final isAbove = position.zoom > _labelHideZoom;
@@ -282,12 +295,25 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
       final inServiceArea = _checkIsInServiceArea(position.target);
       _updateBannerVisibility(inServiceArea);
-
-      _mapFetchDebounceTimer?.cancel();
-      _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
-        if (mounted) _fetchMapStores();
-      });
     });
+  }
+
+  void _onCameraIdle() {
+    if (!_isAppInitiatedMove) return;
+    _isAppInitiatedMove = false;
+
+    if (_showSearchAreaButton) {
+      setState(() => _showSearchAreaButton = false);
+    }
+    _mapFetchDebounceTimer?.cancel();
+    _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (mounted) _fetchMapStores();
+    });
+  }
+
+  Future<void> _onSearchAreaPressed() async {
+    setState(() => _showSearchAreaButton = false);
+    await _fetchMapStores();
   }
 
   Future<void> _fetchMapStores() async {
@@ -348,6 +374,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
     final target = NLatLng(position.latitude, position.longitude);
 
+    _isAppInitiatedMove = true;
     await controller.updateCamera(
       NCameraUpdate.withParams(target: target, zoom: 15),
     );
@@ -426,7 +453,19 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                         ),
                         onMapReady: _onMapReady,
                         onCameraChange: _onCameraChange,
+                        onCameraIdle: _onCameraIdle,
                       ),
+                      if (_showSearchAreaButton)
+                        Positioned(
+                          top: MgSizes.md,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: SearchInAreaButton(
+                              onPressed: _onSearchAreaPressed,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

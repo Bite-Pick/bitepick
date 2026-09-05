@@ -102,6 +102,9 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.plus({double? size, Color? color}) =>
       _makeIcon('plus.svg', size, color);
 
+  factory BaseSvgIcon.reload({double? size, Color? color}) =>
+      _makeIcon('reload.svg', size, color);
+
   factory BaseSvgIcon.right({double? size, Color? color}) =>
       _makeIcon('right.svg', size, color);
 
