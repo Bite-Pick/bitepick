@@ -32,7 +32,12 @@ class MagambellApp extends ConsumerWidget {
           theme: MgTheme.getInstance().themeData,
           routerConfig: router,
           builder: (context, child) {
-            return Stack(children: [child!, const _VisualElements()]);
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.noScaling,
+              ),
+              child: Stack(children: [child!, const _VisualElements()]),
+            );
           },
         );
       },

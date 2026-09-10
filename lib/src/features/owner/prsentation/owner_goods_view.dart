@@ -13,6 +13,7 @@ import 'package:magambell/src/features/store/data/repositories/store_repository.
 import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
+import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
@@ -363,7 +364,7 @@ class OwnerGoodsView extends ConsumerWidget {
               content: Text("상품 관리하기"),
             ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md),
           ],
-        );
+        ).padding(bottom: BaseScaffold.getBottomMargin(context));
       },
     );
   }

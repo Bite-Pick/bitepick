@@ -143,7 +143,6 @@ class MainScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
     );
