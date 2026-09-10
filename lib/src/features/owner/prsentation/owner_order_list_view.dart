@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -37,10 +38,26 @@ class OwnerOrderListView extends ConsumerWidget {
             // 주문 목록
             Expanded(
               child: controllerState.orders.isEmpty
-                  ? Center(
-                      child: Text(
-                        '주문이 없습니다.',
-                      ).md().textColor(MgColorScheme.gray4),
+                  ? Align(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            R.ASSETS_IMAGES_NO_ORDER_PNG,
+                            width: 80,
+                            height: 80,
+                          ),
+                          Gaps.h16,
+                          Text('아직 주문이 없어요')
+                              .md()
+                              .semibold()
+                              .center()
+                              .height(1.5)
+                              .letterSpacing(MgFontSize.md * -0.025)
+                              .textColor(NewColorScheme.gray4),
+                        ],
+                      ).margin(top: MgSizes.xxxxxl + MgSizes.xs),
                     )
                   : RefreshIndicator(
                       onRefresh: () => controller.refresh(),

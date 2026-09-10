@@ -304,6 +304,9 @@ class R {
 
   static const String ASSETS_IMAGES_NAVERMAP_PNG = 'assets/images/navermap.png';
 
+  static const String ASSETS_IMAGES_NO_ORDER_PNG =
+      'assets/images/no_order.png';
+
   static const String ASSETS_IMAGES_ORDER_CAUTION_1_PNG =
       'assets/images/order_caution_1.png';
 
@@ -317,9 +320,6 @@ class R {
       'assets/images/order_ready.png';
 
   static const String ASSETS_IMAGES_OWNER_PNG = 'assets/images/owner.png';
-
-  static const String ASSETS_IMAGES_PLACEHOLDER_PNG =
-      'assets/images/placeholder.png';
 
   static const String ASSETS_IMAGES_STORE_REGISTER_SUCCESS_PNG =
       'assets/images/store_register_success.png';
