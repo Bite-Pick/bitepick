@@ -90,7 +90,11 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
   // 가입 경로 선택
   void setReferralSource(SignupReferralSource source) {
-    state = state.copyWith(referralSource: source, referralSourceError: null);
+    state = state.copyWith(
+      referralSource: source,
+      referralSourceError: null,
+      referralSourceOtherError: null,
+    );
   }
 
   // 가입 경로 "기타" 직접 입력
