@@ -36,6 +36,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   final _nicknameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _referralSourceOtherController = TextEditingController();
+  final _nicknameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -47,6 +48,9 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     _nicknameController.addListener(_onNicknameChanged);
     _phoneController.addListener(_onPhoneChanged);
     _referralSourceOtherController.addListener(_onReferralSourceOtherChanged);
+
+    // 닉네임 필드에서 다른 필드로 포커스가 옮겨가면 바로 검증
+    _nicknameFocusNode.addListener(_onNicknameFocusChange);
   }
 
   @override
@@ -57,9 +61,11 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     _referralSourceOtherController.removeListener(
       _onReferralSourceOtherChanged,
     );
+    _nicknameFocusNode.removeListener(_onNicknameFocusChange);
     _nicknameController.dispose();
     _phoneController.dispose();
     _referralSourceOtherController.dispose();
+    _nicknameFocusNode.dispose();
     super.dispose();
   }
 
@@ -85,6 +91,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                   MgTextField(
                     label: "닉네임",
                     controller: _nicknameController,
+                    focusNode: _nicknameFocusNode,
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.nicknameError,
                     reserveErrorSpace: false,
@@ -134,6 +141,14 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   void _onNicknameChanged() => ref
       .read(joinBasicInfoScreenControllerProvider.notifier)
       .setNickname(_nicknameController.text);
+
+  void _onNicknameFocusChange() {
+    if (!_nicknameFocusNode.hasFocus) {
+      ref
+          .read(joinBasicInfoScreenControllerProvider.notifier)
+          .validateNickname();
+    }
+  }
 
   void _onPhoneChanged() => ref
       .read(joinBasicInfoScreenControllerProvider.notifier)

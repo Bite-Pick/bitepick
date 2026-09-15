@@ -33,8 +33,32 @@ class JoinBasicInfoState with _$JoinBasicInfoState {
 
 @Riverpod(keepAlive: true)
 class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
+  // 숫자로만 구성된 닉네임 차단
+  static final RegExp _digitsOnlyPattern = RegExp(r'^[0-9]+$');
+
+  // 완성되지 않은 한글 자모(초성/중성) 포함 차단 - ㄱㄴㄷ, ㅏㅑㅓ 등이 일부라도 섞이면 안 됨
+  static final RegExp _jamoPattern = RegExp(r'[ㄱ-ㅣ]');
+
+  // 한글 완성형/영문/숫자만 허용 (특수문자, 공백 등은 전부 차단)
+  static final RegExp _allowedCharsPattern = RegExp(r'^[가-힣a-zA-Z0-9]+$');
+
   @override
   JoinBasicInfoState build() => const JoinBasicInfoState();
+
+  // 닉네임 형식 검증 (길이/숫자만/자모 포함 여부/특수문자 포함 여부)
+  String? _validateNicknameFormat(String nickname) {
+    final trimmed = nickname.trim();
+    if (trimmed.isEmpty) return '닉네임을 입력해주세요';
+    if (trimmed.length > 10) return '닉네임은 10자 이내로 입력해주세요';
+    if (_digitsOnlyPattern.hasMatch(trimmed)) return '닉네임은 숫자로만 만들 수 없어요';
+    if (_jamoPattern.hasMatch(trimmed)) {
+      return '닉네임에 자음/모음만 단독으로 사용할 수 없어요';
+    }
+    if (!_allowedCharsPattern.hasMatch(trimmed)) {
+      return '닉네임에 특수문자는 사용할 수 없어요';
+    }
+    return null;
+  }
 
   // 1단계: UserRole 선택
   void setUserRole(UserRole userRole) =>
@@ -149,8 +173,9 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
   // 닉네임만 검증 (onEditingComplete에서 호출)
   Future<void> validateNickname() async {
-    if (state.nickname.trim().isEmpty) {
-      state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
+    final formatError = _validateNicknameFormat(state.nickname);
+    if (formatError != null) {
+      state = state.copyWith(nicknameError: formatError);
       return;
     }
 
@@ -167,8 +192,9 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     bool isValid = true;
 
     // 닉네임 검증
-    if (state.nickname.trim().isEmpty) {
-      state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
+    final nicknameFormatError = _validateNicknameFormat(state.nickname);
+    if (nicknameFormatError != null) {
+      state = state.copyWith(nicknameError: nicknameFormatError);
       isValid = false;
     } else {
       final isDuplicate = await ref
