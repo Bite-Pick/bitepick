@@ -64,12 +64,13 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
   void setUserRole(UserRole userRole) =>
       state = state.copyWith(userRole: userRole);
 
-  // 소셜 로그인 정보 저장
+  // 소셜 로그인 정보 저장 (새로운 가입 플로우 시작점이므로, 이전에 남아있던
+  // 닉네임/가입 경로 등의 입력값은 초기화한다 - 탈퇴 후 재가입 시나리오 등)
   void setSocialLoginInfo({
     required AuthProviderType providerType,
     required String socialToken,
   }) {
-    state = state.copyWith(
+    state = JoinBasicInfoState(
       providerType: providerType,
       socialToken: socialToken,
     );
