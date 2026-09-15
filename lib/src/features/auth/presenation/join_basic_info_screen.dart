@@ -95,6 +95,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.nicknameError,
                     reserveErrorSpace: false,
+                    hintText: "닉네임 입력",
                     onEditingComplete: () => ref
                         .read(joinBasicInfoScreenControllerProvider.notifier)
                         .validateNickname(),
@@ -107,6 +108,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.phoneError,
                     reserveErrorSpace: false,
+                    hintText: "전화번호 입력",
                   ),
                   Gaps.h32,
                   JoinReferralSourceField(
