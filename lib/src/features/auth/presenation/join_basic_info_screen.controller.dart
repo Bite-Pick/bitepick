@@ -151,6 +151,10 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
             userRole: state.userRole!.value,
             nickName: state.nickname,
             phoneNumber: state.phone,
+            signupSource: state.referralSource?.value,
+            signupSourceDetail: state.referralSource == SignupReferralSource.etc
+                ? state.referralSourceOther.trim()
+                : null,
           );
 
       if (tokens == null) {

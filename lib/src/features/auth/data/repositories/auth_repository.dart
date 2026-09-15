@@ -20,7 +20,7 @@ class AuthRepository {
   }
 
   /// 소셜 로그인/회원가입
-  /// - 기존 회원: name, nickName, phoneNumber, userRole을 비워서 호출
+  /// - 기존 회원: name, nickName, phoneNumber, userRole, signupSource를 비워서 호출
   /// - 신규 회원: 모든 파라미터를 채워서 호출
   Future<AuthTokens?> authenticateWithSocial({
     required AuthProviderType providerType,
@@ -29,6 +29,8 @@ class AuthRepository {
     String? nickName,
     String? phoneNumber,
     String? userRole, // "CUSTOMER" or "OWNER"
+    String? signupSource, // "INSTAGRAM" | "THREAD" | "REFERRAL" | "SEARCH" | "OTHER"
+    String? signupSourceDetail, // signupSource가 "OTHER"일 때만 값이 있어야 함
   }) async {
     final requestData = JsonUtils.removeEmpty({
       "providerType": providerType.name,
@@ -37,6 +39,8 @@ class AuthRepository {
       "nickName": nickName,
       "phoneNumber": phoneNumber,
       "userRole": userRole,
+      "signupSource": signupSource,
+      "signupSourceDetail": signupSourceDetail,
     });
 
     final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
