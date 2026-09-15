@@ -22,12 +22,17 @@ mixin _$JoinBasicInfoState {
   String? get socialToken => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
   String get phone => throw _privateConstructorUsedError;
+  SignupReferralSource? get referralSource =>
+      throw _privateConstructorUsedError;
+  String get referralSourceOther => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   bool get submitted =>
       throw _privateConstructorUsedError; // submit 버튼을 눌렀는지 여부
   String? get error => throw _privateConstructorUsedError;
   String? get nicknameError => throw _privateConstructorUsedError;
   String? get phoneError => throw _privateConstructorUsedError;
+  String? get referralSourceError => throw _privateConstructorUsedError;
+  String? get referralSourceOtherError => throw _privateConstructorUsedError;
 
   /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
@@ -49,11 +54,15 @@ abstract class $JoinBasicInfoStateCopyWith<$Res> {
     String? socialToken,
     String nickname,
     String phone,
+    SignupReferralSource? referralSource,
+    String referralSourceOther,
     bool isLoading,
     bool submitted,
     String? error,
     String? nicknameError,
     String? phoneError,
+    String? referralSourceError,
+    String? referralSourceOtherError,
   });
 }
 
@@ -77,11 +86,15 @@ class _$JoinBasicInfoStateCopyWithImpl<$Res, $Val extends JoinBasicInfoState>
     Object? socialToken = freezed,
     Object? nickname = null,
     Object? phone = null,
+    Object? referralSource = freezed,
+    Object? referralSourceOther = null,
     Object? isLoading = null,
     Object? submitted = null,
     Object? error = freezed,
     Object? nicknameError = freezed,
     Object? phoneError = freezed,
+    Object? referralSourceError = freezed,
+    Object? referralSourceOtherError = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -105,6 +118,14 @@ class _$JoinBasicInfoStateCopyWithImpl<$Res, $Val extends JoinBasicInfoState>
                 ? _value.phone
                 : phone // ignore: cast_nullable_to_non_nullable
                       as String,
+            referralSource: freezed == referralSource
+                ? _value.referralSource
+                : referralSource // ignore: cast_nullable_to_non_nullable
+                      as SignupReferralSource?,
+            referralSourceOther: null == referralSourceOther
+                ? _value.referralSourceOther
+                : referralSourceOther // ignore: cast_nullable_to_non_nullable
+                      as String,
             isLoading: null == isLoading
                 ? _value.isLoading
                 : isLoading // ignore: cast_nullable_to_non_nullable
@@ -124,6 +145,14 @@ class _$JoinBasicInfoStateCopyWithImpl<$Res, $Val extends JoinBasicInfoState>
             phoneError: freezed == phoneError
                 ? _value.phoneError
                 : phoneError // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            referralSourceError: freezed == referralSourceError
+                ? _value.referralSourceError
+                : referralSourceError // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            referralSourceOtherError: freezed == referralSourceOtherError
+                ? _value.referralSourceOtherError
+                : referralSourceOtherError // ignore: cast_nullable_to_non_nullable
                       as String?,
           )
           as $Val,
@@ -146,11 +175,15 @@ abstract class _$$JoinBasicInfoStateImplCopyWith<$Res>
     String? socialToken,
     String nickname,
     String phone,
+    SignupReferralSource? referralSource,
+    String referralSourceOther,
     bool isLoading,
     bool submitted,
     String? error,
     String? nicknameError,
     String? phoneError,
+    String? referralSourceError,
+    String? referralSourceOtherError,
   });
 }
 
@@ -173,11 +206,15 @@ class __$$JoinBasicInfoStateImplCopyWithImpl<$Res>
     Object? socialToken = freezed,
     Object? nickname = null,
     Object? phone = null,
+    Object? referralSource = freezed,
+    Object? referralSourceOther = null,
     Object? isLoading = null,
     Object? submitted = null,
     Object? error = freezed,
     Object? nicknameError = freezed,
     Object? phoneError = freezed,
+    Object? referralSourceError = freezed,
+    Object? referralSourceOtherError = freezed,
   }) {
     return _then(
       _$JoinBasicInfoStateImpl(
@@ -201,6 +238,14 @@ class __$$JoinBasicInfoStateImplCopyWithImpl<$Res>
             ? _value.phone
             : phone // ignore: cast_nullable_to_non_nullable
                   as String,
+        referralSource: freezed == referralSource
+            ? _value.referralSource
+            : referralSource // ignore: cast_nullable_to_non_nullable
+                  as SignupReferralSource?,
+        referralSourceOther: null == referralSourceOther
+            ? _value.referralSourceOther
+            : referralSourceOther // ignore: cast_nullable_to_non_nullable
+                  as String,
         isLoading: null == isLoading
             ? _value.isLoading
             : isLoading // ignore: cast_nullable_to_non_nullable
@@ -221,6 +266,14 @@ class __$$JoinBasicInfoStateImplCopyWithImpl<$Res>
             ? _value.phoneError
             : phoneError // ignore: cast_nullable_to_non_nullable
                   as String?,
+        referralSourceError: freezed == referralSourceError
+            ? _value.referralSourceError
+            : referralSourceError // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        referralSourceOtherError: freezed == referralSourceOtherError
+            ? _value.referralSourceOtherError
+            : referralSourceOtherError // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -235,11 +288,15 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
     this.socialToken = null,
     this.nickname = '',
     this.phone = '',
+    this.referralSource = null,
+    this.referralSourceOther = '',
     this.isLoading = false,
     this.submitted = false,
     this.error,
     this.nicknameError,
     this.phoneError,
+    this.referralSourceError,
+    this.referralSourceOtherError,
   });
 
   @override
@@ -259,6 +316,12 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
   final String phone;
   @override
   @JsonKey()
+  final SignupReferralSource? referralSource;
+  @override
+  @JsonKey()
+  final String referralSourceOther;
+  @override
+  @JsonKey()
   final bool isLoading;
   @override
   @JsonKey()
@@ -270,10 +333,14 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
   final String? nicknameError;
   @override
   final String? phoneError;
+  @override
+  final String? referralSourceError;
+  @override
+  final String? referralSourceOtherError;
 
   @override
   String toString() {
-    return 'JoinBasicInfoState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, isLoading: $isLoading, submitted: $submitted, error: $error, nicknameError: $nicknameError, phoneError: $phoneError)';
+    return 'JoinBasicInfoState(userRole: $userRole, providerType: $providerType, socialToken: $socialToken, nickname: $nickname, phone: $phone, referralSource: $referralSource, referralSourceOther: $referralSourceOther, isLoading: $isLoading, submitted: $submitted, error: $error, nicknameError: $nicknameError, phoneError: $phoneError, referralSourceError: $referralSourceError, referralSourceOtherError: $referralSourceOtherError)';
   }
 
   @override
@@ -290,6 +357,10 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
             (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.referralSource, referralSource) ||
+                other.referralSource == referralSource) &&
+            (identical(other.referralSourceOther, referralSourceOther) ||
+                other.referralSourceOther == referralSourceOther) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.submitted, submitted) ||
@@ -298,7 +369,14 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
             (identical(other.nicknameError, nicknameError) ||
                 other.nicknameError == nicknameError) &&
             (identical(other.phoneError, phoneError) ||
-                other.phoneError == phoneError));
+                other.phoneError == phoneError) &&
+            (identical(other.referralSourceError, referralSourceError) ||
+                other.referralSourceError == referralSourceError) &&
+            (identical(
+                  other.referralSourceOtherError,
+                  referralSourceOtherError,
+                ) ||
+                other.referralSourceOtherError == referralSourceOtherError));
   }
 
   @override
@@ -309,11 +387,15 @@ class _$JoinBasicInfoStateImpl implements _JoinBasicInfoState {
     socialToken,
     nickname,
     phone,
+    referralSource,
+    referralSourceOther,
     isLoading,
     submitted,
     error,
     nicknameError,
     phoneError,
+    referralSourceError,
+    referralSourceOtherError,
   );
 
   /// Create a copy of JoinBasicInfoState
@@ -335,11 +417,15 @@ abstract class _JoinBasicInfoState implements JoinBasicInfoState {
     final String? socialToken,
     final String nickname,
     final String phone,
+    final SignupReferralSource? referralSource,
+    final String referralSourceOther,
     final bool isLoading,
     final bool submitted,
     final String? error,
     final String? nicknameError,
     final String? phoneError,
+    final String? referralSourceError,
+    final String? referralSourceOtherError,
   }) = _$JoinBasicInfoStateImpl;
 
   @override
@@ -353,6 +439,10 @@ abstract class _JoinBasicInfoState implements JoinBasicInfoState {
   @override
   String get phone;
   @override
+  SignupReferralSource? get referralSource;
+  @override
+  String get referralSourceOther;
+  @override
   bool get isLoading;
   @override
   bool get submitted; // submit 버튼을 눌렀는지 여부
@@ -362,6 +452,10 @@ abstract class _JoinBasicInfoState implements JoinBasicInfoState {
   String? get nicknameError;
   @override
   String? get phoneError;
+  @override
+  String? get referralSourceError;
+  @override
+  String? get referralSourceOtherError;
 
   /// Create a copy of JoinBasicInfoState
   /// with the given fields replaced by the non-null parameter values.
