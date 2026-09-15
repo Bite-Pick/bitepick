@@ -43,7 +43,19 @@ class AuthRepository {
       "signupSourceDetail": signupSourceDetail,
     });
 
-    final res = await _dio.post('/v1/auth/oauth/login', data: requestData);
+    final Response res;
+    try {
+      res = await _dio.post('/v1/auth/oauth/login', data: requestData);
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      final code = data is Map ? data['code'] as String? : null;
+      final message = data is Map ? data['message'] as String? : null;
+
+      if (code == "DUPLICATE_NICKNAME") {
+        throw DuplicateNicknameException();
+      }
+      throw AuthenticationException(message ?? '인증에 실패했습니다.', errorCode: code);
+    }
 
     if (res.statusCode != 200) {
       final errorCode = res.data?['code'];
