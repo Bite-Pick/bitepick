@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
+import 'package:magambell/src/features/auth/domain/entities/signup_referral_source.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
@@ -18,11 +19,15 @@ class JoinBasicInfoState with _$JoinBasicInfoState {
     @Default(null) String? socialToken,
     @Default('') String nickname,
     @Default('') String phone,
+    @Default(null) SignupReferralSource? referralSource,
+    @Default('') String referralSourceOther,
     @Default(false) bool isLoading,
     @Default(false) bool submitted, // submit 버튼을 눌렀는지 여부
     String? error,
     String? nicknameError,
     String? phoneError,
+    String? referralSourceError,
+    String? referralSourceOtherError,
   }) = _JoinBasicInfoState;
 }
 
@@ -56,6 +61,19 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     // 숫자만 추출 (하이픈 등 제거)
     final digitsOnly = phone.replaceAll(RegExp(r'[^0-9]'), '');
     state = state.copyWith(phone: digitsOnly, phoneError: null);
+  }
+
+  // 가입 경로 선택
+  void setReferralSource(SignupReferralSource source) {
+    state = state.copyWith(referralSource: source, referralSourceError: null);
+  }
+
+  // 가입 경로 "기타" 직접 입력
+  void setReferralSourceOther(String value) {
+    state = state.copyWith(
+      referralSourceOther: value,
+      referralSourceOtherError: null,
+    );
   }
 
   // 전화번호 포맷팅 (UI 표시용)
@@ -169,6 +187,16 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
       isValid = false;
     } else if (!RegExp(r'^01[0-9][0-9]{7,8}$').hasMatch(phoneDigits)) {
       state = state.copyWith(phoneError: '올바른 전화번호 형식이 아닙니다');
+      isValid = false;
+    }
+
+    // 가입 경로 검증
+    if (state.referralSource == null) {
+      state = state.copyWith(referralSourceError: '가입 경로를 선택해주세요');
+      isValid = false;
+    } else if (state.referralSource == SignupReferralSource.etc &&
+        state.referralSourceOther.trim().isEmpty) {
+      state = state.copyWith(referralSourceOtherError: '가입 경로를 입력해주세요');
       isValid = false;
     }
 

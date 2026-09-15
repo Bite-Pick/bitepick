@@ -5,8 +5,10 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/auth/domain/entities/signup_referral_source.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
+import 'package:magambell/src/features/auth/presenation/widgets/join_referral_source_field.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -33,6 +35,7 @@ class JoinBasicInfoScreen extends ConsumerStatefulWidget {
 class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   final _nicknameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _referralSourceOtherController = TextEditingController();
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     // Controller의 초기값으로 텍스트 필드 동기화
     _nicknameController.addListener(_onNicknameChanged);
     _phoneController.addListener(_onPhoneChanged);
+    _referralSourceOtherController.addListener(_onReferralSourceOtherChanged);
   }
 
   @override
@@ -50,8 +54,12 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     _phoneController.removeListener(_formatPhoneNumber);
     _nicknameController.removeListener(_onNicknameChanged);
     _phoneController.removeListener(_onPhoneChanged);
+    _referralSourceOtherController.removeListener(
+      _onReferralSourceOtherChanged,
+    );
     _nicknameController.dispose();
     _phoneController.dispose();
+    _referralSourceOtherController.dispose();
     super.dispose();
   }
 
@@ -79,6 +87,7 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                     controller: _nicknameController,
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.nicknameError,
+                    reserveErrorSpace: false,
                     onEditingComplete: () => ref
                         .read(joinBasicInfoScreenControllerProvider.notifier)
                         .validateNickname(),
@@ -90,6 +99,17 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                     keyboardType: TextInputType.phone,
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.phoneError,
+                    reserveErrorSpace: false,
+                  ),
+                  Gaps.h32,
+                  JoinReferralSourceField(
+                    value: joinState.referralSource,
+                    onChanged: (source) => ref
+                        .read(joinBasicInfoScreenControllerProvider.notifier)
+                        .setReferralSource(source),
+                    error: joinState.referralSourceError,
+                    otherController: _referralSourceOtherController,
+                    otherError: joinState.referralSourceOtherError,
                   ),
                 ],
               ),
@@ -100,7 +120,10 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
             content: Text(joinState.isLoading ? "처리중..." : "완료"),
             disabled:
                 _nicknameController.text.isEmpty ||
-                _phoneController.text.isEmpty,
+                _phoneController.text.isEmpty ||
+                joinState.referralSource == null ||
+                (joinState.referralSource == SignupReferralSource.etc &&
+                    _referralSourceOtherController.text.trim().isEmpty),
           ).primary(),
           Gaps.h16,
         ],
@@ -115,6 +138,10 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   void _onPhoneChanged() => ref
       .read(joinBasicInfoScreenControllerProvider.notifier)
       .setPhone(_phoneController.text);
+
+  void _onReferralSourceOtherChanged() => ref
+      .read(joinBasicInfoScreenControllerProvider.notifier)
+      .setReferralSourceOther(_referralSourceOtherController.text);
 
   void _formatPhoneNumber() {
     final text = _phoneController.text;
