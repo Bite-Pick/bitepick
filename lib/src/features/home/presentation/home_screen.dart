@@ -247,7 +247,7 @@ class _BusinessInfoSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: const Color(0xFFF5F5F5),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 24 + 52),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
