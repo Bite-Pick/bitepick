@@ -29,6 +29,7 @@ class MgTextField extends StatefulWidget {
     this.suffixIcon,
     this.backgroundColor,
     this.compact = false,
+    this.reserveErrorSpace = true,
   });
 
   final String? label;
@@ -50,6 +51,9 @@ class MgTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final Color? backgroundColor;
   final bool compact;
+  // true(기본): 에러 영역을 항상 고정 높이로 유지해 레이아웃 점프를 막는다.
+  // false: 에러가 있을 때만 공간을 차지해, 아래 위젯이 그만큼 밀려나게 한다.
+  final bool reserveErrorSpace;
 
   @override
   State<MgTextField> createState() => _MgTextFieldState();
@@ -121,10 +125,14 @@ class _MgTextFieldState extends State<MgTextField> {
     return TextInputAction.done;
   }
 
+  bool get _hasError => widget.error != null && widget.error!.isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: widget.compact ? 0 : spacingMd),
+      margin: EdgeInsets.only(
+        bottom: !widget.reserveErrorSpace || widget.compact ? 0 : spacingMd,
+      ),
       decoration: widget.boxDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,16 +199,21 @@ class _MgTextFieldState extends State<MgTextField> {
             ),
           ),
 
-          // 에러 영역 항상 고정 높이로 유지 (레이아웃 점프 방지)
-          SizedBox(
-            height: widget.compact ? 0 : 20,
-            child: widget.error != null && widget.error!.isNotEmpty
-                ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(widget.error!).sm().red(),
-                  )
-                : null,
-          ),
+          if (widget.reserveErrorSpace)
+            // 에러 영역 항상 고정 높이로 유지 (레이아웃 점프 방지)
+            SizedBox(
+              height: widget.compact ? 0 : 20,
+              child: _hasError
+                  ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(widget.error!).sm().red(),
+                    )
+                  : null,
+            )
+          else if (_hasError) ...[
+            Gaps.h8,
+            Text(widget.error!).sm().red(),
+          ],
         ],
       ),
     );
