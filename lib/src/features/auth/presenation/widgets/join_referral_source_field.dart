@@ -37,7 +37,16 @@ class JoinReferralSourceField extends StatelessWidget {
       children: [
         Text('가입 경로').bold().md().padding(bottom: MgSizes.size8),
         GestureDetector(
-          onTap: () => _showBottomSheet(context),
+          onTap: () {
+            // 닉네임/전화번호 필드가 포커스된 상태로 바텀시트를 열면
+            // 키보드가 내려가지 않고 포커스가 남아있어 미리 해제한다.
+            // 바텀시트(모달 라우트)가 닫힐 때 Flutter가 이전 포커스를 다시
+            // 복원해주는 동작 때문에 닫힌 뒤에도 한 번 더 해제해줘야 한다.
+            FocusManager.instance.primaryFocus?.unfocus();
+            _showBottomSheet(context).then((_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            });
+          },
           child: Container(
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: MgSizes.sm),
@@ -76,8 +85,8 @@ class JoinReferralSourceField extends StatelessWidget {
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
-    MgBottomsheet.show(context, (context, bottomState) {
+  Future<void> _showBottomSheet(BuildContext context) {
+    return MgBottomsheet.show(context, (context, bottomState) {
       return MgBottomsheet(
         SizedBox(
           height: 400,
