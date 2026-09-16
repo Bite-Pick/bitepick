@@ -221,6 +221,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 class _BusinessInfoSection extends StatelessWidget {
   const _BusinessInfoSection();
 
+  static const double _mapViewButtonClearance = 52;
+
   @override
   Widget build(BuildContext context) {
     const infoStyle = TextStyle(fontSize: 13, color: Color(0xFF888888));
@@ -247,7 +249,12 @@ class _BusinessInfoSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: const Color(0xFFF5F5F5),
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 24 + 52),
+      padding: const EdgeInsets.fromLTRB(
+        20,
+        24,
+        20,
+        24 + _mapViewButtonClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
