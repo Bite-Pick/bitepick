@@ -168,6 +168,7 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
         : goodsStartTime;
 
     return SafeArea(
+      bottom: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
