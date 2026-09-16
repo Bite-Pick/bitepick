@@ -73,6 +73,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         builder: (store) {
           return BaseScaffold(
             canSwipeBack: false,
+            hasBottomMargin: false,
             appBar: BaseAppBar(
               // leading: _buildDaySelectButton(), // TODO: 스프린트 종료후 추가
               // leadingWidth: 120,
