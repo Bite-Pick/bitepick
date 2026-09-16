@@ -74,6 +74,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         builder: (store) {
           return BaseScaffold(
             canSwipeBack: false,
+            hasBottomMargin: false,
             appBar: BaseAppBar(
               height: 48,
               leading: _buildStoreNameLabel(store?.storeName),
