@@ -13,7 +13,11 @@ class WithdrawController extends _$WithdrawController {
   @override
   FutureOr<void> build() {}
 
-  Future<bool> withdraw({required BuildContext context}) async {
+  Future<bool> withdraw({
+    required BuildContext context,
+    bool showAlertDialog = true,
+  }) async {
+    if (showAlertDialog) {
     // 확인 다이얼로그
     bool ok = false;
     await showDialog(
@@ -25,7 +29,7 @@ class WithdrawController extends _$WithdrawController {
       ),
     );
     if (!ok) return false;
-
+  }
     state = const AsyncLoading();
 
     try {

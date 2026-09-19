@@ -34,10 +34,14 @@ Future<void> logout(
   if (context.mounted) DefaultRoute().go(context);
 }
 
-Future<void> withDraw(WidgetRef ref, BuildContext context) async {
+Future<void> withDraw(
+  WidgetRef ref, 
+  BuildContext context, {
+  bool showAlertDialog = true,
+}) async {
   final res = await ref
       .read(withdrawControllerProvider.notifier)
-      .withdraw(context: context);
+      .withdraw(context: context, showAlertDialog: showAlertDialog);
   if (res) {
     ToastPresentor.success(context, "회원탈퇴가 완료되었습니다");
     await logout(ref, context, showAlertDialog: false);
