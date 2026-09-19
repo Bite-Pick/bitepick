@@ -17,6 +17,7 @@ class WithdrawController extends _$WithdrawController {
     required BuildContext context,
     bool showAlertDialog = true,
   }) async {
+    if (state.isLoading) return false;
     if (showAlertDialog) {
     // 확인 다이얼로그
     bool ok = false;
@@ -61,7 +62,7 @@ class WithdrawController extends _$WithdrawController {
 
       if (authCode == null || authCode.isEmpty) {
         state = const AsyncError('소셜 인증에 실패했습니다.', StackTrace.empty);
-        _showSnack(context, '소셜 인증 실패', isError: true);
+        if (context.mounted) _showSnack(context, '소셜 인증 실패', isError: true);
         return false;
       }
 
@@ -72,13 +73,13 @@ class WithdrawController extends _$WithdrawController {
 
       if (!success) {
         state = const AsyncError('탈퇴 요청에 실패했습니다.', StackTrace.empty);
-        _showSnack(context, '탈퇴 요청에 실패했습니다.', isError: true);
+        if (context.mounted) _showSnack(context, '탈퇴 요청에 실패했습니다.', isError: true);
         return false;
       }
       return true;
     } catch (e, st) {
       state = AsyncError(e, st);
-      _showSnack(context, '알 수 없는 오류가 발생했습니다.', isError: true);
+      if (context.mounted) _showSnack(context, '알 수 없는 오류가 발생했습니다.', isError: true);
       return false;
     }
   }

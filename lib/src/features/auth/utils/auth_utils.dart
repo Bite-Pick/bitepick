@@ -43,7 +43,9 @@ Future<void> withDraw(
       .read(withdrawControllerProvider.notifier)
       .withdraw(context: context, showAlertDialog: showAlertDialog);
   if (res) {
-    ToastPresentor.success(context, "회원탈퇴가 완료되었습니다");
+    if (context.mounted) {
+      ToastPresentor.success(context, "회원탈퇴가 완료되었습니다");
+    }
     await logout(ref, context, showAlertDialog: false);
   }
 }

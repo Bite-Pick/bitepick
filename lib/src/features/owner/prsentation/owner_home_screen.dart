@@ -72,7 +72,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         asyncValue: storeAsync,
         onRetry: () => ref.invalidate(ownerStoreProvider),
         builder: (store) {
-          if (!_initialTabset) {
+          if (!_initialTabset && store != null) {
             _initialTabset = true;
             final isOpen = store?.goodsList[0].saleStatus == "ON";
             _tabController.index = isOpen ? 1 : 0;
