@@ -348,7 +348,7 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
       asyncValue: ownerStoreAsync,
       onRetry: () => ref.invalidate(ownerStoreProvider),
       builder: (store) {
-        if (store == null) return OwnerGoodsEmptyScreen();
+        if (store == null || store.goodsList.isEmpty) return OwnerGoodsEmptyScreen();
         final saleStatus = store.goodsList[0].saleStatus == "ON";
         final subscriberCount = ref.watch(
           storeSubscriberCountProvider(storeId: store.storeId),
@@ -357,10 +357,8 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
           children: [
             RefreshIndicator(
               onRefresh: () async {
-                try {
-                  ref.invalidate(ownerStoreProvider);
-                  await ref.read(ownerStoreProvider.future);
-                } catch (_) {}
+                ref.invalidate(ownerStoreProvider);
+                await ref.read(ownerStoreProvider.future);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -443,7 +441,7 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
                                   Text.rich(
                                     TextSpan(
                                       children: [
-                                        TextSpan(text: '${subscriberCount + 5}명')
+                                        TextSpan(text: '${subscriberCount + 5}명') // 임시로 +5명으로 표시
                                             .semibold()
                                             .fontSize(12)
                                             .height(1.5)

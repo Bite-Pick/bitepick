@@ -38,17 +38,6 @@ class _BaseMapViewState extends State<BaseMapView> {
   }
 
   Future<void> _onMapReady(NaverMapController controller) async {
-  await NOverlayImage.fromWidget(
-    context: context,
-    size: const Size(80, 65),
-    widget: const StorePinMarker(
-      storeName: '',
-      isSelected: true,
-      isOpen: false,
-      showLabel: false,
-    ),
-  );
-
   final icon = await NOverlayImage.fromWidget(
     context: context,
     size: const Size(80, 65),
@@ -63,7 +52,7 @@ class _BaseMapViewState extends State<BaseMapView> {
     id: "goal",
     position: NLatLng(widget.latitude, widget.longitude),
     icon: icon,
-    anchor: const NPoint(0.5, 0.5), // 추가
+    anchor: const NPoint(0.5, 0.5), 
   );
   await controller.addOverlay(marker);
 }
