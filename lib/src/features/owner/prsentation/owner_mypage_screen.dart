@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/auth/utils/auth_utils.dart';
+import 'package:magambell/src/features/order/domain/entities/sales_summary.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
@@ -14,6 +15,8 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_mypage_confirm_dialog.dart';
 import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
+import 'package:magambell/src/features/order/data/repositories/order_repository.dart';
+import 'package:magambell/src/core/extensions/price_extension.dart';
 
 
 class OwnerMypageRoute extends GoRouteData {
@@ -66,6 +69,7 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
   Widget build(BuildContext context) {
     final store = ref.watch(ownerStoreProvider).value;
     final storeName = store?.storeName ?? '';
+    final salesSummary = ref.watch(salesSummaryProvider).value;
 
     return BaseScaffold(
       appBar: BaseAppBar(
@@ -143,7 +147,7 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
                                   style: context.textTheme.labelMedium?.copyWith(color: NewColorScheme.gray4),
                                 ),
                                 Text(
-                                  '87,000원', //실제 가게 누적 판매 수익 API 연동 필요
+                                  '${(salesSummary?.totalAmount ?? 0).toPrice()}원',
                                   style: context.textTheme.displaySmall?.copyWith(color: NewColorScheme.gray1),
                                 ).semibold(),
                               ],
