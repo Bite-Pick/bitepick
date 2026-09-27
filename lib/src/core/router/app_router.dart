@@ -28,6 +28,7 @@ import 'package:magambell/src/features/order/presentation/order_pay_screen.dart'
 import 'package:magambell/src/features/order/presentation/portone_payment_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_home_screen.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_mypage_screen.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_view.dart';
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
@@ -149,6 +150,10 @@ class LoginRoute extends GoRouteData {
       path: 'service-region/select',
     ),
     TypedGoRoute<OwnerHomeRoute>(name: 'OwnerHomeRoute', path: 'owner/home'),
+    TypedGoRoute<OwnerMypageRoute>(
+      name: 'OwnerMypageRoute',
+      path: 'owner/mypage',
+    ),
     TypedGoRoute<GoodsRegisterRoute>(
       name: 'GoodsRegisterRoute',
       path: 'owner/goods/register',

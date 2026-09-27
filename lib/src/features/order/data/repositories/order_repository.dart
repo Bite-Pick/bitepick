@@ -10,6 +10,7 @@ import 'package:magambell/src/features/order/domain/entities/order_form.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner.dart';
 import 'package:magambell/src/features/order/domain/entities/order_owner_status.dart';
 import 'package:magambell/src/features/order/domain/entities/order_reject_reason.dart';
+import 'package:magambell/src/features/order/domain/entities/sales_summary.dart';
 import 'package:magambell/src/features/order/data/dtos/order_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -37,7 +38,7 @@ class OrderRepository {
       },
     );
 
-    final list = res.data['data']['orderStoreList'] as List<dynamic>?;
+    final list = (res.data['data'] as Map<String, dynamic>?)?['orderStoreList'] as List<dynamic>?;
     if (res.data['status'] != 'OK' || list == null) return [];
 
     return list
@@ -55,7 +56,7 @@ class OrderRepository {
     );
     if (res.data['status'] != 'OK') return [];
 
-    final list = res.data['data']['orderListDTOList'] as List<dynamic>?;
+    final list = (res.data['data'] as Map<String, dynamic>?)?['orderListDTOList'] as List<dynamic>?;
     if (res.data['status'] != 'OK' || list == null) return [];
 
     return list
@@ -102,6 +103,15 @@ class OrderRepository {
     final data = res.data['data'] as String?;
     if (res.data['status'] != 'OK' || data == null) return false;
     return true;
+  }
+
+  /// 사장님 매출 요약
+  Future<SalesSummary?> getSalesSummary() async {
+    final res = await _dio.get('/v1/order/store/sales/summary');
+    if (res.data['status'] != 'OK') return null;
+    final data = res.data['data'] as Map<String, dynamic>?;
+    if (data == null) return null;
+    return SalesSummary.fromJson(data);
   }
 
   /// 주문 생성 (결제 전)
@@ -188,4 +198,9 @@ Future<OrderDetailDTO?> userOrderDetail(
   required String orderId,
 }) async {
   return ref.read(orderRepositoryProvider).getUserOrderDetail(orderId);
+}
+
+@riverpod
+Future<SalesSummary?> salesSummary(Ref ref) async {
+  return ref.read(orderRepositoryProvider).getSalesSummary();
 }
