@@ -18,6 +18,9 @@ _$ReviewImpl _$$ReviewImplFromJson(Map<String, dynamic> json) => _$ReviewImpl(
   goodsId: json['goodsId'] as String,
   storeId: json['storeId'] as String,
   storeName: json['storeName'] as String,
+  reply: json['reply'] == null
+      ? null
+      : StoreReviewReply.fromJson(json['reply'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
@@ -31,4 +34,5 @@ Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
       'goodsId': instance.goodsId,
       'storeId': instance.storeId,
       'storeName': instance.storeName,
+      'reply': instance.reply,
     };

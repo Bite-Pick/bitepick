@@ -30,6 +30,7 @@ mixin _$Review {
   String get goodsId => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
+  StoreReviewReply? get reply => throw _privateConstructorUsedError;
 
   /// Serializes this Review to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +56,10 @@ abstract class $ReviewCopyWith<$Res> {
     String goodsId,
     String storeId,
     String storeName,
+    StoreReviewReply? reply,
   });
+
+  $StoreReviewReplyCopyWith<$Res>? get reply;
 }
 
 /// @nodoc
@@ -82,6 +86,7 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
     Object? goodsId = null,
     Object? storeId = null,
     Object? storeName = null,
+    Object? reply = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -121,9 +126,27 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
                 ? _value.storeName
                 : storeName // ignore: cast_nullable_to_non_nullable
                       as String,
+            reply: freezed == reply
+                ? _value.reply
+                : reply // ignore: cast_nullable_to_non_nullable
+                      as StoreReviewReply?,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of Review
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StoreReviewReplyCopyWith<$Res>? get reply {
+    if (_value.reply == null) {
+      return null;
+    }
+
+    return $StoreReviewReplyCopyWith<$Res>(_value.reply!, (value) {
+      return _then(_value.copyWith(reply: value) as $Val);
+    });
   }
 }
 
@@ -145,7 +168,11 @@ abstract class _$$ReviewImplCopyWith<$Res> implements $ReviewCopyWith<$Res> {
     String goodsId,
     String storeId,
     String storeName,
+    StoreReviewReply? reply,
   });
+
+  @override
+  $StoreReviewReplyCopyWith<$Res>? get reply;
 }
 
 /// @nodoc
@@ -171,6 +198,7 @@ class __$$ReviewImplCopyWithImpl<$Res>
     Object? goodsId = null,
     Object? storeId = null,
     Object? storeName = null,
+    Object? reply = freezed,
   }) {
     return _then(
       _$ReviewImpl(
@@ -210,6 +238,10 @@ class __$$ReviewImplCopyWithImpl<$Res>
             ? _value.storeName
             : storeName // ignore: cast_nullable_to_non_nullable
                   as String,
+        reply: freezed == reply
+            ? _value.reply
+            : reply // ignore: cast_nullable_to_non_nullable
+                  as StoreReviewReply?,
       ),
     );
   }
@@ -228,6 +260,7 @@ class _$ReviewImpl extends _Review {
     required this.goodsId,
     required this.storeId,
     required this.storeName,
+    this.reply,
   }) : _imageUrls = imageUrls,
        super._();
 
@@ -258,10 +291,12 @@ class _$ReviewImpl extends _Review {
   final String storeId;
   @override
   final String storeName;
+  @override
+  final StoreReviewReply? reply;
 
   @override
   String toString() {
-    return 'Review(reviewId: $reviewId, rating: $rating, description: $description, createdAt: $createdAt, imageUrls: $imageUrls, nickName: $nickName, goodsId: $goodsId, storeId: $storeId, storeName: $storeName)';
+    return 'Review(reviewId: $reviewId, rating: $rating, description: $description, createdAt: $createdAt, imageUrls: $imageUrls, nickName: $nickName, goodsId: $goodsId, storeId: $storeId, storeName: $storeName, reply: $reply)';
   }
 
   @override
@@ -285,7 +320,8 @@ class _$ReviewImpl extends _Review {
             (identical(other.goodsId, goodsId) || other.goodsId == goodsId) &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.storeName, storeName) ||
-                other.storeName == storeName));
+                other.storeName == storeName) &&
+            (identical(other.reply, reply) || other.reply == reply));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -301,6 +337,7 @@ class _$ReviewImpl extends _Review {
     goodsId,
     storeId,
     storeName,
+    reply,
   );
 
   /// Create a copy of Review
@@ -328,6 +365,7 @@ abstract class _Review extends Review {
     required final String goodsId,
     required final String storeId,
     required final String storeName,
+    final StoreReviewReply? reply,
   }) = _$ReviewImpl;
   const _Review._() : super._();
 
@@ -351,6 +389,8 @@ abstract class _Review extends Review {
   String get storeId;
   @override
   String get storeName;
+  @override
+  StoreReviewReply? get reply;
 
   /// Create a copy of Review
   /// with the given fields replaced by the non-null parameter values.
