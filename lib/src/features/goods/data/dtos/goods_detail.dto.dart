@@ -50,7 +50,10 @@ class GoodsDetailDto with _$GoodsDetailDto {
       endTime: endTime.toIso8601String(),
       description: description ?? '',
       parkingDescription: parkingDescription,
-      goodsImageList: goodsImages
+      goodsImageList: goodsImages,
+      menuCount: (goodsImages ?? [])
+          .where((g) => g.goodsName != null && g.goodsName!.isNotEmpty)
+          .length,
     );
   }
 }

@@ -38,48 +38,61 @@ class StoreLocationInfoView extends StatelessWidget {
     if (latitude == null || longitude == null) return SizedBox.shrink();
 
     return Column(
-      spacing: MgSizes.md,
+      spacing: MgSizes.sm,
       children: [
-        if (latitude != null && longitude != null)
-          GestureDetector(
-            onTap: () async =>
-                // 지도 전체화면으로 이동
-                StoreMapRoute(
-                  id: storeId,
-                  $extra: StoreMapExtra(
-                    storeName: storeName,
-                    latitude: latitude!,
-                    longitude: longitude!,
-                    address: address,
-                  ),
-                ).push(context),
-            child: IgnorePointer(
-              child: BaseMapView(
-                latitude: latitude!,
-                longitude: longitude!,
-                buildingName: storeName,
-              ).constrained(height: mapHeight),
+        GestureDetector(
+          onTap: () async => StoreMapRoute(
+            id: storeId, 
+            $extra: StoreMapExtra(
+              storeName: storeName, 
+              latitude: latitude!, 
+              longitude: longitude!, 
+              address: address,
+            ),
+          ).push(context),
+          child: IgnorePointer(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(MgRadius.sm),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: NewColorScheme.gray11, width: 0.5),
+                  borderRadius: BorderRadius.circular(MgRadius.sm),
+                ),
+                child: BaseMapView(
+                  latitude: latitude!, 
+                  longitude: longitude!,
+                  buildingName: storeName,
+                ).constrained(height: mapHeight),
+              ),
             ),
           ),
+        ),
         MgButton(
           onPressed: () async {
             await MgBottomsheet.show(context, (context, bottomState) {
               return _buildFindRouteBottomSheet(context);
             });
-          },
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              BaseSvgIcon.mapPin(size: MgSizes.lg),
-              Gaps.w4,
-              Text("길찾기"),
-            ],
+          }, 
+          content: Text(
+            '길 찾기',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: MgFontFamily.semiBold,
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              height: 1.5,
+              letterSpacing: -0.375,
+              color: NewColorScheme.gray1,
+            ),
           ),
-          borderColor: MgColorScheme.gray7,
+          backgroundColor: NewColorScheme.gray12,
+          borderColor: null,
+          borderRadius: MgRadius.sm,
+          height: 44,
+          padding: EdgeInsets.zero,
         ),
       ],
-    );
+    ).padding(horizontal: MgSizes.md);
   }
 
   Widget _buildFindRouteBottomSheet(BuildContext context) {

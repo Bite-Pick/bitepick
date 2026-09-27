@@ -14,6 +14,7 @@ class BaseNetworkImage extends ConsumerWidget {
     this.imageBuilder,
     this.placeholderBuilder,
     this.errorWidgetBuilder,
+    this.backgroundColor = MgColorScheme.gray10,
   });
   final String imageUrl;
   final double width;
@@ -22,6 +23,7 @@ class BaseNetworkImage extends ConsumerWidget {
   final ImageWidgetBuilder? imageBuilder;
   final PlaceholderWidgetBuilder? placeholderBuilder;
   final LoadingErrorWidgetBuilder? errorWidgetBuilder;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,8 +32,8 @@ class BaseNetworkImage extends ConsumerWidget {
       imageBuilder: (context, imageProvider) => imageBuilder != null
           ? imageBuilder!(context, imageProvider)
           : Container(
-              height: width,
-              width: height,
+              width: width,
+              height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
@@ -40,8 +42,8 @@ class BaseNetworkImage extends ConsumerWidget {
       errorWidget: (context, url, error) => errorWidgetBuilder != null
           ? errorWidgetBuilder!(context, url, error)
           : Container(
-              height: width,
-              width: height,
+              width: width,
+              height: height,
               decoration: BoxDecoration(
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(8),
@@ -51,10 +53,10 @@ class BaseNetworkImage extends ConsumerWidget {
       placeholder: (context, url) => placeholderBuilder != null
           ? placeholderBuilder!(context, url)
           : Container(
-              height: width,
-              width: height,
+              width: width,
+              height: height,
               decoration: BoxDecoration(
-                color: MgColorScheme.gray10, // TODO: shimmer로 변경
+                color: backgroundColor, // TODO: shimmer로 변경
                 borderRadius: BorderRadius.circular(8),
               ),
             ),

@@ -18,6 +18,7 @@ class StoreInfoUiData with _$StoreInfoUiData {
     required String startTime,
     required String endTime,
     required String description,
+    required int menuCount,
     String? parkingDescription, // TODO: parkingDescription 확인필요
     List<GoodsImagesList>? goodsImageList, // TODO: goodsImageList 확인필요
     double? latitude,

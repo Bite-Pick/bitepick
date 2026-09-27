@@ -28,43 +28,40 @@ class StorePinMarker extends StatelessWidget {
           if (isOpen) _OpenBadge(),
           _PinIcon(isSelected: isSelected),
           if (showLabel)
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Stack(
-                children: [
-                  Text(
-                    storeName,
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 3
-                        ..color = Colors.white,
-                      letterSpacing: -0.3,
-                      height: 1.0,
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+            Stack(
+              children: [
+                Text(
+                  storeName,
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 3
+                      ..color = Colors.white,
+                    letterSpacing: -0.3,
+                    height: 1.0,
                   ),
-                  Text(
-                    storeName,
-                    style: const TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: NewColorScheme.gray1,
-                      letterSpacing: -0.3,
-                      height: 1.0,
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                Text(
+                  storeName,
+                  style: const TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: NewColorScheme.gray1,
+                    letterSpacing: -0.3,
+                    height: 1.0,
                   ),
-                ],
-              ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
             ),
         ],
       ),
