@@ -69,7 +69,7 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
   Widget build(BuildContext context) {
     final store = ref.watch(ownerStoreProvider).value;
     final storeName = store?.storeName ?? '';
-    final salesSummary = ref.watch(salesSummaryProvider).value;
+    final salesSummaryAsync = ref.watch(salesSummaryProvider);
 
     return BaseScaffold(
       appBar: BaseAppBar(
@@ -147,7 +147,13 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
                                   style: context.textTheme.labelMedium?.copyWith(color: NewColorScheme.gray4),
                                 ),
                                 Text(
-                                  '${(salesSummary?.totalAmount ?? 0).toPrice()}원',
+                                  salesSummaryAsync.when(
+                                    data: (summary) => summary == null
+                                        ? '조회 실패'
+                                        : '${summary.totalAmount.toPrice()}원',
+                                    loading: () => '조회 중...',
+                                    error: (_, __) => '조회 실패',
+                                  ),
                                   style: context.textTheme.displaySmall?.copyWith(color: NewColorScheme.gray1),
                                 ).semibold(),
                               ],
@@ -394,6 +400,9 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
                         icon: BaseSvgIcon.satisfiedService(size: 14),
                         text: '이해하기 쉬워요',
                         width: 114,
+                        onTap: () {
+                          // FAQ 피드백 저장 API 연동 필요
+                        }
                       ),
                       Gaps.w8,
                       _buildFeedbackChip(
@@ -401,6 +410,9 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
                         icon: BaseSvgIcon.unsatisfiedService(size: 14),
                         text: '추가 설명이 필요해요',
                         width: 137,
+                        onTap: () {
+                          // FAQ 피드백 저장 API 연동 필요
+                        },
                       ),
                     ],
                   ),
@@ -429,26 +441,31 @@ Widget _buildFeedbackChip({
   required Widget icon,
   required String text,
   required double width,
+  required VoidCallback onTap,
 }) {
-  return Container(
-    width: width,
-    height: MgSizes.xxxl,
-    decoration: BoxDecoration(
-      color: NewColorScheme.gray14,
-      borderRadius: BorderRadius.circular(MgRadius.full),
-      border: Border.all(width: 1, color: NewColorScheme.gray9),
-    ),
-    child: Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          Gaps.w4,
-          Text(
-            text,
-            style: context.textTheme.bodySmall?.copyWith(color: NewColorScheme.gray4),
-          ),
-        ],
+  return GestureDetector(
+    onTap: onTap,
+    behavior: HitTestBehavior.opaque,
+    child: Container(
+      width: width,
+      height: MgSizes.xxxl,
+      decoration: BoxDecoration(
+        color: NewColorScheme.gray14,
+        borderRadius: BorderRadius.circular(MgRadius.full),
+        border: Border.all(width: 1, color: NewColorScheme.gray9),
+      ),
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            icon,
+            Gaps.w4,
+            Text(
+              text,
+              style: context.textTheme.bodySmall?.copyWith(color: NewColorScheme.gray4),
+            ),
+          ],
+        ),
       ),
     ),
   );
