@@ -39,6 +39,11 @@ class Store with _$Store {
       startTime: firstGoods?.startTime ?? "",
       endTime: firstGoods?.endTime ?? "",
       description: description ?? "",
+      parkingDescription: parkingDescription,
+      goodsImageList: goodsImageList,
+      menuCount: (goodsImageList ?? [])
+          .where((g) => g.goodsName != null && g.goodsName!.isNotEmpty)
+          .length,
     );
   }
 }

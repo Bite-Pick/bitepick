@@ -17,7 +17,6 @@ import 'package:magambell/src/features/order/presentation/order_caution_screen.d
 import 'package:magambell/src/features/order/presentation/order_pay_screen.controller.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
-import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_review_list_view.dart';
 import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
@@ -50,14 +49,6 @@ class StoreScreen extends ConsumerStatefulWidget {
 }
 
 class _StoreScreenState extends ConsumerState<StoreScreen> {
-  final _tabIndex = ValueNotifier<int>(0);
-
-  @override
-  void dispose() {
-    _tabIndex.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final storeAsync = ref.watch(storeGoodsDetailProvider(widget.id));
@@ -67,6 +58,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
       onRetry: () => ref.invalidate(storeGoodsDetailProvider(widget.id)),
       builder: (store) {
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
+        final reviewsAsync = ref.watch(reviewsProvider(goodsId: store.goodsId, imageCheck: false));
         return BaseScaffold(
           appBar: BaseAppBar(),
           bottomNavigationBar: _BottomOrderBar(
@@ -78,34 +70,19 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
               ref.invalidate(storeSubscriberCountProvider(storeId: widget.id));
               ref.refresh(storeGoodsDetailProvider(widget.id));
             },
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: StoreInfoView(store.toStoreInfoData()),
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _SliverAppBarDelegate(
-                    ValueListenableBuilder<int>(
-                      valueListenable: _tabIndex,
-                      builder: (context, index, _) => _StoreTabBar(
-                        goodsId: store.goodsId,
-                        selectedIndex: index,
-                        onTabChanged: (i) => _tabIndex.value = i,
-                      ),
-                    ),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  StoreInfoView(
+                    store.toStoreInfoData(),
+                    hasFavorite: false,
+                    reviewCount: reviewsAsync.value?.length ?? 0,
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: ValueListenableBuilder<int>(
-                    valueListenable: _tabIndex,
-                    builder: (context, index, _) => index == 0
-                        ? StoreBiteBagView(store.goodsImages ?? [])
-                        : StoreReviewListView(store.goodsId),
-                  ),
-                ),
-              ],
-            ),
+                  StoreReviewListView(store.goodsId),
+                ],
+              ),
+            )
           ),
         );
       },
@@ -388,82 +365,5 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
         ],
       ),
     );
-  }
-}
-
-class _StoreTabBar extends ConsumerWidget {
-  const _StoreTabBar({
-    required this.goodsId,
-    required this.selectedIndex,
-    required this.onTabChanged,
-  });
-
-  final String goodsId;
-  final int selectedIndex;
-  final ValueChanged<int> onTabChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final reviewsAsync = ref.watch(
-      reviewsProvider(goodsId: goodsId, imageCheck: false),
-    );
-
-    return MgAsyncAnimatedSwitcher(
-      asyncValue: reviewsAsync,
-      onRetry: () =>
-          ref.invalidate(reviewsProvider(goodsId: goodsId, imageCheck: false)),
-      emptyBuilder: () => _buildTabBar(context, 0),
-      builder: (reviews) => _buildTabBar(context, reviews.length),
-    );
-  }
-
-  Widget _buildTabBar(BuildContext context, int reviewCount) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: selectedIndex,
-      child: TabBar(
-        dividerColor: MgColorScheme.gray8,
-        overlayColor: WidgetStateProperty.all(Colors.transparent),
-        labelColor: MgColorScheme.gray1,
-        unselectedLabelColor: MgColorScheme.gray5,
-        indicatorSize: TabBarIndicatorSize.tab,
-        indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
-        ),
-        labelStyle: context.textTheme.titleLarge,
-        unselectedLabelStyle: context.textTheme.bodyLarge,
-        onTap: onTabChanged,
-        tabs: [
-          Tab(text: '상품 정보').margin(horizontal: MgSizes.md),
-          Tab(text: '리뷰 $reviewCount'),
-        ],
-      ),
-    );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._child);
-
-  final Widget _child;
-
-  @override
-  double get minExtent => 48.0;
-
-  @override
-  double get maxExtent => 48.0;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(color: MgColorScheme.gray11, child: _child);
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return true;
   }
 }
