@@ -124,7 +124,9 @@ class ReviewRepository {
         'size': size
       },
     );
-    if (res.data['status'] != 'OK') return null;
+    if (res.data['status'] != 'OK') {
+      throw Exception(res.data['message'] as String? ?? '리뷰 목록을 불러오지 못했습니다.');
+    }
     final data = res.data['data'] as Map<String, dynamic>?;
     if (data == null) return null;
     return StoreReviewListResponse.fromJson(data);

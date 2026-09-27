@@ -53,18 +53,23 @@ class _OwnerReplyComposerState extends ConsumerState<OwnerReplyComposer> {
     if (reviewId == null || content.isEmpty || _isSubmitting) return;
 
     setState(() => _isSubmitting = true);
-    final success = await ref
+    try {
+      final success = await ref
         .read(reviewRepositoryProvider)
         .addReply(reviewId, content);
-    if (!mounted) return;
+      if (!mounted) return;
 
-
-    setState(() => _isSubmitting = false);
-    if (success) {
-      ref.invalidate(ownerStoreReviewsProvider);
-      ref.read(activeReplyReviewIdProvider.notifier).state = null;
-      ToastPresentor.success(context, "답글을 등록했어요.");
-    } else {
+      setState(() => _isSubmitting = false);
+      if (success) {
+        ref.invalidate(ownerStoreReviewsProvider);
+        ref.read(activeReplyReviewIdProvider.notifier).state = null;
+        ToastPresentor.success(context, "답글을 등록했어요.");
+      } else {
+        ToastPresentor.error(context, "답글 등록에 실패했어요");
+      }
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
       ToastPresentor.error(context, "답글 등록에 실패했어요");
     }
   }
