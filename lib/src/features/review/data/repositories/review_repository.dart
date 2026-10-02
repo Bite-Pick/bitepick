@@ -141,6 +141,16 @@ class ReviewRepository {
     return res.data['status'] == 'OK';
   }
 
+  /// 8. 리뷰 답글 수정
+  Future<bool> updateReply(String reviewId, String content) async {
+    final res = await _dio.patch(
+      '/v1/review/$reviewId/reply',
+      data: {'content': content},
+    );
+    return res.data['status'] == 'OK';
+  }
+
+
   // /// 3. 리뷰 평점별 조회
   // Future<Map<String, dynamic>> getRatingStats(String goodsId) async {
   //   final res = await _dio.get(
