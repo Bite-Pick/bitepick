@@ -34,16 +34,16 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            MgCheckbox(
-              initialValue: _imageCheckOnly,
-              onChanged: (value) => _toggleImageCheck(),
-            ),
-            Gaps.w8,
-            Text("포토리뷰").sm(),
-          ],
-        ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
+       // Row(
+       //   children: [
+       //     MgCheckbox(
+       //       initialValue: _imageCheckOnly,
+       //       onChanged: (value) => _toggleImageCheck(),
+       //    ),
+       //     Gaps.w8,
+       //     Text("포토리뷰").sm(),
+       //   ],
+       // ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
         MgAsyncAnimatedSwitcher(
           asyncValue: reviewsAsync,
           onRetry: () => ref.invalidate(reviewsProvider(goodsId: widget.goodsId, imageCheck: _imageCheckOnly)),
@@ -58,13 +58,16 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
             ),
           ),
           builder: (reviews) => Column(
-            children: reviews.map((review) {
+            children: [
+              for (int i = 0; i < reviews.length; i++) ...[
+                if (i != 0) Gaps.h16,
               // TODO: review에 userId가 내려오거나, 본인 리뷰 여부를 판별할 수 있는 flag가 추가되어야함
-              return review.nickName ==
-                      ref.read(userStateProvider).asData!.value?.nickName
-                  ? ReviewItem.myReview(review)
-                  : ReviewItem.userReview(review);
-            }).toList(),
+                reviews[i].nickName ==
+                        ref.read(userStateProvider).asData!.value?.nickName
+                    ? ReviewItem.myReview(reviews[i])
+                    : ReviewItem.userReview(reviews[i])
+              ],
+            ],
           ),
         ),
       ],

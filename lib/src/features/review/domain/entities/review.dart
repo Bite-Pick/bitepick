@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magambell/src/features/review/domain/entities/store_review.dart';
 
 part 'review.freezed.dart';
 part 'review.g.dart';
@@ -39,6 +40,7 @@ class Review with _$Review {
     required String goodsId,
     required String storeId,
     required String storeName,
+    StoreReviewReply? reply,
   }) = _Review;
 
   const Review._();
