@@ -75,7 +75,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               // TODO: BaseCustomScrollView refact
               child: RefreshIndicator(
                 onRefresh: () async {
-                  ref.invalidate(homeScreenControllerProvider);
+                  try {
+                    ref.invalidate(homeScreenControllerProvider);
+                    await ref.read(homeScreenControllerProvider.future);
+                  } catch (_) {
+                    // 에러 상태는 MgAsyncAnimatedSwitcher가 표시한다.
+                  }
                 },
                 child: CustomScrollView(
                   controller: _scrollController,

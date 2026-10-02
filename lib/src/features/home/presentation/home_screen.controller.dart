@@ -52,9 +52,11 @@ class HomeScreenController extends _$HomeScreenController {
   @override
   Future<HomeScreenControllerState> build() async {
     _localStorage = SharedPreferenceStore();
+    // 예외를 내부에서 처리하므로 먼저 시작해도 안전하다. (권한 팝업/대기 시간 겹치기)
+    final positionFuture = _resolveLocation();
     final serviceAddresses = await ref.read(serviceAddressesProvider.future);
-    final position = await _resolveLocation();
     final allStores = await ref.read(storeRepositoryProvider).getAllStores();
+    final position = await positionFuture;
 
     const onlyAvailable = false;
     const sortType = SortType.distanceAsc;
