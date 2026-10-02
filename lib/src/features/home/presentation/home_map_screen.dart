@@ -11,7 +11,6 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
-import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
@@ -58,7 +57,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   bool _serviceAreaChipDismissed = false;
   bool _showSearchAreaButton = false;
   bool _isAppInitiatedMove = false;
-  Timer? _bannerDebounceTimer;
   Timer? _tooltipTimer;
   Timer? _mapFetchDebounceTimer;
   int _fetchStoresRequestId = 0;
@@ -66,7 +64,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
   static const _tooltipPosition = NLatLng(37.3243773830569, 127.107505020642);
-  static const _serviceAreaRadiusM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
   static const double _selectedPinHeight = 43.0;
@@ -75,34 +72,15 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
   @override
   void dispose() {
-    _bannerDebounceTimer?.cancel();
     _tooltipTimer?.cancel();
     _mapFetchDebounceTimer?.cancel();
     _mapReady = false;
     super.dispose();
   }
 
-  bool _checkIsInServiceArea(NLatLng target) {
-    final serviceAddresses =
-        ref.read(homeScreenControllerProvider).valueOrNull?.serviceAddresses ??
-        [];
-    if (serviceAddresses.isEmpty) return true;
-    return serviceAddresses.any((addr) {
-      final dist = Geolocator.distanceBetween(
-        target.latitude,
-        target.longitude,
-        addr.latitude,
-        addr.longitude,
-      );
-      return dist <= _serviceAreaRadiusM;
-    });
-  }
-
-  void _updateBannerVisibility(bool inServiceArea) {
-    _bannerDebounceTimer?.cancel();
-    _bannerDebounceTimer = Timer(const Duration(milliseconds: 200), () {
-      if (mounted) setState(() => _bannerVisible = !inServiceArea);
-    });
+  /// 현재 지도 범위 안에 매장이 하나도 없으면 안내 배너를 보여준다.
+  void _updateBannerVisibility(bool hasStoreInBounds) {
+    if (mounted) setState(() => _bannerVisible = !hasStoreInBounds);
   }
 
   Future<void> _onBannerCtaTapped() async {
@@ -307,9 +285,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       if (wasAbove != isAbove) {
         setState(() => _currentZoom = position.zoom);
       }
-
-      final inServiceArea = _checkIsInServiceArea(position.target);
-      _updateBannerVisibility(inServiceArea);
     });
   }
 
@@ -355,7 +330,23 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         );
 
     if (requestId != _fetchStoresRequestId) return;
-    if (mounted) _refreshStoreMarkers(stores);
+    if (!mounted) return;
+    _refreshStoreMarkers(stores);
+
+    // 예약가능 필터와 무관하게, 범위 안에 매장이 있는지로 배너 노출을 결정한다.
+    final allStores =
+        ref.read(homeScreenControllerProvider).valueOrNull?.allStores;
+    _updateBannerVisibility(
+      allStores == null
+          ? stores.isNotEmpty
+          : allStores.any(
+              (st) =>
+                  st.latitude >= bounds.southWest.latitude &&
+                  st.latitude <= bounds.northEast.latitude &&
+                  st.longitude >= bounds.southWest.longitude &&
+                  st.longitude <= bounds.northEast.longitude,
+            ),
+    );
   }
 
   Future<void> _onGpsPressed() async {
@@ -421,7 +412,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   @override
   Widget build(BuildContext context) {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
-    final defaultAddress = controllerState?.defaultAddress;
 
     ref.listen(homeScreenControllerProvider, (prev, next) {
       final prevAvailable = prev?.valueOrNull?.onlyAvailable;
@@ -441,10 +431,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           children: [
             Column(
               children: [
-                HomeAppBarContent(
-                  defaultAddress: defaultAddress,
-                  serviceAddresses: controllerState?.serviceAddresses ?? [],
-                ),
                 HomeFilterBar(
                   onlyAvailable: controllerState?.onlyAvailable ?? false,
                   onToggleAvailable: () => ref
