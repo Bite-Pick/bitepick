@@ -11,7 +11,6 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
-import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
@@ -421,7 +420,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   @override
   Widget build(BuildContext context) {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
-    final defaultAddress = controllerState?.defaultAddress;
 
     ref.listen(homeScreenControllerProvider, (prev, next) {
       final prevAvailable = prev?.valueOrNull?.onlyAvailable;
@@ -441,10 +439,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           children: [
             Column(
               children: [
-                HomeAppBarContent(
-                  defaultAddress: defaultAddress,
-                  serviceAddresses: controllerState?.serviceAddresses ?? [],
-                ),
                 HomeFilterBar(
                   onlyAvailable: controllerState?.onlyAvailable ?? false,
                   onToggleAvailable: () => ref
