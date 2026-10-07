@@ -100,7 +100,6 @@ class HomeFilterBar extends StatelessWidget {
               GestureDetector(
                 onTap: onSortTap,
                 child: SizedBox(
-                  width: 54,
                   height: 20,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
