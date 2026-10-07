@@ -36,8 +36,29 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.down({double? size, Color? color}) =>
       _makeIcon('down.svg', size, color);
 
-  factory BaseSvgIcon.chevronDown({double? size, Color? color}) =>
-      _makeIcon('chevron-down.svg', size, color);
+  factory BaseSvgIcon.chevronDownBlack({double? size, Color? color}) =>
+      _makeIcon('down_black.svg', size, color);
+
+  factory BaseSvgIcon.chevronDownGray({double? size, Color? color}) =>
+      _makeIcon('down_gray.svg', size, color);
+  
+  factory BaseSvgIcon.chevronRightGray({double? size, Color? color}) =>
+      _makeIcon('right_gray.svg', size, color);
+
+  factory BaseSvgIcon.upNew({double? size, Color? color}) =>
+      _makeIcon('up_new.svg', size, color);
+
+  factory BaseSvgIcon.review({double? size, Color? color}) =>
+      _makeIcon('review.svg', size, color);
+  
+  factory BaseSvgIcon.storeInfo({double? size, Color? color}) =>
+      _makeIcon('store_info.svg', size, color);
+
+  factory BaseSvgIcon.satisfiedService({double? size, Color? color}) =>
+      _makeIcon('satisfied_service.svg', size, color);
+
+  factory BaseSvgIcon.unsatisfiedService({double? size, Color? color}) =>
+      _makeIcon('unsatisfied_service.svg', size, color);
 
   factory BaseSvgIcon.download({double? size, Color? color}) =>
       _makeIcon('download.svg', size, color);
