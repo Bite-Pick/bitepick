@@ -4,6 +4,7 @@ import 'package:magambell/src/core/network/api_client.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:magambell/src/features/review/domain/entities/store_review.dart';
 
 part 'review_repository.g.dart';
 
@@ -109,6 +110,47 @@ class ReviewRepository {
         .toList();
   }
 
+  /// 6. 사장님 매장 리뷰 목록
+  Future<StoreReviewListResponse?> getStoreReviews({
+    String filter = 'ALL',
+    int? cursor,
+    int size = 100,
+  }) async {
+    final res = await _dio.get(
+      '/v1/review/store',
+      queryParameters: {
+        'filter': filter, 
+        if (cursor != null) 'cursor': cursor, 
+        'size': size
+      },
+    );
+    if (res.data['status'] != 'OK') {
+      throw Exception(res.data['message'] as String? ?? '리뷰 목록을 불러오지 못했습니다.');
+    }
+    final data = res.data['data'] as Map<String, dynamic>?;
+    if (data == null) return null;
+    return StoreReviewListResponse.fromJson(data);
+  }
+
+  /// 7. 리뷰 답글 등록
+  Future<bool> addReply(String reviewId, String content) async {
+    final res = await _dio.post(
+      '/v1/review/$reviewId/reply',
+      data: {'content': content},
+    );
+    return res.data['status'] == 'OK';
+  }
+
+  /// 8. 리뷰 답글 수정
+  Future<bool> updateReply(String reviewId, String content) async {
+    final res = await _dio.patch(
+      '/v1/review/$reviewId/reply',
+      data: {'content': content},
+    );
+    return res.data['status'] == 'OK';
+  }
+
+
   // /// 3. 리뷰 평점별 조회
   // Future<Map<String, dynamic>> getRatingStats(String goodsId) async {
   //   final res = await _dio.get(
@@ -148,4 +190,17 @@ Future<List<Review>> myReviews(Ref ref, {int page = 1, int size = 10}) async {
   return ref
       .read(reviewRepositoryProvider)
       .getMyReviews(page: page, size: size);
+}
+
+
+@riverpod
+Future<StoreReviewListResponse?> ownerStoreReviews(
+  Ref ref, {
+    String filter = 'ALL',
+    int? cursor,
+    int size = 100,
+}) async {
+  return ref
+      .read(reviewRepositoryProvider)
+      .getStoreReviews(filter: filter, cursor: cursor, size: size);
 }

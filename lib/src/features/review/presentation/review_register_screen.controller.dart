@@ -127,7 +127,7 @@ class ReviewRegisterScreenController extends _$ReviewRegisterScreenController {
 
         talker.info('리뷰 이미지 업로드 완료');
       }
-
+      ref.invalidate(myReviewsProvider());
       state = state.copyWith(isSubmitting: false);
       return true;
     } catch (e) {

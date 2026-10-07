@@ -349,5 +349,172 @@ class _MyReviewsProviderElement
   int get size => (origin as MyReviewsProvider).size;
 }
 
+String _$ownerStoreReviewsHash() => r'4df6eeb94d67a8be03699a836d902fee10f80543';
+
+/// See also [ownerStoreReviews].
+@ProviderFor(ownerStoreReviews)
+const ownerStoreReviewsProvider = OwnerStoreReviewsFamily();
+
+/// See also [ownerStoreReviews].
+class OwnerStoreReviewsFamily
+    extends Family<AsyncValue<StoreReviewListResponse?>> {
+  /// See also [ownerStoreReviews].
+  const OwnerStoreReviewsFamily();
+
+  /// See also [ownerStoreReviews].
+  OwnerStoreReviewsProvider call({
+    String filter = 'ALL',
+    int? cursor,
+    int size = 100,
+  }) {
+    return OwnerStoreReviewsProvider(
+      filter: filter,
+      cursor: cursor,
+      size: size,
+    );
+  }
+
+  @override
+  OwnerStoreReviewsProvider getProviderOverride(
+    covariant OwnerStoreReviewsProvider provider,
+  ) {
+    return call(
+      filter: provider.filter,
+      cursor: provider.cursor,
+      size: provider.size,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'ownerStoreReviewsProvider';
+}
+
+/// See also [ownerStoreReviews].
+class OwnerStoreReviewsProvider
+    extends AutoDisposeFutureProvider<StoreReviewListResponse?> {
+  /// See also [ownerStoreReviews].
+  OwnerStoreReviewsProvider({
+    String filter = 'ALL',
+    int? cursor,
+    int size = 100,
+  }) : this._internal(
+         (ref) => ownerStoreReviews(
+           ref as OwnerStoreReviewsRef,
+           filter: filter,
+           cursor: cursor,
+           size: size,
+         ),
+         from: ownerStoreReviewsProvider,
+         name: r'ownerStoreReviewsProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$ownerStoreReviewsHash,
+         dependencies: OwnerStoreReviewsFamily._dependencies,
+         allTransitiveDependencies:
+             OwnerStoreReviewsFamily._allTransitiveDependencies,
+         filter: filter,
+         cursor: cursor,
+         size: size,
+       );
+
+  OwnerStoreReviewsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.filter,
+    required this.cursor,
+    required this.size,
+  }) : super.internal();
+
+  final String filter;
+  final int? cursor;
+  final int size;
+
+  @override
+  Override overrideWith(
+    FutureOr<StoreReviewListResponse?> Function(OwnerStoreReviewsRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: OwnerStoreReviewsProvider._internal(
+        (ref) => create(ref as OwnerStoreReviewsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        filter: filter,
+        cursor: cursor,
+        size: size,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<StoreReviewListResponse?> createElement() {
+    return _OwnerStoreReviewsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is OwnerStoreReviewsProvider &&
+        other.filter == filter &&
+        other.cursor == cursor &&
+        other.size == size;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, filter.hashCode);
+    hash = _SystemHash.combine(hash, cursor.hashCode);
+    hash = _SystemHash.combine(hash, size.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin OwnerStoreReviewsRef
+    on AutoDisposeFutureProviderRef<StoreReviewListResponse?> {
+  /// The parameter `filter` of this provider.
+  String get filter;
+
+  /// The parameter `cursor` of this provider.
+  int? get cursor;
+
+  /// The parameter `size` of this provider.
+  int get size;
+}
+
+class _OwnerStoreReviewsProviderElement
+    extends AutoDisposeFutureProviderElement<StoreReviewListResponse?>
+    with OwnerStoreReviewsRef {
+  _OwnerStoreReviewsProviderElement(super.provider);
+
+  @override
+  String get filter => (origin as OwnerStoreReviewsProvider).filter;
+  @override
+  int? get cursor => (origin as OwnerStoreReviewsProvider).cursor;
+  @override
+  int get size => (origin as OwnerStoreReviewsProvider).size;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

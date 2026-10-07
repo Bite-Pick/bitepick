@@ -1,21 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/datetime_extension.dart';
-import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
-import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
-import 'package:magambell/src/features/user/presentation/user_profile_item.dart';
+import 'package:magambell/src/features/review/presentation/review_card_view.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
-import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
-import 'package:magambell/src/widgets/mg_tag.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 enum ReviewItemButtonType { report, delete, none }
@@ -114,49 +108,30 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
   Widget build(BuildContext context) {
     final user = ref.read(userStateProvider).asData!.value;
     final isLogin = user != null;
-    return Container(
-      padding: const EdgeInsets.all(MgSizes.md),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: MgColorScheme.gray8, width: 1),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(widget.review.nickName).sm(),
-          Gaps.h(6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              MgTag(child: Text(widget.review.ratingLabel)),
-              Gaps.w8,
-              Text(widget.review.createdAt.toDate()).textGray().xs(),
-              if (isLogin) ...[Spacer(), _buildActionButton()],
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: MgSizes.md),
+          child: ReviewCardView(
+            nickName: widget.review.nickName,
+            createdAt: widget.review.createdAt,
+            description: widget.review.description,
+            imageUrls: widget.review.imageUrls,
+            replyContent: widget.review.reply?.content,
+            replyCreatedAt: widget.review.reply?.createdAt,
+            trailing: isLogin ? _buildActionButton() : null,
           ),
-          Text(widget.review.description).sm().margin(vertical: MgSizes.sm),
-          if (widget.review.imageUrls.isNotEmpty)
-            SizedBox(
-              height: 120.w,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.review.imageUrls.length,
-                separatorBuilder: (_, __) => Gaps.w8,
-                itemBuilder: (_, index) => GestureDetector(
-                  onTap: () => _showImageViewer(index),
-                  child: BaseNetworkImage(
-                    imageUrl: widget.review.imageUrls[index],
-                    height: 120.w,
-                    width: 120.w,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+        ),
+        Container(
+          height: 1,
+          color: MgColorScheme.gray8,
+          margin: const EdgeInsets.symmetric(horizontal: MgSizes.md),
+        ),
+      ],
     );
   }
+
 
   Widget _buildActionButton() {
     return switch (widget.buttonType) {

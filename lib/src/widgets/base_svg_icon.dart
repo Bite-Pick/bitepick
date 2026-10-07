@@ -60,6 +60,30 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.unsatisfiedService({double? size, Color? color}) =>
       _makeIcon('unsatisfied_service.svg', size, color);
 
+  factory BaseSvgIcon.timeNew({double? size, Color? color}) =>
+      _makeIcon('time_new.svg', size, color);
+    
+  factory BaseSvgIcon.storeDescription({double? size, Color? color}) =>
+      _makeIcon('store_description.svg', size, color);
+  
+  factory BaseSvgIcon.caretDownMd({double? size, Color? color}) => 
+      _makeIcon('caret_down_md.svg', size, color);
+
+  factory BaseSvgIcon.caretUpMd({double? size, Color? color}) =>
+      _makeIcon('caret_up_md.svg', size, color);
+
+  factory BaseSvgIcon.edit({double? size, Color? color}) =>
+      _makeIcon('edit.svg', size, color);
+
+  factory BaseSvgIcon.maps({double? size, Color? color}) => 
+      _makeIcon('maps.svg', size, color);
+
+  factory BaseSvgIcon.parking({double? size, Color? color}) => 
+      _makeIcon('parking.svg', size, color);
+
+  factory BaseSvgIcon.sendButton({double? size, Color? color}) => 
+      _makeIcon('send-button.svg', size, color);
+
   factory BaseSvgIcon.download({double? size, Color? color}) =>
       _makeIcon('download.svg', size, color);
 
