@@ -95,34 +95,92 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                   ),
                 ],
               ).margin(right: MgSizes.xxl),
-              bottom: TabBar(
-                dividerColor: Colors.transparent,
-                controller: _tabController,
-                labelColor: MgColorScheme.gray1,
-                unselectedLabelColor: MgColorScheme.gray5,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicator: UnderlineTabIndicator(
-                  borderSide: BorderSide(color: MgColorScheme.gray1, width: 2),
-                ),
-                labelStyle: context.textTheme.titleLarge,
-                unselectedLabelStyle: context.textTheme.bodyLarge,
-                tabs: [
-                  Tab(text: '가게'),
-                  Tab(text: '주문'),
-                ],
-              ),
             ),
-            body: Stack(
+            body: Column(
               children: [
-                TabBarView(
-                  controller: _tabController,
-                  children: [OwnerGoodsView(), OwnerOrderListView()],
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: MgSizes.md),
+                  decoration: const BoxDecoration(
+                    color: NewColorScheme.gray14,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: NewColorScheme.gray11,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
+                  child: TabBar(
+                    controller: _tabController,
+                    labelPadding: EdgeInsets.zero,
+                    labelColor: NewColorScheme.gray1,
+                    unselectedLabelColor: NewColorScheme.gray5,
+                    dividerColor: Colors.transparent,
+                    splashFactory: NoSplash.splashFactory,
+                    overlayColor: const WidgetStatePropertyAll(
+                      Colors.transparent,
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: UnderlineTabIndicator(
+                      borderSide: BorderSide(
+                        color: const Color(0xFF111827),
+                        width: 2,
+                      ),
+                    ),
+                    labelStyle: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    unselectedLabelStyle: context.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                    tabs: [
+                      Tab(height: MgSizes.size48, child: _buildTabLabel('가게')),
+                      Tab(height: MgSizes.size48, child: _buildTabLabel('주문')),
+                    ],
+                  ),
                 ),
-                HomeUpdateBanner(),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      TabBarView(
+                        controller: _tabController,
+                        children: [
+                          OwnerGoodsView(
+                            onStoreOpenTap: () {
+                              if (store == null) return;
+                              _showQuantityConfirmDialog(
+                                store.goodsList[0].goodsId ?? "",
+                                store.goodsList[0],
+                                store.goodsImageList,
+                              );
+                            },
+                          ),
+                          OwnerOrderListView(),
+                        ],
+                      ),
+                      HomeUpdateBanner(),
+                    ],
+                  ),
+                ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildTabLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: MgSizes.xss, bottom: MgSizes.sm),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: MgSizes.sm,
+          vertical: MgSizes.xss,
+        ),
+        decoration: BoxDecoration(
+          color: NewColorScheme.gray14,
+          borderRadius: BorderRadius.circular(MgRadius.sm),
+        ),
+        child: Text(text),
       ),
     );
   }
@@ -138,7 +196,8 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
             _tabController.animateTo(0);
           } else {
             final isOpen =
-                ref.read(ownerStoreProvider).value?.goodsList[0].saleStatus == "ON";
+                ref.read(ownerStoreProvider).value?.goodsList[0].saleStatus ==
+                "ON";
             _tabController.animateTo(isOpen ? 1 : 0);
           }
         },
@@ -196,7 +255,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
       child: Row(
         children: [
           Text(
-            "영업중",
+            saleStatus ? "영업중" : "영업전",
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w600,
               color: NewColorScheme.gray4,
@@ -211,14 +270,17 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
             padding: const EdgeInsets.all(MgSizes.size4),
             decoration: BoxDecoration(
               color: saleStatus
-                  ? MgColorScheme.systemInfo // 활성화(ON) 시 트랙 색상
-                  : MgColorScheme.gray5, // 비활성화(OFF) 시 트랙 색상
+                  ? MgColorScheme
+                        .systemInfo // 활성화(ON) 시 트랙 색상
+                  : NewColorScheme.gray11, // 비활성화(OFF) 시 트랙 색상
               borderRadius: BorderRadius.circular(MgRadius.full),
             ),
             child: AnimatedAlign(
               duration: _switchAnimationDuration,
               curve: Curves.easeInOut,
-              alignment: saleStatus ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: saleStatus
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
               child: Container(
                 width: MgSizes.size20,
                 height: MgSizes.size20,

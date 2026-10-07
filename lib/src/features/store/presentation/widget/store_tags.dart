@@ -20,27 +20,34 @@ class StoreTags extends StatelessWidget {
     super.key,
     required this.quantity,
     required this.saleStatus,
+    this.showSaleStatus = true,
+    this.compact = false,
   });
   final int quantity;
   final String saleStatus;
+  final bool showSaleStatus;
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> tags = [];
     // TODO: saleStatus enum으로 변경및 조건문 수정
-    if (saleStatus == "ON") {
-      tags.add(
-        MgTag(child: Text("예약 가능", style: _tagTextStyle)).copyWith(
-          backgroundColor: NewColorScheme.systemNeutral,
-          color: NewColorScheme.systemAlert,
-        ),
-      );
-    } else {
-      tags.add(
-        MgTag(child: Text("예약 마감", style: _tagTextStyle)).copyWith(
-          backgroundColor: NewColorScheme.gray12,
-          color: NewColorScheme.gray6,
-        ),
-      );
+    if (showSaleStatus) {
+      if (saleStatus == "ON") {
+        tags.add(
+          MgTag(child: Text("예약 가능", style: _tagTextStyle)).copyWith(
+            backgroundColor: NewColorScheme.systemNeutral,
+            color: NewColorScheme.systemAlert,
+          ),
+        );
+      } else {
+        tags.add(
+          MgTag(child: Text("예약 마감", style: _tagTextStyle)).copyWith(
+            backgroundColor: NewColorScheme.gray12,
+            color: NewColorScheme.gray6,
+          ),
+        );
+      }
     }
 
     if (quantity > 0) {
@@ -49,6 +56,8 @@ class StoreTags extends StatelessWidget {
             ? MgTag(child: Text('재고있음')).gray()
             : MgTag(
                 child: Text('${quantity.toInt()}개 남음', style: _tagTextStyle),
+                height: compact ? 22 : 24,
+                paddingWidth: compact ? MgSizes.size6 : null,
               ).copyWith(
                 backgroundColor: NewColorScheme.systemAlert,
                 color: NewColorScheme.gray14,
@@ -60,6 +69,6 @@ class StoreTags extends StatelessWidget {
 
     return Row(
       children: tags.joinWithWidget(Gaps.w4),
-    ).margin(bottom: MgSizes.sm);
+    ).margin(bottom: compact ? 0 : MgSizes.sm);
   }
 }

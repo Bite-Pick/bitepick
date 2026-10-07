@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
 
 class BaseMapView extends StatefulWidget {
   const BaseMapView({
@@ -18,6 +19,11 @@ class BaseMapView extends StatefulWidget {
 }
 
 class _BaseMapViewState extends State<BaseMapView> {
+  static const _pinHeight = 43.0;
+  static const _labelHeight = 12.0;
+  static const _markerWidth = 80.0;
+  static const _markerHeight = _pinHeight + _labelHeight; 
+
   late final NCameraPosition _initialPosition;
 
   @override
@@ -32,12 +38,25 @@ class _BaseMapViewState extends State<BaseMapView> {
   }
 
   Future<void> _onMapReady(NaverMapController controller) async {
-    final marker = NMarker(
-      id: "goal",
-      position: NLatLng(widget.latitude, widget.longitude),
-    );
-    await controller.addOverlay(marker);
-  }
+  final icon = await NOverlayImage.fromWidget(
+    context: context,
+    size: const Size(80, 65),
+    widget: StorePinMarker(
+      storeName: widget.buildingName,
+      isSelected: true,
+      isOpen: false,
+      showLabel: true,
+    ),
+  );
+  final marker = NMarker(
+    id: "goal",
+    position: NLatLng(widget.latitude, widget.longitude),
+    icon: icon,
+    anchor: const NPoint(0.5, 0.5), 
+  );
+  await controller.addOverlay(marker);
+}
+
 
   @override
   Widget build(BuildContext context) {

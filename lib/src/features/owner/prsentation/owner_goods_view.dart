@@ -4,25 +4,46 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/goods/presentation/goods_edit_screen.dart';
 import 'package:magambell/src/features/image/data/repositories/presigned_image_repository.dart';
 import 'package:magambell/src/features/image/domain/entities/local_image.dart';
 import 'package:magambell/src/features/image/utils/image_requester.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_empty_screen.dart';
+import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/store/domain/entities/store.dart';
-import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
+import 'package:magambell/src/features/review/presentation/owner_review_list_view.dart';
+import 'package:magambell/src/features/review/presentation/owner_reply_composer.dart';
+import 'package:magambell/src/features/notification/data/repositories/notification_repository.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
-class OwnerGoodsView extends ConsumerWidget {
-  const OwnerGoodsView({super.key, this.store});
+class OwnerGoodsView extends ConsumerStatefulWidget {
+  const OwnerGoodsView({super.key, this.store, this.onStoreOpenTap});
   final Store? store;
+  final VoidCallback? onStoreOpenTap;
 
+  @override
+  ConsumerState<OwnerGoodsView> createState() => _OwnerGoodsViewState();
+}
+
+class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
   static const int _maxImages = 5;
+  final _bottomBarKey = GlobalKey();
+  double _bottomBarHeight = 0;
+
+  void _measureBottomBar() {
+    final height = _bottomBarKey.currentContext?.size?.height;
+    if (height != null && height != _bottomBarHeight) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _bottomBarHeight = height);
+      });
+    }
+  }
 
   void _showPhotoEditBottomSheet(
     BuildContext context,
@@ -139,8 +160,7 @@ class OwnerGoodsView extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    // 타이틀 + 닫기 버튼
+                    const SizedBox(height: MgSizes.size20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -193,7 +213,7 @@ class OwnerGoodsView extends ConsumerWidget {
                                         size: 24,
                                       ),
                                     ),
-                                    const SizedBox(height: 1),
+                                    const SizedBox(height: MgSizes.size1),
                                     RichText(
                                       text: TextSpan(
                                         children: [
@@ -279,8 +299,8 @@ class OwnerGoodsView extends ConsumerWidget {
                                 ),
                               // X 버튼
                               Positioned(
-                                top: 2,
-                                right: 2 + 10,
+                                top: MgSizes.size2,
+                                right: MgSizes.size12,
                                 child: GestureDetector(
                                   onTap: () =>
                                       setState(() => images.removeAt(imageIndex)),
@@ -319,53 +339,167 @@ class OwnerGoodsView extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _measureBottomBar());
     final ownerStoreAsync = ref.watch(ownerStoreProvider);
+    final reviewsAsync = ref.watch(ownerStoreReviewsProvider());
+    final activeReplyId = ref.watch(activeReplyReviewIdProvider);
     return MgAsyncAnimatedSwitcher(
       asyncValue: ownerStoreAsync,
       onRetry: () => ref.invalidate(ownerStoreProvider),
       builder: (store) {
-        if (store == null) return OwnerGoodsEmptyScreen();
-        return Column(
+        if (store == null || store.goodsList.isEmpty) return OwnerGoodsEmptyScreen();
+        final saleStatus = store.goodsList[0].saleStatus == "ON";
+        final showBottomBar = activeReplyId != null || !saleStatus;
+        final subscriberCount = ref.watch(
+          storeSubscriberCountProvider(storeId: store.storeId),
+        ).value;
+        return Stack(
           children: [
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  try {
-                    ref.invalidate(ownerStoreProvider);
-                    await ref.read(ownerStoreProvider.future);
-                  } catch (_) {}
-                },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
+            RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(ownerStoreProvider);
+                await ref.read(ownerStoreProvider.future);
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    StoreInfoView(
+                      store.toStoreInfoData(),
+                      hasFavorite: false,
+                      onPhotoChangeTap: () =>
+                          _showPhotoEditBottomSheet(context, ref, store),
+                      onMenuEditTap: () async {
+                        await GoodsEditRoute(
+                          $extra: {
+                            "goods": store.goodsList[0],
+                            "goodsImageList": store.goodsImageList,
+                          },
+                        ).push(context);
+                      },
+                      reviewCount: reviewsAsync.value?.summary.totalCount ?? 0,
+                    ),
+                    OwnerReviewListView(),
+                    if (showBottomBar)
+                      SizedBox(height: _bottomBarHeight + 20),
+                  ],
+                ),
+              ),
+            ),
+            if (showBottomBar)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  key: _bottomBarKey,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      StoreInfoView(
-                        store.toStoreInfoData(),
-                        hasFavorite: false,
-                        onPhotoChangeTap: () =>
-                            _showPhotoEditBottomSheet(context, ref, store),
+                    if (activeReplyId == null && !saleStatus) ...[
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: MgSizes.size10,
+                            vertical: MgSizes.size6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: NewColorScheme.gray2,
+                            borderRadius: BorderRadius.circular(MgSizes.size4),
+                          ),
+                          child: Text(
+                            '가게 오픈시 오픈 알림을 신청한\n고객에게 알림이 가요!',
+                            textAlign: TextAlign.center,
+                          )
+                              .semibold()
+                              .fontSize(12)
+                              .height(1.5)
+                              .letterSpacing(-0.3)
+                              .textColor(NewColorScheme.gray14),
+                        ),
                       ),
-                      StoreBiteBagView(store.goodsImageList ?? []),
+                      Center(
+                        child: CustomPaint(
+                          size: const Size(20, 6),
+                          painter: _TooltipArrowPainter(),
+                        ),
+                      ),
+                      Gaps.h8,
+                    ],
+                    activeReplyId != null
+                        ? const OwnerReplyComposer()
+                        : Container(
+                            width: double.infinity,
+                            decoration: const BoxDecoration(
+                              color: NewColorScheme.gray14,
+                              border: Border(
+                                top: BorderSide(color: NewColorScheme.gray12, width: 1),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                if (!saleStatus && subscriberCount != null) ...[
+                                  Gaps.h(15),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(text: '${subscriberCount + 5}명') // 임시로 +5명으로 표시
+                                            .semibold()
+                                            .fontSize(12)
+                                            .height(1.5)
+                                            .letterSpacing(-0.3)
+                                            .textColor(MgColorScheme.systemInfo),
+                                        TextSpan(text: '이 매장 오픈을 기다리고 있어요!')
+                                            .medium()
+                                            .fontSize(12)
+                                            .height(1.5)
+                                            .letterSpacing(-0.3)
+                                            .textColor(NewColorScheme.gray5),
+                                        ],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                                Gaps.h16,
+                                MgButton(
+                                  onPressed: saleStatus ? null : widget.onStoreOpenTap,
+                                  height: MgSizes.size48,
+                                  borderRadius: 10,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                    vertical: MgSizes.size12,
+                                  ),
+                                  content: Text("가게 오픈하기"),
+                                ).primary().margin(horizontal: MgSizes.md),
+                              ],
+                            ),
+                          ),
                     ],
                   ),
                 ),
               ),
-            ),
-            MgButton(
-              onPressed: () async {
-                await GoodsEditRoute(
-                  $extra: {
-                    "goods": store.goodsList[0],
-                    "goodsImageList": store.goodsImageList,
-                  },
-                ).push(context);
-              },
-              content: Text("상품 관리하기"),
-            ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md),
           ],
         ).padding(bottom: BaseScaffold.getBottomMargin(context));
       },
     );
   }
+}
+
+class _TooltipArrowPainter extends CustomPainter {
+  const _TooltipArrowPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = NewColorScheme.gray2;
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width / 2, size.height)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
