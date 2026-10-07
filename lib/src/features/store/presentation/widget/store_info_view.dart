@@ -441,17 +441,6 @@ class StoreInfoView extends ConsumerWidget {
             ),
           ),
         ),
-        if (reviewCount == 0) 
-          Center(
-            child: Column(
-              children: [
-                Gaps.h24,
-                Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160),
-                Gaps.h12,
-                Text('아직 등록된 리뷰가 없어요').bold(),
-              ],
-            ),
-          ),
       ],
     ).padding(top: MgSizes.size6);
   }
