@@ -338,6 +338,7 @@ class StoreInfoView extends ConsumerWidget {
     final detailAsync = ref.watch(storeGoodsDetailProvider(storeInfo.storeId));
     final latitude = storeInfo.latitude ?? detailAsync.value?.latitude;
     final longitude = storeInfo.longitude ?? detailAsync.value?.longitude;
+    final parkingDescription = storeInfo.parkingDescription;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,23 +379,24 @@ class StoreInfoView extends ConsumerWidget {
                 ),
               ],
             ),
-            Row(
-              children: [
-                BaseSvgIcon.parking(size: MgSizes.size16),
-                Gaps.w8,
-                Expanded(
-                  child: Text(
-                    storeInfo.parkingDescription ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: NewColorScheme.gray3,
+            if (parkingDescription != null && parkingDescription.isNotEmpty)
+              Row(
+                children: [
+                  BaseSvgIcon.parking(size: MgSizes.size16),
+                  Gaps.w8,
+                  Expanded(
+                    child: Text(
+                      parkingDescription,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: NewColorScheme.gray3,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ).padding(horizontal: MgSizes.md),
         if (latitude != null && longitude != null)
