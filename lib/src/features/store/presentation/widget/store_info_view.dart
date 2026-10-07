@@ -480,34 +480,58 @@ class _ExpandableDescriptionRowState
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _expanded = !_expanded),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BaseSvgIcon.storeDescription(size: MgSizes.size16),
-          Gaps.w8,
-          Expanded(
-            child: Text(
-              widget.description,
-              maxLines: _expanded ? null : 1,
-              overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              textHeightBehavior: const TextHeightBehavior(
-                applyHeightToFirstAscent: false,
+    final textStyle = context.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+      color: NewColorScheme.gray3,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const leadingWidth = MgSizes.size16 + MgSizes.xss;
+        final availableTextWidth = constraints.maxWidth > leadingWidth
+            ? constraints.maxWidth - leadingWidth
+            : 0.0;
+        final textPainter = TextPainter(
+          text: TextSpan(text: widget.description, style: textStyle),
+          maxLines: 1,
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout(maxWidth: availableTextWidth);
+        final canExpand = textPainter.didExceedMaxLines;
+
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: canExpand
+              ? () => setState(() => _expanded = !_expanded)
+              : null,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BaseSvgIcon.storeDescription(size: MgSizes.size16),
+              Gaps.w8,
+              Expanded(
+                child: Text(
+                  widget.description,
+                  maxLines: canExpand && !_expanded ? 1 : null,
+                  overflow: canExpand && !_expanded
+                      ? TextOverflow.ellipsis
+                      : TextOverflow.visible,
+                  textHeightBehavior: const TextHeightBehavior(
+                    applyHeightToFirstAscent: false,
+                  ),
+                  style: textStyle,
+                ),
               ),
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: NewColorScheme.gray3,
-              ),
-            ),
+              if (canExpand) ...[
+                Gaps.w8,
+                _expanded
+                    ? BaseSvgIcon.caretUpMd(size: MgSizes.size20)
+                    : BaseSvgIcon.caretDownMd(size: MgSizes.size20),
+              ],
+            ],
           ),
-          Gaps.w8,
-          _expanded
-              ? BaseSvgIcon.caretUpMd(size: MgSizes.size20)
-              : BaseSvgIcon.caretDownMd(size: MgSizes.size20),
-        ],
-      ),
+        );
+      },
     );
   }
 }
