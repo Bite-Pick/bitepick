@@ -350,6 +350,7 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
       builder: (store) {
         if (store == null || store.goodsList.isEmpty) return OwnerGoodsEmptyScreen();
         final saleStatus = store.goodsList[0].saleStatus == "ON";
+        final showBottomBar = activeReplyId != null || !saleStatus;
         final subscriberCount = ref.watch(
           storeSubscriberCountProvider(storeId: store.storeId),
         ).value;
@@ -380,20 +381,22 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
                       reviewCount: reviewsAsync.value?.summary.totalCount ?? 0,
                     ),
                     OwnerReviewListView(),
-                    SizedBox(height: _bottomBarHeight + 20),
+                    if (showBottomBar)
+                      SizedBox(height: _bottomBarHeight + 20),
                   ],
                 ),
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                key: _bottomBarKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+            if (showBottomBar)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  key: _bottomBarKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                     if (activeReplyId == null && !saleStatus) ...[
                       Center(
                         child: Container(
@@ -472,10 +475,10 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
                               ],
                             ),
                           ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ).padding(bottom: BaseScaffold.getBottomMargin(context));
       },
