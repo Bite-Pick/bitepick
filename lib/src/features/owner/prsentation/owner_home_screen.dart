@@ -7,13 +7,12 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
-import 'package:magambell/src/core/utils/inquiry_button.dart';
-import 'package:magambell/src/features/auth/utils/auth_utils.dart';
+import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/features/goods/data/repositories/goods_repository.dart';
 import 'package:magambell/src/features/goods/domain/entities/goods.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_goods_view.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.dart';
-import 'package:magambell/src/features/owner/prsentation/widgets/owner_more_button.dart';
+import 'package:magambell/src/features/owner/prsentation/owner_mypage_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
@@ -47,6 +46,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   late final TabController _tabController;
   bool _isTogglingStatus = false;
   bool? _optimisticSaleStatus;
+  bool _initialTabset = false;
 
   @override
   void initState() {
@@ -72,6 +72,11 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
         asyncValue: storeAsync,
         onRetry: () => ref.invalidate(ownerStoreProvider),
         builder: (store) {
+          if (!_initialTabset && store != null) {
+            _initialTabset = true;
+            final isOpen = store?.goodsList[0].saleStatus == "ON";
+            _tabController.index = isOpen ? 1 : 0;
+          }
           return BaseScaffold(
             canSwipeBack: false,
             hasBottomMargin: false,
@@ -98,7 +103,10 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                   decoration: const BoxDecoration(
                     color: NewColorScheme.gray14,
                     border: Border(
-                      bottom: BorderSide(color: NewColorScheme.gray11, width: 0.5),
+                      bottom: BorderSide(
+                        color: NewColorScheme.gray11,
+                        width: 0.5,
+                      ),
                     ),
                   ),
                   child: TabBar(
@@ -108,13 +116,21 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                     unselectedLabelColor: NewColorScheme.gray5,
                     dividerColor: Colors.transparent,
                     splashFactory: NoSplash.splashFactory,
-                    overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                    overlayColor: const WidgetStatePropertyAll(
+                      Colors.transparent,
+                    ),
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicator: UnderlineTabIndicator(
-                      borderSide: BorderSide(color: const Color(0xFF111827), width: 2),
+                      borderSide: BorderSide(
+                        color: const Color(0xFF111827),
+                        width: 2,
+                      ),
                     ),
-                    labelStyle: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-                    unselectedLabelStyle: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                    labelStyle: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    unselectedLabelStyle: context.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w600),
                     tabs: [
                       Tab(height: MgSizes.size48, child: _buildTabLabel('가게')),
                       Tab(height: MgSizes.size48, child: _buildTabLabel('주문')),
@@ -131,13 +147,13 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                             onStoreOpenTap: () {
                               if (store == null) return;
                               _showQuantityConfirmDialog(
-                                store.goodsList[0].goodsId ?? "", 
-                                store.goodsList[0], 
+                                store.goodsList[0].goodsId ?? "",
+                                store.goodsList[0],
                                 store.goodsImageList,
                               );
                             },
-                          ), 
-                          OwnerOrderListView()
+                          ),
+                          OwnerOrderListView(),
                         ],
                       ),
                       HomeUpdateBanner(),
@@ -145,7 +161,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
                   ),
                 ),
               ],
-            ),  
+            ),
           );
         },
       ),
@@ -172,7 +188,19 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
   Widget _buildStoreNameLabel(String? storeName) {
     return Align(
       alignment: Alignment.topLeft,
-      child: OwnerMoreButton(
+      child: GestureDetector(
+        onTap: () async {
+          final result = await OwnerMypageRoute().push<String>(context);
+          if (!mounted) return;
+          if (result == 'review') {
+            _tabController.animateTo(0);
+          } else {
+            final isOpen =
+                ref.read(ownerStoreProvider).value?.goodsList[0].saleStatus ==
+                "ON";
+            _tabController.animateTo(isOpen ? 1 : 0);
+          }
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -185,7 +213,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
               ).max(1).ellipsis(),
             ),
             Gaps.w2,
-            BaseSvgIcon.chevronDown(
+            BaseSvgIcon.chevronDownBlack(
               size: MgSizes.size16,
               color: NewColorScheme.gray1,
             ),
@@ -242,14 +270,17 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen>
             padding: const EdgeInsets.all(MgSizes.size4),
             decoration: BoxDecoration(
               color: saleStatus
-                  ? MgColorScheme.systemInfo // 활성화(ON) 시 트랙 색상
+                  ? MgColorScheme
+                        .systemInfo // 활성화(ON) 시 트랙 색상
                   : NewColorScheme.gray11, // 비활성화(OFF) 시 트랙 색상
               borderRadius: BorderRadius.circular(MgRadius.full),
             ),
             child: AnimatedAlign(
               duration: _switchAnimationDuration,
               curve: Curves.easeInOut,
-              alignment: saleStatus ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: saleStatus
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
               child: Container(
                 width: MgSizes.size20,
                 height: MgSizes.size20,

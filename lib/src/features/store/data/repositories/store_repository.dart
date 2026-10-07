@@ -130,6 +130,18 @@ class StoreRepository {
         .toList();
   }
 
+  /// 전국을 덮는 범위로 지도 API를 호출해 모든 매장을 가져온다.
+  /// (홈 리스트 API는 서버에서 반경 제한이 있어 임시로 사용)
+  Future<List<StoreListDTO>> getAllStores({bool onlyAvailable = false}) {
+    return getStoreMapList(
+      swLatitude: 32,
+      swLongitude: 124,
+      neLatitude: 39,
+      neLongitude: 132,
+      onlyAvailable: onlyAvailable,
+    );
+  }
+
   Future<Store?> getOwnerStore() async {
     final res = await _dio.get('/v1/store/owner');
 
