@@ -364,7 +364,7 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
           : null,
         ),
       padding: isExpanded
-          ? const EdgeInsets.only(top: MgSizes.md, right: MgSizes.md, bottom: MgSizes.xxl, left: MgSizes.md)
+          ? const EdgeInsets.only(top: MgSizes.md, right: MgSizes.md, bottom: MgSizes.md, left: MgSizes.md)
           : EdgeInsets.symmetric(horizontal: MgSizes.md, vertical: 15),
       child: isExpanded
           ? Column(
@@ -389,34 +389,6 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
                     style: context.textTheme.labelMedium?.copyWith(fontSize: 13, letterSpacing: 13 * -0.025, color: NewColorScheme.gray4,),
                   ),
                 ),
-                Gaps.h8,
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildFeedbackChip(
-                        context: context,
-                        icon: BaseSvgIcon.satisfiedService(size: 14),
-                        text: '이해하기 쉬워요',
-                        width: 114,
-                        onTap: () {
-                          // FAQ 피드백 저장 API 연동 필요
-                        }
-                      ),
-                      Gaps.w8,
-                      _buildFeedbackChip(
-                        context: context,
-                        icon: BaseSvgIcon.unsatisfiedService(size: 14),
-                        text: '추가 설명이 필요해요',
-                        width: 137,
-                        onTap: () {
-                          // FAQ 피드백 저장 API 연동 필요
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ],
             )
           : Row(
@@ -434,39 +406,4 @@ class _OwnerMypageScreenState extends ConsumerState<OwnerMypageScreen> {
       ),
     );
   }
-}
-
-Widget _buildFeedbackChip({
-  required BuildContext context,
-  required Widget icon,
-  required String text,
-  required double width,
-  required VoidCallback onTap,
-}) {
-  return GestureDetector(
-    onTap: onTap,
-    behavior: HitTestBehavior.opaque,
-    child: Container(
-      width: width,
-      height: MgSizes.xxxl,
-      decoration: BoxDecoration(
-        color: NewColorScheme.gray14,
-        borderRadius: BorderRadius.circular(MgRadius.full),
-        border: Border.all(width: 1, color: NewColorScheme.gray9),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            icon,
-            Gaps.w4,
-            Text(
-              text,
-              style: context.textTheme.bodySmall?.copyWith(color: NewColorScheme.gray4),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }
