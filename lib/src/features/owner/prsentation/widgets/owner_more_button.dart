@@ -5,9 +5,11 @@ import 'package:magambell/src/features/auth/utils/auth_utils.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 
 class OwnerMoreButton extends ConsumerWidget {
-  const OwnerMoreButton({super.key, this.showWithdraw = true});
+  const OwnerMoreButton({super.key, this.showWithdraw = true, this.child});
 
   final bool showWithdraw;
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +19,7 @@ class OwnerMoreButton extends ConsumerWidget {
       if (showWithdraw) ('withdraw', '회원탈퇴'),
     ];
     return PopupMenuButton<String>(
-      icon: BaseSvgIcon.moreVertical(),
+      icon: child == null ? BaseSvgIcon.moreVertical() : null,
       onSelected: (value) {
         return switch (value) {
           'logout' => logout(ref, context), // TODO: dialog로 묻기
@@ -37,6 +39,7 @@ class OwnerMoreButton extends ConsumerWidget {
           if (value != menus.last.$1) const PopupMenuDivider(),
         ],
       ],
+      child: child,
     );
   }
 }

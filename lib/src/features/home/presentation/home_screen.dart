@@ -1,24 +1,14 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
-import 'package:magambell/src/core/router/app_router.dart';
-import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/core/utils/kakao_share_util.dart';
-import 'package:magambell/src/features/address/domain/entities/address.dart';
-import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
-import 'package:magambell/src/features/home/presentation/widgets/home_unsupported_area_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
-import 'package:magambell/src/features/user/presentation/widgets/login_user_alert_dialog.dart';
-import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
@@ -26,7 +16,6 @@ import 'package:magambell/src/features/home/presentation/widgets/home_goods_item
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
-import 'package:magambell/src/widgets/mg_button.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -86,19 +75,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               // TODO: BaseCustomScrollView refact
               child: RefreshIndicator(
                 onRefresh: () async {
-                  ref.refresh(homeScreenControllerProvider);
+                  try {
+                    ref.invalidate(homeScreenControllerProvider);
+                    await ref.read(homeScreenControllerProvider.future);
+                  } catch (_) {
+                    // 에러 상태는 MgAsyncAnimatedSwitcher가 표시한다.
+                  }
                 },
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: [
-                    SliverPersistentHeader(
-                      pinned: true,
-                      floating: true,
-                      delegate: _HomeAppBar(
-                        controllerState.serviceAddresses,
-                        controllerState.defaultAddress,
-                      ),
-                    ),
                     SliverList(
                       delegate: SliverChildListDelegate([
                         Column(
@@ -126,11 +112,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: controllerState.storeGoodsList.length,
+                              itemCount: controllerState.visibleStores.length,
                               separatorBuilder: (context, index) => Gaps.h4,
                               itemBuilder: (context, index) {
                                 final item =
-                                    controllerState.storeGoodsList[index];
+                                    controllerState.visibleStores[index];
                                 return HomeGoodsItem(
                                       goods: item.toHomeGoodsItem(),
                                     )
@@ -138,13 +124,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     .margin(horizontal: MgSizes.md);
                               },
                             ),
-                            if (controllerState.isLoadingMore)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
                             if (!controllerState.hasMore &&
                                 controllerState.storeGoodsList.isNotEmpty)
                               Padding(
@@ -172,7 +151,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheet(SortType currentSortType) {
     final List<String> sorts = SortType.values
-        .where((e) => e != SortType.distanceAsc)
+        .where((e) => e == SortType.distanceAsc || e == SortType.priceAsc)
         .map((e) => e.name)
         .toList();
     return MgBottomsheet(
@@ -221,6 +200,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 class _BusinessInfoSection extends StatelessWidget {
   const _BusinessInfoSection();
 
+  static const double _mapViewButtonClearance = 52;
+
   @override
   Widget build(BuildContext context) {
     const infoStyle = TextStyle(fontSize: 13, color: Color(0xFF888888));
@@ -247,7 +228,12 @@ class _BusinessInfoSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: const Color(0xFFF5F5F5),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      padding: const EdgeInsets.fromLTRB(
+        20,
+        24,
+        20,
+        24 + _mapViewButtonClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -270,198 +256,4 @@ class _BusinessInfoSection extends StatelessWidget {
       ),
     );
   }
-}
-
-class _HomeAppBar extends SliverPersistentHeaderDelegate {
-  _HomeAppBar(this.serviceAddresses, this.defaultAddress);
-
-  final Address? defaultAddress;
-  final List<Address> serviceAddresses;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return HomeAppBarContent(
-      defaultAddress: defaultAddress,
-      serviceAddresses: serviceAddresses,
-    );
-  }
-
-  @override
-  double get minExtent => kToolbarHeight;
-  @override
-  double get maxExtent => minExtent;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
-}
-
-class HomeAppBarContent extends ConsumerStatefulWidget {
-  const HomeAppBarContent({
-    super.key,
-    required this.defaultAddress,
-    required this.serviceAddresses,
-  });
-
-  final List<Address> serviceAddresses;
-  final Address? defaultAddress;
-
-  @override
-  ConsumerState<HomeAppBarContent> createState() => _HomeAppBarContentState();
-}
-
-class _HomeAppBarContentState extends ConsumerState<HomeAppBarContent> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // SvgPicture.asset(R.ASSETS_ICONS_SVG_HOME_LOGO_SVG, height: 30),
-            _buildAddress(widget.serviceAddresses),
-            // TODO: 런칭 이후 추가
-            //  _buildSearch(),
-          ],
-        )
-        .margin(vertical: MgSizes.md)
-        .margin(horizontal: MgSizes.md)
-        .colored(MgColorScheme.gray11);
-  }
-
-  String _shortAddressName(String fullName) {
-    final parts = fullName.split(' ');
-    final city = parts.firstWhere(
-      (p) => p.endsWith('시'),
-      orElse: () => parts.first,
-    );
-    return '$city ${parts.last}';
-  }
-
-  // TODO[tooltip]: 주소 변경시 tooltip 표시
-  Widget _buildAddress(List<Address> serviceAreas) {
-    final addressText = widget.defaultAddress != null
-        ? _shortAddressName(widget.defaultAddress!.name)
-        : '주소를 설정해주세요';
-    return GestureDetector(
-      onTap: () async => showAddressBottomSheet(serviceAreas),
-      child: Row(
-        children: [
-          Text(
-            addressText,
-            style: const TextStyle(
-              fontFamily: 'Pretendard',
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              height: 1.5,
-              letterSpacing: -0.4,
-            ),
-          ),
-          Gaps.w4,
-          BaseSvgIcon.down(size: 16),
-        ],
-      ),
-    );
-  }
-
-  Future<void> showAddressBottomSheet(List<Address> serviceAreas) async {
-    final user = ref.read(userStateProvider).asData!.value;
-    final isLogin = user != null;
-    if (!isLogin) {
-      unawaited(showLoginAlerDialog(context));
-      return;
-    }
-    final shouldOpenRegionRequest = await MgBottomsheet.show<bool>(
-      context,
-      (context, bottomState) => _buildAddressBottomSheet(serviceAreas),
-    );
-
-    if (shouldOpenRegionRequest == true && mounted) {
-      final result = await SelectServiceRegionRoute().push<bool>(context);
-      if (result == true && mounted) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          if (!mounted) return;
-          await showDialog(
-            context: context,
-            builder: (context) => HomeUnsupportedAreaView.share(
-              onPressed: KakaoShareUtil.shareOpenRegionRequest,
-            ),
-          );
-        });
-      }
-    }
-  }
-
-  Widget _buildAddressBottomSheet(List<Address> serviceAreas) {
-    return MgBottomsheet(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text("픽업 가능한 지역").md().bold().margin(vertical: MgSizes.xl),
-
-          // 서비스 가능 지역만 표시
-          ...serviceAreas.map(
-            (address) => _buildAddressBottomSheetItem(
-              address,
-              isSelect: widget.defaultAddress?.label == address.label,
-            ),
-          ),
-
-          Gaps.h16,
-          MgButton(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                BaseSvgIcon.helpCirlce(
-                  color: MgColorScheme.gray5,
-                  size: MgSizes.lg,
-                ),
-                Gaps.w4,
-                Text("원하는 지역이 없어요").sm().textGray().regular(),
-              ],
-            ),
-            onPressed: () => Navigator.pop(context, true),
-          ).transparent(),
-        ],
-      ).margin(all: MgSizes.md),
-    );
-  }
-
-  Widget _buildAddressBottomSheetItem(
-    Address address, {
-    bool isSelect = false,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        ref.read(homeScreenControllerProvider.notifier).saveToStorage(address);
-        context.pop();
-      },
-      child:
-          Row(
-                children: [
-                  BaseSvgIcon.mapPin(size: 20),
-                  Text(
-                    address.label,
-                  ).md().margin(left: MgSizes.sm, right: MgSizes.xs),
-                  if (isSelect) ...[Spacer(), BaseSvgIcon.check(size: 20)],
-                ],
-              )
-              .margin(all: MgSizes.md)
-              .decorated(
-                border: isSelect
-                    ? Border.all(color: MgColorScheme.gray4, width: 1)
-                    : null,
-                borderRadius: BorderRadius.circular(16),
-                color: isSelect ? MgColorScheme.gray10 : null,
-              ),
-    );
-  }
-
-  // Widget _buildSearch() {
-  //   return GestureDetector(
-  //     onTap: () async => SearchRoute().push(context),
-  //     child: BaseSvgIcon.search(size: 24),
-  //   );
-  // }
 }

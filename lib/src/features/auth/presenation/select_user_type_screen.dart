@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -98,50 +96,51 @@ class _SelectUserTypeScreenState extends ConsumerState<SelectUserTypeScreen> {
 
   void _showAgreementBottomSheet() {
     MgBottomsheet.show(context, (context, bottomState) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text("이용 약관").md().bold().margin(bottom: MgSizes.md),
-          JoinAgreementSection(
-            allAgreeText: '약관 전체 동의',
-            items: [
-              AgreementItem(text: '(필수) 개인정보 처리방침', link: PRIAVCY_POLICY),
-              selectedUserRole == UserRole.customer
-                  ? AgreementItem(
-                      text: '(필수) 서비스 이용약관 (사용자용)',
-                      link: GUEST_SERVICE_TERM,
-                    )
-                  : AgreementItem(
-                      text: '(필수) 서비스 이용약관 (공급자용)',
-                      link: OWNER_SERVICE_TERM,
-                    ),
-            ],
-            onAllAgreedChanged: (allAgreed) {
-              bottomState(() => _allAgreed = allAgreed);
-            },
-          ),
-          Gaps.h32,
-          MgButton(
-            onPressed: () {
-              if (!_allAgreed) {
-                ToastPresentor.error(context, "모든 약관에 동의해 주세요.");
-                return;
-              }
+      return MgBottomsheet(
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("이용 약관").md().bold().margin(bottom: MgSizes.md),
+            JoinAgreementSection(
+              allAgreeText: '약관 전체 동의',
+              items: [
+                AgreementItem(text: '(필수) 개인정보 처리방침', link: PRIAVCY_POLICY),
+                selectedUserRole == UserRole.customer
+                    ? AgreementItem(
+                        text: '(필수) 서비스 이용약관 (사용자용)',
+                        link: GUEST_SERVICE_TERM,
+                      )
+                    : AgreementItem(
+                        text: '(필수) 서비스 이용약관 (공급자용)',
+                        link: OWNER_SERVICE_TERM,
+                      ),
+              ],
+              onAllAgreedChanged: (allAgreed) {
+                bottomState(() => _allAgreed = allAgreed);
+              },
+            ),
+            Gaps.h32,
+            MgButton(
+              onPressed: () {
+                if (!_allAgreed) {
+                  ToastPresentor.error(context, "모든 약관에 동의해 주세요.");
+                  return;
+                }
 
-              // UserRole 저장
-              ref
-                  .read(joinBasicInfoScreenControllerProvider.notifier)
-                  .setUserRole(selectedUserRole!);
+                // UserRole 저장
+                ref
+                    .read(joinBasicInfoScreenControllerProvider.notifier)
+                    .setUserRole(selectedUserRole!);
 
-              context.pop();
+                context.pop();
 
-              JoinBasicInfoRoute().push(context);
-            },
-            content: const Text("확인"),
-          ).primary(),
-          if (Platform.isAndroid) SizedBox(height: 48,),
-        ],
-      ).padding(all: MgSizes.xl);
+                JoinBasicInfoRoute().push(context);
+              },
+              content: const Text("확인"),
+            ).primary(),
+          ],
+        ).padding(all: MgSizes.xl),
+      );
     }, height: 400.h);
   }
 

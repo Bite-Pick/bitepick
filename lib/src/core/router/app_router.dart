@@ -32,6 +32,10 @@ import 'package:magambell/src/features/owner/prsentation/widgets/owner_approved_
 import 'package:magambell/src/features/review/presentation/my_review_list_screen.dart';
 import 'package:magambell/src/features/review/presentation/reivew_register_screen.dart';
 import 'package:magambell/src/features/search/presentation/search_screen.dart';
+import 'package:magambell/src/features/onboarding/domain/constants.dart';
+import 'package:magambell/src/features/onboarding/presentation/owner_onboarding_screen.dart';
+import 'package:magambell/src/features/onboarding/presentation/user_onboarding_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magambell/src/features/splash/presentation/splash_screen.dart';
 import 'package:magambell/src/features/store/presentation/store_screen.dart';
 import 'package:magambell/src/features/user/domain/entities/user.dart';
@@ -66,6 +70,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     observers: [TalkerRouteObserver()],
   );
 });
+
+@TypedGoRoute<OnboardingRoute>(name: 'OnboardingRoute', path: '/onboarding')
+class OnboardingRoute extends GoRouteData {
+  const OnboardingRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const OnboardingScreen();
+  }
+}
+
+@TypedGoRoute<OwnerOnboardingRoute>(
+  name: 'OwnerOnboardingRoute',
+  path: '/owner-onboarding',
+)
+class OwnerOnboardingRoute extends GoRouteData {
+  const OwnerOnboardingRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const OwnerOnboardingScreen();
+  }
+}
 
 @TypedGoRoute<SplashRoute>(name: 'SplashRoute', path: '/splash')
 class SplashRoute extends GoRouteData {
@@ -225,7 +252,11 @@ class DefaultRoute extends GoRouteData {
       // ProviderContainer를 통해 userProvider 접근
       final ref = ProviderScope.containerOf(context);
       final user = await ref.read(userStateProvider.future);
+
+      // 비로그인 → 로그인 화면
       if (user == null) return LoginRoute().location;
+
+      final prefs = await SharedPreferences.getInstance();
 
       // userRole에 따라 다른 홈 화면으로 리다이렉트
       switch (user.userRole) {
@@ -236,10 +267,16 @@ class DefaultRoute extends GoRouteData {
           if (user.approved == ApprovedStatus.waiting) {
             return OwnerStoreWaitingRoute().location;
           }
+          final ownerOnboardingCompleted =
+              prefs.getBool(kOwnerOnboardingCompletedKey) ?? false;
+          if (!ownerOnboardingCompleted) return OwnerOnboardingRoute().location;
           return OwnerHomeRoute().location;
         case UserRole.customer:
+          final onboardingCompleted =
+              prefs.getBool(kOnboardingCompletedKey) ?? false;
+          if (!onboardingCompleted) return OnboardingRoute().location;
           return MainRoute().location;
-        case UserRole.admin: // TODO: 확인 필요
+        case UserRole.admin:
           return AdminHomeRoute().location;
       }
     } catch (error) {

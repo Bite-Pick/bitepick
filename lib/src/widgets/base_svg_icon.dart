@@ -36,6 +36,9 @@ class BaseSvgIcon extends StatelessWidget {
   factory BaseSvgIcon.down({double? size, Color? color}) =>
       _makeIcon('down.svg', size, color);
 
+  factory BaseSvgIcon.chevronDown({double? size, Color? color}) =>
+      _makeIcon('chevron-down.svg', size, color);
+
   factory BaseSvgIcon.download({double? size, Color? color}) =>
       _makeIcon('download.svg', size, color);
 
@@ -101,6 +104,9 @@ class BaseSvgIcon extends StatelessWidget {
 
   factory BaseSvgIcon.plus({double? size, Color? color}) =>
       _makeIcon('plus.svg', size, color);
+
+  factory BaseSvgIcon.reload({double? size, Color? color}) =>
+      _makeIcon('reload.svg', size, color);
 
   factory BaseSvgIcon.right({double? size, Color? color}) =>
       _makeIcon('right.svg', size, color);

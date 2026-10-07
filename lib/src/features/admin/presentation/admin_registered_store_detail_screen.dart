@@ -575,23 +575,15 @@ class _AdminRegisteredStoreDetailScreenState
     }
 
     // 새로 추가한 이미지만 S3 업로드 (순서 기반 매칭)
-    final newStoreLocalImages = _storeImages.where((img) => img.file != null).toList();
-    final storeUrlsToUpload = result.storeUrls.where((u) => u.url != null).toList();
-    for (var i = 0; i < newStoreLocalImages.length && i < storeUrlsToUpload.length; i++) {
-      await ref.read(presignedImageRepositoryProvider).uploadToS3WithPresignedUrl(
-        presignedUrl: storeUrlsToUpload[i].url!,
-        file: newStoreLocalImages[i].file!,
-      );
-    }
-
-    final newGoodsLocalImages = _goodsDetails.where((d) => d.localImage.file != null).map((d) => d.localImage).toList();
-    final goodsUrlsToUpload = result.goodsUrls.where((u) => u.url != null).toList();
-    for (var i = 0; i < newGoodsLocalImages.length && i < goodsUrlsToUpload.length; i++) {
-      await ref.read(presignedImageRepositoryProvider).uploadToS3WithPresignedUrl(
-        presignedUrl: goodsUrlsToUpload[i].url!,
-        file: newGoodsLocalImages[i].file!,
-      );
-    }
+    final goodsLocalImages = _goodsDetails.map((d) => d.localImage).toList();
+    await ref.read(presignedImageRepositoryProvider).uploadLocalImagesInOrder(
+      localImages: _storeImages,
+      presignedUrls: result.storeUrls,
+    );
+    await ref.read(presignedImageRepositoryProvider).uploadLocalImagesInOrder(
+      localImages: goodsLocalImages,
+      presignedUrls: result.goodsUrls,
+    );
 
     if (mounted) {
       context.pop();

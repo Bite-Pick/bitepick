@@ -11,7 +11,6 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/address/presentation/select_service_region_screen.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
-import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_icon_floating_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
@@ -19,6 +18,7 @@ import 'package:magambell/src/features/home/presentation/widgets/my_location_mar
 import 'package:magambell/src/features/home/presentation/widgets/map_tooltip_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/non_service_area_banner.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
+import 'package:magambell/src/features/home/presentation/widgets/search_in_area_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/service_area_request_chip.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_map_bottom_sheet.dart';
 import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
@@ -55,14 +55,15 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   // 비서비스 지역 UI 상태
   bool _bannerVisible = false;
   bool _serviceAreaChipDismissed = false;
-  Timer? _bannerDebounceTimer;
+  bool _showSearchAreaButton = false;
+  bool _isAppInitiatedMove = false;
   Timer? _tooltipTimer;
   Timer? _mapFetchDebounceTimer;
+  int _fetchStoresRequestId = 0;
 
   static const _myLocationMarkerId = 'my_location';
   static const _tooltipMarkerId = 'service_tooltip';
   static const _tooltipPosition = NLatLng(37.3243773830569, 127.107505020642);
-  static const _serviceAreaRadiusM = 5000.0;
   static const _labelHideZoom = 12.0;
   static const _storeMarkerPrefix = 'store_';
   static const double _selectedPinHeight = 43.0;
@@ -71,38 +72,20 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
   @override
   void dispose() {
-    _bannerDebounceTimer?.cancel();
     _tooltipTimer?.cancel();
     _mapFetchDebounceTimer?.cancel();
     _mapReady = false;
     super.dispose();
   }
 
-  bool _checkIsInServiceArea(NLatLng target) {
-    final serviceAddresses =
-        ref.read(homeScreenControllerProvider).valueOrNull?.serviceAddresses ??
-        [];
-    if (serviceAddresses.isEmpty) return true;
-    return serviceAddresses.any((addr) {
-      final dist = Geolocator.distanceBetween(
-        target.latitude,
-        target.longitude,
-        addr.latitude,
-        addr.longitude,
-      );
-      return dist <= _serviceAreaRadiusM;
-    });
-  }
-
-  void _updateBannerVisibility(bool inServiceArea) {
-    _bannerDebounceTimer?.cancel();
-    _bannerDebounceTimer = Timer(const Duration(milliseconds: 200), () {
-      if (mounted) setState(() => _bannerVisible = !inServiceArea);
-    });
+  /// 현재 지도 범위 안에 매장이 하나도 없으면 안내 배너를 보여준다.
+  void _updateBannerVisibility(bool hasStoreInBounds) {
+    if (mounted) setState(() => _bannerVisible = !hasStoreInBounds);
   }
 
   Future<void> _onBannerCtaTapped() async {
     if (_mapController == null) return;
+    _isAppInitiatedMove = true;
     await _mapController!.updateCamera(
       NCameraUpdate.withParams(target: _tooltipPosition, zoom: 13),
     );
@@ -163,7 +146,9 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     final controller = _mapController;
     if (controller == null || !_mapReady || !mounted) return;
     final icon = await NOverlayImage.fromWidget(
-      widget: const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
+      widget: _lockTextScale(
+        const MapTooltipMarker(label: '현재 죽전 지역 서비스 중'),
+      ),
       size: const Size(165, 45),
       context: context,
     );
@@ -215,6 +200,10 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     }
   }
 
+  Widget _lockTextScale(Widget child) {
+    return MediaQuery(data: MediaQuery.of(context), child: child);
+  }
+
   Future<NMarker> _buildStoreMarker(StoreListDTO store) async {
     final isSelected = store.storeId == _selectedStoreId;
     final isOpen = store.saleStatus == 'ON';
@@ -225,11 +214,13 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
         : Size(80, isOpen ? 90 : 70);
 
     final icon = await NOverlayImage.fromWidget(
-      widget: StorePinMarker(
-        storeName: store.storeName,
-        isSelected: isSelected,
-        isOpen: isOpen,
-        showLabel: showLabel,
+      widget: _lockTextScale(
+        StorePinMarker(
+          storeName: store.storeName,
+          isSelected: isSelected,
+          isOpen: isOpen,
+          showLabel: showLabel,
+        ),
       ),
       size: imageSize,
       context: context,
@@ -252,6 +243,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
       _selectedStoreId = store.storeId;
       _bottomSheetStore = store;
     });
+    _isAppInitiatedMove = true;
     _mapController?.updateCamera(
       NCameraUpdate.scrollAndZoomTo(
         target: NLatLng(store.latitude, store.longitude),
@@ -273,26 +265,54 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   }
 
   void _onCameraChange(NCameraUpdateReason reason, bool animated) {
+    final isUserMoved =
+        reason == NCameraUpdateReason.gesture ||
+        reason == NCameraUpdateReason.control;
+
+    if (isUserMoved) {
+      // 앱이 시작한 이동(애니메이션)이 끝나기 전에 사용자가 직접 지도를
+      // 움직인 경우, 이후의 카메라 정지를 앱 이동으로 잘못 처리해
+      // 검색 버튼을 바로 숨기거나 자동 조회하지 않도록 플래그를 정리한다.
+      _isAppInitiatedMove = false;
+      if (!_showSearchAreaButton) {
+        setState(() => _showSearchAreaButton = true);
+      }
+    }
+
     _mapController?.getCameraPosition().then((position) {
       final wasAbove = _currentZoom > _labelHideZoom;
       final isAbove = position.zoom > _labelHideZoom;
       if (wasAbove != isAbove) {
         setState(() => _currentZoom = position.zoom);
       }
-
-      final inServiceArea = _checkIsInServiceArea(position.target);
-      _updateBannerVisibility(inServiceArea);
-
-      _mapFetchDebounceTimer?.cancel();
-      _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
-        if (mounted) _fetchMapStores();
-      });
     });
+  }
+
+  void _onCameraIdle() {
+    if (!_isAppInitiatedMove) return;
+    _isAppInitiatedMove = false;
+
+    if (_showSearchAreaButton) {
+      setState(() => _showSearchAreaButton = false);
+    }
+    _mapFetchDebounceTimer?.cancel();
+    _mapFetchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (mounted) unawaited(_fetchMapStores());
+    });
+  }
+
+  Future<void> _onSearchAreaPressed() async {
+    _mapFetchDebounceTimer?.cancel();
+    _mapFetchDebounceTimer = null;
+    setState(() => _showSearchAreaButton = false);
+    await _fetchMapStores();
   }
 
   Future<void> _fetchMapStores() async {
     final controller = _mapController;
     if (controller == null || !_mapReady) return;
+
+    final requestId = ++_fetchStoresRequestId;
 
     final bounds = await controller.getContentBounds();
     final onlyAvailable =
@@ -309,7 +329,24 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           onlyAvailable: onlyAvailable,
         );
 
-    if (mounted) _refreshStoreMarkers(stores);
+    if (requestId != _fetchStoresRequestId) return;
+    if (!mounted) return;
+    _refreshStoreMarkers(stores);
+
+    // 예약가능 필터와 무관하게, 범위 안에 매장이 있는지로 배너 노출을 결정한다.
+    final allStores =
+        ref.read(homeScreenControllerProvider).valueOrNull?.allStores;
+    _updateBannerVisibility(
+      allStores == null
+          ? stores.isNotEmpty
+          : allStores.any(
+              (st) =>
+                  st.latitude >= bounds.southWest.latitude &&
+                  st.latitude <= bounds.northEast.latitude &&
+                  st.longitude >= bounds.southWest.longitude &&
+                  st.longitude <= bounds.northEast.longitude,
+            ),
+    );
   }
 
   Future<void> _onGpsPressed() async {
@@ -348,6 +385,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
     final target = NLatLng(position.latitude, position.longitude);
 
+    _isAppInitiatedMove = true;
     await controller.updateCamera(
       NCameraUpdate.withParams(target: target, zoom: 15),
     );
@@ -374,7 +412,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
   @override
   Widget build(BuildContext context) {
     final controllerState = ref.watch(homeScreenControllerProvider).valueOrNull;
-    final defaultAddress = controllerState?.defaultAddress;
 
     ref.listen(homeScreenControllerProvider, (prev, next) {
       final prevAvailable = prev?.valueOrNull?.onlyAvailable;
@@ -394,10 +431,6 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           children: [
             Column(
               children: [
-                HomeAppBarContent(
-                  defaultAddress: defaultAddress,
-                  serviceAddresses: controllerState?.serviceAddresses ?? [],
-                ),
                 HomeFilterBar(
                   onlyAvailable: controllerState?.onlyAvailable ?? false,
                   onToggleAvailable: () => ref
@@ -426,7 +459,19 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
                         ),
                         onMapReady: _onMapReady,
                         onCameraChange: _onCameraChange,
+                        onCameraIdle: _onCameraIdle,
                       ),
+                      if (_showSearchAreaButton)
+                        Positioned(
+                          top: MgSizes.md,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: SearchInAreaButton(
+                              onPressed: _onSearchAreaPressed,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

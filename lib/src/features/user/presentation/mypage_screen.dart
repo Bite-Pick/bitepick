@@ -181,8 +181,8 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
   }
 
   Widget _buildProfileSection() {
-    final userState = ref.read(userStateProvider).asData!.value;
-    if (userState == null) return SizedBox.shrink();
+    final userState = ref.watch(userStateProvider).asData?.value;
+    if (userState == null) return const SizedBox.shrink();
 
     return Row(
       children: [
@@ -190,7 +190,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
         Gaps.w12,
         Column(
           children: [
-            Text(userState!.nickName),
+            Text(userState.nickName),
             // TODO[mypage]:전화번호
           ],
         ),

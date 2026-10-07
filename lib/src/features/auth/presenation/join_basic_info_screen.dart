@@ -5,8 +5,10 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/router/app_router.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/auth/domain/entities/signup_referral_source.dart';
 import 'package:magambell/src/features/auth/presenation/join_basic_info_screen.controller.dart';
 import 'package:magambell/src/features/auth/presenation/join_success_screen.dart';
+import 'package:magambell/src/features/auth/presenation/widgets/join_referral_source_field.dart';
 import 'package:magambell/src/widgets/base_appbar.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -33,6 +35,8 @@ class JoinBasicInfoScreen extends ConsumerStatefulWidget {
 class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
   final _nicknameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _referralSourceOtherController = TextEditingController();
+  final _nicknameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -43,6 +47,10 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     // Controller의 초기값으로 텍스트 필드 동기화
     _nicknameController.addListener(_onNicknameChanged);
     _phoneController.addListener(_onPhoneChanged);
+    _referralSourceOtherController.addListener(_onReferralSourceOtherChanged);
+
+    // 닉네임 필드에서 다른 필드로 포커스가 옮겨가면 바로 검증
+    _nicknameFocusNode.addListener(_onNicknameFocusChange);
   }
 
   @override
@@ -50,8 +58,14 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
     _phoneController.removeListener(_formatPhoneNumber);
     _nicknameController.removeListener(_onNicknameChanged);
     _phoneController.removeListener(_onPhoneChanged);
+    _referralSourceOtherController.removeListener(
+      _onReferralSourceOtherChanged,
+    );
+    _nicknameFocusNode.removeListener(_onNicknameFocusChange);
     _nicknameController.dispose();
     _phoneController.dispose();
+    _referralSourceOtherController.dispose();
+    _nicknameFocusNode.dispose();
     super.dispose();
   }
 
@@ -77,8 +91,11 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                   MgTextField(
                     label: "닉네임",
                     controller: _nicknameController,
+                    focusNode: _nicknameFocusNode,
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.nicknameError,
+                    reserveErrorSpace: false,
+                    hintText: "닉네임 입력",
                     onEditingComplete: () => ref
                         .read(joinBasicInfoScreenControllerProvider.notifier)
                         .validateNickname(),
@@ -90,6 +107,18 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
                     keyboardType: TextInputType.phone,
                     prefixIcon: SizedBox.shrink(),
                     error: joinState.phoneError,
+                    reserveErrorSpace: false,
+                    hintText: "전화번호 입력",
+                  ),
+                  Gaps.h32,
+                  JoinReferralSourceField(
+                    value: joinState.referralSource,
+                    onChanged: (source) => ref
+                        .read(joinBasicInfoScreenControllerProvider.notifier)
+                        .setReferralSource(source),
+                    error: joinState.referralSourceError,
+                    otherController: _referralSourceOtherController,
+                    otherError: joinState.referralSourceOtherError,
                   ),
                 ],
               ),
@@ -100,7 +129,10 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
             content: Text(joinState.isLoading ? "처리중..." : "완료"),
             disabled:
                 _nicknameController.text.isEmpty ||
-                _phoneController.text.isEmpty,
+                _phoneController.text.isEmpty ||
+                joinState.referralSource == null ||
+                (joinState.referralSource == SignupReferralSource.etc &&
+                    _referralSourceOtherController.text.trim().isEmpty),
           ).primary(),
           Gaps.h16,
         ],
@@ -112,9 +144,21 @@ class _JoinBasicInfoScreenState extends ConsumerState<JoinBasicInfoScreen> {
       .read(joinBasicInfoScreenControllerProvider.notifier)
       .setNickname(_nicknameController.text);
 
+  void _onNicknameFocusChange() {
+    if (!_nicknameFocusNode.hasFocus) {
+      ref
+          .read(joinBasicInfoScreenControllerProvider.notifier)
+          .validateNickname();
+    }
+  }
+
   void _onPhoneChanged() => ref
       .read(joinBasicInfoScreenControllerProvider.notifier)
       .setPhone(_phoneController.text);
+
+  void _onReferralSourceOtherChanged() => ref
+      .read(joinBasicInfoScreenControllerProvider.notifier)
+      .setReferralSourceOther(_referralSourceOtherController.text);
 
   void _formatPhoneNumber() {
     final text = _phoneController.text;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
@@ -7,6 +8,7 @@ import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/features/order/presentation/widget/order_owner_info_item.dart';
 import 'package:magambell/src/features/owner/prsentation/owner_order_list_view.controller.dart';
 import 'package:magambell/src/features/owner/prsentation/widgets/order_status_tabs.dart';
+import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 
 class OwnerOrderListView extends ConsumerWidget {
@@ -37,10 +39,26 @@ class OwnerOrderListView extends ConsumerWidget {
             // 주문 목록
             Expanded(
               child: controllerState.orders.isEmpty
-                  ? Center(
-                      child: Text(
-                        '주문이 없습니다.',
-                      ).md().textColor(MgColorScheme.gray4),
+                  ? Align(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            R.ASSETS_IMAGES_NO_ORDER_PNG,
+                            width: 80,
+                            height: 80,
+                          ),
+                          Gaps.h16,
+                          Text('아직 주문이 없어요')
+                              .md()
+                              .semibold()
+                              .center()
+                              .height(1.5)
+                              .letterSpacing(MgFontSize.md * -0.025)
+                              .textColor(NewColorScheme.gray4),
+                        ],
+                      ).margin(top: MgSizes.xxxxxl + MgSizes.xs),
                     )
                   : RefreshIndicator(
                       onRefresh: () => controller.refresh(),
@@ -56,7 +74,9 @@ class OwnerOrderListView extends ConsumerWidget {
                     ),
             ),
           ],
-        ).colored(MgColorScheme.gray9);
+        )
+            .padding(bottom: BaseScaffold.getBottomMargin(context))
+            .colored(MgColorScheme.gray9);
       },
     );
   }

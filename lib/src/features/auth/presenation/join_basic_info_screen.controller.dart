@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:magambell/src/features/auth/domain/entities/auth_provider_type.dart';
+import 'package:magambell/src/features/auth/domain/entities/signup_referral_source.dart';
 import 'package:magambell/src/features/auth/domain/entities/user_role.dart';
 import 'package:magambell/src/features/auth/providers/auth_token_manager.dart';
 import 'package:magambell/src/widgets/mg_reactive_phone_textfield.dart';
@@ -18,29 +19,58 @@ class JoinBasicInfoState with _$JoinBasicInfoState {
     @Default(null) String? socialToken,
     @Default('') String nickname,
     @Default('') String phone,
+    @Default(null) SignupReferralSource? referralSource,
+    @Default('') String referralSourceOther,
     @Default(false) bool isLoading,
     @Default(false) bool submitted, // submit 버튼을 눌렀는지 여부
     String? error,
     String? nicknameError,
     String? phoneError,
+    String? referralSourceError,
+    String? referralSourceOtherError,
   }) = _JoinBasicInfoState;
 }
 
 @Riverpod(keepAlive: true)
 class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
+  // 숫자로만 구성된 닉네임 차단
+  static final RegExp _digitsOnlyPattern = RegExp(r'^[0-9]+$');
+
+  // 완성되지 않은 한글 자모(초성/중성) 포함 차단 - ㄱㄴㄷ, ㅏㅑㅓ 등이 일부라도 섞이면 안 됨
+  static final RegExp _jamoPattern = RegExp(r'[ㄱ-ㅣ]');
+
+  // 한글 완성형/영문/숫자만 허용 (특수문자, 공백 등은 전부 차단)
+  static final RegExp _allowedCharsPattern = RegExp(r'^[가-힣a-zA-Z0-9]+$');
+
   @override
   JoinBasicInfoState build() => const JoinBasicInfoState();
+
+  // 닉네임 형식 검증 (길이/숫자만/자모 포함 여부/특수문자 포함 여부)
+  String? _validateNicknameFormat(String nickname) {
+    final trimmed = nickname.trim();
+    if (trimmed.isEmpty) return '닉네임을 입력해주세요';
+    if (trimmed.length > 10) return '닉네임은 10자 이내로 입력해주세요';
+    if (_digitsOnlyPattern.hasMatch(trimmed)) return '닉네임은 숫자로만 만들 수 없어요';
+    if (_jamoPattern.hasMatch(trimmed)) {
+      return '닉네임에 자음/모음만 단독으로 사용할 수 없어요';
+    }
+    if (!_allowedCharsPattern.hasMatch(trimmed)) {
+      return '닉네임에 특수문자는 사용할 수 없어요';
+    }
+    return null;
+  }
 
   // 1단계: UserRole 선택
   void setUserRole(UserRole userRole) =>
       state = state.copyWith(userRole: userRole);
 
-  // 소셜 로그인 정보 저장
+  // 소셜 로그인 정보 저장 (새로운 가입 플로우 시작점이므로, 이전에 남아있던
+  // 닉네임/가입 경로 등의 입력값은 초기화한다 - 탈퇴 후 재가입 시나리오 등)
   void setSocialLoginInfo({
     required AuthProviderType providerType,
     required String socialToken,
   }) {
-    state = state.copyWith(
+    state = JoinBasicInfoState(
       providerType: providerType,
       socialToken: socialToken,
     );
@@ -56,6 +86,23 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     // 숫자만 추출 (하이픈 등 제거)
     final digitsOnly = phone.replaceAll(RegExp(r'[^0-9]'), '');
     state = state.copyWith(phone: digitsOnly, phoneError: null);
+  }
+
+  // 가입 경로 선택
+  void setReferralSource(SignupReferralSource source) {
+    state = state.copyWith(
+      referralSource: source,
+      referralSourceError: null,
+      referralSourceOtherError: null,
+    );
+  }
+
+  // 가입 경로 "기타" 직접 입력
+  void setReferralSourceOther(String value) {
+    state = state.copyWith(
+      referralSourceOther: value,
+      referralSourceOtherError: null,
+    );
   }
 
   // 전화번호 포맷팅 (UI 표시용)
@@ -108,6 +155,10 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
             userRole: state.userRole!.value,
             nickName: state.nickname,
             phoneNumber: state.phone,
+            signupSource: state.referralSource?.value,
+            signupSourceDetail: state.referralSource == SignupReferralSource.etc
+                ? state.referralSourceOther.trim()
+                : null,
           );
 
       if (tokens == null) {
@@ -131,8 +182,9 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
 
   // 닉네임만 검증 (onEditingComplete에서 호출)
   Future<void> validateNickname() async {
-    if (state.nickname.trim().isEmpty) {
-      state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
+    final formatError = _validateNicknameFormat(state.nickname);
+    if (formatError != null) {
+      state = state.copyWith(nicknameError: formatError);
       return;
     }
 
@@ -149,8 +201,9 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
     bool isValid = true;
 
     // 닉네임 검증
-    if (state.nickname.trim().isEmpty) {
-      state = state.copyWith(nicknameError: '닉네임을 입력해주세요');
+    final nicknameFormatError = _validateNicknameFormat(state.nickname);
+    if (nicknameFormatError != null) {
+      state = state.copyWith(nicknameError: nicknameFormatError);
       isValid = false;
     } else {
       final isDuplicate = await ref
@@ -169,6 +222,16 @@ class JoinBasicInfoScreenController extends _$JoinBasicInfoScreenController {
       isValid = false;
     } else if (!RegExp(r'^01[0-9][0-9]{7,8}$').hasMatch(phoneDigits)) {
       state = state.copyWith(phoneError: '올바른 전화번호 형식이 아닙니다');
+      isValid = false;
+    }
+
+    // 가입 경로 검증
+    if (state.referralSource == null) {
+      state = state.copyWith(referralSourceError: '가입 경로를 선택해주세요');
+      isValid = false;
+    } else if (state.referralSource == SignupReferralSource.etc &&
+        state.referralSourceOther.trim().isEmpty) {
+      state = state.copyWith(referralSourceOtherError: '가입 경로를 입력해주세요');
       isValid = false;
     }
 

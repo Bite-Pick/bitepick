@@ -13,6 +13,7 @@ import 'package:magambell/src/features/store/data/repositories/store_repository.
 import 'package:magambell/src/features/store/domain/entities/store.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_bite_bag_view.dart';
 import 'package:magambell/src/features/store/presentation/widget/store_info_view.dart';
+import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
@@ -95,21 +96,12 @@ class OwnerGoodsView extends ConsumerWidget {
                       images: imageUploads,
                     );
 
-                final newLocalImages =
-                    images.where((img) => img.file != null).toList();
-                final urlsToUpload =
-                    presignedUrls.where((u) => u.url != null).toList();
-
-                for (var i = 0;
-                    i < newLocalImages.length && i < urlsToUpload.length;
-                    i++) {
-                  await ref
-                      .read(presignedImageRepositoryProvider)
-                      .uploadToS3WithPresignedUrl(
-                        presignedUrl: urlsToUpload[i].url!,
-                        file: newLocalImages[i].file!,
-                      );
-                }
+                await ref
+                    .read(presignedImageRepositoryProvider)
+                    .uploadLocalImagesInOrder(
+                      localImages: images,
+                      presignedUrls: presignedUrls,
+                    );
 
                 if (sheetContext.mounted) {
                   Navigator.of(sheetContext).pop();
@@ -372,7 +364,7 @@ class OwnerGoodsView extends ConsumerWidget {
               content: Text("상품 관리하기"),
             ).primary().margin(vertical: MgSizes.lg, horizontal: MgSizes.md),
           ],
-        );
+        ).padding(bottom: BaseScaffold.getBottomMargin(context));
       },
     );
   }
