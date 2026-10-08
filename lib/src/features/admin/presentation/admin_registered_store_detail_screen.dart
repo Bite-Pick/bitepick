@@ -576,14 +576,19 @@ class _AdminRegisteredStoreDetailScreenState
 
     // 새로 추가한 이미지만 S3 업로드 (순서 기반 매칭)
     final goodsLocalImages = _goodsDetails.map((d) => d.localImage).toList();
-    await ref.read(presignedImageRepositoryProvider).uploadLocalImagesInOrder(
-      localImages: _storeImages,
-      presignedUrls: result.storeUrls,
-    );
-    await ref.read(presignedImageRepositoryProvider).uploadLocalImagesInOrder(
-      localImages: goodsLocalImages,
-      presignedUrls: result.goodsUrls,
-    );
+    try {
+      await ref.read(presignedImageRepositoryProvider).uploadLocalImagesInOrder(
+        localImages: _storeImages,
+        presignedUrls: result.storeUrls,
+      );
+      await ref.read(presignedImageRepositoryProvider).uploadLocalImagesInOrder(
+        localImages: goodsLocalImages,
+        presignedUrls: result.goodsUrls,
+      );
+    } catch (_) {
+      if (mounted) ToastPresentor.error(context, '이미지 업로드에 실패했습니다');
+      return;
+    }
 
     if (mounted) {
       context.pop();
