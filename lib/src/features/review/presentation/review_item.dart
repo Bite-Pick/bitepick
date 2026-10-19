@@ -85,18 +85,28 @@ class ReviewItem extends ConsumerStatefulWidget {
   const ReviewItem(
     this.review, {
     this.buttonType = ReviewItemButtonType.none,
+    this.showDivider = true,
     super.key,
   });
 
   final Review review;
   final ReviewItemButtonType buttonType;
+  final bool showDivider;
 
-  factory ReviewItem.userReview(Review review) {
-    return ReviewItem(review, buttonType: ReviewItemButtonType.report);
+  factory ReviewItem.userReview(Review review, {bool showDivider = true}) {
+    return ReviewItem(
+      review, 
+      buttonType: ReviewItemButtonType.report,
+      showDivider: showDivider,
+    );
   }
 
-  factory ReviewItem.myReview(Review review) {
-    return ReviewItem(review, buttonType: ReviewItemButtonType.delete);
+  factory ReviewItem.myReview(Review review, {bool showDivider = true}) {
+    return ReviewItem(
+      review, 
+      buttonType: ReviewItemButtonType.delete,
+      showDivider: showDivider,
+    );
   }
 
   @override
@@ -118,16 +128,18 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
             createdAt: widget.review.createdAt,
             description: widget.review.description,
             imageUrls: widget.review.imageUrls,
+            rating: widget.review.rating,
             replyContent: widget.review.reply?.content,
             replyCreatedAt: widget.review.reply?.createdAt,
             trailing: isLogin ? _buildActionButton() : null,
           ),
         ),
-        Container(
-          height: 1,
-          color: MgColorScheme.gray8,
-          margin: const EdgeInsets.symmetric(horizontal: MgSizes.md),
-        ),
+        if (widget.showDivider)
+          Container(
+            height: 1,
+            color: MgColorScheme.gray8,
+            margin: const EdgeInsets.symmetric(horizontal: MgSizes.md),
+          ),
       ],
     );
   }

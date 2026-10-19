@@ -36,15 +36,15 @@ class StoreTags extends StatelessWidget {
       if (saleStatus == "ON") {
         tags.add(
           MgTag(child: Text("예약 가능", style: _tagTextStyle)).copyWith(
-            backgroundColor: NewColorScheme.systemNeutral,
-            color: NewColorScheme.systemAlert,
+            backgroundColor: const Color(0xFFEAF3FF),
+            color: MgColorScheme.systemInfo,
           ),
         );
       } else {
         tags.add(
           MgTag(child: Text("예약 마감", style: _tagTextStyle)).copyWith(
-            backgroundColor: NewColorScheme.gray12,
-            color: NewColorScheme.gray6,
+            backgroundColor: NewColorScheme.gray11,
+            color: NewColorScheme.gray5,
           ),
         );
       }

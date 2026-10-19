@@ -31,6 +31,15 @@ const _menuItemNameStyle = TextStyle(
   letterSpacing: -0.375,
 );
 
+const _openSoonTextStyle = TextStyle(
+  fontFamily: MgFontFamily.semiBold,
+  fontWeight: FontWeight.w600,
+  fontSize: 15,
+  height: 1.5,
+  letterSpacing: -0.375,
+  color: NewColorScheme.gray14,
+);
+
 class StoreInfoView extends ConsumerWidget {
   const StoreInfoView(
     this.storeInfo, {
@@ -51,7 +60,7 @@ class StoreInfoView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildThumbnailImageView(),
+        _buildThumbnailImageView(context),
         _buildStoreInfoSection(context, ref),
         _buildThinDivider(),
         _buildStoreDetailSection(context),
@@ -65,10 +74,11 @@ class StoreInfoView extends ConsumerWidget {
     );
   }
 
-  Widget _buildThumbnailImageView() {
+  Widget _buildThumbnailImageView(BuildContext context) {
     const imageWidth = 156.0;
     const imageHeight = 196.0;
     List<String> imageUrls = storeInfo.imageUrls;
+    final isBeforeOpen = storeInfo.saleStatus == 'OFF' && onPhotoChangeTap == null;
 
     if (storeInfo.imageUrls.isEmpty) {
       return Container(
@@ -80,30 +90,83 @@ class StoreInfoView extends ConsumerWidget {
 
     return SizedBox(
       height: imageHeight,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: MgSizes.md),
-        itemCount: imageUrls.length,
-        itemBuilder: (context, index) {
-          final imageUrl = imageUrls[index];
-          final isLast = index == imageUrls.length - 1;
-          if (imageUrl.isEmpty) {
-            return Container(
-              width: imageWidth,
-              height: imageHeight,
-              margin: EdgeInsets.only(right: isLast ? 0 : MgSizes.xss),
-              color: MgColorScheme.gray2,
-            );
-          }
-          return BaseNetworkImage(
-            imageUrl: imageUrl, 
-            width: imageWidth,
-            height: imageHeight,
-            borderRadius: MgRadius.md,
-            backgroundColor: NewColorScheme.gray12,
-          ).margin(right: isLast ? 0 : MgSizes.xss);
-        },
-      ).margin(top: MgSizes.xl),
+      child: Stack(
+        children: [
+          ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: MgSizes.md),
+            itemCount: imageUrls.length,
+            itemBuilder: (context, index) {
+              final imageUrl = imageUrls[index];
+              final isLast = index == imageUrls.length - 1;
+              
+              final photo = imageUrl.isEmpty
+                  ? Container(
+                    width: imageWidth,
+                    height: imageHeight,
+                    color: MgColorScheme.gray2,
+                  )
+                : BaseNetworkImage(
+                    imageUrl: imageUrl, 
+                    width: imageWidth,
+                    height: imageHeight,
+                    borderRadius: MgRadius.md,
+                    backgroundColor: NewColorScheme.gray12,
+                  );
+
+              return Stack(
+                children: [
+                  photo, 
+                  if (isBeforeOpen)
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(MgRadius.md),
+                        child: Container(
+                          color: NewColorScheme.gray0.withValues(alpha: 0.3),
+                          alignment: Alignment.center,
+                          child: const Text('오픈 준비 중', style: _openSoonTextStyle),
+                        ),
+                      ),
+                    ),
+                ],
+              ).margin(right: isLast ? 0 : MgSizes.xss);
+            },
+          ).margin(top: MgSizes.xl),
+          if (onPhotoChangeTap != null)
+            Positioned(
+              top: MgSizes.size28,
+              left: MgSizes.size24,
+              child: _buildPhotoChangeChip(context),
+            ),
+        ],
+      )
+    );
+  }
+
+  Widget _buildPhotoChangeChip(BuildContext context) {
+    return GestureDetector(
+      onTap: onPhotoChangeTap,
+      child: Container(
+        height: MgSizes.size28,
+        padding: const EdgeInsets.symmetric(horizontal: MgSizes.size10, vertical: MgSizes.size6),
+        decoration: BoxDecoration(
+          color: NewColorScheme.gray1.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            BaseSvgIcon.camera(size: MgSizes.size16, color: NewColorScheme.gray14),
+            Gaps.w6,
+            Text(
+              '사진 변경',
+              style: context.textTheme.labelSmall?.copyWith(
+                color: NewColorScheme.gray14,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -129,7 +192,7 @@ class StoreInfoView extends ConsumerWidget {
                   StoreTags(
                     quantity: storeInfo.stockQuantity,
                     saleStatus: storeInfo.saleStatus,
-                    showSaleStatus: false,
+                    showSaleStatus: true,
                     compact: true,
                   ),
                 ],

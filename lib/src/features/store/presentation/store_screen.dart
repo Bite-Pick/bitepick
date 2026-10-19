@@ -60,7 +60,19 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
         final reviewsAsync = ref.watch(reviewsProvider(goodsId: store.goodsId, imageCheck: false));
         return BaseScaffold(
-          appBar: BaseAppBar(),
+          appBar: BaseAppBar(
+            title: Text(store.storeName),
+            centerTitle: false,
+            titleSpacing: -MgSizes.xs,
+            bottom: const PreferredSize(
+              preferredSize: Size.fromHeight(0.5), 
+              child: Divider(
+                height: 0.5,
+                thickness: 0.5,
+                color: NewColorScheme.gray11,
+              ),
+            ),
+          ),
           bottomNavigationBar: _BottomOrderBar(
             goods: store,
             storeId: widget.id,
@@ -347,8 +359,8 @@ class _BottomOrderBarState extends ConsumerState<_BottomOrderBar> {
                         },
                         content: Text(
                           !saleStatus
-                              ? (isSubscribed ? '오픈 알림 취소하기' : '오픈 알림 신청하기')
-                              : '구매하기',
+                              ? (isSubscribed ? '오픈 알림 받는 중' : '오픈 알림 받기')
+                              : '주문하기',
                         ),
                       ).primary().copyWith(
                         backgroundColor: !saleStatus && isSubscribed

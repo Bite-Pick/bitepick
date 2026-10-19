@@ -46,18 +46,14 @@ class Review with _$Review {
   const Review._();
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
-
-  // TODO: 서버 로직 확인 필요
-  String get ratingLabel {
-    if (rating == 5) {
-      return '최고에요';
-    } else if (rating >= 2) {
-      return '좋아요';
-    } else {
-      return '별로에요';
-    }
-  }
 }
+
+// TODO: 서버 로직 확인 필요
+String ratingLabelOf(int rating) => switch (rating) {
+  3 => '최고에요',
+  2 => '좋아요',
+  _ => '아쉬워요',
+};
 
 // // Mock data for testing
 // final mockReviews = [
