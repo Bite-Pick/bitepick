@@ -87,11 +87,20 @@ class PreSignedImageRepository {
   }) async {
     final filesToUpload = localImages.where((img) => img.file != null).toList();
     final urlsToUpload = presignedUrls.where((u) => u.url != null).toList();
-    for (var i = 0; i < filesToUpload.length && i < urlsToUpload.length; i++) {
-      await uploadToS3WithPresignedUrl(
+    if (filesToUpload.length != urlsToUpload.length) {
+      throw StateError(
+        '업로드할 이미지 수와 presigned URL 수가 일치하지 않습니다.',
+      );
+    }
+
+    for (var i = 0; i < filesToUpload.length; i++) {
+      final isUploaded = await uploadToS3WithPresignedUrl(
         presignedUrl: urlsToUpload[i].url!,
         file: filesToUpload[i].file!,
       );
+      if (!isUploaded) {
+        throw StateError('이미지를 S3에 업로드하지 못했습니다.');
+      }
     }
   }
 
