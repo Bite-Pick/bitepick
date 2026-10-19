@@ -38,31 +38,36 @@ class OwnerOrderListView extends ConsumerWidget {
 
             // 주문 목록
             Expanded(
-              child: controllerState.orders.isEmpty
-                  ? Align(
-                      alignment: Alignment.topCenter,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
+              child: RefreshIndicator(
+                onRefresh: () => controller.refresh(),
+                child: controllerState.orders.isEmpty
+                    ? ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
                         children: [
-                          Image.asset(
-                            R.ASSETS_IMAGES_NO_ORDER_PNG,
-                            width: 80,
-                            height: 80,
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  R.ASSETS_IMAGES_NO_ORDER_PNG,
+                                  width: 80,
+                                  height: 80,
+                                ),
+                                Gaps.h16,
+                                Text('아직 주문이 없어요')
+                                    .md()
+                                    .semibold()
+                                    .center()
+                                    .height(1.5)
+                                    .letterSpacing(MgFontSize.md * -0.025)
+                                    .textColor(NewColorScheme.gray4),
+                              ],
+                            ).margin(top: MgSizes.xxxxxl + MgSizes.xs),
                           ),
-                          Gaps.h16,
-                          Text('아직 주문이 없어요')
-                              .md()
-                              .semibold()
-                              .center()
-                              .height(1.5)
-                              .letterSpacing(MgFontSize.md * -0.025)
-                              .textColor(NewColorScheme.gray4),
                         ],
-                      ).margin(top: MgSizes.xxxxxl + MgSizes.xs),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: () => controller.refresh(),
-                      child: ListView.separated(
+                      )
+                    : ListView.separated(
                         itemCount: controllerState.orders.length,
                         itemBuilder: (context, index) {
                           final order = controllerState.orders[index];
@@ -71,7 +76,7 @@ class OwnerOrderListView extends ConsumerWidget {
                         },
                         separatorBuilder: (context, index) => Gaps.h20,
                       ).margin(horizontal: MgSizes.xl),
-                    ),
+              ),
             ),
           ],
         )
