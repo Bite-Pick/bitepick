@@ -24,6 +24,7 @@ import 'package:magambell/src/features/home/presentation/widgets/store_map_botto
 import 'package:magambell/src/features/home/presentation/widgets/store_pin_marker.dart';
 import 'package:magambell/src/widgets/base_scaffold.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/toast_presentor.dart';
 
 class HomeMapRoute extends GoRouteData {
   const HomeMapRoute();
@@ -314,20 +315,29 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
     final requestId = ++_fetchStoresRequestId;
 
-    final bounds = await controller.getContentBounds();
-    final onlyAvailable =
-        ref.read(homeScreenControllerProvider).valueOrNull?.onlyAvailable ??
-        false;
+    late final NLatLngBounds bounds;
+    late final List<StoreListDTO> stores;
+    try {
+      bounds = await controller.getContentBounds();
+      final onlyAvailable =
+          ref.read(homeScreenControllerProvider).valueOrNull?.onlyAvailable ??
+          false;
 
-    final stores = await ref
-        .read(storeRepositoryProvider)
-        .getStoreMapList(
-          swLatitude: bounds.southWest.latitude,
-          swLongitude: bounds.southWest.longitude,
-          neLatitude: bounds.northEast.latitude,
-          neLongitude: bounds.northEast.longitude,
-          onlyAvailable: onlyAvailable,
-        );
+      stores = await ref
+          .read(storeRepositoryProvider)
+          .getStoreMapList(
+            swLatitude: bounds.southWest.latitude,
+            swLongitude: bounds.southWest.longitude,
+            neLatitude: bounds.northEast.latitude,
+            neLongitude: bounds.northEast.longitude,
+            onlyAvailable: onlyAvailable,
+          );
+    } catch (_) {
+      if (requestId != _fetchStoresRequestId || !mounted) return;
+      setState(() => _showSearchAreaButton = true);
+      ToastPresentor.error(context, '매장 정보를 불러오지 못했습니다');
+      return;
+    }
 
     if (requestId != _fetchStoresRequestId) return;
     if (!mounted) return;
