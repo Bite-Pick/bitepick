@@ -112,11 +112,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: controllerState.visibleStores.length,
+                              itemCount: controllerState.storeGoodsList.length,
                               separatorBuilder: (context, index) => Gaps.h4,
                               itemBuilder: (context, index) {
                                 final item =
-                                    controllerState.visibleStores[index];
+                                    controllerState.storeGoodsList[index];
                                 return HomeGoodsItem(
                                       goods: item.toHomeGoodsItem(),
                                     )
@@ -124,6 +124,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     .margin(horizontal: MgSizes.md);
                               },
                             ),
+                            if (controllerState.isLoadingMore)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
                             if (!controllerState.hasMore &&
                                 controllerState.storeGoodsList.isNotEmpty)
                               Padding(

@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:magambell/src/core/utils/shared_preference_store.dart';
-import 'package:magambell/src/features/address/data/repositories/region_repository.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
@@ -23,26 +22,14 @@ class HomeScreenControllerState with _$HomeScreenControllerState {
     required bool onlyAvailable,
     required SortType sortType,
 
-    /// 거리 계산 기준 좌표 (현위치 또는 죽전역)
+    /// 서버에 보내는 기준 좌표 (현위치 또는 죽전역)
     required double latitude,
     required double longitude,
-
-    /// 서버에서 받은 전체 매장 (필터/정렬 전)
-    required List<StoreListDTO> allStores,
-
-    /// 필터/정렬이 적용된 전체 매장
     required List<StoreListDTO> storeGoodsList,
-    required List<Address> serviceAddresses,
-    @Default(_pageSize) int visibleCount,
+    @Default(1) int currentPage,
+    @Default(false) bool isLoadingMore,
+    @Default(true) bool hasMore,
   }) = _HomeScreenControllerState;
-
-  const HomeScreenControllerState._();
-
-  /// 화면에 보여줄 매장 (스크롤에 따라 늘어남)
-  List<StoreListDTO> get visibleStores =>
-      this.storeGoodsList.take(visibleCount).toList();
-
-  bool get hasMore => visibleCount < this.storeGoodsList.length;
 }
 
 @riverpod
@@ -52,28 +39,26 @@ class HomeScreenController extends _$HomeScreenController {
   @override
   Future<HomeScreenControllerState> build() async {
     _localStorage = SharedPreferenceStore();
-    // 예외를 내부에서 처리하므로 먼저 시작해도 안전하다. (권한 팝업/대기 시간 겹치기)
-    final positionFuture = _resolveLocation();
-    final serviceAddresses = await ref.read(serviceAddressesProvider.future);
-    final allStores = await ref.read(storeRepositoryProvider).getAllStores();
-    final position = await positionFuture;
+    final position = await _resolveLocation();
 
+    // 초기값: 기본순(영업중 우선 + 가까운 순은 서버에서 정렬)
     const onlyAvailable = false;
-    const sortType = SortType.distanceAsc;
+    const sortType = SortType.recentDesc;
+    final stores = await _fetchStores(
+      latitude: position.latitude,
+      longitude: position.longitude,
+      onlyAvailable: onlyAvailable,
+      sortType: sortType,
+      page: 1,
+    );
+
     return HomeScreenControllerState(
       onlyAvailable: onlyAvailable,
       sortType: sortType,
       latitude: position.latitude,
       longitude: position.longitude,
-      allStores: allStores,
-      storeGoodsList: _arrange(
-        allStores,
-        latitude: position.latitude,
-        longitude: position.longitude,
-        onlyAvailable: onlyAvailable,
-        sortType: sortType,
-      ),
-      serviceAddresses: serviceAddresses,
+      storeGoodsList: stores,
+      hasMore: stores.length >= _pageSize,
     );
   }
 
@@ -81,49 +66,98 @@ class HomeScreenController extends _$HomeScreenController {
     final currentData = state.value;
     if (currentData == null) return;
 
-    final onlyAvailable = !currentData.onlyAvailable;
+    // UI 즉시 업데이트
     state = AsyncData(
-      currentData.copyWith(
-        onlyAvailable: onlyAvailable,
-        visibleCount: _pageSize,
-        storeGoodsList: _arrange(
-          currentData.allStores,
-          latitude: currentData.latitude,
-          longitude: currentData.longitude,
-          onlyAvailable: onlyAvailable,
-          sortType: currentData.sortType,
-        ),
-      ),
+      currentData.copyWith(onlyAvailable: !currentData.onlyAvailable),
     );
+
+    await _reloadStoreGoods();
   }
 
   Future<void> setSortType(SortType sortType) async {
     final currentData = state.value;
     if (currentData == null) return;
 
-    state = AsyncData(
-      currentData.copyWith(
-        sortType: sortType,
-        visibleCount: _pageSize,
-        storeGoodsList: _arrange(
-          currentData.allStores,
-          latitude: currentData.latitude,
-          longitude: currentData.longitude,
-          onlyAvailable: currentData.onlyAvailable,
-          sortType: sortType,
-        ),
-      ),
-    );
+    // UI 즉시 업데이트
+    state = AsyncData(currentData.copyWith(sortType: sortType));
+
+    await _reloadStoreGoods();
   }
 
-  /// 전체 목록을 한 번에 받아오므로, 스크롤 시 화면에 보여줄 개수만 늘린다.
   Future<void> loadMore() async {
     final currentData = state.value;
-    if (currentData == null || !currentData.hasMore) return;
+    if (currentData == null) return;
+    if (currentData.isLoadingMore) return;
+    if (!currentData.hasMore) return;
 
-    state = AsyncData(
-      currentData.copyWith(visibleCount: currentData.visibleCount + _pageSize),
-    );
+    state = AsyncData(currentData.copyWith(isLoadingMore: true));
+
+    try {
+      final nextPage = currentData.currentPage + 1;
+      final newItems = await _fetchStores(
+        latitude: currentData.latitude,
+        longitude: currentData.longitude,
+        onlyAvailable: currentData.onlyAvailable,
+        sortType: currentData.sortType,
+        page: nextPage,
+      );
+
+      state = AsyncData(
+        currentData.copyWith(
+          storeGoodsList: [...currentData.storeGoodsList, ...newItems],
+          currentPage: nextPage,
+          isLoadingMore: false,
+          hasMore: newItems.length >= _pageSize,
+        ),
+      );
+    } catch (_) {
+      state = AsyncData(currentData.copyWith(isLoadingMore: false));
+    }
+  }
+
+  Future<void> _reloadStoreGoods() async {
+    final currentData = state.value;
+    if (currentData == null) return;
+
+    try {
+      final stores = await _fetchStores(
+        latitude: currentData.latitude,
+        longitude: currentData.longitude,
+        onlyAvailable: currentData.onlyAvailable,
+        sortType: currentData.sortType,
+        page: 1,
+      );
+
+      state = AsyncData(
+        currentData.copyWith(
+          storeGoodsList: stores,
+          currentPage: 1,
+          isLoadingMore: false,
+          hasMore: stores.length >= _pageSize,
+        ),
+      );
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
+  }
+
+  Future<List<StoreListDTO>> _fetchStores({
+    required double latitude,
+    required double longitude,
+    required bool onlyAvailable,
+    required SortType sortType,
+    required int page,
+  }) {
+    return ref
+        .read(storeRepositoryProvider)
+        .getStoreGoodsList(
+          latitude: latitude,
+          longitude: longitude,
+          onlyAvailable: onlyAvailable,
+          sortType: sortType,
+          page: page,
+          size: _pageSize,
+        );
   }
 
   Future<void> saveToStorage(Address address) async {
@@ -152,46 +186,5 @@ class HomeScreenController extends _$HomeScreenController {
     } catch (_) {
       return fallback;
     }
-  }
-
-  /// 필터 → 현위치 기준 거리 재계산 → 정렬 (영업중 매장이 항상 최상단)
-  List<StoreListDTO> _arrange(
-    List<StoreListDTO> stores, {
-    required double latitude,
-    required double longitude,
-    required bool onlyAvailable,
-    required SortType sortType,
-  }) {
-    final result = stores
-        .where((s) => !onlyAvailable || s.saleStatus == 'ON')
-        .map(
-          (s) => s.copyWith(
-            distance:
-                Geolocator.distanceBetween(
-                  latitude,
-                  longitude,
-                  s.latitude,
-                  s.longitude,
-                ) /
-                1000,
-          ),
-        )
-        .toList();
-
-    int byDistance(StoreListDTO a, StoreListDTO b) =>
-        a.distance.compareTo(b.distance);
-
-    result.sort((a, b) {
-      final aOn = a.saleStatus == 'ON';
-      final bOn = b.saleStatus == 'ON';
-      if (aOn != bOn) return aOn ? -1 : 1;
-
-      if (sortType == SortType.priceAsc) {
-        final byPrice = a.salePrice.compareTo(b.salePrice);
-        if (byPrice != 0) return byPrice;
-      }
-      return byDistance(a, b);
-    });
-    return result;
   }
 }

@@ -20,17 +20,13 @@ mixin _$HomeScreenControllerState {
   bool get onlyAvailable => throw _privateConstructorUsedError;
   SortType get sortType => throw _privateConstructorUsedError;
 
-  /// 거리 계산 기준 좌표 (현위치 또는 죽전역)
+  /// 서버에 보내는 기준 좌표 (현위치 또는 죽전역)
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
-
-  /// 서버에서 받은 전체 매장 (필터/정렬 전)
-  List<StoreListDTO> get allStores => throw _privateConstructorUsedError;
-
-  /// 필터/정렬이 적용된 전체 매장
   List<StoreListDTO> get storeGoodsList => throw _privateConstructorUsedError;
-  List<Address> get serviceAddresses => throw _privateConstructorUsedError;
-  int get visibleCount => throw _privateConstructorUsedError;
+  int get currentPage => throw _privateConstructorUsedError;
+  bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get hasMore => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
@@ -51,10 +47,10 @@ abstract class $HomeScreenControllerStateCopyWith<$Res> {
     SortType sortType,
     double latitude,
     double longitude,
-    List<StoreListDTO> allStores,
     List<StoreListDTO> storeGoodsList,
-    List<Address> serviceAddresses,
-    int visibleCount,
+    int currentPage,
+    bool isLoadingMore,
+    bool hasMore,
   });
 }
 
@@ -80,10 +76,10 @@ class _$HomeScreenControllerStateCopyWithImpl<
     Object? sortType = null,
     Object? latitude = null,
     Object? longitude = null,
-    Object? allStores = null,
     Object? storeGoodsList = null,
-    Object? serviceAddresses = null,
-    Object? visibleCount = null,
+    Object? currentPage = null,
+    Object? isLoadingMore = null,
+    Object? hasMore = null,
   }) {
     return _then(
       _value.copyWith(
@@ -103,22 +99,22 @@ class _$HomeScreenControllerStateCopyWithImpl<
                 ? _value.longitude
                 : longitude // ignore: cast_nullable_to_non_nullable
                       as double,
-            allStores: null == allStores
-                ? _value.allStores
-                : allStores // ignore: cast_nullable_to_non_nullable
-                      as List<StoreListDTO>,
             storeGoodsList: null == storeGoodsList
                 ? _value.storeGoodsList
                 : storeGoodsList // ignore: cast_nullable_to_non_nullable
                       as List<StoreListDTO>,
-            serviceAddresses: null == serviceAddresses
-                ? _value.serviceAddresses
-                : serviceAddresses // ignore: cast_nullable_to_non_nullable
-                      as List<Address>,
-            visibleCount: null == visibleCount
-                ? _value.visibleCount
-                : visibleCount // ignore: cast_nullable_to_non_nullable
+            currentPage: null == currentPage
+                ? _value.currentPage
+                : currentPage // ignore: cast_nullable_to_non_nullable
                       as int,
+            isLoadingMore: null == isLoadingMore
+                ? _value.isLoadingMore
+                : isLoadingMore // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasMore: null == hasMore
+                ? _value.hasMore
+                : hasMore // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -139,10 +135,10 @@ abstract class _$$HomeScreenControllerStateImplCopyWith<$Res>
     SortType sortType,
     double latitude,
     double longitude,
-    List<StoreListDTO> allStores,
     List<StoreListDTO> storeGoodsList,
-    List<Address> serviceAddresses,
-    int visibleCount,
+    int currentPage,
+    bool isLoadingMore,
+    bool hasMore,
   });
 }
 
@@ -168,10 +164,10 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
     Object? sortType = null,
     Object? latitude = null,
     Object? longitude = null,
-    Object? allStores = null,
     Object? storeGoodsList = null,
-    Object? serviceAddresses = null,
-    Object? visibleCount = null,
+    Object? currentPage = null,
+    Object? isLoadingMore = null,
+    Object? hasMore = null,
   }) {
     return _then(
       _$HomeScreenControllerStateImpl(
@@ -191,22 +187,22 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
             ? _value.longitude
             : longitude // ignore: cast_nullable_to_non_nullable
                   as double,
-        allStores: null == allStores
-            ? _value._allStores
-            : allStores // ignore: cast_nullable_to_non_nullable
-                  as List<StoreListDTO>,
         storeGoodsList: null == storeGoodsList
             ? _value._storeGoodsList
             : storeGoodsList // ignore: cast_nullable_to_non_nullable
                   as List<StoreListDTO>,
-        serviceAddresses: null == serviceAddresses
-            ? _value._serviceAddresses
-            : serviceAddresses // ignore: cast_nullable_to_non_nullable
-                  as List<Address>,
-        visibleCount: null == visibleCount
-            ? _value.visibleCount
-            : visibleCount // ignore: cast_nullable_to_non_nullable
+        currentPage: null == currentPage
+            ? _value.currentPage
+            : currentPage // ignore: cast_nullable_to_non_nullable
                   as int,
+        isLoadingMore: null == isLoadingMore
+            ? _value.isLoadingMore
+            : isLoadingMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasMore: null == hasMore
+            ? _value.hasMore
+            : hasMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -214,47 +210,29 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HomeScreenControllerStateImpl extends _HomeScreenControllerState {
+class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
   const _$HomeScreenControllerStateImpl({
     required this.onlyAvailable,
     required this.sortType,
     required this.latitude,
     required this.longitude,
-    required final List<StoreListDTO> allStores,
     required final List<StoreListDTO> storeGoodsList,
-    required final List<Address> serviceAddresses,
-    this.visibleCount = _pageSize,
-  }) : _allStores = allStores,
-       _storeGoodsList = storeGoodsList,
-       _serviceAddresses = serviceAddresses,
-       super._();
+    this.currentPage = 1,
+    this.isLoadingMore = false,
+    this.hasMore = true,
+  }) : _storeGoodsList = storeGoodsList;
 
   @override
   final bool onlyAvailable;
   @override
   final SortType sortType;
 
-  /// 거리 계산 기준 좌표 (현위치 또는 죽전역)
+  /// 서버에 보내는 기준 좌표 (현위치 또는 죽전역)
   @override
   final double latitude;
   @override
   final double longitude;
-
-  /// 서버에서 받은 전체 매장 (필터/정렬 전)
-  final List<StoreListDTO> _allStores;
-
-  /// 서버에서 받은 전체 매장 (필터/정렬 전)
-  @override
-  List<StoreListDTO> get allStores {
-    if (_allStores is EqualUnmodifiableListView) return _allStores;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_allStores);
-  }
-
-  /// 필터/정렬이 적용된 전체 매장
   final List<StoreListDTO> _storeGoodsList;
-
-  /// 필터/정렬이 적용된 전체 매장
   @override
   List<StoreListDTO> get storeGoodsList {
     if (_storeGoodsList is EqualUnmodifiableListView) return _storeGoodsList;
@@ -262,22 +240,19 @@ class _$HomeScreenControllerStateImpl extends _HomeScreenControllerState {
     return EqualUnmodifiableListView(_storeGoodsList);
   }
 
-  final List<Address> _serviceAddresses;
-  @override
-  List<Address> get serviceAddresses {
-    if (_serviceAddresses is EqualUnmodifiableListView)
-      return _serviceAddresses;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_serviceAddresses);
-  }
-
   @override
   @JsonKey()
-  final int visibleCount;
+  final int currentPage;
+  @override
+  @JsonKey()
+  final bool isLoadingMore;
+  @override
+  @JsonKey()
+  final bool hasMore;
 
   @override
   String toString() {
-    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, latitude: $latitude, longitude: $longitude, allStores: $allStores, storeGoodsList: $storeGoodsList, serviceAddresses: $serviceAddresses, visibleCount: $visibleCount)';
+    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, latitude: $latitude, longitude: $longitude, storeGoodsList: $storeGoodsList, currentPage: $currentPage, isLoadingMore: $isLoadingMore, hasMore: $hasMore)';
   }
 
   @override
@@ -294,19 +269,14 @@ class _$HomeScreenControllerStateImpl extends _HomeScreenControllerState {
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             const DeepCollectionEquality().equals(
-              other._allStores,
-              _allStores,
-            ) &&
-            const DeepCollectionEquality().equals(
               other._storeGoodsList,
               _storeGoodsList,
             ) &&
-            const DeepCollectionEquality().equals(
-              other._serviceAddresses,
-              _serviceAddresses,
-            ) &&
-            (identical(other.visibleCount, visibleCount) ||
-                other.visibleCount == visibleCount));
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore) &&
+            (identical(other.hasMore, hasMore) || other.hasMore == hasMore));
   }
 
   @override
@@ -316,10 +286,10 @@ class _$HomeScreenControllerStateImpl extends _HomeScreenControllerState {
     sortType,
     latitude,
     longitude,
-    const DeepCollectionEquality().hash(_allStores),
     const DeepCollectionEquality().hash(_storeGoodsList),
-    const DeepCollectionEquality().hash(_serviceAddresses),
-    visibleCount,
+    currentPage,
+    isLoadingMore,
+    hasMore,
   );
 
   /// Create a copy of HomeScreenControllerState
@@ -334,41 +304,36 @@ class _$HomeScreenControllerStateImpl extends _HomeScreenControllerState {
       >(this, _$identity);
 }
 
-abstract class _HomeScreenControllerState extends HomeScreenControllerState {
+abstract class _HomeScreenControllerState implements HomeScreenControllerState {
   const factory _HomeScreenControllerState({
     required final bool onlyAvailable,
     required final SortType sortType,
     required final double latitude,
     required final double longitude,
-    required final List<StoreListDTO> allStores,
     required final List<StoreListDTO> storeGoodsList,
-    required final List<Address> serviceAddresses,
-    final int visibleCount,
+    final int currentPage,
+    final bool isLoadingMore,
+    final bool hasMore,
   }) = _$HomeScreenControllerStateImpl;
-  const _HomeScreenControllerState._() : super._();
 
   @override
   bool get onlyAvailable;
   @override
   SortType get sortType;
 
-  /// 거리 계산 기준 좌표 (현위치 또는 죽전역)
+  /// 서버에 보내는 기준 좌표 (현위치 또는 죽전역)
   @override
   double get latitude;
   @override
   double get longitude;
-
-  /// 서버에서 받은 전체 매장 (필터/정렬 전)
-  @override
-  List<StoreListDTO> get allStores;
-
-  /// 필터/정렬이 적용된 전체 매장
   @override
   List<StoreListDTO> get storeGoodsList;
   @override
-  List<Address> get serviceAddresses;
+  int get currentPage;
   @override
-  int get visibleCount;
+  bool get isLoadingMore;
+  @override
+  bool get hasMore;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
