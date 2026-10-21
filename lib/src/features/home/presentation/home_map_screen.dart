@@ -317,11 +317,11 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
 
     late final NLatLngBounds bounds;
     late final List<StoreListDTO> stores;
+    final onlyAvailable =
+        ref.read(homeScreenControllerProvider).valueOrNull?.onlyAvailable ??
+        false;
     try {
       bounds = await controller.getContentBounds();
-      final onlyAvailable =
-          ref.read(homeScreenControllerProvider).valueOrNull?.onlyAvailable ??
-          false;
 
       stores = await ref
           .read(storeRepositoryProvider)
@@ -344,19 +344,25 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     _refreshStoreMarkers(stores);
 
     // 예약가능 필터와 무관하게, 범위 안에 매장이 있는지로 배너 노출을 결정한다.
-    final allStores =
-        ref.read(homeScreenControllerProvider).valueOrNull?.allStores;
-    _updateBannerVisibility(
-      allStores == null
-          ? stores.isNotEmpty
-          : allStores.any(
-              (st) =>
-                  st.latitude >= bounds.southWest.latitude &&
-                  st.latitude <= bounds.northEast.latitude &&
-                  st.longitude >= bounds.southWest.longitude &&
-                  st.longitude <= bounds.northEast.longitude,
-            ),
-    );
+    var hasStoreInBounds = stores.isNotEmpty;
+    if (!hasStoreInBounds && onlyAvailable) {
+      try {
+        final allStoresInBounds = await ref
+            .read(storeRepositoryProvider)
+            .getStoreMapList(
+              swLatitude: bounds.southWest.latitude,
+              swLongitude: bounds.southWest.longitude,
+              neLatitude: bounds.northEast.latitude,
+              neLongitude: bounds.northEast.longitude,
+            );
+        hasStoreInBounds = allStoresInBounds.isNotEmpty;
+      } catch (_) {
+        // 확인에 실패하면 잘못된 안내를 띄우지 않도록 매장이 있는 것으로 본다.
+        hasStoreInBounds = true;
+      }
+      if (requestId != _fetchStoresRequestId || !mounted) return;
+    }
+    _updateBannerVisibility(hasStoreInBounds);
   }
 
   Future<void> _onGpsPressed() async {
