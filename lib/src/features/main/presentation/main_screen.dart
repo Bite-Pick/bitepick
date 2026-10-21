@@ -7,6 +7,7 @@ import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/home/presentation/home_map_screen.dart';
+import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_view_floating_button.dart';
 import 'package:magambell/src/features/order/presentation/order_list_screen.dart';
@@ -40,6 +41,13 @@ class MainScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final navState = ref.watch(navigatorControllerProvider);
     final isMapTab = navState.tabIndex == _mapTabIndex;
+    // 위치 권한이 없을 때는 지도보기 버튼을 숨긴다.
+    final isLocationGranted =
+        ref.watch(
+          homeScreenControllerProvider.select(
+            (state) => state.valueOrNull?.isLocationGranted ?? true,
+          ),
+        );
 
     return BaseScaffold(
       body: Stack(
@@ -52,7 +60,7 @@ class MainScreen extends ConsumerWidget {
             )
           else
             IndexedStack(index: navState.tabIndex, children: _screens),
-          if (navState.tabIndex == 0)
+          if (navState.tabIndex == 0 && isLocationGranted)
             Positioned(
               bottom: MgSizes.md,
               left: 0,

@@ -23,6 +23,9 @@ mixin _$HomeScreenControllerState {
   /// 서버에 보내는 기준 좌표 (현위치 또는 죽전역)
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
+
+  /// 위치 권한(및 위치 서비스)이 허용되어 매장 목록을 보여줄 수 있는지 여부
+  bool get isLocationGranted => throw _privateConstructorUsedError;
   List<StoreListDTO> get storeGoodsList => throw _privateConstructorUsedError;
   int get currentPage => throw _privateConstructorUsedError;
   bool get isLoadingMore => throw _privateConstructorUsedError;
@@ -47,6 +50,7 @@ abstract class $HomeScreenControllerStateCopyWith<$Res> {
     SortType sortType,
     double latitude,
     double longitude,
+    bool isLocationGranted,
     List<StoreListDTO> storeGoodsList,
     int currentPage,
     bool isLoadingMore,
@@ -76,6 +80,7 @@ class _$HomeScreenControllerStateCopyWithImpl<
     Object? sortType = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? isLocationGranted = null,
     Object? storeGoodsList = null,
     Object? currentPage = null,
     Object? isLoadingMore = null,
@@ -99,6 +104,10 @@ class _$HomeScreenControllerStateCopyWithImpl<
                 ? _value.longitude
                 : longitude // ignore: cast_nullable_to_non_nullable
                       as double,
+            isLocationGranted: null == isLocationGranted
+                ? _value.isLocationGranted
+                : isLocationGranted // ignore: cast_nullable_to_non_nullable
+                      as bool,
             storeGoodsList: null == storeGoodsList
                 ? _value.storeGoodsList
                 : storeGoodsList // ignore: cast_nullable_to_non_nullable
@@ -135,6 +144,7 @@ abstract class _$$HomeScreenControllerStateImplCopyWith<$Res>
     SortType sortType,
     double latitude,
     double longitude,
+    bool isLocationGranted,
     List<StoreListDTO> storeGoodsList,
     int currentPage,
     bool isLoadingMore,
@@ -164,6 +174,7 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
     Object? sortType = null,
     Object? latitude = null,
     Object? longitude = null,
+    Object? isLocationGranted = null,
     Object? storeGoodsList = null,
     Object? currentPage = null,
     Object? isLoadingMore = null,
@@ -187,6 +198,10 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
             ? _value.longitude
             : longitude // ignore: cast_nullable_to_non_nullable
                   as double,
+        isLocationGranted: null == isLocationGranted
+            ? _value.isLocationGranted
+            : isLocationGranted // ignore: cast_nullable_to_non_nullable
+                  as bool,
         storeGoodsList: null == storeGoodsList
             ? _value._storeGoodsList
             : storeGoodsList // ignore: cast_nullable_to_non_nullable
@@ -216,6 +231,7 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     required this.sortType,
     required this.latitude,
     required this.longitude,
+    required this.isLocationGranted,
     required final List<StoreListDTO> storeGoodsList,
     this.currentPage = 1,
     this.isLoadingMore = false,
@@ -232,6 +248,10 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
   final double latitude;
   @override
   final double longitude;
+
+  /// 위치 권한(및 위치 서비스)이 허용되어 매장 목록을 보여줄 수 있는지 여부
+  @override
+  final bool isLocationGranted;
   final List<StoreListDTO> _storeGoodsList;
   @override
   List<StoreListDTO> get storeGoodsList {
@@ -252,7 +272,7 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
 
   @override
   String toString() {
-    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, latitude: $latitude, longitude: $longitude, storeGoodsList: $storeGoodsList, currentPage: $currentPage, isLoadingMore: $isLoadingMore, hasMore: $hasMore)';
+    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, latitude: $latitude, longitude: $longitude, isLocationGranted: $isLocationGranted, storeGoodsList: $storeGoodsList, currentPage: $currentPage, isLoadingMore: $isLoadingMore, hasMore: $hasMore)';
   }
 
   @override
@@ -268,6 +288,8 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
+            (identical(other.isLocationGranted, isLocationGranted) ||
+                other.isLocationGranted == isLocationGranted) &&
             const DeepCollectionEquality().equals(
               other._storeGoodsList,
               _storeGoodsList,
@@ -286,6 +308,7 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     sortType,
     latitude,
     longitude,
+    isLocationGranted,
     const DeepCollectionEquality().hash(_storeGoodsList),
     currentPage,
     isLoadingMore,
@@ -310,6 +333,7 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
     required final SortType sortType,
     required final double latitude,
     required final double longitude,
+    required final bool isLocationGranted,
     required final List<StoreListDTO> storeGoodsList,
     final int currentPage,
     final bool isLoadingMore,
@@ -326,6 +350,10 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
   double get latitude;
   @override
   double get longitude;
+
+  /// 위치 권한(및 위치 서비스)이 허용되어 매장 목록을 보여줄 수 있는지 여부
+  @override
+  bool get isLocationGranted;
   @override
   List<StoreListDTO> get storeGoodsList;
   @override

@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'home_screen.controller.g.dart';
 part 'home_screen.controller.freezed.dart';
 
-/// 위치 권한이 없거나 현위치를 가져오지 못할 때 쓰는 기준 좌표 (죽전역)
+/// 권한은 있지만 현위치를 가져오지 못할 때 쓰는 기준 좌표 (죽전역)
 const _fallbackLatitude = 37.324716;
 const _fallbackLongitude = 127.107391;
 
@@ -25,6 +25,9 @@ class HomeScreenControllerState with _$HomeScreenControllerState {
     /// 서버에 보내는 기준 좌표 (현위치 또는 죽전역)
     required double latitude,
     required double longitude,
+
+    /// 위치 권한(및 위치 서비스)이 허용되어 매장 목록을 보여줄 수 있는지 여부
+    required bool isLocationGranted,
     required List<StoreListDTO> storeGoodsList,
     @Default(1) int currentPage,
     @Default(false) bool isLoadingMore,
@@ -40,6 +43,19 @@ class HomeScreenController extends _$HomeScreenController {
   Future<HomeScreenControllerState> build() async {
     _localStorage = SharedPreferenceStore();
     final position = await _resolveLocation();
+
+    // 위치 권한이 없으면 매장 목록을 조회하지 않고 권한 안내 화면을 보여준다.
+    if (position == null) {
+      return const HomeScreenControllerState(
+        onlyAvailable: false,
+        sortType: SortType.recentDesc,
+        latitude: _fallbackLatitude,
+        longitude: _fallbackLongitude,
+        isLocationGranted: false,
+        storeGoodsList: [],
+        hasMore: false,
+      );
+    }
 
     // 초기값: 기본순(영업중 우선 + 가까운 순은 서버에서 정렬)
     const onlyAvailable = false;
@@ -57,6 +73,7 @@ class HomeScreenController extends _$HomeScreenController {
       sortType: sortType,
       latitude: position.latitude,
       longitude: position.longitude,
+      isLocationGranted: true,
       storeGoodsList: stores,
       hasMore: stores.length >= _pageSize,
     );
@@ -71,6 +88,7 @@ class HomeScreenController extends _$HomeScreenController {
       currentData.copyWith(onlyAvailable: !currentData.onlyAvailable),
     );
 
+    if (!currentData.isLocationGranted) return;
     await _reloadStoreGoods();
   }
 
@@ -81,12 +99,13 @@ class HomeScreenController extends _$HomeScreenController {
     // UI 즉시 업데이트
     state = AsyncData(currentData.copyWith(sortType: sortType));
 
+    if (!currentData.isLocationGranted) return;
     await _reloadStoreGoods();
   }
 
   Future<void> loadMore() async {
     final currentData = state.value;
-    if (currentData == null) return;
+    if (currentData == null || !currentData.isLocationGranted) return;
     if (currentData.isLoadingMore) return;
     if (!currentData.hasMore) return;
 
@@ -164,19 +183,50 @@ class HomeScreenController extends _$HomeScreenController {
     await _localStorage.setAddress(address.id);
   }
 
-  Future<({double latitude, double longitude})> _resolveLocation() async {
-    const fallback = (latitude: _fallbackLatitude, longitude: _fallbackLongitude);
-    try {
-      if (!await Geolocator.isLocationServiceEnabled()) return fallback;
+  /// 위치 권한 요청 버튼 동작. 설정에서 직접 허용해야 하는 경우 설정 화면을 연다.
+  Future<void> requestLocationPermission() async {
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
+    if (permission == LocationPermission.deniedForever) {
+      await Geolocator.openAppSettings();
+      return;
+    }
+    if (permission == LocationPermission.denied) return;
+
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      await Geolocator.openLocationSettings();
+      return;
+    }
+    ref.invalidateSelf();
+  }
+
+  /// 설정 화면에서 돌아왔을 때 권한이 허용되었다면 목록을 다시 불러온다.
+  Future<void> recheckLocation() async {
+    final currentData = state.value;
+    if (currentData == null || currentData.isLocationGranted) return;
+
+    final position = await _resolveLocation(requestIfDenied: false);
+    if (position != null) ref.invalidateSelf();
+  }
+
+  /// 현위치를 반환한다. 권한이 없거나 위치 서비스가 꺼져 있으면 null,
+  /// 권한은 있지만 위치를 가져오지 못하면 죽전역 좌표를 반환한다.
+  Future<({double latitude, double longitude})?> _resolveLocation({
+    bool requestIfDenied = true,
+  }) async {
+    try {
       var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
+      if (permission == LocationPermission.denied && requestIfDenied) {
         permission = await Geolocator.requestPermission();
       }
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        return fallback;
+        return null;
       }
+      if (!await Geolocator.isLocationServiceEnabled()) return null;
 
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.medium,
@@ -184,7 +234,7 @@ class HomeScreenController extends _$HomeScreenController {
       );
       return (latitude: position.latitude, longitude: position.longitude);
     } catch (_) {
-      return fallback;
+      return (latitude: _fallbackLatitude, longitude: _fallbackLongitude);
     }
   }
 }

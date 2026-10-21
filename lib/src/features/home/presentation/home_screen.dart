@@ -14,6 +14,7 @@ import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_location_permission_view.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -25,19 +26,30 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // 설정 화면에서 위치 권한을 허용하고 돌아온 경우 목록을 다시 불러온다.
+    if (state == AppLifecycleState.resumed) {
+      ref.read(homeScreenControllerProvider.notifier).recheckLocation();
+    }
   }
 
   void _onScroll() {
@@ -115,38 +127,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 );
                               },
                             ),
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: controllerState.storeGoodsList.length,
-                              separatorBuilder: (context, index) => Gaps.h4,
-                              itemBuilder: (context, index) {
-                                final item =
-                                    controllerState.storeGoodsList[index];
-                                return HomeGoodsItem(
-                                      goods: item.toHomeGoodsItem(),
-                                    )
-                                    .margin(bottom: MgSizes.xs)
-                                    .margin(horizontal: MgSizes.md);
-                              },
-                            ),
-                            if (controllerState.isLoadingMore)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
+                            if (!controllerState.isLocationGranted)
+                              HomeLocationPermissionView(
+                                onPressed: () => ref
+                                    .read(homeScreenControllerProvider.notifier)
+                                    .requestLocationPermission(),
+                              )
+                            else ...[
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controllerState.storeGoodsList.length,
+                                  separatorBuilder: (context, index) => Gaps.h4,
+                                  itemBuilder: (context, index) {
+                                    final item =
+                                        controllerState.storeGoodsList[index];
+                                    return HomeGoodsItem(
+                                          goods: item.toHomeGoodsItem(),
+                                        )
+                                        .margin(bottom: MgSizes.xs)
+                                        .margin(horizontal: MgSizes.md);
+                                  },
                                 ),
-                              ),
-                            if (!controllerState.hasMore &&
-                                controllerState.storeGoodsList.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                child: Center(
-                                  child: Text('bitepick').sm().textGray(),
-                                ),
-                              ),
+                                if (controllerState.isLoadingMore)
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                if (!controllerState.hasMore &&
+                                    controllerState.storeGoodsList.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Center(
+                                      child: Text('bitepick').sm().textGray(),
+                                    ),
+                                  ),
+                            ],
                             const _BusinessInfoSection(),
                           ],
                         ),
