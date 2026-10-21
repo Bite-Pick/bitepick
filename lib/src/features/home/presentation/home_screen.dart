@@ -158,7 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheet(SortType currentSortType) {
     final List<String> sorts = SortType.values
-        .where((e) => e == SortType.distanceAsc || e == SortType.priceAsc)
+        .where((e) => e != SortType.distanceAsc)
         .map((e) => e.name)
         .toList();
     return MgBottomsheet(
