@@ -299,6 +299,9 @@ class R {
 
   static const String ASSETS_IMAGES_KAKAOMAP_PNG = 'assets/images/kakaomap.png';
 
+  static const String ASSETS_IMAGES_LOCATION_PERMISSION_PNG =
+      'assets/images/location_permission.png';
+
   static const String ASSETS_IMAGES_NAVER_LOGIN_PNG =
       'assets/images/naver_login.png';
 
