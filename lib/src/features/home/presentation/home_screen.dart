@@ -7,6 +7,7 @@ import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
@@ -85,6 +86,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: [
+                    const SliverPersistentHeader(
+                      pinned: true,
+                      floating: true,
+                      delegate: HomeAppBarDelegate(),
+                    ),
                     SliverList(
                       delegate: SliverChildListDelegate([
                         Column(

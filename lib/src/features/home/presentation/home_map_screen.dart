@@ -17,6 +17,7 @@ import 'package:magambell/src/features/home/presentation/widgets/map_view_floati
 import 'package:magambell/src/features/home/presentation/widgets/my_location_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/map_tooltip_marker.dart';
 import 'package:magambell/src/features/home/presentation/widgets/non_service_area_banner.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/search_in_area_button.dart';
 import 'package:magambell/src/features/home/presentation/widgets/service_area_request_chip.dart';
@@ -447,6 +448,7 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
           children: [
             Column(
               children: [
+                const HomeAppBar(),
                 HomeFilterBar(
                   onlyAvailable: controllerState?.onlyAvailable ?? false,
                   onToggleAvailable: () => ref
