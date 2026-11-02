@@ -31,6 +31,9 @@ mixin _$HomeScreenControllerState {
   bool get isLoadingMore => throw _privateConstructorUsedError;
   bool get hasMore => throw _privateConstructorUsedError;
 
+  /// 다음 페이지 조회가 실패한 상태. 사용자가 재시도하기 전까지 자동 재요청하지 않는다.
+  bool get loadMoreFailed => throw _privateConstructorUsedError;
+
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -55,6 +58,7 @@ abstract class $HomeScreenControllerStateCopyWith<$Res> {
     int currentPage,
     bool isLoadingMore,
     bool hasMore,
+    bool loadMoreFailed,
   });
 }
 
@@ -85,6 +89,7 @@ class _$HomeScreenControllerStateCopyWithImpl<
     Object? currentPage = null,
     Object? isLoadingMore = null,
     Object? hasMore = null,
+    Object? loadMoreFailed = null,
   }) {
     return _then(
       _value.copyWith(
@@ -124,6 +129,10 @@ class _$HomeScreenControllerStateCopyWithImpl<
                 ? _value.hasMore
                 : hasMore // ignore: cast_nullable_to_non_nullable
                       as bool,
+            loadMoreFailed: null == loadMoreFailed
+                ? _value.loadMoreFailed
+                : loadMoreFailed // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -149,6 +158,7 @@ abstract class _$$HomeScreenControllerStateImplCopyWith<$Res>
     int currentPage,
     bool isLoadingMore,
     bool hasMore,
+    bool loadMoreFailed,
   });
 }
 
@@ -179,6 +189,7 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
     Object? currentPage = null,
     Object? isLoadingMore = null,
     Object? hasMore = null,
+    Object? loadMoreFailed = null,
   }) {
     return _then(
       _$HomeScreenControllerStateImpl(
@@ -218,6 +229,10 @@ class __$$HomeScreenControllerStateImplCopyWithImpl<$Res>
             ? _value.hasMore
             : hasMore // ignore: cast_nullable_to_non_nullable
                   as bool,
+        loadMoreFailed: null == loadMoreFailed
+            ? _value.loadMoreFailed
+            : loadMoreFailed // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -236,6 +251,7 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     this.currentPage = 1,
     this.isLoadingMore = false,
     this.hasMore = true,
+    this.loadMoreFailed = false,
   }) : _storeGoodsList = storeGoodsList;
 
   @override
@@ -270,9 +286,14 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
   @JsonKey()
   final bool hasMore;
 
+  /// 다음 페이지 조회가 실패한 상태. 사용자가 재시도하기 전까지 자동 재요청하지 않는다.
+  @override
+  @JsonKey()
+  final bool loadMoreFailed;
+
   @override
   String toString() {
-    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, latitude: $latitude, longitude: $longitude, isLocationGranted: $isLocationGranted, storeGoodsList: $storeGoodsList, currentPage: $currentPage, isLoadingMore: $isLoadingMore, hasMore: $hasMore)';
+    return 'HomeScreenControllerState(onlyAvailable: $onlyAvailable, sortType: $sortType, latitude: $latitude, longitude: $longitude, isLocationGranted: $isLocationGranted, storeGoodsList: $storeGoodsList, currentPage: $currentPage, isLoadingMore: $isLoadingMore, hasMore: $hasMore, loadMoreFailed: $loadMoreFailed)';
   }
 
   @override
@@ -298,7 +319,9 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
                 other.currentPage == currentPage) &&
             (identical(other.isLoadingMore, isLoadingMore) ||
                 other.isLoadingMore == isLoadingMore) &&
-            (identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+            (identical(other.hasMore, hasMore) || other.hasMore == hasMore) &&
+            (identical(other.loadMoreFailed, loadMoreFailed) ||
+                other.loadMoreFailed == loadMoreFailed));
   }
 
   @override
@@ -313,6 +336,7 @@ class _$HomeScreenControllerStateImpl implements _HomeScreenControllerState {
     currentPage,
     isLoadingMore,
     hasMore,
+    loadMoreFailed,
   );
 
   /// Create a copy of HomeScreenControllerState
@@ -338,6 +362,7 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
     final int currentPage,
     final bool isLoadingMore,
     final bool hasMore,
+    final bool loadMoreFailed,
   }) = _$HomeScreenControllerStateImpl;
 
   @override
@@ -362,6 +387,10 @@ abstract class _HomeScreenControllerState implements HomeScreenControllerState {
   bool get isLoadingMore;
   @override
   bool get hasMore;
+
+  /// 다음 페이지 조회가 실패한 상태. 사용자가 재시도하기 전까지 자동 재요청하지 않는다.
+  @override
+  bool get loadMoreFailed;
 
   /// Create a copy of HomeScreenControllerState
   /// with the given fields replaced by the non-null parameter values.

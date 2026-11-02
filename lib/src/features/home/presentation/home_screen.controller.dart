@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:magambell/src/core/utils/shared_preference_store.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/address/domain/entities/address.dart';
 import 'package:magambell/src/features/goods/data/dtos/store_list.dto.dart';
 import 'package:magambell/src/features/store/data/repositories/store_repository.dart';
@@ -32,6 +33,9 @@ class HomeScreenControllerState with _$HomeScreenControllerState {
     @Default(1) int currentPage,
     @Default(false) bool isLoadingMore,
     @Default(true) bool hasMore,
+
+    /// 다음 페이지 조회가 실패한 상태. 사용자가 재시도하기 전까지 자동 재요청하지 않는다.
+    @Default(false) bool loadMoreFailed,
   }) = _HomeScreenControllerState;
 }
 
@@ -39,8 +43,13 @@ class HomeScreenControllerState with _$HomeScreenControllerState {
 class HomeScreenController extends _$HomeScreenController {
   late SharedPreferenceStore _localStorage;
 
+  /// 응답 순번. 목록을 새로 만드는 요청(build/재조회)이 시작될 때마다 올려서,
+  /// 늦게 도착한 이전 요청의 응답이 최신 상태를 덮어쓰지 않게 한다.
+  int _requestSeq = 0;
+
   @override
   Future<HomeScreenControllerState> build() async {
+    _requestSeq++;
     _localStorage = SharedPreferenceStore();
     final position = await _resolveLocation();
 
@@ -108,7 +117,9 @@ class HomeScreenController extends _$HomeScreenController {
     if (currentData == null || !currentData.isLocationGranted) return;
     if (currentData.isLoadingMore) return;
     if (!currentData.hasMore) return;
+    if (currentData.loadMoreFailed) return;
 
+    final seq = _requestSeq;
     state = AsyncData(currentData.copyWith(isLoadingMore: true));
 
     try {
@@ -121,23 +132,42 @@ class HomeScreenController extends _$HomeScreenController {
         page: nextPage,
       );
 
+      // 응답을 기다리는 사이 필터/정렬이 바뀌었다면 이전 쿼리의 페이지는 버린다.
+      final latest = state.value;
+      if (seq != _requestSeq || latest == null) return;
+
       state = AsyncData(
-        currentData.copyWith(
-          storeGoodsList: [...currentData.storeGoodsList, ...newItems],
+        latest.copyWith(
+          storeGoodsList: [...latest.storeGoodsList, ...newItems],
           currentPage: nextPage,
           isLoadingMore: false,
           hasMore: newItems.length >= _pageSize,
         ),
       );
-    } catch (_) {
-      state = AsyncData(currentData.copyWith(isLoadingMore: false));
+    } catch (e, stack) {
+      talker.handle(e, stack, '홈 매장 다음 페이지 조회 실패');
+      final latest = state.value;
+      if (seq != _requestSeq || latest == null) return;
+      state = AsyncData(
+        latest.copyWith(isLoadingMore: false, loadMoreFailed: true),
+      );
     }
+  }
+
+  /// 다음 페이지 조회 실패 후 사용자가 재시도할 때 호출한다.
+  Future<void> retryLoadMore() async {
+    final currentData = state.value;
+    if (currentData == null) return;
+
+    state = AsyncData(currentData.copyWith(loadMoreFailed: false));
+    await loadMore();
   }
 
   Future<void> _reloadStoreGoods() async {
     final currentData = state.value;
     if (currentData == null) return;
 
+    final seq = ++_requestSeq;
     try {
       final stores = await _fetchStores(
         latitude: currentData.latitude,
@@ -147,15 +177,20 @@ class HomeScreenController extends _$HomeScreenController {
         page: 1,
       );
 
+      final latest = state.value;
+      if (seq != _requestSeq || latest == null) return;
+
       state = AsyncData(
-        currentData.copyWith(
+        latest.copyWith(
           storeGoodsList: stores,
           currentPage: 1,
           isLoadingMore: false,
+          loadMoreFailed: false,
           hasMore: stores.length >= _pageSize,
         ),
       );
     } catch (e, stack) {
+      if (seq != _requestSeq) return;
       state = AsyncError(e, stack);
     }
   }
@@ -203,13 +238,17 @@ class HomeScreenController extends _$HomeScreenController {
     ref.invalidateSelf();
   }
 
-  /// 설정 화면에서 돌아왔을 때 권한이 허용되었다면 목록을 다시 불러온다.
+  /// 설정 화면에서 돌아왔을 때 위치 권한/서비스 상태가 바뀌었다면 목록을 다시 구성한다.
+  /// - 권한 없음 → 허용: 목록을 새로 불러온다.
+  /// - 허용 → 권한/위치 서비스 꺼짐: 권한 안내 화면으로 전환한다.
+  /// 허용 상태가 그대로라면 목록과 스크롤 위치를 유지한다.
   Future<void> recheckLocation() async {
     final currentData = state.value;
-    if (currentData == null || currentData.isLocationGranted) return;
+    if (currentData == null) return;
 
     final position = await _resolveLocation(requestIfDenied: false);
-    if (position != null) ref.invalidateSelf();
+    final isGranted = position != null;
+    if (isGranted != currentData.isLocationGranted) ref.invalidateSelf();
   }
 
   /// 현위치를 반환한다. 권한이 없거나 위치 서비스가 꺼져 있으면 null,
