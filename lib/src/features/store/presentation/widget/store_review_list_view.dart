@@ -64,8 +64,14 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
               // TODO: review에 userId가 내려오거나, 본인 리뷰 여부를 판별할 수 있는 flag가 추가되어야함
                 reviews[i].nickName ==
                         ref.read(userStateProvider).asData!.value?.nickName
-                    ? ReviewItem.myReview(reviews[i])
-                    : ReviewItem.userReview(reviews[i])
+                    ? ReviewItem.myReview(
+                        reviews[i],
+                        showDivider: i != reviews.length - 1,
+                      )
+                    : ReviewItem.userReview(
+                      reviews[i],
+                      showDivider: i != reviews.length - 1,
+                      )
               ],
             ],
           ),

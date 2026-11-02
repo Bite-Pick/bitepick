@@ -368,6 +368,7 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
                     StoreInfoView(
                       store.toStoreInfoData(),
                       hasFavorite: false,
+                      isOwnerView: true,
                       onPhotoChangeTap: () =>
                           _showPhotoEditBottomSheet(context, ref, store),
                       onMenuEditTap: () async {

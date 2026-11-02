@@ -6,6 +6,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/base_network_image.dart';
+import 'package:magambell/src/features/review/domain/entities/review.dart';
 
 class ReviewCardView extends StatelessWidget {
   const ReviewCardView({
@@ -14,6 +15,7 @@ class ReviewCardView extends StatelessWidget {
     required this.createdAt,
     required this.description,
     required this.imageUrls,
+    required this.rating,
     this.trailing,
     this.replyContent,
     this.replyCreatedAt,
@@ -23,6 +25,7 @@ class ReviewCardView extends StatelessWidget {
   final DateTime createdAt;
   final String description;
   final List<String> imageUrls;
+  final int rating;
   final Widget? trailing;
   final String? replyContent;
   final DateTime? replyCreatedAt;
@@ -120,7 +123,7 @@ class ReviewCardView extends StatelessWidget {
         children: [
           Image.asset('assets/images/menu.png', width: 12, height: 12),
           Gaps.w4,
-          Text('추천해요')
+          Text(ratingLabelOf(rating))
               .xs()
               .height(1.5)
               .letterSpacing(-0.3)

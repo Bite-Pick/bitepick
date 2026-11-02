@@ -19,6 +19,7 @@ class OwnerReviewItem extends ConsumerWidget {
       createdAt: review.createdAt,
       description: review.description,
       imageUrls: review.imageUrls,
+      rating: review.rating,
       replyContent: review.reply?.content,
       replyCreatedAt: review.reply?.createdAt,
       trailing: GestureDetector(
