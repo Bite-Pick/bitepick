@@ -48,7 +48,6 @@ class Review with _$Review {
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
 }
 
-// TODO: 서버 로직 확인 필요
 String ratingLabelOf(int rating) => switch (rating) {
   3 => '최고에요',
   2 => '좋아요',

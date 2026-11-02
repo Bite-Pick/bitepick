@@ -48,12 +48,14 @@ class StoreInfoView extends ConsumerWidget {
       this.onPhotoChangeTap, 
       this.onMenuEditTap,
       this.reviewCount = 0,
+      this.isOwnerView = false,
   });
   final StoreInfoUiData storeInfo;
   final bool hasFavorite;
   final VoidCallback? onPhotoChangeTap;
   final VoidCallback? onMenuEditTap;
   final int reviewCount;
+  final bool isOwnerView;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,7 +80,7 @@ class StoreInfoView extends ConsumerWidget {
     const imageWidth = 156.0;
     const imageHeight = 196.0;
     List<String> imageUrls = storeInfo.imageUrls;
-    final isBeforeOpen = storeInfo.saleStatus == 'OFF' && onPhotoChangeTap == null;
+    final isBeforeOpen = storeInfo.saleStatus == 'OFF' && !isOwnerView;
 
     if (storeInfo.imageUrls.isEmpty) {
       return Container(
