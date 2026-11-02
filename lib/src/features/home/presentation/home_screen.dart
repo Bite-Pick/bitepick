@@ -156,6 +156,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       child: CircularProgressIndicator(),
                                     ),
                                   ),
+                                if (controllerState.loadMoreFailed)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Center(
+                                      child: TextButton(
+                                        onPressed: () => ref
+                                            .read(
+                                              homeScreenControllerProvider
+                                                  .notifier,
+                                            )
+                                            .retryLoadMore(),
+                                        child: const Text(
+                                          '불러오지 못했어요. 다시 시도',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 if (!controllerState.hasMore &&
                                     controllerState.storeGoodsList.isNotEmpty)
                                   Padding(
