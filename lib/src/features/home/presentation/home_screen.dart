@@ -7,12 +7,14 @@ import 'package:magambell/src/core/extensions/list_extension.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/navigator/navigator_controller.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_banners_view.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_update_banner.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
 import 'package:magambell/src/features/home/presentation/home_screen.controller.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_filter_bar.dart';
 import 'package:magambell/src/features/home/presentation/widgets/home_goods_item.dart';
+import 'package:magambell/src/features/home/presentation/widgets/home_location_permission_view.dart';
 import 'package:magambell/src/features/store/domain/sort_type.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
 import 'package:magambell/src/widgets/mg_bottomsheet.dart';
@@ -24,19 +26,30 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // 설정 화면에서 위치 권한을 허용하고 돌아온 경우 목록을 다시 불러온다.
+    if (state == AppLifecycleState.resumed) {
+      ref.read(homeScreenControllerProvider.notifier).recheckLocation();
+    }
   }
 
   void _onScroll() {
@@ -85,6 +98,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: [
+                    const SliverPersistentHeader(
+                      pinned: true,
+                      floating: true,
+                      delegate: HomeAppBarDelegate(),
+                    ),
                     SliverList(
                       delegate: SliverChildListDelegate([
                         Column(
@@ -109,31 +127,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 );
                               },
                             ),
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: controllerState.visibleStores.length,
-                              separatorBuilder: (context, index) => Gaps.h4,
-                              itemBuilder: (context, index) {
-                                final item =
-                                    controllerState.visibleStores[index];
-                                return HomeGoodsItem(
-                                      goods: item.toHomeGoodsItem(),
-                                    )
-                                    .margin(bottom: MgSizes.xs)
-                                    .margin(horizontal: MgSizes.md);
-                              },
-                            ),
-                            if (!controllerState.hasMore &&
-                                controllerState.storeGoodsList.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
+                            if (!controllerState.isLocationGranted)
+                              HomeLocationPermissionView(
+                                onPressed: () => ref
+                                    .read(homeScreenControllerProvider.notifier)
+                                    .requestLocationPermission(),
+                              )
+                            else ...[
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controllerState.storeGoodsList.length,
+                                  separatorBuilder: (context, index) => Gaps.h4,
+                                  itemBuilder: (context, index) {
+                                    final item =
+                                        controllerState.storeGoodsList[index];
+                                    return HomeGoodsItem(
+                                          goods: item.toHomeGoodsItem(),
+                                        )
+                                        .margin(bottom: MgSizes.xs)
+                                        .margin(horizontal: MgSizes.md);
+                                  },
                                 ),
-                                child: Center(
-                                  child: Text('bitepick').sm().textGray(),
-                                ),
-                              ),
+                                if (controllerState.isLoadingMore)
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                if (controllerState.loadMoreFailed)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Center(
+                                      child: TextButton(
+                                        onPressed: () => ref
+                                            .read(
+                                              homeScreenControllerProvider
+                                                  .notifier,
+                                            )
+                                            .retryLoadMore(),
+                                        child: const Text(
+                                          '불러오지 못했어요. 다시 시도',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                if (!controllerState.hasMore &&
+                                    controllerState.storeGoodsList.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Center(
+                                      child: Text('bitepick').sm().textGray(),
+                                    ),
+                                  ),
+                            ],
                             const _BusinessInfoSection(),
                           ],
                         ),
@@ -151,7 +203,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildSortBottomSheet(SortType currentSortType) {
     final List<String> sorts = SortType.values
-        .where((e) => e == SortType.distanceAsc || e == SortType.priceAsc)
+        .where((e) => e != SortType.distanceAsc)
         .map((e) => e.name)
         .toList();
     return MgBottomsheet(
