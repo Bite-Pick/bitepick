@@ -89,7 +89,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
                   StoreInfoView(
                     store.toStoreInfoData(),
                     hasFavorite: false,
-                    reviewCount: reviewCount.value ?? 0,
+                    reviewCount: reviewCount.value,
                   ),
                   StoreReviewListView(store.goodsId),
                 ],
