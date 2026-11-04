@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:magambell/src/constants/index.dart';
 
-/// 사진을 전체 화면으로 확대해서 보여준다. 좌우로 넘기고, 핀치로 확대할 수 있다.
 Future<void> showImageViewer(
   BuildContext context, {
   required List<String> imageUrls,

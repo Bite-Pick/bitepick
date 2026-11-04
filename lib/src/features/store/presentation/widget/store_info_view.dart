@@ -77,7 +77,6 @@ class StoreInfoView extends ConsumerWidget {
     );
   }
 
-  /// 빈 URL은 건너뛰고, 탭한 사진이 첫 화면이 되도록 인덱스를 맞춰 뷰어를 연다.
   void _openImageViewer(BuildContext context, List<String> urls, int index) {
     final viewerUrls = <String>[];
     var viewerIndex = 0;
