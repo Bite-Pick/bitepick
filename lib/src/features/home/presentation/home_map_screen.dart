@@ -99,32 +99,35 @@ class _HomeMapScreenState extends ConsumerState<HomeMapScreen> {
     _mapController = controller;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      await Future.wait([
-        precacheImage(
-          const AssetImage('assets/images/pin_store_default.png'),
-          context,
+      await precacheImage(
+        const AssetImage('assets/images/pin_store_default.png'),
+        context,
+      );
+      if (!mounted) return;
+      // flutter_naver_map은 첫 호출 때 임시 폴더를 초기화(기존 폴더 삭제)하므로
+      // 동시에 호출하면 생성 중인 이미지 파일이 지워져 iOS에서 네이티브 크래시가 난다.
+      // 워밍업 이미지는 반드시 순차로 만든다.
+      await NOverlayImage.fromWidget(
+        widget: const StorePinMarker(
+          storeName: '',
+          isSelected: true,
+          isOpen: false,
+          showLabel: false,
         ),
-        NOverlayImage.fromWidget(
-          widget: const StorePinMarker(
-            storeName: '',
-            isSelected: true,
-            isOpen: false,
-            showLabel: false,
-          ),
-          size: const Size(80, 90),
-          context: context,
+        size: const Size(80, 90),
+        context: context,
+      );
+      if (!mounted) return;
+      await NOverlayImage.fromWidget(
+        widget: const StorePinMarker(
+          storeName: '',
+          isSelected: true,
+          isOpen: true,
+          showLabel: false,
         ),
-        NOverlayImage.fromWidget(
-          widget: const StorePinMarker(
-            storeName: '',
-            isSelected: true,
-            isOpen: true,
-            showLabel: false,
-          ),
-          size: const Size(80, 110),
-          context: context,
-        ),
-      ]);
+        size: const Size(80, 110),
+        context: context,
+      );
       if (!mounted) return;
       _mapReady = true;
       _showTooltip();
