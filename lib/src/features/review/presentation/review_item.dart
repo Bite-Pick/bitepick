@@ -6,6 +6,7 @@ import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:magambell/src/features/review/presentation/review_card_view.dart';
+import 'package:magambell/src/features/review/presentation/store_reviews.controller.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -198,7 +199,10 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
           if (res) {
             ToastPresentor.success(context, "리뷰가 삭제되었습니다.");
             // TODO: refactor 각 화면에서 사용하는 provider만 invalidate하도록
-            ref.invalidate(reviewsProvider(goodsId: widget.review.goodsId));
+            ref.invalidate(storeReviewsProvider(widget.review.goodsId));
+            ref.invalidate(
+              reviewTotalCountProvider(goodsId: widget.review.goodsId),
+            );
             ref.invalidate(myReviewsProvider);
           } else {
             ToastPresentor.error(context, "리뷰 삭제에 실패했습니다. 문의해주세요");
