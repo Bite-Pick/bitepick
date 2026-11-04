@@ -21,6 +21,7 @@ import 'package:magambell/src/features/store/presentation/widget/store_tags.dart
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/base_network_image.dart';
 import 'package:magambell/src/widgets/base_svg_icon.dart';
+import 'package:magambell/src/widgets/image_viewer.dart';
 import 'package:magambell/src/widgets/toast_presentor.dart';
 
 const _menuItemNameStyle = TextStyle(
@@ -76,6 +77,18 @@ class StoreInfoView extends ConsumerWidget {
     );
   }
 
+  /// 빈 URL은 건너뛰고, 탭한 사진이 첫 화면이 되도록 인덱스를 맞춰 뷰어를 연다.
+  void _openImageViewer(BuildContext context, List<String> urls, int index) {
+    final viewerUrls = <String>[];
+    var viewerIndex = 0;
+    for (var i = 0; i < urls.length; i++) {
+      if (urls[i].isEmpty) continue;
+      if (i == index) viewerIndex = viewerUrls.length;
+      viewerUrls.add(urls[i]);
+    }
+    showImageViewer(context, imageUrls: viewerUrls, initialIndex: viewerIndex);
+  }
+
   Widget _buildThumbnailImageView(BuildContext context) {
     const imageWidth = 156.0;
     const imageHeight = 196.0;
@@ -116,21 +129,26 @@ class StoreInfoView extends ConsumerWidget {
                     backgroundColor: NewColorScheme.gray12,
                   );
 
-              return Stack(
-                children: [
-                  photo, 
-                  if (isBeforeOpen)
-                    Positioned.fill(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(MgRadius.md),
-                        child: Container(
-                          color: NewColorScheme.gray0.withValues(alpha: 0.3),
-                          alignment: Alignment.center,
-                          child: const Text('오픈 준비 중', style: _openSoonTextStyle),
+              return GestureDetector(
+                onTap: imageUrl.isEmpty
+                    ? null
+                    : () => _openImageViewer(context, imageUrls, index),
+                child: Stack(
+                  children: [
+                    photo, 
+                    if (isBeforeOpen)
+                      Positioned.fill(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(MgRadius.md),
+                          child: Container(
+                            color: NewColorScheme.gray0.withValues(alpha: 0.3),
+                            alignment: Alignment.center,
+                            child: const Text('오픈 준비 중', style: _openSoonTextStyle),
+                          ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ).margin(right: isLast ? 0 : MgSizes.xss);
             },
           ).margin(top: MgSizes.xl),
@@ -374,12 +392,21 @@ class StoreInfoView extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BaseNetworkImage(
-                          imageUrl: item.imageUrl ?? '',
-                          width: 104,
-                          height: 103,
-                          borderRadius: MgRadius.sm,
-                          backgroundColor: NewColorScheme.gray12,
+                        GestureDetector(
+                          onTap: (item.imageUrl ?? '').isEmpty
+                              ? null
+                              : () => _openImageViewer(
+                                  context,
+                                  menuItems.map((e) => e.imageUrl ?? '').toList(),
+                                  index,
+                                ),
+                          child: BaseNetworkImage(
+                            imageUrl: item.imageUrl ?? '',
+                            width: 104,
+                            height: 103,
+                            borderRadius: MgRadius.sm,
+                            backgroundColor: NewColorScheme.gray12,
+                          ),
                         ),
                         Gaps.h(MgSizes.size6),
                         Text(
