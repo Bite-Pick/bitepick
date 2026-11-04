@@ -21,7 +21,6 @@ class StoreReviewsState with _$StoreReviewsState {
   }) = _StoreReviewsState;
 }
 
-/// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
 @riverpod
 class StoreReviews extends _$StoreReviews {
   /// 응답 순번. 목록을 새로 만들 때(build) 올려서, 늦게 도착한 이전 요청의

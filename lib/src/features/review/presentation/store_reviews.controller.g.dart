@@ -36,24 +36,16 @@ abstract class _$StoreReviews
   FutureOr<StoreReviewsState> build(String goodsId);
 }
 
-/// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
-///
-/// Copied from [StoreReviews].
+/// See also [StoreReviews].
 @ProviderFor(StoreReviews)
 const storeReviewsProvider = StoreReviewsFamily();
 
-/// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
-///
-/// Copied from [StoreReviews].
+/// See also [StoreReviews].
 class StoreReviewsFamily extends Family<AsyncValue<StoreReviewsState>> {
-  /// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
-  ///
-  /// Copied from [StoreReviews].
+  /// See also [StoreReviews].
   const StoreReviewsFamily();
 
-  /// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
-  ///
-  /// Copied from [StoreReviews].
+  /// See also [StoreReviews].
   StoreReviewsProvider call(String goodsId) {
     return StoreReviewsProvider(goodsId);
   }
@@ -80,15 +72,11 @@ class StoreReviewsFamily extends Family<AsyncValue<StoreReviewsState>> {
   String? get name => r'storeReviewsProvider';
 }
 
-/// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
-///
-/// Copied from [StoreReviews].
+/// See also [StoreReviews].
 class StoreReviewsProvider
     extends
         AutoDisposeAsyncNotifierProviderImpl<StoreReviews, StoreReviewsState> {
-  /// 매장 상세 리뷰 목록. 첫 페이지를 불러오고, "더보기"로 다음 페이지를 이어 붙인다.
-  ///
-  /// Copied from [StoreReviews].
+  /// See also [StoreReviews].
   StoreReviewsProvider(String goodsId)
     : this._internal(
         () => StoreReviews()..goodsId = goodsId,

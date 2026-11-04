@@ -19,7 +19,6 @@ Review _review(int id) => Review(
   storeName: '매장',
 );
 
-/// 전체 [total]개의 리뷰를 page/size로 잘라서 돌려주는 가짜 저장소
 class _FakeReviewRepository extends ReviewRepository {
   _FakeReviewRepository(super.ref, {required this.total});
 
@@ -88,7 +87,6 @@ void main() {
     expect(last.reviews.length, 25);
     expect(last.hasMore, isFalse);
 
-    // 더 없으면 요청하지 않는다.
     final repo =
         container.read(reviewRepositoryProvider) as _FakeReviewRepository;
     final before = repo.requestedPages.length;

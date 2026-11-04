@@ -151,7 +151,6 @@ class ReviewRepository {
   }
 
 
-  /// 3. 매장 리뷰 전체 개수
   Future<int> getReviewTotalCount(String goodsId) async {
     final res = await _dio.get(
       '/v1/review/rating',
