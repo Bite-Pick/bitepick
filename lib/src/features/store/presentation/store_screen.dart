@@ -58,7 +58,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
       onRetry: () => ref.invalidate(storeGoodsDetailProvider(widget.id)),
       builder: (store) {
         if (store == null) return Center(child: Text("에러가 발생했습니다"));
-        final reviewsAsync = ref.watch(reviewsProvider(goodsId: store.goodsId, imageCheck: false));
+        final reviewCount = ref.watch(reviewTotalCountProvider(goodsId: store.goodsId));
         return BaseScaffold(
           appBar: BaseAppBar(
             title: Text(store.storeName),
@@ -89,7 +89,7 @@ class _StoreScreenState extends ConsumerState<StoreScreen> {
                   StoreInfoView(
                     store.toStoreInfoData(),
                     hasFavorite: false,
-                    reviewCount: reviewsAsync.value?.length ?? 0,
+                    reviewCount: reviewCount.value ?? 0,
                   ),
                   StoreReviewListView(store.goodsId),
                 ],

@@ -5,10 +5,11 @@ import 'package:magambell/src/constants/assets.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
-import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
+import 'package:magambell/src/features/review/presentation/store_reviews.controller.dart';
 import 'package:magambell/src/features/review/presentation/review_item.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/mg_async_animated_switcher.dart';
+import 'package:magambell/src/widgets/mg_button.dart';
 import 'package:magambell/src/widgets/mg_checkbox.dart';
 
 class StoreReviewListView extends ConsumerStatefulWidget {
@@ -21,16 +22,10 @@ class StoreReviewListView extends ConsumerStatefulWidget {
 }
 
 class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
-  bool _imageCheckOnly = false;
-
-  void _toggleImageCheck() =>
-      setState(() => _imageCheckOnly = !_imageCheckOnly);
-
   @override
   Widget build(BuildContext context) {
-    final reviewsAsync = ref.watch(
-      reviewsProvider(goodsId: widget.goodsId, imageCheck: _imageCheckOnly),
-    );
+    final reviewsState = ref.watch(storeReviewsProvider(widget.goodsId));
+    final reviewsAsync = reviewsState.whenData((state) => state.reviews);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -46,7 +41,7 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
        // ).margin(horizontal: MgSizes.md, top: MgSizes.xxl),
         MgAsyncAnimatedSwitcher(
           asyncValue: reviewsAsync,
-          onRetry: () => ref.invalidate(reviewsProvider(goodsId: widget.goodsId, imageCheck: _imageCheckOnly)),
+          onRetry: () => ref.invalidate(storeReviewsProvider(widget.goodsId)),
           emptyBuilder: () => Center(
             child: Column(
               children: [
@@ -76,7 +71,26 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
             ],
           ),
         ),
+        if (reviewsState.value?.hasMore ?? false)
+          _buildLoadMoreButton(reviewsState.value!.isLoadingMore),
       ],
     );
+  }
+
+  Widget _buildLoadMoreButton(bool isLoading) {
+    return MgButton(
+      onPressed: isLoading
+          ? null
+          : () => ref
+                .read(storeReviewsProvider(widget.goodsId).notifier)
+                .loadMore(),
+      content: isLoading
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Text('리뷰 더보기'),
+    ).gray().margin(horizontal: MgSizes.md, top: MgSizes.md);
   }
 }
