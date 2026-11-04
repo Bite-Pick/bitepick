@@ -151,15 +151,16 @@ class ReviewRepository {
   }
 
 
-  // /// 3. 리뷰 평점별 조회
-  // Future<Map<String, dynamic>> getRatingStats(String goodsId) async {
-  //   final res = await _dio.get(
-  //     '/v1/review/rating',
-  //     queryParameters: {'goodsId': goodsId},
-  //   );
-  //   final data = res.data['data'] as Map<String, dynamic>?;
-  //   return data ?? {};
-  // }
+  /// 3. 매장 리뷰 전체 개수
+  Future<int> getReviewTotalCount(String goodsId) async {
+    final res = await _dio.get(
+      '/v1/review/rating',
+      queryParameters: {'goodsId': goodsId, 'imageCheck': false},
+    );
+    final data = res.data['data'] as Map<String, dynamic>?;
+    if (res.data['status'] != 'OK' || data == null) return 0;
+    return (data['totalCount'] as num?)?.toInt() ?? 0;
+  }
 }
 
 @riverpod
@@ -168,21 +169,8 @@ ReviewRepository reviewRepository(Ref ref) {
 }
 
 @riverpod
-Future<List<Review>> reviews(
-  Ref ref, {
-  required String goodsId,
-  bool imageCheck = true,
-  int page = 1,
-  int size = 10,
-}) async {
-  return ref
-      .read(reviewRepositoryProvider)
-      .getReviews(
-        goodsId: goodsId,
-        imageCheck: imageCheck,
-        page: page,
-        size: size,
-      );
+Future<int> reviewTotalCount(Ref ref, {required String goodsId}) {
+  return ref.read(reviewRepositoryProvider).getReviewTotalCount(goodsId);
 }
 
 @riverpod
