@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +33,9 @@ class ReviewRepository {
       },
     );
     final data = res.data['data'] as Map<String, dynamic>?;
-    if (res.data['status'] != 'OK' || data == null) return [];
+    if (res.data['status'] != 'OK' || data == null) {
+      throw ApiResponseException();
+    }
     final list = data['reviewListDTOList'] as List? ?? [];
     return list
         .map((json) => Review.fromJson(json as Map<String, dynamic>))
@@ -157,8 +160,11 @@ class ReviewRepository {
       queryParameters: {'goodsId': goodsId, 'imageCheck': false},
     );
     final data = res.data['data'] as Map<String, dynamic>?;
-    if (res.data['status'] != 'OK' || data == null) return 0;
-    return (data['totalCount'] as num?)?.toInt() ?? 0;
+    final totalCount = (data?['totalCount'] as num?)?.toInt();
+    if (res.data['status'] != 'OK' || totalCount == null) {
+      throw ApiResponseException();
+    }
+    return totalCount;
   }
 }
 
