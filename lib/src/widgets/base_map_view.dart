@@ -20,6 +20,8 @@ class BaseMapView extends StatefulWidget {
 
 class _BaseMapViewState extends State<BaseMapView> {
   static const _pinHeight = 43.0;
+  static const _pinViewBoxHeight = 51.0;
+  static const _pinTipY = 44.25;
   static const _labelHeight = 12.0;
   static const _markerWidth = 80.0;
   static const _markerHeight = _pinHeight + _labelHeight; 
