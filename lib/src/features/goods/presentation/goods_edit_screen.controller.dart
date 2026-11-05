@@ -108,6 +108,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
         .mapIndexed((index, imageItem) {
       // 서버에서 받은 이미지는 이미 업로드된 상태이므로 uploadedUrl에 저장
       return GoodsDetailItem(
+        uid: 'init_$index',
         localImage: LocalImage(
           id: imageItem.id ?? index+1,
           key: imageItem.key ?? '',
@@ -182,8 +183,11 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
   void addGoodsDetail(File file, String name) {
     final fileName = file.path.split('/').last;
     final newDetail = GoodsDetailItem(
+      uid: getId().toString(),
       localImage: LocalImage(
-        id: state.goodsDetails.length + 1, // 1부터 시작 (서버와 매칭)
+        id: state.goodsDetails
+                .map((d) => d.localImage.id)
+                .fold<int>(0, (max, id) => id > max ? id : max) + 1, // 1부터 시작 (서버와 매칭)
         key: fileName,
         file: file,
       ),
@@ -199,6 +203,7 @@ class GoodsEditScreenController extends _$GoodsEditScreenController {
     if (index >= 0 && index < state.goodsDetails.length) {
       final detail = state.goodsDetails[index];
       final updatedDetail = GoodsDetailItem(
+        uid: detail.uid,
         localImage: LocalImage(
           id: detail.localImage.id,
           key: file != null ? file.path.split('/').last : detail.localImage.key,

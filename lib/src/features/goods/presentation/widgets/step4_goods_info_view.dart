@@ -68,7 +68,7 @@ class Step4GoodsInfoView extends ConsumerWidget {
               final detail = entry.value;
 
               return GoodsDetailInfoFormItem(
-                key: ValueKey(index),
+                key: ValueKey(detail.uid),
                 index: index,
                 onRemove: () => onRemoveGoodsDetail(index),
                 onImageChanged: (file) {

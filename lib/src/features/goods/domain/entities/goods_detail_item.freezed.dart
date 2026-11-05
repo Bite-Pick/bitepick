@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GoodsDetailItem {
+  String get uid => throw _privateConstructorUsedError;
   LocalImage get localImage => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
@@ -34,7 +35,7 @@ abstract class $GoodsDetailItemCopyWith<$Res> {
     $Res Function(GoodsDetailItem) then,
   ) = _$GoodsDetailItemCopyWithImpl<$Res, GoodsDetailItem>;
   @useResult
-  $Res call({LocalImage localImage, String name});
+  $Res call({String uid, LocalImage localImage, String name});
 
   $LocalImageCopyWith<$Res> get localImage;
 }
@@ -53,9 +54,17 @@ class _$GoodsDetailItemCopyWithImpl<$Res, $Val extends GoodsDetailItem>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? localImage = null, Object? name = null}) {
+  $Res call({
+    Object? uid = null,
+    Object? localImage = null,
+    Object? name = null,
+  }) {
     return _then(
       _value.copyWith(
+            uid: null == uid
+                ? _value.uid
+                : uid // ignore: cast_nullable_to_non_nullable
+                      as String,
             localImage: null == localImage
                 ? _value.localImage
                 : localImage // ignore: cast_nullable_to_non_nullable
@@ -89,7 +98,7 @@ abstract class _$$GoodsDetailItemImplCopyWith<$Res>
   ) = __$$GoodsDetailItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({LocalImage localImage, String name});
+  $Res call({String uid, LocalImage localImage, String name});
 
   @override
   $LocalImageCopyWith<$Res> get localImage;
@@ -108,9 +117,17 @@ class __$$GoodsDetailItemImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? localImage = null, Object? name = null}) {
+  $Res call({
+    Object? uid = null,
+    Object? localImage = null,
+    Object? name = null,
+  }) {
     return _then(
       _$GoodsDetailItemImpl(
+        uid: null == uid
+            ? _value.uid
+            : uid // ignore: cast_nullable_to_non_nullable
+                  as String,
         localImage: null == localImage
             ? _value.localImage
             : localImage // ignore: cast_nullable_to_non_nullable
@@ -127,8 +144,14 @@ class __$$GoodsDetailItemImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$GoodsDetailItemImpl implements _GoodsDetailItem {
-  const _$GoodsDetailItemImpl({required this.localImage, required this.name});
+  const _$GoodsDetailItemImpl({
+    required this.uid,
+    required this.localImage,
+    required this.name,
+  });
 
+  @override
+  final String uid;
   @override
   final LocalImage localImage;
   @override
@@ -136,7 +159,7 @@ class _$GoodsDetailItemImpl implements _GoodsDetailItem {
 
   @override
   String toString() {
-    return 'GoodsDetailItem(localImage: $localImage, name: $name)';
+    return 'GoodsDetailItem(uid: $uid, localImage: $localImage, name: $name)';
   }
 
   @override
@@ -144,13 +167,14 @@ class _$GoodsDetailItemImpl implements _GoodsDetailItem {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GoodsDetailItemImpl &&
+            (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.localImage, localImage) ||
                 other.localImage == localImage) &&
             (identical(other.name, name) || other.name == name));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, localImage, name);
+  int get hashCode => Object.hash(runtimeType, uid, localImage, name);
 
   /// Create a copy of GoodsDetailItem
   /// with the given fields replaced by the non-null parameter values.
@@ -166,10 +190,13 @@ class _$GoodsDetailItemImpl implements _GoodsDetailItem {
 
 abstract class _GoodsDetailItem implements GoodsDetailItem {
   const factory _GoodsDetailItem({
+    required final String uid,
     required final LocalImage localImage,
     required final String name,
   }) = _$GoodsDetailItemImpl;
 
+  @override
+  String get uid;
   @override
   LocalImage get localImage;
   @override

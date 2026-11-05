@@ -87,6 +87,7 @@ class _AdminRegisteredStoreDetailScreenState
     for (final item in widget.store.goodsImageList) {
       if (item.imageUrl == null || item.imageUrl!.isEmpty) continue;
       _goodsDetails.add(GoodsDetailItem(
+        uid: 'init_${_goodsDetails.length}',
         localImage: LocalImage(
           id: _goodsDetails.length + 1,
           key: item.key,
@@ -374,6 +375,7 @@ class _AdminRegisteredStoreDetailScreenState
     if (file != null) {
       setState(() {
         _goodsDetails.add(GoodsDetailItem(
+          uid: getId().toString(),
           localImage: LocalImage(
             id: _goodsDetails.length + 1,
             key: file.path.split('/').last,
