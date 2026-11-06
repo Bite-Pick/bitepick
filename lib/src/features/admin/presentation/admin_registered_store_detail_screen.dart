@@ -323,7 +323,7 @@ class _AdminRegisteredStoreDetailScreenState
           final index = entry.key;
           final detail = entry.value;
           return GoodsDetailInfoFormItem(
-            key: ValueKey(index),
+            key: ValueKey(detail.uid),
             index: index,
             onRemove: () => setState(() => _goodsDetails.removeAt(index)),
             onImageChanged: (file) {
