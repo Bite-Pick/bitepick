@@ -40,11 +40,7 @@ class _BaseMapViewState extends State<BaseMapView> {
   }
 
   Future<void> _onMapReady(NaverMapController controller) async {
-    const showLabel = true;
-    const markerSize = Size(
-      _markerWidth,
-      showLabel ? _markerHeight : _pinHeight,
-    );
+    const markerSize = Size(_markerWidth, _markerHeight);
 
     final icon = await NOverlayImage.fromWidget(
       context: context,
@@ -53,14 +49,17 @@ class _BaseMapViewState extends State<BaseMapView> {
         storeName: widget.buildingName,
         isSelected: true,
         isOpen: false,
-        showLabel: showLabel,
+        showLabel: true,
       ),
     );
     final marker = NMarker(
       id: "goal",
       position: NLatLng(widget.latitude, widget.longitude),
       icon: icon,
-      anchor: NPoint(0.5, _pinHeight / markerSize.height), 
+      anchor: NPoint(
+        0.5,
+        (_pinHeight * _pinTipY / _pinViewBoxHeight) / markerSize.height,
+      ),
     );
     await controller.addOverlay(marker);
   }
