@@ -20,6 +20,8 @@ class BaseMapView extends StatefulWidget {
 
 class _BaseMapViewState extends State<BaseMapView> {
   static const _pinHeight = 43.0;
+  static const _pinViewBoxHeight = 51.0;
+  static const _pinTipY = 44.25;
   static const _labelHeight = 12.0;
   static const _markerWidth = 80.0;
   static const _markerHeight = _pinHeight + _labelHeight; 
@@ -38,24 +40,29 @@ class _BaseMapViewState extends State<BaseMapView> {
   }
 
   Future<void> _onMapReady(NaverMapController controller) async {
-  final icon = await NOverlayImage.fromWidget(
-    context: context,
-    size: const Size(80, 65),
-    widget: StorePinMarker(
-      storeName: widget.buildingName,
-      isSelected: true,
-      isOpen: false,
-      showLabel: true,
-    ),
-  );
-  final marker = NMarker(
-    id: "goal",
-    position: NLatLng(widget.latitude, widget.longitude),
-    icon: icon,
-    anchor: const NPoint(0.5, 0.5), 
-  );
-  await controller.addOverlay(marker);
-}
+    const markerSize = Size(_markerWidth, _markerHeight);
+
+    final icon = await NOverlayImage.fromWidget(
+      context: context,
+      size: markerSize,
+      widget: StorePinMarker(
+        storeName: widget.buildingName,
+        isSelected: true,
+        isOpen: false,
+        showLabel: true,
+      ),
+    );
+    final marker = NMarker(
+      id: "goal",
+      position: NLatLng(widget.latitude, widget.longitude),
+      icon: icon,
+      anchor: NPoint(
+        0.5,
+        (_pinHeight * _pinTipY / _pinViewBoxHeight) / markerSize.height,
+      ),
+    );
+    await controller.addOverlay(marker);
+  }
 
 
   @override
