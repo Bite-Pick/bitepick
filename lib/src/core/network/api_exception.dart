@@ -8,6 +8,15 @@ class DuplicateNicknameException implements Exception {
   String toString() => message;
 }
 
+/// 서버 응답이 비정상이거나 필요한 데이터가 없는 경우의 예외
+class ApiResponseException implements Exception {
+  final String message;
+  ApiResponseException([this.message = '서버 응답이 올바르지 않아요.']);
+
+  @override
+  String toString() => 'ApiResponseException: $message';
+}
+
 /// 인증 실패 예외
 class AuthenticationException implements Exception {
   final String message;

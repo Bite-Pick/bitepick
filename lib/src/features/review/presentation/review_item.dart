@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
+import 'package:magambell/src/core/utils/talker_instance.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:magambell/src/features/review/presentation/review_card_view.dart';
+import 'package:magambell/src/features/review/presentation/store_reviews.controller.dart';
 import 'package:magambell/src/features/user/providers/user.provider.dart';
 import 'package:magambell/src/widgets/mg_alert_dialog.dart';
 import 'package:magambell/src/widgets/mg_button.dart';
@@ -171,18 +173,37 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
     );
   }
 
-  // TODO[review]: 테스트 필요
   Future<void> _showReportDialog() async {
     await showDialog(
       context: context,
       builder: (context) => MgAlertDialog.basic(
         title: '이 리뷰를 신고할까요?',
         content: Text('신고하면 리뷰가 보이지 않아요.'),
-        onConfirm: () async => ref
-            .read(reviewRepositoryProvider)
-            .reportReview(widget.review.reviewId),
+        onConfirm: _reportReview,
       ),
     );
+  }
+
+  Future<void> _reportReview() async {
+    final goodsId = widget.review.goodsId;
+    try {
+      final reported = await ref
+          .read(reviewRepositoryProvider)
+          .reportReview(widget.review.reviewId);
+      if (reported && mounted) {
+        ToastPresentor.success(context, '신고했어요. 이 리뷰는 더 이상 보이지 않아요');
+      }
+    } catch (e, stack) {
+      talker.handle(e, stack, '리뷰 신고 실패');
+      if (mounted) {
+        ToastPresentor.error(context, '신고하지 못했어요. 다시 시도해주세요');
+      }
+      return;
+    }
+
+    // 서버는 신고한 리뷰를 신고자의 목록에서 제외한다. 이미 신고한 리뷰도 같은 상태로 맞춘다.
+    if (!mounted) return;
+    ref.invalidate(storeReviewsProvider(goodsId));
   }
 
   Future<void> _showDeleteDialog() async {
@@ -198,7 +219,10 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
           if (res) {
             ToastPresentor.success(context, "리뷰가 삭제되었습니다.");
             // TODO: refactor 각 화면에서 사용하는 provider만 invalidate하도록
-            ref.invalidate(reviewsProvider(goodsId: widget.review.goodsId));
+            ref.invalidate(storeReviewsProvider(widget.review.goodsId));
+            ref.invalidate(
+              reviewTotalCountProvider(goodsId: widget.review.goodsId),
+            );
             ref.invalidate(myReviewsProvider);
           } else {
             ToastPresentor.error(context, "리뷰 삭제에 실패했습니다. 문의해주세요");
