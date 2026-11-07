@@ -377,7 +377,9 @@ class _AdminRegisteredStoreDetailScreenState
         _goodsDetails.add(GoodsDetailItem(
           uid: getId().toString(),
           localImage: LocalImage(
-            id: _goodsDetails.length + 1,
+            id: _goodsDetails
+                    .map((d) => d.localImage.id)
+                    .fold<int>(0, (max, id) => id > max ? id : max) + 1,
             key: file.path.split('/').last,
             file: file,
           ),
