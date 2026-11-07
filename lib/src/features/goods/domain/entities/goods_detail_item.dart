@@ -7,6 +7,7 @@ part 'goods_detail_item.freezed.dart';
 @freezed
 class GoodsDetailItem with _$GoodsDetailItem {
   const factory GoodsDetailItem({
+    required String uid,
     required LocalImage localImage,
     required String name, // 상품명
   }) = _GoodsDetailItem;

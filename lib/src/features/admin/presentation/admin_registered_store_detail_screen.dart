@@ -87,6 +87,7 @@ class _AdminRegisteredStoreDetailScreenState
     for (final item in widget.store.goodsImageList) {
       if (item.imageUrl == null || item.imageUrl!.isEmpty) continue;
       _goodsDetails.add(GoodsDetailItem(
+        uid: 'init_${_goodsDetails.length}',
         localImage: LocalImage(
           id: _goodsDetails.length + 1,
           key: item.key,
@@ -322,7 +323,7 @@ class _AdminRegisteredStoreDetailScreenState
           final index = entry.key;
           final detail = entry.value;
           return GoodsDetailInfoFormItem(
-            key: ValueKey(index),
+            key: ValueKey(detail.uid),
             index: index,
             onRemove: () => setState(() => _goodsDetails.removeAt(index)),
             onImageChanged: (file) {
@@ -374,8 +375,11 @@ class _AdminRegisteredStoreDetailScreenState
     if (file != null) {
       setState(() {
         _goodsDetails.add(GoodsDetailItem(
+          uid: getId().toString(),
           localImage: LocalImage(
-            id: _goodsDetails.length + 1,
+            id: _goodsDetails
+                    .map((d) => d.localImage.id)
+                    .fold<int>(0, (max, id) => id > max ? id : max) + 1,
             key: file.path.split('/').last,
             file: file,
           ),
