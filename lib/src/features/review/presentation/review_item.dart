@@ -95,16 +95,6 @@ class _ReviewItemState extends ConsumerState<ReviewItem> {
     };
   }
 
-  void _showImageViewer(int initialIndex) {
-    showDialog(
-      context: context,
-      builder: (_) => _ImageViewerDialog(
-        imageUrls: widget.review.imageUrls,
-        initialIndex: initialIndex,
-      ),
-    );
-  }
-
   Future<void> _showReportDialog() async {
     await showDialog(
       context: context,
