@@ -6,6 +6,7 @@ import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_text_style.dart';
 import 'package:magambell/src/widgets/base_network_image.dart';
+import 'package:magambell/src/widgets/image_viewer.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 
 class ReviewCardView extends StatelessWidget {
@@ -83,15 +84,22 @@ class ReviewCardView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: MgSizes.md),
               itemCount: imageUrls.length,
               separatorBuilder: (_, __) => const SizedBox(width: MgSizes.size4),
-              itemBuilder: (_, index) => ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(MgSizes.size8),
-                  bottomLeft: Radius.circular(MgSizes.size8),
+              itemBuilder: (_, index) => GestureDetector(
+                onTap: () => showImageViewer(
+                  context,
+                  imageUrls: imageUrls,
+                  initialIndex: index,
                 ),
-                child: BaseNetworkImage(
-                  imageUrl: imageUrls[index],
-                  width: 142,
-                  height: 142,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(MgSizes.size8),
+                    bottomLeft: Radius.circular(MgSizes.size8),
+                  ),
+                  child: BaseNetworkImage(
+                    imageUrl: imageUrls[index],
+                    width: 142,
+                    height: 142,
+                  ),
                 ),
               ),
             ),
