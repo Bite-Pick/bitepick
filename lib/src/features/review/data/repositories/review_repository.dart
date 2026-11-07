@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/core/network/api_client.dart';
+import 'package:magambell/src/core/network/api_exception.dart';
 import 'package:magambell/src/features/image/domain/entities/image_upload_response.dart';
 import 'package:magambell/src/features/review/domain/entities/review.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +33,9 @@ class ReviewRepository {
       },
     );
     final data = res.data['data'] as Map<String, dynamic>?;
-    if (res.data['status'] != 'OK' || data == null) return [];
+    if (res.data['status'] != 'OK' || data == null) {
+      throw ApiResponseException();
+    }
     final list = data['reviewListDTOList'] as List? ?? [];
     return list
         .map((json) => Review.fromJson(json as Map<String, dynamic>))
@@ -151,15 +154,18 @@ class ReviewRepository {
   }
 
 
-  // /// 3. 리뷰 평점별 조회
-  // Future<Map<String, dynamic>> getRatingStats(String goodsId) async {
-  //   final res = await _dio.get(
-  //     '/v1/review/rating',
-  //     queryParameters: {'goodsId': goodsId},
-  //   );
-  //   final data = res.data['data'] as Map<String, dynamic>?;
-  //   return data ?? {};
-  // }
+  Future<int> getReviewTotalCount(String goodsId) async {
+    final res = await _dio.get(
+      '/v1/review/rating',
+      queryParameters: {'goodsId': goodsId, 'imageCheck': false},
+    );
+    final data = res.data['data'] as Map<String, dynamic>?;
+    final totalCount = (data?['totalCount'] as num?)?.toInt();
+    if (res.data['status'] != 'OK' || totalCount == null) {
+      throw ApiResponseException();
+    }
+    return totalCount;
+  }
 }
 
 @riverpod
@@ -168,21 +174,8 @@ ReviewRepository reviewRepository(Ref ref) {
 }
 
 @riverpod
-Future<List<Review>> reviews(
-  Ref ref, {
-  required String goodsId,
-  bool imageCheck = true,
-  int page = 1,
-  int size = 10,
-}) async {
-  return ref
-      .read(reviewRepositoryProvider)
-      .getReviews(
-        goodsId: goodsId,
-        imageCheck: imageCheck,
-        page: page,
-        size: size,
-      );
+Future<int> reviewTotalCount(Ref ref, {required String goodsId}) {
+  return ref.read(reviewRepositoryProvider).getReviewTotalCount(goodsId);
 }
 
 @riverpod

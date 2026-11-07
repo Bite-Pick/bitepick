@@ -48,14 +48,14 @@ class StoreInfoView extends ConsumerWidget {
       this.hasFavorite = true, 
       this.onPhotoChangeTap, 
       this.onMenuEditTap,
-      this.reviewCount = 0,
+      this.reviewCount,
       this.isOwnerView = false,
   });
   final StoreInfoUiData storeInfo;
   final bool hasFavorite;
   final VoidCallback? onPhotoChangeTap;
   final VoidCallback? onMenuEditTap;
-  final int reviewCount;
+  final int? reviewCount;
   final bool isOwnerView;
 
   @override
@@ -521,14 +521,16 @@ class StoreInfoView extends ConsumerWidget {
                       color: NewColorScheme.gray1,
                     ),
                   ),
-                  Gaps.w4,
-                  Text(
-                    '$reviewCount',
-                    style: context.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: NewColorScheme.gray7,
+                  if (reviewCount != null) ...[
+                    Gaps.w4,
+                    Text(
+                      '$reviewCount',
+                      style: context.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: NewColorScheme.gray7,
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
