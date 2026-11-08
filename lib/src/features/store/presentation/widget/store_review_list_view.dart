@@ -91,6 +91,10 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
               child: CircularProgressIndicator(strokeWidth: 2),
             )
           : const Text('리뷰 더보기'),
-    ).gray().margin(horizontal: MgSizes.md, top: MgSizes.md);
+    ).gray().margin(
+      horizontal: MgSizes.md, 
+      top: MgSizes.md,
+      bottom: MgSizes.xxl,
+    );
   }
 }
