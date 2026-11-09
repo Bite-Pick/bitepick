@@ -23,18 +23,15 @@ class OwnerReviewItem extends ConsumerWidget {
       replyContent: review.reply?.content,
       replyCreatedAt: review.reply?.createdAt,
       trailing: GestureDetector(
-        onTap: review.reply == null
-            ? () {
-                ref.read(activeReplyReviewIdProvider.notifier).state =
-                    review.reviewId;
-                Scrollable.ensureVisible(
-                  context,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                  alignment: 0,
-                );
-              }
-            : null,
+        onTap: () {
+          ref.read(activeReplyReviewIdProvider.notifier).state = review.reviewId;
+          Scrollable.ensureVisible(
+            context,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            alignment: 0,
+          );
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
