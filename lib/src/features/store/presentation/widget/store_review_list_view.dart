@@ -49,6 +49,7 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
                 Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
                 Gaps.h12,
                 Text("아직 등록된 리뷰가 없어요").bold(),
+                Gaps.h16,
               ],
             ),
           ),
