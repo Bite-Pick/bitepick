@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
@@ -81,14 +80,14 @@ class _OwnerReplyComposerState extends ConsumerState<OwnerReplyComposer> {
       if (success) {
         ref.invalidate(ownerStoreReviewsProvider);
         ref.read(activeReplyReviewIdProvider.notifier).state = null;
-        ToastPresentor.success(context, "답글을 ${_label}했어요.");
+        ToastPresentor.success(context, "답글을 $_label했어요.");
       } else {
-        ToastPresentor.error(context, "답글 ${_label}에 실패했어요");
+        ToastPresentor.error(context, "답글 $_label에 실패했어요");
       }
     } catch (_) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      ToastPresentor.error(context, "답글 ${_label}에 실패했어요");
+      ToastPresentor.error(context, "답글 $_label에 실패했어요");
     }
   }
 
