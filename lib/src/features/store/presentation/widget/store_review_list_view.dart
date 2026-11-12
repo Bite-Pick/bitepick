@@ -49,6 +49,7 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
                 Image.asset(R.ASSETS_IMAGES_CHARACTER_EMPTY_PNG, width: 160.w),
                 Gaps.h12,
                 Text("아직 등록된 리뷰가 없어요").bold(),
+                Gaps.h16,
               ],
             ),
           ),
@@ -91,6 +92,10 @@ class _StoreReviewListViewState extends ConsumerState<StoreReviewListView> {
               child: CircularProgressIndicator(strokeWidth: 2),
             )
           : const Text('리뷰 더보기'),
-    ).gray().margin(horizontal: MgSizes.md, top: MgSizes.md);
+    ).gray().margin(
+      horizontal: MgSizes.md, 
+      top: MgSizes.md,
+      bottom: MgSizes.xxl,
+    );
   }
 }
