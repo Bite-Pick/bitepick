@@ -9,13 +9,15 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-// Load keystore properties from key.properties file
-val keystorePropertiesFile = rootProject.file("key.properties")
-val keystoreProperties = Properties().apply {
-    if (keystorePropertiesFile.exists()) {
-        load(FileInputStream(keystorePropertiesFile))
-    }
+// prod(및 dev 폴백)은 key.properties, dev는 key.dev.properties의 키로 서명한다.
+fun loadKeystoreProperties(fileName: String): Properties? {
+    val file = rootProject.file(fileName)
+    if (!file.exists()) return null
+    return Properties().apply { FileInputStream(file).use { load(it) } }
 }
+
+val keystoreProperties = loadKeystoreProperties("key.properties")
+val devKeystoreProperties = loadKeystoreProperties("key.dev.properties")
 
 
 android {
@@ -58,15 +60,13 @@ android {
         }
     }
 
-    val hasKeystore = keystorePropertiesFile.exists()
-
     signingConfigs {
-        if (hasKeystore) {
-            create("release") {
-                val alias = keystoreProperties.getProperty("keyAlias")
-                val keyPwd = keystoreProperties.getProperty("keyPassword")
-                val storePwd = keystoreProperties.getProperty("storePassword")
-                val storeFilePath = keystoreProperties.getProperty("storeFile")
+        fun createSigningConfig(name: String, properties: Properties) {
+            create(name) {
+                val alias = properties.getProperty("keyAlias")
+                val keyPwd = properties.getProperty("keyPassword")
+                val storePwd = properties.getProperty("storePassword")
+                val storeFilePath = properties.getProperty("storeFile")
 
                 if (!alias.isNullOrBlank()) {
                     keyAlias = alias
@@ -82,14 +82,15 @@ android {
                 }
             }
         }
+
+        keystoreProperties?.let { createSigningConfig("release", it) }
+        devKeystoreProperties?.let { createSigningConfig("releaseDev", it) }
     }
 
     buildTypes {
         getByName("release") {
-            if (hasKeystore) {
-                signingConfig = signingConfigs.getByName("release")
-            }
-            // else: keystore 없으면 기본 signing 설정 사용
+            // 서명 키는 아래 androidComponents에서 flavor별로 지정한다.
+            // keystore가 없으면 기본 signing 설정을 사용한다.
 
             // ProGuard 활성화
             isMinifyEnabled = true
@@ -98,6 +99,20 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+}
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        val signingConfigs = android.signingConfigs
+        // dev는 dev 업로드 키를 쓰고, 파일이 없으면(CI 등) 기존처럼 release 키로 폴백한다.
+        val config = when (variant.flavorName) {
+            "dev" -> signingConfigs.findByName("releaseDev") ?: signingConfigs.findByName("release")
+            else -> signingConfigs.findByName("release")
+        }
+        if (config != null) {
+            variant.signingConfig.setConfig(config)
         }
     }
 }
