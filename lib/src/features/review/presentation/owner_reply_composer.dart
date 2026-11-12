@@ -69,16 +69,17 @@ class _OwnerReplyComposerState extends ConsumerState<OwnerReplyComposer> {
     if (reviewId == null || content.isEmpty || _isSubmitting) return;
 
     setState(() => _isSubmitting = true);
+    final container = ProviderScope.containerOf(context, listen: false);
     try {
       final repo = ref.read(reviewRepositoryProvider);
       final success = _isEdit
           ? await repo.updateReply(reviewId, content)
           : await repo.addReply(reviewId, content);
+      if (success) container.invalidate(ownerStoreReviewsProvider);
       if (!mounted) return;
 
       setState(() => _isSubmitting = false);
       if (success) {
-        ref.invalidate(ownerStoreReviewsProvider);
         ref.read(activeReplyReviewIdProvider.notifier).state = null;
         ToastPresentor.success(context, "답글을 $_label했어요.");
       } else {
