@@ -429,7 +429,7 @@ class _OwnerGoodsViewState extends ConsumerState<OwnerGoodsView> {
                       Gaps.h8,
                     ],
                     activeReplyId != null
-                        ? const OwnerReplyComposer()
+                        ? OwnerReplyComposer(key: ValueKey(activeReplyId))
                         : Container(
                             width: double.infinity,
                             decoration: const BoxDecoration(

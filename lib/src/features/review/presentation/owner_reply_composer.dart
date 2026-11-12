@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:magambell/src/constants/index.dart';
-import 'package:magambell/src/core/extensions/widget_extension.dart';
 import 'package:magambell/src/core/theme/mg_color.dart';
 import 'package:magambell/src/core/theme/mg_theme.dart';
 import 'package:magambell/src/features/review/data/repositories/review_repository.dart';
@@ -22,10 +21,27 @@ class _OwnerReplyComposerState extends ConsumerState<OwnerReplyComposer> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
   bool _isSubmitting = false;
+  bool _isEdit = false;
+  String get _label => _isEdit ? '수정' : '등록';
 
   @override
   void initState() {
     super.initState();
+    final reviewId = ref.read(activeReplyReviewIdProvider);
+    final review = ref
+        .read(ownerStoreReviewsProvider())
+        .value
+        ?.items
+        .where((e) => e.reviewId == reviewId)
+        .firstOrNull;
+    final existing = review?.reply?.content;
+    if (existing != null) {
+      _isEdit = true;
+      _controller.value = TextEditingValue(
+        text: existing,
+        selection: TextSelection.collapsed(offset: existing.length),
+      );
+    }
     Future.delayed(Duration.zero, () {
       if (mounted) _focusNode.requestFocus();
     });
@@ -53,24 +69,26 @@ class _OwnerReplyComposerState extends ConsumerState<OwnerReplyComposer> {
     if (reviewId == null || content.isEmpty || _isSubmitting) return;
 
     setState(() => _isSubmitting = true);
+    final container = ProviderScope.containerOf(context, listen: false);
     try {
-      final success = await ref
-        .read(reviewRepositoryProvider)
-        .addReply(reviewId, content);
+      final repo = ref.read(reviewRepositoryProvider);
+      final success = _isEdit
+          ? await repo.updateReply(reviewId, content)
+          : await repo.addReply(reviewId, content);
+      if (success) container.invalidate(ownerStoreReviewsProvider);
       if (!mounted) return;
 
       setState(() => _isSubmitting = false);
       if (success) {
-        ref.invalidate(ownerStoreReviewsProvider);
         ref.read(activeReplyReviewIdProvider.notifier).state = null;
-        ToastPresentor.success(context, "답글을 등록했어요.");
+        ToastPresentor.success(context, "답글을 $_label했어요.");
       } else {
-        ToastPresentor.error(context, "답글 등록에 실패했어요");
+        ToastPresentor.error(context, "답글 $_label에 실패했어요");
       }
     } catch (_) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      ToastPresentor.error(context, "답글 등록에 실패했어요");
+      ToastPresentor.error(context, "답글 $_label에 실패했어요");
     }
   }
 
